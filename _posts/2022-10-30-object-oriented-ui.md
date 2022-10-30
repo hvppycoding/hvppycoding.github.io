@@ -7,7 +7,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Amélie Mourichon**](https://unsplash.com/@amayli) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - Template
+  - UX/UI
 ---
 본 포스트는 『객체지향 UI 디자인』 책을 보며 정리한 글입니다.  
 자세한 내용은 책을 참고하세요.
