@@ -33,13 +33,13 @@ body { margin: 0; }
 /* Selected elements */
 
 ::-moz-selection {
-  color: #fff;
+  /* color: #fff; */
   /* background: #000; */
   background: $custom-selection-color; /* changed background color */
 }
 
 ::selection {
-  color: #fff;
+  /* color: #fff; */
   /* background: #000; */
   background: $custom-selection-color; /* changed background color */
 }

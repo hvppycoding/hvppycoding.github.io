@@ -220,5 +220,6 @@ $intro-transition: intro 0.3s both !default;
    ========================================================================== */
 $custom-highlight-color: #ffed99;
 $custom-faint-color: $light-gray;
-$custom-selection-color: #5bc3bf !default; /* Added the custom selection color */
+/* custom selection color(github-like) */
+$custom-selection-color: rgba(84, 174, 255, 0.4) !default; 
 $custom-code-color: #e03e3e !default;
