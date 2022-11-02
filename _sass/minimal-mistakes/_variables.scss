@@ -128,6 +128,7 @@ $masthead-link-color-hover: mix(#000, $primary-color, 25%) !default;
 $navicon-link-color-hover: mix(#fff, $primary-color, 75%) !default;
 
 /* syntax highlighting (base16) */
+/*
 $base00: #263238 !default;
 $base01: #2e3c43 !default;
 $base02: #314549 !default;
@@ -144,6 +145,7 @@ $base0c: #89ddff !default;
 $base0d: #82aaff !default;
 $base0e: #c792ea !default;
 $base0f: #ff5370 !default;
+*/
 
 /* Bluloco Light Theme(customized) */
 // $base00: #ffffff !default; /* Background */
@@ -162,6 +164,24 @@ $base0f: #ff5370 !default;
 // $base0d: #275fe4 !default; /* Attributes */
 // $base0e: #823ff1 !default; /* Keyword */
 // $base0f: #ce33c0 !default;
+
+/* Github Code Block Theme(customized) */
+$base00: #f6f8fa !default; /* Background */
+$base01: #f6f8fa !default;
+$base02: #f6f8fa !default;
+$base03: #f6f8fa !default;
+$base04: #6e7781 !default; /* Comment */
+$base05: #24292f !default; /* Foreground */
+$base06: #24292f !default;
+$base07: #24292f !default;
+$base08: #d52753 !default; /* Error, Name.Constant */
+$base09: #0550ae !default; /* Literal.Number */
+$base0a: #953800 !default; /* Type */
+$base0b: #0a3069 !default; /* Literal.String */
+$base0c: #0550ae !default; /* Operator */
+$base0d: #8250df !default; /* Attributes */
+$base0e: #cf222e !default; /* Keyword */
+$base0f: #ce33c0 !default;
 
 /*
    Breakpoints
