@@ -55,8 +55,7 @@ def find_workers_available_for_time(open_time: datetime.datetime):
     # fall back to workers who listed they are available in
     # in an emergency
     emergency_workers = [worker for worker in get_emergency_workers()
-                         if is_available(worker)]
-
+                         if is_available(worker)]git
     if emergency_workers:
         return emergency_workers
 
@@ -79,3 +78,25 @@ def count_authors(cookbooks: List[Cookbook]):
   ...
 ```
 </div>
+
+### 타입 어노테이션의 장점: 자동 완성
+[p.84] 파이썬은 동적 타입 언어이기 때문에 어떤 연산이 가능한지 예측하기는 쉽지 않다. 하지만 타입 어노테이션이 돼 있다면 많은 파이썬을 인식하는 IDE들이 변수들의 연산을 쉽게 예측하고 자동 완성 기능을 제공할 수 있다.
+
+### 타입 어노테이션의 장점: 타입 체커
+
+[p.85] 타입 체커는 타입 어노테이션을 체크하는 툴이다. mypy는 제일 많이 쓰이는 타입 체커다.
+```bash
+# mypy 패키지 설치
+pip install mypy
+
+# 타입 오류 탐지
+mypy 파일명.py
+```
+
+### 타입 어노테이션 적용 조건
+
+[p.90] 타입 어노테이션은 잘못하면 너무 과하게 적용되기 쉽다. 특히 타입이 분명한 변수들은 일일이 어노테이션을 할 필요가 없고, 프라이빗 메서드에 대한 파라미터까지 어노테이션할 필요도 없다. 언제 타입 체커를 사용해야 할까?
+- 다른 모듈이나 사용자가 호출할 가능성이 높은 함수
+- 타입이 복잡한 곳 또는 비직관적인 곳
+- mypy가 타입이 필요하다고 하는 경우
+
