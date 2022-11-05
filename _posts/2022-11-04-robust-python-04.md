@@ -143,7 +143,7 @@ def write_hello(path_or_io):
     elif isinstance(path_or_io, TextIOWrapper):
         path_or_io.write('hello')
     else:
-        print('path_or_io is not str or TextIOWrapper instance')
+        print('path_or_io is neither str nor TextIOWrapper')
 
 if __name__ == '__main__':
     with open('other_path.txt', 'w') as f:
@@ -166,7 +166,7 @@ def write_hello(path_or_io: Union[str, TextIOWrapper]):
     elif isinstance(path_or_io, TextIOWrapper):
         path_or_io.write('hello')
     else:
-        print('path_or_io is not str or TextIOWrapper instance')
+        print('path_or_io is neither str nor TextIOWrapper')
 
 if __name__ == '__main__':
     write_hello('hello.txt')
