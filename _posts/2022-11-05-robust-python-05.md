@@ -239,8 +239,10 @@ class CaseInsensitiveSet(collections.abc.Set):
         for item in str_set:
             self._data.add(item.lower())
 
-    def __contains__(self, k: str) -> bool:
-        return k.lower() in self._data
+    def __contains__(self, x: object) -> bool:
+        if isinstance(x, str):
+            return k.lower() in self._data
+        return k in self._data
     
     def __iter__(self) -> Iterator[str]:
         return iter(self._data)
@@ -259,6 +261,6 @@ for k in cis:
 print('HARRY' in cis)
 # True
 
-print(list(cis | CaseInsensitiveSet({'Albus'})))
+print(list(cis | CaseInsensitiveSet({'albus'})))
 # ['harry', 'ron', 'albus', 'hermione']
 ```
