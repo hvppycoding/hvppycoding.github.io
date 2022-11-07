@@ -94,7 +94,7 @@ analytics:
 # Site Author
 author:
   name             : "Hvppy Coding"
-  avatar           : "/assets/favicon/hpcd_white_circle.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/icon.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Programmer"
   location         : South Korea
   email            :
