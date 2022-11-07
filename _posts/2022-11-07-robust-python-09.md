@@ -32,3 +32,71 @@ class MyFraction:
   numerator: int = 0
   denominator: int = 1
 ```
+
+```python
+import datetime
+from dataclasses import dataclass
+from enum import auto, Enum
+
+class Currency(Enum):
+  DOLLAR = auto()
+  WON = auto()
+
+@dataclass(eq=True, order=True, frozen=True) # 비교/정렬 가능(필드 순차 비교)
+class Ratings:
+  average_ratings: float = 0.0
+  number_of_ratings: int = 0
+
+print(sorted([Ratings(5.0, 1), Ratings(4.5, 2), Ratings(5.0, 10), Ratings(0.5, 1)]))
+# [Ratings(average_ratings=0.5, number_of_ratings=1), Ratings(average_ratings=4.5, number_of_ratings=2), 
+#  Ratings(average_ratings=5.0, number_of_ratings=1), Ratings(average_ratings=5.0, number_of_ratings=10)]
+
+print(Ratings(5.0, 1) == Ratings(5.0, 1))
+# True
+
+@dataclass(frozen=True) # frozen 설정 시 변경 불가
+class Book:
+  title: str
+  author: str
+  price: float = 10.0
+  currency: Currency = Currency.DOLLAR
+  ratings: Ratings = Ratings()
+  
+@dataclass
+class BookCategory:
+  title: str
+  books: set[Book]
+
+  # 메서드 추가도 가능
+  def get_book_titles(self):
+    return [b.title for b in self.books]
+
+algo_for_opt = Book('Algorithms for Optimization', 'Mykel J. Kochenderfer', 52.99, Currency.DOLLAR)
+# > algo_for_opt.price = 50.0
+# dataclasses.FrozenInstanceError: cannot assign to field 'price'
+art_of_cp = Book('The Art of Computer Programming', 'Donald E. Knuth', 162900, Currency.WON)
+ddd = Book('Domain-Driven Design', 'Eric Evans', 44.17, Currency.DOLLAR)
+
+computer_category = BookCategory(
+  'Computers',
+  {algo_for_opt, art_of_cp, ddd}
+)
+
+print(algo_for_opt.price)
+# 52.99
+
+print(computer_category.get_book_titles())
+# ['Algorithms for Optimization', 'The Art of Computer Programming', 'Domain-Driven Design']
+
+print(str(computer_category))
+# BookCategory(
+#   title='Computers', 
+#   books={
+#     Book(title='The Art of Computer Programming', author='Donald E. Knuth', price=162900, currency=<Currency.WON: 2>, ratings=Ratings(average_ratings=0.0, number_of_ratings=0)),
+#     Book(title='Domain-Driven Design', author='Eric Evans', price=44.17, currency=<Currency.DOLLAR: 1>, ratings=Ratings(average_ratings=0.0, number_of_ratings=0)), 
+#     Book(title='Algorithms for Optimization', author='Mykel J. Kochenderfer', price=52.99, currency=<Currency.DOLLAR: 1>, ratings=Ratings(average_ratings=0.0, number_of_ratings=0))
+#   }
+# )
+```
+
+추가 정보는 `dataclass` 공식 [문서](https://docs.python.org/ko/3/library/dataclasses.html)를 참고하자.
