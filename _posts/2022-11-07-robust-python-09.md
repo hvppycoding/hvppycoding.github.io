@@ -2,6 +2,7 @@
 title: "Robust Python 09 - 견고한 파이썬"
 excerpt: "Robust Python 09 - 견고한 파이썬"
 date: 2022-11-07 01:00:00 +0900
+classes: wide
 header:
   overlay_image: /assets/images/unsplash-emile-perron.jpg
   overlay_filter: 0.5
@@ -32,6 +33,8 @@ class MyFraction:
   numerator: int = 0
   denominator: int = 1
 ```
+
+아래 예시는 `dataclass`의 특성들은 보여주는 코드이다. `dataclass`로 평점, 도서, 도서 카테고리를 만들었다.
 
 ```python
 import datetime
@@ -99,4 +102,4 @@ print(str(computer_category))
 # )
 ```
 
-추가 정보는 `dataclass` 공식 [문서](https://docs.python.org/ko/3/library/dataclasses.html)를 참고하자.
+추가 정보는 `dataclass` [공식 문서](https://docs.python.org/ko/3/library/dataclasses.html)를 참고하자.
