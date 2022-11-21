@@ -235,4 +235,4 @@ class Person:
 
 [p.253] 대부분의 개발자가 클래스의 의미에 대한 고려 없이 클래스를 너무 많이 사용하곤 한다. 생성할 사용자 정의 타입을 결정할 때 다음의 가이드를 참고하길 바란다. 
 
-![적절한 추상화의 선택]({{site.baseurl}}/assets/images/2022-11-09-robust-python-10.svg)
+![적절한 추상화의 선택]({{site.baseurl}}/assets/images/2022-11-09-robust-python-10.svg){: .align-center}

@@ -1,0 +1,70 @@
+<mxfile host="65bd71144e">
+    <diagram id="tv39V_c9GUA5fFCuqizI" name="페이지-1">
+        <mxGraphModel dx="697" dy="1131" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="23" value="유형이 같은가?" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="260" y="220" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="스칼라인가?&lt;br&gt;컬렉션인가?" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="140" y="290" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="불변 속성이 &lt;br&gt;존재하는가?" style="rounded=1;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="380" y="290" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="열거형" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=center;fontColor=#333333;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="360" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="딕셔너리" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=center;fontColor=#333333;" vertex="1" parent="1">
+                    <mxGeometry x="210" y="360" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="데이터 클래스" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=center;fontColor=#333333;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="360" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="클래스" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=center;fontColor=#333333;" vertex="1" parent="1">
+                    <mxGeometry x="450" y="360" width="90" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="스칼라" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;align=center;" edge="1" parent="1" source="24" target="30">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="270" y="250" as="sourcePoint"/>
+                        <mxPoint x="210" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="같음" style="endArrow=classic;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;align=center;" edge="1" parent="1" source="23" target="24">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="180" y="340" as="sourcePoint"/>
+                        <mxPoint x="155" y="370" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" value="다름" style="endArrow=classic;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;align=center;" edge="1" parent="1" source="23" target="25">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="300" y="270" as="sourcePoint"/>
+                        <mxPoint x="240" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="컬렉션" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;align=center;" edge="1" parent="1" source="24" target="31">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="300" y="270" as="sourcePoint"/>
+                        <mxPoint x="240" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="38" value="아니오" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;align=center;" edge="1" parent="1" source="25" target="32">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="360" y="270" as="sourcePoint"/>
+                        <mxPoint x="420" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="39" value="예" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;align=center;" edge="1" parent="1" source="25" target="33">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="420" y="340" as="sourcePoint"/>
+                        <mxPoint x="395" y="370" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="41" value="&lt;b&gt;적절한 추상화의 선택&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="255" y="420" width="130" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
