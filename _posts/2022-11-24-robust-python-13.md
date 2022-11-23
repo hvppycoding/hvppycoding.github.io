@@ -103,11 +103,11 @@ class BLTSandwich:
 def split_dish(order: Splittable) -> tuple[Splittable, Splittable]:
 ```
 
-`split_dish` 함수는 아래와 같이 타입 체크를 사용할 수 있다.
+`split_dish` 함수는 위와 같이 타입 체크를 사용할 수 있다.
 
 ## 런타임 시 체크할 수 있는 프로토콜
 
-[p.314] 지금까지의 프로토콜 설명은 정적 검사만 다루었다. 하지만 런타임 시에 `isinstance()`나 `issubclass()`와 같은 함수를 통해 체크하고 싶을 수 있다. 하지만 기본 프로토콜에서는 이를 지원하지 않는다. `runtime_checkable` 데코라이터를 적용해야 한다.
+[p.314] 지금까지의 프로토콜 설명은 정적 검사만 다루었다. 하지만 런타임 시에 `isinstance()`나 `issubclass()`와 같은 함수를 통해 체크하고 싶을 수 있다. 하지만 기본 프로토콜에서는 이를 지원하지 않는다. 런타임 체크를 위해서는 `runtime_checkable` 데코라이터를 적용해야만 한다.
 
 ```python
 from typing import Protocol, runtime_checkable
@@ -128,7 +128,7 @@ assert isinstance(BLTSandwich(), Splittable)
 ```
 
 <div class="notice--warning" markdown="1">
-어떻게 직접 상속받지도 않았는데 `isinstance`가 가능할까? `runtime_checkable` 데코레이터는 소스 코드는 다음과 같다. 
+Question. 어떻게 직접 상속받지도 않았는데 `isinstance`가 가능할까? `runtime_checkable` 데코레이터는 소스 코드는 다음과 같다. 
 
 ```python
 def runtime_checkable(cls):
