@@ -14,7 +14,8 @@ categories:
 예제 코드: [https://github.com/pviafore/RobustPython](https://github.com/pviafore/RobustPython)
 {: .notice--info}
 
-# 2부 사용자 정의 타입
+## 2부. 사용자 정의 타입
+
 [p.187] 사용자 저으이 타입은 코드베이스 내의 도메인 개념을 전달하는 역할을 한다.
 
 - 열거형: 제약된 값들의 집합을 나타낸다.
@@ -22,6 +23,7 @@ categories:
 - 클래스: 서로 다른 개념 간의 관계를 나타내며 불변성을 보존해야 한다.(데이터 클래스와 차이는?)
 
 학생의 시험 점수를 계산하는 함수가 다음과 같다고 생각해보자. 두 함수 중 어떤 함수를 사용하고 싶은가?
+
 ```python
 def calculate_total_test_score(student: tuple[str, str],
                                subtotal: float) -> float:
@@ -34,7 +36,7 @@ def calculate_total_test_score(student: Student,
 
 훌륭한 도메인 연관 타입을 세움으로써 좀 더 건강한 시스템을 구축할 수 있다.
 
-# 8장. 사용자 정의 타입: 열거형
+## 8장. 사용자 정의 타입: 열거형
 
 변수가 특정한 값만 가질 수 있도록 하고 싶을 때가 있을 것이다.
 예를 들어 게임 캐릭터가 몇 가지 상태(정지, 오른쪽 이동, 왼쪽 이동, 점프 중)만 가질 수 있다고 하자.
@@ -67,6 +69,7 @@ def set_unit_state(state: UnitState):
 {: .notice--warning}
 
 ### 플래그
+
 `Enum`에서 비트 연산이 필요하다면 `Flag`를 사용할 수 있다.
 
 ```python
