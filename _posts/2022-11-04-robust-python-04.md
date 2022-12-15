@@ -14,7 +14,7 @@ categories:
 예제 코드: [https://github.com/pviafore/RobustPython](https://github.com/pviafore/RobustPython)
 {: .notice--info}
 
-# 4장. 타입의 제어
+## 4장. 타입의 제어
 
 고급 어노테이션 소개
 
@@ -53,20 +53,21 @@ if __name__ == '__main__':
 
 `find_student` 함수에서 해당 id에 일치하는 학생 정보가 없을 경우, `None`을 리턴한다. 이 경우 `None` 타입에 대해 `student.set_professor()` 함수를 호출하게 되므로 오류를 발생시킨다. 이에 대해 타입 체커를 수행해보면 다음과 같은 오류가 발생한다.
 
-```
+```text
 $ mypy optional.py
 > optional.py:20: error: Incompatible return value type (got "None", expected "Student")
   Found 1 error in 1 file (checked 1 source file)
 ```
 
 `find_student` 함수의 반환 타입을 아래와 같이 변경하자. 이는 함수의 리턴값이 `None`이 될 수도 있음을 나타낸다.
+
 ```python
 def find_student(student_id: int) -> Optional[Student]
 ```
 
 다시 타입 체커를 수행해보면, 다음과 같은 오류가 발생한다.
 
-```
+```text
 $ mypy optional2.py
 > optional2.py:28: error: Item "None" of "Optional[Student]" has no attribute "set_professor"
   Found 1 error in 1 file (checked 1 source file)
@@ -110,7 +111,6 @@ def assign_professor(student_id: int, professor_name: str):
 if __name__ == '__main__':
     assign_professor(12, 'steven')
 ```
-
 
 ### Union 타입
 
@@ -175,6 +175,7 @@ if __name__ == '__main__':
 ```
 
 [p.104] 특히 다음과 같은 경우에 `Union`의 진가가 발휘된다.
+
 - 사용자 입력에 따라 서로 다른 타입의 반환값을 리턴할 때
 - 다른 형태의 사용자 입력을 처리할 때(예를 들어 사용자가 문자열 또는 리스트를 입력할 수 있을 때)
 - 이전 버전과의 호환성을 위해 다른 타입 반환할 때(요청에 따라 예전 버전의 객체나 새로운 버전의 객체 중 선택 반환)
@@ -202,18 +203,19 @@ if __name__ == '__main__':
     c2 = Card('Joker', 'A')
 ```
 
-```
+```text
 literal.py:13: error: Argument 1 to "Card" has incompatible type "Literal['Joker']"; 
 expected "Literal['Spade', 'Club', 'Diamond', 'Heart']"
 Found 1 error in 1 file (checked 1 source file)
 ```
 
 ### Annotated 타입
+
 리터럴을 일일이 선언하는 것이 어려울 경우(예를 들어 1~100 사이 숫자) Annotation을 활용 가능, 현재는 체크 도구가 존재하지 않으며 주석 역할로 사용할 수 있다.
 
 ### NewType
-예를 들어 타입 객체 중 특정 조건을 만족한 객체만 사용하고 싶을 경우 NewType 사용할 수 있다.
 
+예를 들어 타입 객체 중 특정 조건을 만족한 객체만 사용하고 싶을 경우 NewType 사용할 수 있다.
 
 ### Final 타입
 

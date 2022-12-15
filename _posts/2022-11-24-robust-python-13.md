@@ -15,12 +15,11 @@ categories:
 예제 코드: [https://github.com/pviafore/RobustPython](https://github.com/pviafore/RobustPython)
 {: .notice--info}
 
+## 13장. 프로토콜
 
-# 13장. 프로토콜
+[p.301] 덕 타이핑을 사용하면 어떤 상위 클래스나 사전 정의된 상속 구조가 필요없다. 타입 체커는 덕 타이핑을 어떻게 다뤄야 할지 정보가 전혀 없다. 이를 위해 파이썬 3.8부터 도입된 기능인 프로토콜을 소개한다. 프로토콜을 통해 덕 타입 변수에 어노테이션을 추가할 수 있다.  
 
-[p.301] 덕 타이핑을 사용하면 어떤 상위 클래스나 사전 정의된 상속 구조가 필요없다. 타입 체커는 덕 타이핑을 어떻게 다뤄야 할지 정보가 전혀 없다. 이를 위해 파이썬 3.8부터 도입된 기능인 프로토콜을 소개한다. 프로토콜을 통해 덕 타입 변수에 어노테이션을 추가할 수 있다. 
-
-메뉴를 반으로 나누는 아래와 같은 메서드 `split_dish`가 있다고 하자. 
+메뉴를 반으로 나누는 아래와 같은 메서드 `split_dish`가 있다고 하자.  
 
 ```python
 import math
@@ -64,7 +63,7 @@ iterator: Iterator = ShuffleIterator(my_list)
 assert {1,2,3,4} == {n for n in iterator}
 ```
 
-위 코드에서 타입의 작동을 위해 `Iterator`의 하위 클래스화할 필요가 없음에 주목하라. 이는 `ShuffleIterator`가 이터레이터 수행을 위한 두 개의 메서드 `__iter__`과 `__next__`를 갖고 있기 때문이다. 
+위 코드에서 타입의 작동을 위해 `Iterator`의 하위 클래스화할 필요가 없음에 주목하라. 이는 `ShuffleIterator`가 이터레이터 수행을 위한 두 개의 메서드 `__iter__`과 `__next__`를 갖고 있기 때문이다.  
 
 ## 프로토콜의 정의
 
@@ -128,7 +127,7 @@ assert isinstance(BLTSandwich(), Splittable)
 ```
 
 <div class="notice--warning" markdown="1">
-Question. 어떻게 직접 상속받지도 않았는데 `isinstance`가 가능할까? `runtime_checkable` 데코레이터는 소스 코드는 다음과 같다. 
+Question. 어떻게 직접 상속받지도 않았는데 `isinstance`가 가능할까? `runtime_checkable` 데코레이터는 소스 코드는 다음과 같다.  
 
 ```python
 def runtime_checkable(cls):
@@ -212,4 +211,5 @@ class Protocol(Generic, metaclass=_ProtocolMeta):
             cls.__init__ = _no_init_or_replace_init
 
 ```
+
 </div>

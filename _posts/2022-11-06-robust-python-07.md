@@ -14,11 +14,11 @@ categories:
 예제 코드: [https://github.com/pviafore/RobustPython](https://github.com/pviafore/RobustPython)
 {: .notice--info}
 
-# 7장. 실용적 타입 체킹
+## 7장. 실용적 타입 체킹
 
 ### MonkeyType
 
-MonkeyType은 파이썬 코드에 자동으로 어노테이팅을 해주는 도구다. 
+MonkeyType은 파이썬 코드에 자동으로 어노테이팅을 해주는 도구다.  
 [깃허브 저장소](https://github.com/pviafore/RobustPython/tree/master/code_examples/chapter7)의 소스 코드를 사용해서 실습을 진행해보자.  
 
 ```bash
@@ -59,7 +59,6 @@ class Recipe:
 monkeytype apply [module명]
 ```
 
-
 <div class="notice--warning" markdown="1">
 `automated_recipe_maker` 모듈과 `pasta_with_sausage` 모듈 모두 어노테이션을 적용하면 그 이후 `NameError: name 'Receptacle' is not defined`  에러가 발생하며 코드 실행이 되지 않는다. 이는 두 파일 사이에서 Circular Import가 발생하기 때문이다. `automated_recipe_maker.put_receptacle_on_stovetop`에서 `pasta_with_sausage.Receptacle`를 argument로 사용하기 때문에 어노테이션을 위해 이를 import한다. 그런데 `pasta_with_sausage` 모듈에서도 `automated_recipe_maker.Ingredient`를 사용하기 때문에 이를 import한다. 아래와 같은 코드를 추가하여 문제를 해결하였다.
 
@@ -72,6 +71,7 @@ if TYPE_CHECKING:
     from pasta_with_sausage import Receptacle
 ...
 ```
+
 </div>
 
 코드베이스에 대한 어노테이션을 생성한 후에는 `Union`이 적용된 부분을 검사해보자. `Union`은 함수 코드에 하나 이상의 타입이 전달됨을 의미한다. 의도한 동작인지 확인해볼 필요가 있다.
@@ -81,9 +81,7 @@ if TYPE_CHECKING:
 pytype은 현재(2022-11-06) 윈도우 OS를 지원하지 않는다. Windows is currently not supported unless you use WSL(2022-11-06).
 {: .notice--danger}
 
-
-
-MonkeyType의 문제 중 하나는 런타임 시에만 타입 어노테이션이 가능하다 점이다. 코드를 수행해보기 어려운 환경에서는 사용하기 어렵다. Pytype은 정적 분석을 통해 어노테이션을 수행한다. 
+MonkeyType의 문제 중 하나는 런타임 시에만 타입 어노테이션이 가능하다 점이다. 코드를 수행해보기 어려운 환경에서는 사용하기 어렵다. Pytype은 정적 분석을 통해 어노테이션을 수행한다.  
 
 ```bash
 pip install pytype

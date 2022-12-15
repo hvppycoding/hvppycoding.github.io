@@ -14,7 +14,7 @@ categories:
 예제 코드: [https://github.com/pviafore/RobustPython](https://github.com/pviafore/RobustPython)
 {: .notice--info}
 
-# 6장. 타입 체커의 커스터마이징
+## 6장. 타입 체커의 커스터마이징
 
 [p.145] 훌륭한 코딩 기술은 오래갈 수 있지만 여러분을 한 단계 높은 수준으로 올려주는 것은 사용하는 도구들이다. 코드 편집기, 컴파일러, 운영체제에 대한 공부를 게을리하면 안 된다.
 
@@ -39,8 +39,9 @@ mypy를 실행하면 현재 디렉터리에서 mypy.ini 설정 파일을 찾는�
 - `--disallow-untyped-calls`: 어노테이션된 함수에서 어노테이션 되지 않은 함수를 호출할 때 오류 처리
 - `--strict-optional`: 명시적으로 `is None`을 수행해야 한다. (mypy 버전에 따라 default로 옵션 켜져 있음)
 
-mypy는 `None` 값을 `Optional`로 암시적으로 취급한다. 예를 들어 아래 코드에서 `x`는 묵시적으로 `Optional[int]`로 변환된다. 
+mypy는 `None` 값을 `Optional`로 암시적으로 취급한다. 예를 들어 아래 코드에서 `x`는 묵시적으로 `Optional[int]`로 변환된다.  
 이러한 암시적 변환을 끄려면 `--no-implicit-optional`을 설정할 수도 있다.
+
 ```python
 def foo(x: int = None) -> None:
     print(x)
@@ -57,5 +58,6 @@ mypy는 대규모 코드베이스 체크 시 시간이 오래걸린다. mypy는 
 
 
 ### 기타 타입 체커
+
 - Pyre: 페이스북 제작, mypy 데몬 모드와 유사하게 동작한다. 쿼리를 사용하여 코드베이스를 검사할 수 있다. Pysa라는 정적 코드 보안 분석기가 내장되어 있다.
 - Pyright: 마이크로소프트 제작, 유연한 타입 체커이며, VS Code에 플러그인이 가능하다. Pyright 기반으로 동작하는 Pylance는 자동 완성/레퍼런스 검색/호출 그래프 탐색 등의 기능을 제공한다.

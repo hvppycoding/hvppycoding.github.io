@@ -105,7 +105,7 @@ def main() -> None:
 
 - import 라이브러리를 Future, Standard, Thirdparty, Firstparty 순으로 자동 정렬해준다.
 - `isort 파일명.py`를 통해 파일 자동 수정할 수 있다.
-- 만약 파일을 수정하지 않고 dry run만 하기 위해서는 `isoer --diff 파일명.py` 사용하자.
+- 만약 파일을 수정하지 않고 dry run만 하기 위해서는 `isort --diff 파일명.py` 사용하자.
 - pylint와 비슷하게 config 파일로 설정이 가능하다.
 
 ### Code Linter: autopep8
@@ -204,8 +204,6 @@ if __name__ == "__main__":
 
 - vscode 확장에서 테스트 기능을 제공하며, test를 탐색/수행할 수 있다.
 
-2022-12-12-unittest.png
-
 ![unittest example]({{site.baseurl}}/assets/images/2022-12-12-unittest.png)
 
 ### Unit-Testing with pytest
@@ -254,3 +252,131 @@ def test_raises(x: Any, y: Any) -> None:
     with pytest.raises(TypeError):  # Error가 raise되는 것을 체크한다.
         _ = Vector2D(x, y)
 ```
+
+## Packaging
+
+### Modules and Packages - 1
+
+상대경로에 위치한 package에 접근 가능하다.
+
+```bash
+📂my_package         # python package
+ └─📝__init__.py     # python package의 main
+📝main.py            # from my_package import <my_package/__init__.py 내 정의된 변수/함수> 가능
+```
+
+### Modules and Packages - 2
+
+```bash
+📂my_package         # python package
+ ├─📝__init__.py     # python package의 main
+ └─📂printing        # sub-package
+    └─📝__init__.py  # sub-package의 main
+📝main.py            # from my_package.printing import <my_package/printing/__init__.py 내 정의된 변수/함수> 가능
+```
+
+### Modules and Packages - 3
+
+```python
+'''
+📂my_package
+ ├─📝__init__.py
+ ├─📂printing
+ │  ├─📝__init__.py    # from ._printing import print_hello_world (_printing에 선언된 함수를 printing package main에 포함)
+ │  └─📝_printing.py   # _로 시작하는 module은 private함을 나타냄
+ └─📂version
+    └─📝__init__.py    # __version__ 선언됨
+📝main.py
+'''
+
+# main.py
+from my_package.printing import print_hello_world
+from my_package.version import __version__
+# 이렇게도 쓸 수는 있다.(프로그래밍적으로 private한 것은 아님)
+# from my_package.printing._printing import print_hello_world 
+
+
+def main() -> None:
+    print_hello_world()
+    print(__version__)
+```
+
+### Modern Python Packages
+
+- [템플릿 예시](https://github.com/franneck94/Python-Project-Template-Eng)
+
+#### Project layout
+
+```bash
+📂fastvector
+ ├─📝README.md  # 패키지 설명 문서 
+ ├─📝.editorconfig  # Editor 규칙 설정
+ ├─📝.gitattributes  # git commit 시 설정
+ ├─📝.gitignore  # git에서 무시할 파일 설정
+ ├─📝.pre-commit-config.yaml
+ ├─📝pyproject.toml
+ ├─📝requirements.txt  # 필요 라이브러리
+ ├─📝setup.py  # 
+ ├─📝setup.cfg  # 라이브러리, version 등 설정
+ ├─📂tests
+ │  ├─📝__init__.py
+ │  └─📝test_vector.py
+ ├─📂docs
+ │  ├─📝api.md
+ │  └─📝index.md
+ ├─📂fastvector
+ │  ├─📝__init__.py
+ │  ├─📝vector.py
+ │  └─📝version.py
+ └─📂tests
+    ├─📝__init__.py
+    └─📝test_vector.py
+```
+
+자세한 `setup.py`와 `setup.cfg` 관련 자세한 내용은 `setuptools`의 [user guide](https://setuptools.pypa.io/en/latest/userguide/index.html)를 참고할 수 있다.
+
+다음은 `setup.cfg` 파일의 예시이다.
+
+```conf
+[metadata]
+name = my_package
+version = attr: my_package.VERSION
+description = My package description
+long_description = file: README.rst, CHANGELOG.rst, LICENSE.rst
+keywords = one, two
+license = BSD 3-Clause License
+classifiers =
+    Framework :: Django
+    Programming Language :: Python :: 3
+
+[options]
+zip_safe = False
+include_package_data = True
+packages = find:
+install_requires =
+    requests
+    importlib-metadata; python_version<"3.8"
+
+[options.package_data]
+* = *.txt, *.rst
+hello = *.msg
+
+[options.entry_points]
+console_scripts =
+    executable-name = my_package.module:function
+
+[options.extras_require]
+pdf = ReportLab>=1.2; RXP
+rest = docutils>=0.3; pack ==1.1, ==1.3
+
+[options.packages.find]
+exclude =
+    examples*
+    tools*
+    docs*
+    my_package.tests*
+```
+
+### Mkdocs and Github Pages
+
+Mkdocs를 통해 Jekyll 페이지 생성할 수 있고, github에 publish할 수 있다.
