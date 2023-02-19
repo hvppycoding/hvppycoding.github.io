@@ -9,4 +9,5 @@ header:
 categories:
   - Template
 ---
+
 # Post Template - Electronics
