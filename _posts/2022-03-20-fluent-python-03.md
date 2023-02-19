@@ -55,19 +55,17 @@ print(country_code)
 
 기본 `dict` 클래스의 API는 다음과 같다.
 
-
-
 | 메서드 | 설명 |
 |-------|------|
 |`d.clear()`| 모든 항목 제거 |
 |`d.__contains__(k)` | `k in d` |
-|`d.copy()` | 얕게 복사 | 
-|`d.__delitem__(k)` | `del d[k]` - 키가 `k`인 항목을 제거 | 
-|`d.fromkeys(it, [initial]` | 선택적인 초기값(default는 None)을 받아, 반복 가능한 키들을 이용해서 새로 딕셔너리 생성 | 
+|`d.copy()` | 얕게 복사 |
+|`d.__delitem__(k)` | `del d[k]` - 키가 `k`인 항목을 제거 |
+|`d.fromkeys(it, [initial]` | 선택적인 초기값(default는 None)을 받아, 반복 가능한 키들을 이용해서 새로 딕셔너리 생성 |
 |`d.get(k, [default])` | `k` 키를 가진 항목을 반환한다. 해당 항목이 없으면 `default` 반환한다. `default`의 기본값은 `None`이다. |
 |`d.__getitem__(k)` | `d[k]` - `k` 키를 가진 항목을 반환한다. |
 |`d.items()` | (키, 값) 쌍으로 구성된 항목들의 뷰를 가져온다. |
-|`d.__iter__()` | 키에 대한 반복자를 가져온다. | 
+|`d.__iter__()` | 키에 대한 반복자를 가져온다. |
 |`d.keys()` | 키에 대한 뷰를 가져온다. |
 |`d.__len__()` | `len(d)` - 항목 수를 반환한다. |
 |`d.__missing__()` | `__getitem__()`이 `k` 키를 찾을 수 없을 때 호출된다. |
@@ -102,7 +100,7 @@ for k in d:
 
 <div class="no-highlight" markdown="1">
 
-```
+```text
 Cobain: ['Kurt', 'Warren']
 Duck: ['Donald', 'Duck', 'Johnny']
 Keller: ['Helen']
@@ -111,6 +109,7 @@ Keller: ['Helen']
 </div>
 
 `d.setdefault(last, []).append(first)` 코드는 아래 코드와 동일하다.
+
 ```python
 if last not in d:
   d[last] = []
@@ -144,6 +143,7 @@ for k in d:
 ```
 
 ### 3.4.2 `__missing__()` 메서드
+
 `dict` 클래스를 상속하고 `__missing__` 메서드를 정의하면, `dict.__getitem__()` 메서드가 키를 발견할 수 없을 때 `KeyError`를 발생시키지 않고 `__missing__()` 메서드를 호출한다.  
 
 비문자열로 키를 검색할 때 키를 찾지 못하면 문자열화하여 탐색하는 딕셔너리를 구현해보자.
@@ -188,11 +188,14 @@ print(d[1])
 
 - `collections.OrderedDict`: 키를 삽입한 순서대로 유지함으로써 항목을 반복하는 순서를 예측할 수 있다.
 - `collections.ChainMap`: 매핑들의 목록을 담고 있으며 한꺼번에 모두 검색할 수 있다. 각 매핑을 차례대로 검색하고, 그 중 하나에서라도 키가 검색되면 성공한다. 다음 코드 예제는 파이썬에서 변수를 조회하는 기본 규칙을 표현하고 있다.
+
   ```python
   import builtins
   pylookup = ChainMap(locals(), globals(), vars(builtins))
   ```
+
 - `collections.Counter`: 모든 키에 대한 횟수 카운터를 갖고 있는 매핑이다. 다음 코드는 `Counter`를 사용해서 각 글자의 횟수를 계산하는 예이다.
+
   ```python
   collections.Counter('abracadabra')
   # Counter({'a': 5, 'b': 2, 'r': 2, 'c':1, 'd': 1})
@@ -258,6 +261,7 @@ print(d_proxy)
 ```
 
 ## 3.8 집합 이론
+
 집합 `set` 객체는 고유한 객체의 모음으로서, 기본적으로 중복 항목을 제거한다.
 
 ```python
@@ -267,9 +271,11 @@ print(set(l))
 ```
 
 ### 3.8.1 집합 리터럴
+
 `{1}`, `{1, 2}`와 같은 수학적 표기법과 동일하게 집합 리터럴을 생성할 수 있다. 하지만 공집합의 경우 `{}`는 딕셔너리를 생성하므로 `set()`로 표기해야 한다.
 
 ### 3.8.2 지능형 집합
+
 기존의 지능형 리스트나 지능형 딕셔너리와 유사하다.
 
 ```python
@@ -290,8 +296,8 @@ print(s)
 | 연산 | 설명 |
 |-----|------|
 | `a & b` | 교집합 |
-| `a \| b` | 합집합 |
+| `a | b` | 합집합 |
 | `a - b` | 차집합 |
 | `a ^ b` | 대칭차(`a & b`의 여집합)|
 
-이 외에도 집합 연산을 제공한다. 예를 들어 $S \subset Z$ 연산의 경우 파이썬 연산자 <span class="monospace" markdown="1">S < Z</span>로 구할 수 있다. 이는 특별 메서드 `__lt__()`에 구현되어 있다.
+이 외에도 집합 연산을 제공한다. 예를 들어 $S \subset Z$ 연산의 경우 파이썬 연산자 `S < Z`로 구할 수 있다. 이는 특별 메서드 `__lt__()`에 구현되어 있다.
