@@ -1,7 +1,7 @@
 ---
 title: "Digital System Design 04"
 excerpt: "Logic Conversion and Cell based Design"
-date: 2023-02-26 01:00:00 +0900
+date: 2023-02-26 02:00:00 +0900
 header:
   overlay_image: /assets/images/unsplash-Umberto.jpg
   overlay_filter: 0.5
@@ -95,3 +95,22 @@ AOI gate: AND + OR + INVERTER
 ### Case #1: Fail(Area/Power)
 
 ![2023-03-06-case1-example.png]({{site.baseurl}}/assets/images/2023-03-06-case1-example.png)
+
+![2023-03-08-case1-solution.png]({{site.baseurl}}/assets/images/2023-03-08-case1-solution.png)
+
+Logic Design 후 Physical Design에서 이러한 Violation들을 해결한다. Gate의 Area 같은 정보는 어떻게 알 수 있을까? Cell의 Library 명세에 있다.  
+
+### Case #2: Fail(Hold time violation)
+
+- Solution 1: Delay를 위한 Buffer 추가
+- Solution 2: Detour routing
+
+![2023-03-08-case2-solution.png]({{site.baseurl}}/assets/images/2023-03-08-case2-solution.png)
+
+### 정리하기
+
+- Cell designd은 target technology에서 규정한 design rules를 만족하는 design이 되어야 한다.
+- Cell의 종류로는 NAND2, NOR2, AOI22, FF, MUX 등이 있다.
+- Cell design에 고려 사항으로는 area, timing, power, pin accessibility 등을 들 수 있다.
+- Logic synthesis와 physical design에서 사용한 cells들에 맞게 optimization이 이루어진다.
+
