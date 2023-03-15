@@ -95,7 +95,7 @@ analytics:
 author:
   name             : "Hvppy Coding"
   avatar           : "/assets/images/icon.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Programmer"
+  bio              : "-"
   location         : South Korea
   email            :
   links:
