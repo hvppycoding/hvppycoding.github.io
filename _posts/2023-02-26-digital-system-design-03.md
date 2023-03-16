@@ -1,6 +1,6 @@
 ---
 title: "Digital System Design 03"
-excerpt: "Logic Sim plication"
+excerpt: "Logic Simplification"
 date: 2023-02-26 00:00:00 +0900
 header:
   overlay_image: /assets/images/unsplash-Umberto.jpg
