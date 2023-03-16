@@ -2,6 +2,7 @@
 title: "Post Template - MATH"
 excerpt: "Post Template - MATH"
 date: 2022-02-20 20:00:00 +0900
+mathjax: "true"
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg
   overlay_filter: 0.5
