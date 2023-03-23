@@ -34,7 +34,7 @@ Latch나 Flip-flop이 디지털 시스템에 들어가면 그 시스템을 Seque
 ### State Transistion Diagram
 
 ### Gated or Level-sensitive Latch
- 
+
 Enable 신호가 On일 때(High level일 때)만 동작하도록 개선.  
 
 ![2023-03-14-level-sensitive-latch.png]({{site.baseurl}}/assets/images/2023-03-14-level-sensitive-latch.png)

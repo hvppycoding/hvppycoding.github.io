@@ -41,5 +41,6 @@ background와 motivation을 review한다.
 Analytical placement는 대개 3-step으로 이루어져 있다. global placement(GP), legalization(LG), detailed placement(DP). 
 
 ### 단어
+
 - essentially: 근본적으로
 - analogy: 비유, 유사점
