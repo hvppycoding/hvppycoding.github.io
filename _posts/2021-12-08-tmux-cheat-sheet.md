@@ -10,8 +10,10 @@ date: 2021-12-08 23:00:00 +0900
 categories:
   - Linux
 ---
-# tmux 사용법
-나 같은 경우에는 주로 원격 접속 시 세션 관리를 위해 tmux 프로그램을 사용한다.  
+
+## tmux 사용법
+
+주로 원격 접속 시 세션 관리를 위해 tmux 프로그램을 사용한다.  
 putty나 terminus로 원격 접속 시 프로그램이 꺼지면 세션 정보도 사라져서, 새로 접속할 때마다 초기화되는 불편함이 있다.
 tmux를 사용하면 기존에 사용하던 세션을 불러올 수도 있고, 또한 동시에 여러가지 작업을 할 때 여러 세션을 사용하면 편하다.
 
@@ -34,3 +36,13 @@ tmux를 사용하면 기존에 사용하던 세션을 불러올 수도 있고, �
 - Pane split(가로): `<Ctrl + b> %`
 - Pane split(세로): `<Ctrl + b> "`
 - Pane 이동: `<Ctrl + b> 방향키`
+
+## tmux config
+
+Self-contained, pretty and versatile .tmux.conf configuration file.
+
+tmux 환경 꾸미기 및 다양한 편의 기능이 탑재된 config 파일이다. 설정 방법 및 Document는 github를 확인하자.
+
+[https://github.com/gpakosz/.tmux](https://github.com/gpakosz/.tmux)
+
+![tmux-config.gif]({{site.url}}/assets/images/tmux-config.gif)
