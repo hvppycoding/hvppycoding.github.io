@@ -20,6 +20,17 @@ mathjax: "true"
 
 - Textbook: Introduction to Algorithms(4th Edition)
 
+## 점근적 표기
+
+### O-표기법
+
+- 정의: $O(g(n)) = \\{ f(n) | \exists c > 0, n_0 > 0\;s.t.\;\forall n \ge n_0, f(n) \le cg(n) \\}$
+- 풀어서 말하면, $O(g(n)) = \\{ f(n) | $ 충분히 큰 모든 $n$에 대하여 $f(n) \le cg(n)$인 야의 상수 $c$가 존재한다 $\\}$
+- 직관적으로 표현하면, $O(g(n))=\\{ f(n) | $ 충분히 큰 모든 $n$에 대하여 $f(n) \le cg(n)$인 양의 상수 $c$가 존재한다 $\\}$
+- 예: $5n^2 + 3 = O(n^2)$임을 보여라.
+  - $c=6$, $n_0=2$일 때 Big O 정의에 따라 $O(n^2)$이다.
+  - $O(n^2) = \\{ f(n) | \exists c > 0, n_0 > 0\;s.t.\;\forall n \ge n_0, f(n) \le cn^2 \\}$
+
 ## Heap Sort
 
 ### Heaps
