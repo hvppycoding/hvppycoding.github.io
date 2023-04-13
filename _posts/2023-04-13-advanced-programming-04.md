@@ -19,7 +19,7 @@ mathjax: "true"
 
 - 편의를 위해 데이터가 distinct number set이라고 가정하자.
 - Selection problem:
-  - Input: set of n(distinct) numbers and a number i with $i \le i \le n$
+  - Input: set of n(distinct) numbers and a number i with $1 \le i \le n$
   - Output: The element $x \in A$ that is larger than exactly i-1 other elements of A
 - 단순히 O(n log n) 정렬 후 찾아낼 수도 있다.
 
@@ -31,7 +31,7 @@ mathjax: "true"
 
 - Size i의 max-heap 할당 후 각 원소에 대해 heap max element보다 크다면 무시, 작다면 root에 새로운 원소를 넣은 뒤 `HEAPIFY(root)` 수행
 
-## A Divide and Conque Method
+## A Divide and Conquer Method
 
 - Quicksort와 유사한 방식으로 `RANDOMIZE-SELECT` 알고리즘을 만들 수 있다.
   - Input을 Recursive하게 Partition한다.
@@ -158,7 +158,7 @@ SELECT(A, p, r, i)
 - 그룹의 수를 g라고 하면, 두 영역은 각각 최소 $3g/2$개의 원소를 보유하고 있다.
 - PARTITION을 수행하면 두 영역 중 하나의 영역의 원소는 반드시 제외되므로 PARTITION 후 남는 원소는 많아도 $5g -\frac{3g}{2} = \frac{7g}{2} \le \frac{7n}{10}$ 이하이다.
 
-- 이를 바탕으로 Reccurrence 식을 세워 Worst-case running time은 다음과 같고,
+- 이를 바탕으로 Recurrence 식을 세워 Worst-case running time은 다음과 같고,
 
 $$
 T(n) \le T(\frac{n}{5}) + T(\frac{7n}{10}) + \theta(n)
