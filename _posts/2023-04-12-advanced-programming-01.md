@@ -135,7 +135,7 @@ BUILD-MAX-HEAP(A)
 
 $$
 \begin{align}
-\sum_{h=0}^{\lfloor \lg{n} \rfloor} \lceil \frac{n}{2^{h+1}} \rceil O(h) &\le \sum_{h=0}^{\lfloor \lg{n} \rfloor} (\frac{n}{2^{h+1}}) O(h)\\
+\sum_{h=0}^{\lfloor \lg{n} \rfloor} \lceil \frac{n}{2^{h+1}} \rceil O(h) &\le \sum_{h=0}^{\lfloor \lg{n} \rfloor} (\frac{n}{2^{h+1}} + 1) O(h)\\
 &=O(n \sum_{h=0}^{\lfloor \lg{n} \rfloor}\frac{h}{2^{h}}) + \sum_{h=0}^{\lfloor \lg{n} \rfloor}O(h) \\
 &\le O(n \sum_{h=0}^{\infty}\frac{h}{2^{h}})+O((\lg{n})^2)\\
 &= O(n) + O((\lg{n})^2) = O(n)\\
