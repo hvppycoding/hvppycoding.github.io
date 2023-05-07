@@ -165,3 +165,8 @@ TOPOLOGICAL-SORT(G)
   - v가 black이면 v.f < u.f이다. 왜냐하면 v가 u보다 먼저 finish되었기 때문이다.
   - 그러므로 DAG의 모든 (u,v) edge에 대해 v.f < u.f 임을 알 수 있다.
 
+> **Theorem 22.9 (White-path Theorem)**
+> (directed 혹은 undirected) Graph G=(V,E)의 depth-first forest에서 vertex v가 vertex u의 descendant ⇔(iff) u.d 발견 시점에서 u에서 White vertex로 구성된 path를 통해 v로 도달할 수 있다.
+
+>
+> 
