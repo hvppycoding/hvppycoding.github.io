@@ -73,9 +73,9 @@ BFS(G, s)
 ## Analysis of BFS
 
 - 각 vertex는 최대 한 번만 enqueue된다.
-- enqueue와 dequeue는 $O(1)$이므로, 큐에 관련된 시간 복잡도는 $O(|V|)$이다.
-- 각 vertex에 대해 adjacency list를 한 번씩 scan한다. 따라서 시간 복잡도는 $O(|E|)$이다.
-- 총 시간 복잡도는 $O(|V| + |E|)$이다.
+- enqueue와 dequeue는 O(1)이므로, 큐에 관련된 시간 복잡도는 O(\|V\|)이다.
+- 각 vertex에 대해 adjacency list를 한 번씩 scan한다. 따라서 시간 복잡도는 O(\|E\|)이다.
+- 총 시간 복잡도는 O(\|V\| + \|E\|)이다.
 
 ## Shortest path
 
@@ -88,7 +88,7 @@ BFS(G, s)
 
 - 증명
   - 만약 u가 s로부터 reachable하면 v도 reachable하다.
-  - s에서 v로 가는 shortest path는 s에서 u로 가는 shortest path에 (u,v)를 추가한 것보다 길 수는 없다.
+  - s에서 v로 가는 shortest path는 s에서 u로 가는 shortest path에 Edge (u,v)를 추가한 것보다 길 수는 없다.
   - u가 s로부터 unreachable하면 $\delta(s, u) = \infty$이다.
 
 ### Lemma 22.2
@@ -97,7 +97,7 @@ BFS(G, s)
 - 증명
   - ENQUEUE 연산의 횟수에 대해 Induction을 사용한다.
   - Inductive hypothesis: $v.d \geq \delta(s, v)$ for all $v \in V$
-  - Basis: $s.d = 0 = \delta(s, s)$이고, $v.d = \infty \geq \delta(s, v)$ for all $v \in V - \{s\}$
+  - Basis: $s.d = 0 = \delta(s, s)$이고, $v.d = \infty \geq \delta(s, v)$ for all $v \in V - \lbrace s \rbrace$
   - Inductive step: vertex u로부터 white vertex v가 찾아진다.
     - $v.d = u.d + 1$
     - $\qquad \geq \delta(s, u) + 1$ from the induction hypothesis
@@ -129,7 +129,7 @@ BFS(G, s)
 
 ### Theorem 22.5 (BFS의 Correctness)
 
-- $G=(V, E)$의 source vertex $s \in V$에서 BFS를 수행한다고 가정하자. 그러면 BFS는 source s로부터 도달가능한 모든 v를 발견한다. BFS가 종료될 때, 모든 vertex $v \in V$에 대해 $v.d = \delta(s, v)$이다. 또한, rechable한 모든 $v \neq s$인 vertex v에 대해 s에서 v로 가는 shortest path 중 하나는 s에서 v.π로가는 shortest path에 (v.π, v) edge를 더한 것과 같다.
+- $G=(V, E)$의 source vertex $s \in V$에서 BFS를 수행한다고 가정하자. 그러면 BFS는 source s로부터 도달가능한 모든 v를 발견한다. BFS가 종료될 때, 모든 vertex $v \in V$에 대해 $v.d = \delta(s, v)$이다. 또한, reachable한 모든 $v \neq s$인 vertex v에 대해 s에서 v로 가는 shortest path 중 하나는 s에서 v.π로가는 shortest path에 (v.π, v) edge를 더한 것과 같다.
 - 증명
   - 어떤 vertex들이 shortest path distance가 아닌 d를 가진다고 가정하자. vertex v가 **틀린 d value**를 갖고있는 vertex들 중 **minimum δ(s,v)**를 가진 vertex라고 하자. Lemma 22.2로부터 **v.d > δ(s,v)**이다. vertex v는 반드시 s에서 reachable하다(아니면 δ(s,v) = ∞ ≥ v.d가 된다). u가 v의 shortest path의 predecessor라고 하자. δ(s,v) = δ(s,u) + 1 이다.
   - δ(s,u) < δ(s,v) 이고, 우리가 v를 고른 방식으로 인해 u.d = δ(s,u)를 만족한다. v.d > δ(s,v) = δ(s,u) + 1 = u.d + 1
@@ -148,7 +148,7 @@ BFS(G, s)
   - $V_\pi = \lbrace v \in V\ \|\ v.\pi \neq NIL \rbrace ∪ \lbrace s \rbrace$
   - $E_\pi = \lbrace (v.\pi, v)\ \|\ v \in V_\pi - \lbrace s \rbrace \rbrace$
 - Predecessor subgraph $G_\pi$는 BFT이고, $V_\pi$는 s로부터 reachable한 모든 vertex의 집합이다. $G_\pi$는 s로부터 reachable한 모든 vertex들의 unique shortest path를 포함한다.
-- Breath-first tree는 connected된 tree이기 때문에 |E| = |V| - 1이다. (Theorem B.2)
+- Breath-first tree는 connected된 tree이기 때문에 \|E\| = \|V\| - 1이다. (Theorem B.2)
 
 ### Theorem B.2
 
@@ -156,8 +156,8 @@ BFS(G, s)
   - G는 tree이다.
   - G의 모든 vertex pair가 unique simple path로 연결되어 있다.
   - G가 연결되어 있고, 어떤 edge를 제거하였을 때 disconnected된다.
-  - G가 connected이고 |E| = |V| - 1이다.
-  - G가 acyclic이고 |E| = |V| - 1이다.
+  - G가 connected이고 \|E\| = \|V\| - 1이다.
+  - G가 acyclic이고 \|E\| = \|V\| - 1이다.
   - G가 acyclic이고 아무 edge하나를 추가하였을 때 cycle이 생긴다.
 
 ### Lemma 22.6

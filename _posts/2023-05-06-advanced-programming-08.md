@@ -22,7 +22,7 @@ mathjax: "true"
     - WHITE: u.d 이전
     - GRAY: u.d ~ u.f
     - BLACK: u.f 이후
-  - Timestamp는 1부터 2|V|까지의 정수이다. 각 |V| vertex들에 대해 하나의 discovery event와 하나의 finishing event가 존재한다.
+  - Timestamp는 1부터 2\|V\|까지의 정수이다. 각 \|V\| vertex들에 대해 하나의 discovery event와 하나의 finishing event가 존재한다.
 
 ```text
 DFS(G)
@@ -47,29 +47,29 @@ DFS-VISIT(G, u)
   u.f = time
 ```
 
-- DFS Time Complexity: Θ(|V|)
-- DFS-VISIT Time Complexity: $\sum_{v \in V} | Adj[v]| =  Θ(|E|)$
-- DFS Running Time: Θ(|V| + |E|)
+- DFS Time Complexity: Θ(\|V\|)
+- DFS-VISIT Time Complexity: $\sum_{v \in V} \| Adj[v]\| =  Θ(\|E\|)$
+- DFS Running Time: Θ(\|V\| + \|E\|)
 
 ## Depth-First Search Properties
 
 - $G_\pi$가 forest of tree를 이룬다.
-- u=v.π ⇔(iff) `DFS-VISIT(v)`가 u의 adjacency list를 탐색 중 불렸을 때
-- Discoverty time과 finishing time은 parenthesis structure 갖고 있음
+- u=v.π ⇔(iff) `DFS-VISIT(v)`가 u의 adjacency list를 탐색 중 불린다
+- discoverty time과 finishing time은 parenthesis structure 갖고 있음
 
 ### Theorem 22.7 (Parenthesis Theorem)
 
 - (directed 혹은 undirected) graph G=(V, E)에서 depth-first search 시 두 임의의 vertex u와 v에 대해 다음 세가지 중 딱 한 가지 조건만 만족한다.
-  - [u.d, u.f]와 [v.d, v.f]가 완전히 disjoint한 경우
-  - [u.d, u.f]가 [v.d, v.f]에 완전히 포함되는 경우
-  - [v.d, v.f]가 [u.d, u.f]에 완전히 포함되는 경우
+  - [u.d, u.f]와 [v.d, v.f]가 완전히 disjoint한 경우. u와 v는 서로의 descendant가 아니다.
+  - [u.d, u.f]가 [v.d, v.f]에 완전히 포함되는 경우. depth-first tree에서 u는 v의 descendant이다.
+  - [v.d, v.f]가 [u.d, u.f]에 완전히 포함되는 경우. depth-first tree에서 v는 u의 descendant이다.
 
 ### Proof of Theorem 22.7 (Parenthesis Theorem)
 
 - u.d < v.d 인 경우부터 살펴보자
   - v.d < u.f:
-    - v가 u가 GRAY일 때 발견되었음. 이는 v가 u의 descendant임을 의미한다.
-    - 그리고 v가 u보다 최근에 발견되었으므로 v의 모든 outgoing edge가 탐색되고, v가 종료된다.(u로 return하기 전에)
+    - u가 GRAY일 때 v가 발견되었음. 이는 v가 u의 descendant임을 의미한다.
+    - 그리고 v가 u보다 나중에 발견되었으므로 v의 모든 outgoing edge가 탐색되고, v가 종료된다.(u로 return하기 전에)
     - 그러므로 [v.d, v.f]는 interval [u.d, u.f]에 완전히 포함된다.
   - u.f < v.d:
     - u.d < u.f 이고 v.d < v.f
@@ -78,12 +78,12 @@ DFS-VISIT(G, u)
 
 ### Corollary 22.8
 
-- Depth-first forest에서 Vertex v가 u의 proper descendant ⇔(iff) u.d < v.d < v.f < u.f
+- Depth-first forest에서 Vertex v가 u의 proper descendant 이다. ⇔(iff) u.d < v.d < v.f < u.f 이다.
 - Theorem 22.7로부터 바로 증명 가능하다.
 
 ### Theorem 22.9 (White-path Theorem)
 
-- (directed 혹은 undirected) Graph G=(V,E)의 depth-first forest에서 vertex v가 vertex u의 descendant ⇔(iff) u.d 발견 시점에서 u에서 White vertex로 구성된 path를 통해 v로 도달할 수 있다.
+- (directed 혹은 undirected) Graph G=(V,E)의 depth-first forest에서 vertex v가 vertex u의 descendant이다. ⇔(iff) u.d 발견 시점에서 u에서 White vertex로 구성된 path를 통해 v로 도달할 수 있다.
 
 ### Proof of Theorem 22.9(⇒)
 
@@ -94,12 +94,12 @@ DFS-VISIT(G, u)
 
 ### Proof of Theorem 22.9(⇐)
 
-- u.d 시점에서 u에서 v로 가는 white vectex들로 구성된 path가 존재하지만, v가 u의 descendant가 아니라고 가정하자.
+- u.d 시점에서 u에서 v로 가는 white vertex들로 구성된 path가 존재하지만, v가 u의 descendant가 아니라고 가정하자.
 - 일반성을 잃지 않고, v 외의 path 위의 모든 vertex가 u의 descendant가 된다고 가정하자. (아니면, v가 u의 descendant가 아닌 path에서 가장 가까운 vertex라고 가정하자)
-- w가 v의 path의 predecessor라고 하자. w는 u의 descendant이다.(w와 u는 동일한 vertex일 수도 있다)
+- w가 v의 path의 predecessor라고 하자. w는 u의 descendant이다.(w와 u는 같은 vertex일 수도 있다)
 - Corollary 22.8에 의해 w.f ≤ u.f이다.
 - v는 u가 discover된 후에 discover되어야하지만 w가 finish되기 전에는 discover되어야 한다. 즉, u.d < v.d < w.f ≤ u.f
-- Theorem 22.7로부터 [v.d, v.f]는 [u.d, u.f]에 완전히 포함되어야 한다.
+- Theorem 22.7(Parenthesis Theorem)로부터 [v.d, v.f]는 [u.d, u.f]에 완전히 포함되어야 한다.
 - Corollary 22.8로부터 v는 u의 descendant가 된다.
 
 ## Classification of Edges
@@ -164,9 +164,3 @@ TOPOLOGICAL-SORT(G)
   - v가 white이면 v.f < u.f이다. 왜냐하면 v가 u의 descendant이기 때문이다.
   - v가 black이면 v.f < u.f이다. 왜냐하면 v가 u보다 먼저 finish되었기 때문이다.
   - 그러므로 DAG의 모든 (u,v) edge에 대해 v.f < u.f 임을 알 수 있다.
-
-> **Theorem 22.9 (White-path Theorem)**
-> (directed 혹은 undirected) Graph G=(V,E)의 depth-first forest에서 vertex v가 vertex u의 descendant ⇔(iff) u.d 발견 시점에서 u에서 White vertex로 구성된 path를 통해 v로 도달할 수 있다.
-
->
-> 

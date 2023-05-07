@@ -18,8 +18,8 @@ mathjax: "true"
 
 - Directed Graph G의 Strongly Connected Components(SCC)는 다음을 만족하는 vertex들의 maximal set C 이다. C ⊆ V such that ∀ u, v ∈ C, u와 v는 서로 reachable하다.
 - SCC를 찾기 위해 DFS를 두 번 수행한다: $G$ 한 번, $G^T$ 한 번
-  - Transpose of G: $G^T=(V, E^T)$, where $E^T=\{(u, v): (v, u) \in E\}$
-  - Time Complexity: Θ(|V| + |E|)
+  - Transpose of G: $G^T=(V, E^T)$, where $E^T=\lbrace (u, v): (v, u) \in E \rbrace$
+  - Time Complexity: Θ(\|V\| + \|E\|)
 - $G$와 $G^T$는 완전히 동일한 SCC를 가지고 있다.
   - G에서 u와 v가 서로 reachable하다면, $G^T$에서도 reachable하다.
 
@@ -37,7 +37,7 @@ STRONGLY-CONNECTED-COMPONENTS(G)
 
 - Component graph $G^{SCC} = (V^{SCC}, E^{SCC})$ (DAG)
   - G가 strongly connected components $C_1$, $C_2$,..., $C_k$를 갖고 있다고 하자.
-  - $V^{SCC} = \{v_1, v_2,..., v_k\}$이고 각각의 $C_i$마다 $v_i$가 존재한다.
+  - $V^{SCC} = \lbrace v_1, v_2,..., v_k \rbrace$이고 각각의 $C_i$마다 $v_i$가 존재한다.
   - $(v_i, v_j) \in E^{SCC}$ Edge가 존재하면 G에는 edge (x, y)가 존재한다(x ∈ $C_i$, y ∈ $C_j$).
 
 ### Lemma 22.13
@@ -65,11 +65,11 @@ STRONGLY-CONNECTED-COMPONENTS(G)
   - white-path theorem에 의해 C와 C'의 모든 vertex들은 x의 descendant가 된다.
   - Corollary 22.8에 의해 x는 descendant들보다 큰 finishing time을 가지므로, x.f = f(C) > f(C')이다.
 
-> **Theorem 22.9 (White-path Theorem)**
-> (directed 혹은 undirected) Graph G=(V,E)의 depth-first forest에서 vertex v가 vertex u의 descendant ⇔(iff) u.d 발견 시점에서 u에서 White vertex로 구성된 path를 통해 v로 도달할 수 있다.
+> **Theorem 22.9 (White-path Theorem)**  
+> (directed 혹은 undirected) Graph G=(V,E)의 depth-first forest에서 vertex v가 vertex u의 descendant이다. ⇔(iff) u.d 발견 시점에서 u에서 White vertex로 구성된 path를 통해 v로 도달할 수 있다.
 
-> **Corollary 22.8**
-> Depth-first forest에서 Vertex v가 u의 proper descendant ⇔(iff) u.d < v.d < v.f < u.f
+> **Corollary 22.8**  
+> Depth-first forest에서 Vertex v가 u의 proper descendant이다. ⇔(iff) u.d < v.d < v.f < u.f 이다.
 
 - 증명 Case: d(C) > d(C')
   - y가 C'에서 가장 처음 발견된 vertex라고 하자.
@@ -89,7 +89,7 @@ STRONGLY-CONNECTED-COMPONENTS(G)
 - 그러면 f(C) < f(C') 이다.
 
 - 증명:
-  - (u, v) ∈ E^T ⇔ (v, u) ∈ E
+  - (u, v) ∈ $E^T$ ⇔ (v, u) ∈ E
   - Lemma 22.14에 의해 f(C) < f(C')이다.
 
 ### Theorem 22.16
@@ -108,3 +108,4 @@ STRONGLY-CONNECTED-COMPONENTS(G)
     - 또한 inductive hypothesis와 Corollary 22.15로부터 $G^T$에서 C에서 빠져나가는 edge들은 모두 이미 방문한 상태이다.
     - 그러므로 C 외에 다른 SCC에 속하는 vertex들은 u의 descendant가 될 수 없다.
     - 그러므로 $G^T$에서 u를 root로 하는 depth-first tree는 C에 속한 vertex들로만 구성된다. 이는 inductive step을 만족하며 증명이 끝난다.
+
