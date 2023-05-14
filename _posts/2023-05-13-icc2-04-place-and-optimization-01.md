@@ -598,7 +598,7 @@ Design transformations due to multibit transformation and name changes, can caus
 
 - Placement attraction constraints allow more control over the general placement location of a large group of cells, e.g. modules
   - Can prevent fragmentation of modules
-  - 
+
 ![2023-05-13-placement-attractions.png]({{site.baseurl}}/assets/images/2023-05-13-placement-attractions.png){: .align-center}  
 
 Placement attractions should not be expected to always result in such excellent cohesion as shown above. There may be more spreading or fragmentation if that is beneficial for the design: Cells within placement attractions are allowed to be placed outside of their main collection if it is important for resolving timing or congestion.  
@@ -628,7 +628,7 @@ place_opt
 
 - Cells in a placement group are attracted towards each other, but the group can be placed anywhere in the core, i.e. floating (by default)
   - Use the `-region` option to specify one or two coordinates to define a point, an edge or a rectangular region towards which the cells are attracted, as needed
-  - `[ -region {{ 0 0} {0 1500}} ]`
+  - `[ -region { { 0 0 } { 0 1500} } ]`
   - See man page for additional options and command details
 
 The `create_placement_attraction` command is a much "softer" placement constraint than the move bound, or group bound constraints created by the `create_bound` command. The placement attraction is used to tell the placer about the module relationships that are important, without the need to strongly constrain every cell in each module. In general, the placement attractions will steer the placer in the right direction, but it will also trade off with other considerations like wire length and timing. The region may be exactly one of the following: unset, point, line, rectangle. The argument takes a coordinate list and parses it to determine the desired region. If the user does not specify a value the region is unset: Cells in the cell list are attracted towards each other, but the group can be placed anywhere in the core area. A coordinate list with one point corresponds to a point region, and cells are attracted towards the point. A coordinate list with two colinear points (vertical or horizontal line) corresponds to an edge region, and cells are attracted towards the line. A coordinate list with two non-colinear points corresponds to a rectangular region. Cells will be attracted towards this region (but are not forced to be inside the region, like create bound).  
