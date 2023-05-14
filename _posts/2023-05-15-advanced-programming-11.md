@@ -31,7 +31,7 @@ mathjax: "true"
 ## `GENERIC-MST`
 
 - $A$가 MST의 부분집합이라고 하자.
-- $A ∪ \lbrace (u, v) \rbrace$ 가 MST의 부분집합이면 $Edge $(u, v)$는 안전(safe)하다고 할 수 있다.
+- $A ∪ \lbrace (u, v) \rbrace$도 어떤 MST의 부분집합이면 edge $(u, v)$는 안전(safe)하다고 한다.
 
 ```text
 GENERIC-MST(G,w)
@@ -79,7 +79,7 @@ GENERIC-MST(G,w)
 
 ![2023-05-15-mst-proof.png]({{site.baseurl}}/assets/images/2023-05-15-mst-proof.png){: .align-center}  
 
-- edge $(u, v)$는 simple path $p$에 속한 edge들과 cycle을 형성한다.
+- edge $(u, v)$는 $T$에서 $u$로부터 $v$로의 simple path $p$에 속한 edge들과 cycle을 형성한다.
 - $u$와 $v$는 cut $(S, V-S)$의 서로 다른 side에 있으므로, simple path $p$에는 cut을 cross하는 edge가 적어도 하나 존재한다. 그 edge를 $(x, y)$라고 하자.
 - edge $(x, y)$는 $A$에 포함되어 있지 않다. 왜냐하면 cut은 $A$를 respect하기 때문이다.
 - $(x, y)$가 $T$에서 $u$로부터 $v$로 가는 unique path에 있기 때문에 $(x, y)$를 제거하면 $T$가 둘로 나눠진다.

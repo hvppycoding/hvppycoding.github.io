@@ -1,5 +1,5 @@
 ---
-title: "Singlep-source Shortest Paths"
+title: "Single-source Shortest Paths"
 excerpt: "Advanced Programming Methodologies 12"
 date: 2023-05-15 04:00:00 +0900
 header:
@@ -13,7 +13,7 @@ mathjax: "true"
 
 ## Single-source Shortest Paths Problem
 
-- weighted directed graph $G=(V, E)$(with weight function $w: E \rightarrow R$)가 주어졌을 때 source vertext s에서부터 vertex v까지의 minimum-weight path를 찾는 문제이다.
+- weighted directed graph $G=(V, E)$(with weight function $w: E \rightarrow R$)가 주어졌을 때 source vertex s에서부터 vertex v까지의 minimum-weight path를 찾는 문제이다.
   - weight $w(p)$ of path $p=<v_0, v_1, ..., v_k>$는 edge들의 weight sum이다: $w(p) = \sum_{i=1}^{k} w(v_{i-1}, v_i)$
   - shortest-path weight $\delta(s, v)$
 
@@ -26,7 +26,7 @@ $$
 
 ## Optimal Substructure Property
 
-- 두 vertex 사이의 shortest path는 다른 shortest pathe들을 포함하고 있음.
+- 두 vertex 사이의 shortest path는 다른 shortest path들을 포함하고 있음.
 - Lemma 24.1 (Subpaths of shortest paths are shortest paths)
   - $G=(V, E)$가 weighted directed graph이고 $w$가 edge weight function이라고 하자.
   - $p=<v_0, v_1, ..., v_k>$가 $v_0$에서 $v_k$로 가는 shortest path라고 하자.
@@ -35,16 +35,16 @@ $$
 ## Shortest Path Properties
 
 - negative weight edge를 포함할 수도 있다.
-- 만약 graph $G=(V, E)$에 source s에서 도달 가능한 negative weight cycle은 포함하지 않는다. 이 경우 $v \in V$에 대해 shortest-path weight $\delta(s, v)$는 well-defined된다.
+- 만약 graph $G=(V, E)$에 source s에서 도달 가능한 negative weight cycle은 포함되지 않는다. 이 경우 $v \in V$에 대해 shortest-path weight $\delta(s, v)$는 well-defined된다.
 - 만약 s에서 도달 가능한 negative weight cycle이 존재한다면, shortest path는 well-defined되지 않는다.
 
 ## Representing Shortest Paths
 
-- breadth-first search와 같은 방법으로 shortest path를 표현할 수 있다.
+- breath-first search와 같은 방법으로 shortest path를 표현할 수 있다.
 - shortest-paths tree:
   - Predecessor subgraph $G_{\pi} = (V_{\pi}, E_{\pi})$
-    - $V_{\pi} = \lbrace v \in V: \pi[v] \neq NIL \rbrace \cup \lbrace s \rbrace$
-    - $E_{\pi} = \lbrace (v, \pi[v]): v \in V_{\pi} - \lbrace s \rbrace \rbrace$
+    - $V_{\pi} = \lbrace v \in V: v.\pi \neq NIL \rbrace \cup \lbrace s \rbrace$
+    - $E_{\pi} = \lbrace (v.\pi, v): v \in V_{\pi} - \lbrace s \rbrace \rbrace$
 
 ## Relaxation
 
@@ -106,7 +106,7 @@ RELAX(u, v, w)
 - $G=(V, E)$가 weighted directed graph이고 edge weight function $w: E \rightarrow R$이 정의되어 있다고 하자(source vertex: s). source s에서 v로 가는 path가 존재하지 않는다고 가정하자.
 - `INITIALIZE-SINGLE-SOURCE`를 통해 initialize된 후, $v.d = \delta(s, v) = \infty$이다. 이 식은 relaxation이 어떤 순서로 일어나든지 유지된다.
 - Proof:
-  - By the upper-bound property, $\infty = \delta(s, v) \le v.d$ for all $v \in V$이며, $v.d = \intfy = \delta(s, v)$이다.
+  - By the upper-bound property, $\infty = \delta(s, v) \le v.d$ for all $v \in V$이며, $v.d = \infty = \delta(s, v)$이다.
 
 ## Lemma 24.13
 
@@ -118,7 +118,7 @@ RELAX(u, v, w)
   - $v.d \le u.d + w(u, v)$였을 경우
     - $v.d$는 변하지 않는다.
 
-## Converson Property (Lemma 24.14)
+## Convergence Property (Lemma 24.14)
 
 - $G=(V, E)$가 weighted directed graph이고 edge weight function $w: E \rightarrow R$이 정의되어 있다고 하자(source vertex: s).
 - 어떤 vertex u, v에 대해 s⤳u→v가 shortest path라고 하자.
