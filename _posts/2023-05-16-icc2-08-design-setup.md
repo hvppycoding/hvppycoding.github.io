@@ -59,7 +59,7 @@ The first step in data-setup is to create the design library. This entails givin
 
 - Blocks can be compressed to reduce a design library’s disk size
 
-- To enable compression, set the following before creating the design library 
+- To enable compression, set the following before creating the design library
   - All blocks will be compressed when saved
   - `set_app_options -name lib.setting.compress_design_lib -value true`
 - Alternatively, explicitly compress the current block or all blocks when saving:
