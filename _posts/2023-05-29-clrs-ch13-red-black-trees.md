@@ -42,7 +42,7 @@ $n$개의 내부 노드를 가지는 red-black tree의 height는 최대 $2 \lg (
 
 ### Proof
 
-어떤 노드 $x$를 root로 가지는 subtree에 대해 적어도 $2^{bh(x)} - 1$개의 internal node가 존재하는 것을 먼저 보일 것이다. height $x$에 대해 induction을 적용한다. 만약 $x$의 height가 0이면 $x$는 leaf($T.nil$)이고 $bh(x) = 0$이고, $x$의 subtree는 $2^{bh(x)} - 1 = = 2^0 - 1 = 0$개의 internal node를 가진다. Inductive step을 보면 $x$가 positive height를 가진 internal node라고 하자. node $x$는 두 개의 child를 가지고, child는 leaf일 수도 있다. 만약 child가 black이면 $x$의 black-height에 1로 count되고, red라면 $x$나 자기 자신의 black-height에 count 되지 않는다. 그러므로 child의 black-height는 $bh(x) - 1$(black일 경우)이거나 $bh(x)$(red일 경우)이다. $x$의 child의 height는 $x$ 자신의 height보다 작으며, inductive hypothesis로부터 각 child는 적어도 $2^{bh(x)-1}$개 이상의 internal node를 가진다. 이로부터 $x$는 적어도 $2^{bh(x)-1} + 2^{bh(x)-1} + 1 = 2^{bh(x)} - 1$개의 internal node를 가지므로 induction이 성립한다.  
+어떤 노드 $x$를 root로 가지는 subtree에 대해 적어도 $2^{bh(x)} - 1$개의 internal node가 존재하는 것을 먼저 보일 것이다. height $x$에 대해 induction을 적용한다. 만약 $x$의 height가 0이면 $x$는 leaf($T.nil$)이고 $bh(x) = 0$이고, $x$의 subtree는 $2^{bh(x)} - 1 = 2^0 - 1 = 0$개의 internal node를 가진다. Inductive step을 보면 $x$가 positive height를 가진 internal node라고 하자. node $x$는 두 개의 child를 가지고, child는 leaf일 수도 있다. 만약 child가 black이면 $x$의 black-height에 1로 count되고, red라면 $x$나 자기 자신의 black-height에 count 되지 않는다. 그러므로 child의 black-height는 $bh(x) - 1$(black일 경우)이거나 $bh(x)$(red일 경우)이다. $x$의 child의 height는 $x$ 자신의 height보다 작으며, inductive hypothesis로부터 각 child는 적어도 $2^{bh(x)-1}$개 이상의 internal node를 가진다. 이로부터 $x$는 적어도 $2^{bh(x)-1} + 2^{bh(x)-1} + 1 = 2^{bh(x)} - 1$개의 internal node를 가지므로 induction이 성립한다.  
 *h*가 tree의 height라고 하면 property 4로부터 적어도 root에서 leaf까지의 root를 제외한 simple path 노드의 절반은 black이다. 결과적으로 root의 black-height는 적어도 $h/2$ 이상이다. 이로부터 $n \ge 2^{h/2} - 1$를 얻는다. 1을 좌항으로 보내고 양쪽에 로그를 취하면 $\lg(n+1) \ge h/2$ 혹은 $h \le 2 \lg(n+1)$을 얻을 수 있다.  
 
 ## 13.2 Rotations
@@ -161,23 +161,23 @@ RB-DELETE(T,z)
  2  y-original-color = y.color
  3  if z.left == T.nil
  4    x = z.right
- 5    RB-TRANSPLANT(T,z,z.right)
+ 5    RB-TRANSPLANT(T,z,z.right)    // z를 z의 right child로 대체
  6  elseif z.right == T.nil
  7    x = z.left
- 8    RB-TRANSPLANT(T,z,z.left)
- 9  else y = TREE-MINIMUM(z.right)
+ 8    RB-TRANSPLANT(T,z,z.left)     // z를 z의 left child로 대체
+ 9  else y = TREE-MINIMUM(z.right)  // y는 z의 successor
 10    y-original-color = y.color
 11    x = y.right
-12    if y != z.right
-13      RB-TRANSPLANT(T,y,y.right)
-14      y.right = z.right
+12    if y != z.right               // y가 z의 인접 child가 아닌 경우
+13      RB-TRANSPLANT(T,y,y.right)  // y를 y의 right child로 대체
+14      y.right = z.right           // z의 right child가 y의 child가 된다
 15      y.right.p = y
-16    else x.p = y
-17    RB-TRANSPLANT(T,z,y)
-18    y.left = z.left
+16    else x.p = y                  // x가 T.nil인 경우 처리를 위해 필요
+17    RB-TRANSPLANT(T,z,y)          // z를 successor인 y로 대체
+18    y.left = z.left               // z의 left child가 y의 child가 된다
 19    y.left.p = y
 20    y.color = z.color
-21  if y-original-color == BLACK
+21  if y-original-color == BLACK    // red-black violation fix
 22    RB-DELETE-FIXUP(T,x)
 ```
 
@@ -195,7 +195,7 @@ RB-DELETE(T,z)
 2. $x$가 root를 가리킨다. extra black은 사라진다.
 3. 적절한 rotation과 recoloring을 수행한다.
 
-**`while`** 루프 안에서 $x$는 항상 nonroot double black node를 가리킨다. 라인 2에서 $x$가 parent $x.p$의 왼쪽 child인지 오른쪽 child인지 확인한다. $x$의 sibling은 항상 $w$로 표기한다. $x$가 항상 doubly black이므로 노드 $w$는 $T.nil$이 될 수 없다(그러면 $x.p$에서의 black height가 양쪽이 달라지기 때문). 
+**`while`** 루프 안에서 $x$는 항상 nonroot double black node를 가리킨다. 라인 2에서 $x$가 parent $x.p$의 왼쪽 child인지 오른쪽 child인지 확인한다. $x$의 sibling은 항상 $w$로 표기한다. $x$가 항상 doubly black이므로 노드 $w$는 $T.nil$이 될 수 없다(그러면 $x.p$에서의 black height가 양쪽이 달라지기 때문).  
 
 ```text
 RB-DELETE-FIXUP(T,x)

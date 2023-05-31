@@ -35,7 +35,7 @@ $$
 ## Shortest Path Properties
 
 - negative weight edge를 포함할 수도 있다.
-- 만약 graph $G=(V, E)$에 source s에서 도달 가능한 negative weight cycle은 포함되지 않는다. 이 경우 $v \in V$에 대해 shortest-path weight $\delta(s, v)$는 well-defined된다.
+- graph $G=(V, E)$에 source s에서 도달 가능한 negative weight cycle은 포함되지 않는다. 이 경우 $v \in V$에 대해 shortest-path weight $\delta(s, v)$는 well-defined된다.
 - 만약 s에서 도달 가능한 negative weight cycle이 존재한다면, shortest path는 well-defined되지 않는다.
 
 ## Representing Shortest Paths

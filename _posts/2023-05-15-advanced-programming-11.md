@@ -91,7 +91,7 @@ GENERIC-MST(G,w)
 
 ## Understanding of `GENERIC-MST`
 
-- 진행되면서 set A는 항상 acyclic이다. 아니면 A를 포함학고 있는 MST도 cycle이 있게 되며 이는 모순이다.
+- 진행되면서 set A는 항상 acyclic이다. 아니면 A를 포함하고 있는 MST도 cycle이 있게 되며 이는 모순이다.
 - 어떤 실행 시점에서 graph $G_A = (V, A)$는 forest이며, $G_A$의 연결된 component들은 tree이다.
 - 몇몇 tree들은 하나의 vertex만 갖고 있을 수도 있다. 예를 들어 초기 시작에는 A가 empty이며, 한 개의 vertex를 가진 tree V개로 구성된 forest이다.
 - 그리고 어떤 $A$의 safe edge $(u, v)$는 $G_A$의 distinct component를 연결한다. 왜냐하면 $A ∪ \lbrace (u, v) \rbrace$는 acylic하기 때문이다.
@@ -133,7 +133,7 @@ GENERIC-MST(G,w)
 
 - 여러 disjoint set을 유지하기 위해 disjoint-set data structure를 이용한다.
 - 각 set는 현재 forest에서 하나의 tree에 속한 vertex들을 포함한다.
-- operation $FIND-SET(u)$는 $u$를 포함하고 있는 set의 대표 원소(representative element)를 리턴한다.
+- operation `FIND-SET(u)`는 $u$를 포함하고 있는 set의 대표 원소(representative element)를 리턴한다.
 - 두 개의 vertex $u$와 $v$가 같은 tree에 속하는지 확인하기 위해 `FIND-SET(u)`와 `FIND-SET(v)`가 같은지를 확인하면 된다.
 - 트리들을 결합하기 위해 `UNION`을 호출한다.
 
@@ -167,7 +167,7 @@ MST-KRUSKAL(G,w)
 - 정리하자면,
   - sort edges: $O(E \lg E)$
   - disjoint-set operation
-    - $O(\vert V \vert + \vert E \vert)$ operations $\implies $O((\vert V \vert + \vert E \vert) \alpha(\vert V \vert))$ time
+    - $O(\vert V \vert + \vert E \vert)$ operations $\implies$ $O((\vert V \vert + \vert E \vert) \alpha(\vert V \vert))$ time
     - $\vert E \vert \ge \vert V \vert - 1 \implies O(\vert E \vert \lg V)$ time
     - $\alpha(n)$은 tree의 height에 upper bounded되므로 $\alpha (\vert V \vert) = O(\lg \vert V \vert) = O(\lg \vert E \vert)$
 - Kruskal's algorithm은 $O(E \lg E)$ 시간이 걸린다.
