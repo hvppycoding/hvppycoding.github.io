@@ -21,7 +21,7 @@ Jin Hu†, Andrew B. Kahng‡ + , SeokHyeong Kang‡ , Myung-Chul Kim† and Igo
 
 The well-studied gate-sizing optimization is a major contributor to IC power-performance tradeoffs. Viable optimizers must accurately model circuit timing, satisfy a variety of constraints, scale to large circuits, and effectively utilize a large (but finite) number of possible gate configurations, including Vt and Lg . Within the research-oriented infrastructure used in the ISPD 2012 Gate Sizing Contest, we develop a metaheuristic approach to gate sizing that integrates timing and power optimization, and handles several types of constraints. Our solutions are evaluated using a rigorous protocol that computes circuit delay with Synopsys PrimeTime. Our implementation Trident outperforms the best-reported results on all but one of the ISPD 2012 benchmarks. Compared to the 2012 contest winner, we further reduce leakage power by an average of 43%.  
 
-확립된 게이트 크기 최적화는 집적회로의 전력-성능 트레이드오프에 주요한 요소로 알려져 있다. 유효한 최적화 도구는 회로의 타이밍을 정확하게 모델링하고 다양한 제약 조건을 충족시키며 대규모 회로에 적용할 수 있어야 하며, Vt와 Lg를 포함한 다양한 게이트 구성의 가능성을 효과적으로 활용해야 한다. ISPD 2012 게이트 크기 조정 대회에서 사용된 연구 지향적 인프라에서는 타이밍 및 전력 최적화를 통합하고 여러 유형의 제약 조건을 처리하는 게이트 크기 조정에 대한 메타휴리스틱 접근 방식을 개발한다. 우리의 솔루션은 Synopsys PrimeTime을 사용하여 회로 지연을 계산하는 엄격한 프로토콜을 통해 평가된다. 저희의 구현체인 Trident는 ISPD 2012 벤치마크 중 한 가지를 제외하고 모든 벤치마크에서 최고의 결과를 보여준다. 2012 대회 우승자와 비교하여, 저희는 누설 전력을 평균 43% 더 줄였다.  
+잘 연구된 게이트 크기 최적화는 집적회로의 전력-성능 트레이드오프에 주요한 요소로 알려져 있다. 유효한 최적화 도구는 회로의 타이밍을 정확하게 모델링하고 다양한 제약 조건을 충족시키며 대규모 회로에 적용할 수 있어야 하며, Vt와 Lg를 포함한 다양한 게이트 구성의 가능성을 효과적으로 활용해야 한다. ISPD 2012 게이트 크기 조정 대회에서 사용된 연구 지향적 인프라에서는 타이밍 및 전력 최적화를 통합하고 여러 유형의 제약 조건을 처리하는 게이트 크기 조정에 대한 메타휴리스틱 접근 방식을 개발한다. 우리의 솔루션은 Synopsys PrimeTime을 사용하여 회로 지연을 계산하는 엄밀한 프로토콜을 통해 평가된다. 저희의 구현체인 Trident는 ISPD 2012 벤치마크 중 한 가지를 제외하고 모든 벤치마크에서 최고의 결과를 보여준다. 2012 대회 우승자와 비교하여, 저희는 누설 전력을 평균 43% 더 줄였다.  
 
 ## 1. Introduction
 
@@ -59,7 +59,7 @@ Consider a netlist $N = (C, I, P)$, where $C$ is the set of cells, $I$ is the se
 
 넷리스트 $N = (C, I, P)$가 주어진다. 여기서 $C$는 셀의 집합, $I$는 셀 간의 인터커넥션의 집합, $P$는 셀 $C$의 핀의 집합이다. 또한, 입력 기술 라이브러리 $L$이 주어진다. 각 셀 $c ∈ C$는 유효한(제조 가능한) 크기의 집합을 가진다. $N$과 $L$이 주어진 경우, (이산적인) 게이트 크기 조정의 목표는 설계 제약 조건을 만족하면서 전체 전력 소비를 최소화하는 동안 $C$를 $L$에 매핑하는 것이다. 우리는 다음과 같은 제약 조건을 고려한다: (i) 여유 시간(slack) 제약 조건, (ii) 커패시턴스(capacitance) 제약 조건, 그리고 (iii) 슬루(slew) 제약 조건.  
 
-### 2.2 Preview WOrk on Gate Sizing
+### 2.2 Preview Work on Gate Sizing
 
 The vast majority of gate sizing research has focused on finding continuous solutions, where parameters can take values within certain contiguous ranges. Some techniques optimize transistor parameters (e.g., threshold voltage), and others focus on entire standard cells and deal with drive strength and input-pin capacitances. However, as modern digital methodologies use only discrete cell types, continuous-valued parameters must be efficiently rounded to allowed discrete values.  
 
@@ -139,17 +139,20 @@ Figure 2: GTR 검색 절차 (알고리즘 1) 중에 검색 범위 변경. 거친
 
 Starting with an underpowered configuration, we seek to generate feasible solutions by monotonically (i) increasing cell sizes or (ii) lowering cell threshold voltages (Vt ). Both cell upsizing and Vt downscaling are performed in smallest possible steps; the ordering of these actions is determined by their sensitivities, which are calculated by impacts on TNS and leakage power.  
 
-$$sensitivity_{GTR} = \frac{\Delta TNS}{\Delta leakage_power^{power_exponent}}$$  
+$$\text{sensitivity}_{GTR} = \frac{\Delta TNS}{\Delta \text{leakage_power}^{\text{power_exponent}}}$$  
 
 저전력 구성으로 시작하여, 우리는 (i) 셀 크기를 단조롭게 증가시키거나 (ii) 셀 임계 전압 (Vt)을 낮추어 실행 가능한 솔루션을 생성하려고 합니다. 셀 업사이징과 Vt 다운스케일링은 가능한 최소한의 단계로 수행됩니다. 이러한 동작의 순서는 TNS와 누설 전력에 대한 영향을 계산하여 결정되는 감도에 의해 결정됩니다.  
 
-$$sensitivity_{GTR} = \frac{\Delta TNS}{\Delta leakage_power^{power_exponent}}$$  
+$$\text{sensitivity}_{GTR} = \frac{\Delta TNS}{\Delta \text{leakage_power}^{\text{power_exponent}}}$$  
 
 When estimating the impact of a single cell modification, invoking STA can be computationally prohibitive. Therefore, we approximate the impact on TNS of a single cell modification($m_i^k$) on cell $c_i$ using $N Paths_i$, the number of negative-slack paths that pass through $c_i$. We define the nearest-neighbor set of $c_i$ to be the set of cells that have a driver (fanin) in common with $c_i$, and $N_i$ to be the union of $c_i$’s nearest-neighbor set and $c_i$ itself.  
 
 $$\Delta TNS(m_i^k) \approx \sum_{c_j \in N_i} -\Delta delay_j^k \cdot \sqrt{N Paths_j}$$
 
 단일 셀 수정의 영향을 추정할 때, STA를 호출하는 것은 계산적으로 제한적일 수 있습니다. 따라서, 셀 $c_i$에 대한 단일 셀 수정($m_i^k$)의 TNS에 대한 영향을 $c_i$를 통과하는 음수 여유 경로의 수인 $N Paths_i$를 사용하여 근사적으로 계산합니다. 우리는 $c_i$의 최근접 이웃 세트를 $c_i$와 동일한 드라이버(fanin)를 가지는 셀의 집합으로 정의하고, $N_i$를 $c_i$의 최근접 이웃 세트와 $c_i$ 자체의 합집합으로 정의합니다.  
+
+왜 fanin을 공유하는 Cell들로 정의할까? $c_i$가 바뀌면 그에 따라 input pin capacitance가 변경되고, 이는 앞단 driver의 delay에 영향을 주기 때문인 것 같다.  
+{: .notice--info}
 
 $$\Delta TNS(m_i^k) \approx \sum_{c_j \in N_i} -\Delta delay_j^k \cdot \sqrt{N Paths_j}$$
 
@@ -177,15 +180,14 @@ From the Global Timing Recovery (GTR) stage, we obtain a feasible sizing solutio
 The SGGS algorithm starts with STA and initializes all timing nodes. Sensitivities are computed for all downsizable cells in Lines 3–14. We consider both gate downsizing and Vt upscaling for the sensitivity calculation. We define five sensitivities(Table 1).  
 
 | Acronyms | Sensitivity functions |
-|:========:|:=====================:|
+|:--------:|:---------------------:|
 | SF1      | $-\Delta \text{leakage_power} / \Delta delay$ |
 | SF2      | $-\Delta \text{leakage_power} \times slack$ |
 | SF3      | $-\Delta \text{leakage_power} / (\Delta delay \times \text{#}paths)$ |
 | SF4      | $-\Delta \text{leakage_power} \times slack / \text{#}paths $ |
 | SF5      | $-\Delta \text{leakage_power} \times slack / (\Delta delay \times \text{#}paths) $ |
 
-Table 1: Sensitivity functions for SGGS. SF 4 and SF 5 appear most successful (Table 4), and our metaheuristic produces bet- 
-ter results when using multiple functions. The slack and ∆delay values are expected to be positive.  
+Table 1: Sensitivity functions for SGGS. SF 4 and SF 5 appear most successful (Table 4), and our metaheuristic produces better results when using multiple functions. The slack and ∆delay values are expected to be positive.  
 
 표 1: SGGS를 위한 감도 함수. SF 4와 SF 5가 가장 성공적으로 나타나며 (표 4), 여러 함수를 사용할 때 우리의 메타휴리스틱은 더 나은 결과를 도출합니다. 슬랙과 ∆delay 값은 양수일 것으로 예상됩니다.  
 
@@ -211,4 +213,50 @@ In slack legalization, we first collect cells which are in critical (negative-sl
 
 Each standard cell can drive a certain maximum capacitance load deﬁned in the library (e.g., based on the contest library, the maximum capacitance that can be driven by the smallest four-input NAND gate with high Vt is $3.2fF$). If a cell is overloaded, its output transition time slows down signiﬁcantly, resulting in overall degradation of slacks in its fanout cone. In our heuristic, we remove max-capacitance and slew violations at every iteration of GTR (Algorithm 1) by alternating backward- and forward-traversal repair as necessary. During backward traversal, we visit cells in a reverse topological order and continue to upsize driving cells until capacitance violations for the driving cells are removed or the driving cells reach their maximum sizes (whichever comes ﬁrst). This procedure resolves most of capacitance violations in the early iterations of GTR when cell sizes are relatively small. However, at later stages, cells on certain paths can be saturated at their maximum sizes,4 and we must downsize some of their fanout cells. Therefore, during forward traversal, we visit cells in a forward topological order and continue to downsize fanout cells until capacitance violations for the current cells are removed or all fanout cells shrink to their minimum sizes (whichever comes ﬁrst). Empirically, this requires one to two iterations of backward and forward traversals. As this happens, all output transitions become faster than the maximum slew allowed at the ISPD 2012 contest(300 ps).  
 
-각 표준 셀은 라이브러리에서 정의된 최대용량을 구동할 수 있습니다(예: 콘테스트 라이브러리를 기준으로 가장 작은 4입력 NAND 게이트의 최대용량은 고 Vt에서 3.2fF입니다). 셀이 과부하되면 출력 전이 시간이 크게 느려지고, 그 결과로 전체적으로 팬아웃 콘의 슬랙이 저하됩니다. 우리의 휴리스틱에서는 GTR의 각 반복에서 최대용량과 슬로우 위반을 교대로 역방향 및 순방향으로 수정하여 제거합니다(알고리즘 1). 역방향 탐색 중에는 역위상적인 순서로 셀을 방문하고, 구동 셀의 용량 위반을 제거하거나 구동 셀이 최대 크기에 도달할 때까지 구동 셀을 계속 업사이징합니다(먼저 발생하는 경우). 이 절차는 셀 크기가 비교적 작을 때 GTR 초기 반복에서 대부분의 용량 위반을 해결합니다. 그러나 후기 단계에서는 특정 경로의 셀이 최대 크기로 포화될 수 있으며, 이들의 팬아웃 셀을 다운사이징해야 합니다. 따라서 순방향 탐색 중에는 정방향 위상적인 순서로 셀을 방문하고, 현재 셀에 대한 용량 위반을 제거하거나 모든 팬아웃 셀이 최소 크기로 축소될 때까지 팬아웃 셀을 계속 다운사이징합니다(먼저 발생하는 경우). 실험적으로 이를 위해 역방향 및 순방향 탐색을 한 번 또는 두 번 진행해야 합니다. 이 과정에서 모든 출력 전이는 ISPD 2012 콘테스트에서 허용된 최대 슬로우(300 ps)보다 빠르게 발생합니다.  
+각 표준 셀은 라이브러리에서 정의된 최대용량을 구동할 수 있습니다(예: 콘테스트 라이브러리를 기준으로 가장 작은 입력 NAND 게이트의 최대용량은 고 Vt에서 3.2fF입니다). 셀이 과부하되면 출력 전이 시간이 크게 느려지고, 그 결과로 전체적으로 팬아웃 콘의 슬랙이 저하됩니다. 우리의 휴리스틱에서는 GTR의 각 반복에서 최대용량과 슬로우 위반을 교대로 역방향 및 순방향으로 수정하여 제거합니다(알고리즘 1). 역방향 탐색 중에는 역위상적인 순서로 셀을 방문하고, 구동 셀의 용량 위반을 제거하거나 구동 셀이 최대 크기에 도달할 때까지 구동 셀을 계속 업사이징합니다(먼저 발생하는 경우). 이 절차는 셀 크기가 비교적 작을 때 GTR 초기 반복에서 대부분의 용량 위반을 해결합니다. 그러나 후기 단계에서는 특정 경로의 셀이 최대 크기로 포화될 수 있으며, 이들의 팬아웃 셀을 다운사이징해야 합니다. 따라서 순방향 탐색 중에는 정방향 위상적인 순서로 셀을 방문하고, 현재 셀에 대한 용량 위반을 제거하거나 모든 팬아웃 셀이 최소 크기로 축소될 때까지 팬아웃 셀을 계속 다운사이징합니다(먼저 발생하는 경우). 실험적으로 이를 위해 역방향 및 순방향 탐색을 한 번 또는 두 번 진행해야 합니다. 이 과정에서 모든 출력 전이는 ISPD 2012 콘테스트에서 허용된 최대 슬로우(300 ps)보다 빠르게 발생합니다.  
+
+## Appendix
+
+추가로 알아본 내용들
+
+### SPEF 포맷
+
+SPEF는 "Standard Parasitic Exchange Format"의 약어로, 직역하면 "표준 잡음 교환 형식"입니다. SPEF는 반도체 설계와 레이아웃 도구 사이에서 사용되는 표준 데이터 형식입니다.  
+
+반도체 설계에서 SPEF 파일은 전기적 특성을 설명하는 잡음 및 지연 정보를 포함합니다. 이 파일은 전기적 상호 연결을 나타내는 회로의 세부 정보와 해당 회로의 전압, 전류, 전송 시간 등과 같은 전기적 특성을 설명합니다. SPEF 파일은 주로 회로 시뮬레이션 및 타이밍 분석 도구에 사용되며, 이러한 도구는 회로의 성능과 신호 지연을 예측하고 최적화하는 데 사용됩니다.  
+
+일반적으로 SPEF 파일은 반도체 설계 도구에서 자동으로 생성되며, 레이아웃 정보에서 파생됩니다. 이 파일은 대규모 반도체 설계에서 특히 중요하며, 회로의 전체적인 동작과 성능을 이해하고 분석하는 데 필수적입니다.  
+
+### Liberty 파일의 `cell_rise`와 `rise_transition`
+
+- `cell_rise` : Rise delay
+- `rise_transition` : Slew
+
+```text
+cell_rise ("delay_outputslew_template_7X8") {
+  index_1 ("0.00,3.00,6.00,12.00,24.00,48.00,96.00") ;  /* input slew */
+  index_2 ("5.00,30.00,50.00,80.00,140.00,200.00,300.00,500.00") ;  /* output load */
+  values (\ /* cell_rise values */
+  "8.23, 14.43, 17.89, 21.74, 27.48, 32.10, 38.73, 49.94",\
+  "13.44, 19.94, 24.75, 30.18, 38.07, 44.17, 52.51, 66.24",\
+  "18.64, 25.14, 30.34, 37.12, 46.93, 54.40, 64.42, 80.31",\
+  "29.06, 35.56, 40.76, 48.56, 61.69, 71.64, 84.77, 104.89",\
+  "49.89, 56.39, 61.59, 69.39, 84.99, 99.07, 117.57, 145.40",\
+  "91.56, 98.06, 103.26, 111.06, 126.66, 142.26, 167.92, 208.68",\
+  "174.89, 181.39, 186.59, 194.39, 209.99, 225.59, 251.59, 303.59"\
+  );
+}
+rise_transition ("delay_outputslew_template_7X8") {
+  index_1 ("0.00,3.00,6.00,12.00,24.00,48.00,96.00") ;  /* input slew */
+  index_2 ("5.00,30.00,50.00,80.00,140.00,200.00,300.00,500.00") ;  /* output load */
+  values (\ /* rise_transition values */
+  "8.31, 10.42, 13.02, 15.79, 19.39, 21.93, 25.44, 31.62",\
+  "14.56, 15.47, 17.89, 21.94, 27.64, 31.62, 36.40, 43.73",\
+  "20.81, 21.11, 22.84, 26.79, 34.17, 39.50, 45.99, 54.89",\
+  "33.31, 33.31, 33.90, 36.56, 44.62, 52.13, 61.62, 74.67",\
+  "58.31, 58.31, 58.31, 58.92, 63.99, 71.59, 85.38, 105.77",\
+  "108.31, 108.31, 108.31, 108.31, 109.06, 112.95, 123.55, 151.24",\
+  "208.31, 208.31, 208.31, 208.31, 208.31, 208.31, 211.23, 228.60"\
+  );
+}
+```
