@@ -21,6 +21,7 @@ mathjax: "true"
 - **배열 초기화** 꼼꼼히 하자
 - 증명해야할 것 같으면 증명도 쓰자
 - 동치임을 증명해야하면 양방향으로 증명이 필요하다
+- Recurrence 식 쓸 때 boundary condition 고려가 필요하다면 명시하기(예를 들어 i=0일 때와 i>0일 때 케이스를 나누어서 명시) 
 
 ## NP-Completeness
 
@@ -49,4 +50,3 @@ mathjax: "true"
 
 1. NP다
 2. NP-Hard다
-
