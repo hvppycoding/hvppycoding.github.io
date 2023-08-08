@@ -7,7 +7,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Umberto**](https://unsplash.com/@umby) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - IC Compiler II
+  - VLSI
 ---
 
 Welcome to the IC compiler II Block-level Implementation self-paced training. Now we will discuss the block level floorplanning module.  

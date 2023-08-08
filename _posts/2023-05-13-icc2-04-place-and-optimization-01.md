@@ -7,7 +7,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Umberto**](https://unsplash.com/@umby) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - IC Compiler II
+  - VLSI
 ---
 
 In this module we introduce you to Placement & Optimization flow used in block level implementation.  
