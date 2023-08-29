@@ -410,8 +410,6 @@ The `report_clock_qor` command is your go-to command to analyse the clock tree. 
 
 Menu: Window > New Clock Tree Analysis Window  
 
-![2023-05-17-analyzing-using-cts-guipng]({{site.baseurl}}/assets/images/2023-05-17-analyzing-using-cts-guipng){: .align-center}  
-
 There are also lots of wonderful things in the GUI that can help you analyse your clock tree. The CTS browser helps you to identify clock tree objects, properties and attributes. You can traverse your clock tree levels. The clock tree schematic shown on the lower left allows you to trace your clock paths and cross probe with the layout. The abstraction produced by the clock tree levelized graph or the latency graph are often the preferred way users approach analysing their clock tree.  
 GUI에서는 클럭 트리를 분석하는 데 도움이 되는 다양한 기능이 있습니다. CTS 브라우저를 사용하면 클럭 트리 개체, 속성 및 속성을 식별할 수 있습니다. 클럭 트리 수준을 탐색할 수 있습니다. 왼쪽 하단에 표시된 클럭 트리 도표를 통해 클럭 경로를 추적하고 레이아웃과 교차 프로브를 수행할 수 있습니다. 클럭 트리 레벨별 그래프나 지연 그래프로 생성된 추상화는 사용자가 클럭 트리를 분석하는 선호하는 방법입니다.  
 {: .notice--warning}  

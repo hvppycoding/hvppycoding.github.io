@@ -252,7 +252,7 @@ set_qor_strategy -stage pnr \
   -metric [timing | leakage_power | total_power]
 ```
 
-- For ease of use, configure 10011 to meet your QoR criteria:
+- For ease of use, configure ICC II to meet your QoR criteria:
   - Selecting `leakage_power` or `total_power` configures power optimization in addition to timing (timing remains higher priority)
   - Selecting `timing` will not enable any power optimization
 - The `pnr` stage configures placement, CTS, routing and optimization application options to meet the chosen metric(s)
