@@ -14,7 +14,7 @@ categories:
 
 ## List of Abbreviation
 
-| Abbreviation | full form |
+| Abbreviation | Full Form |
 |--------------|-----------|
 | ACO | Ant Colony Optimization |
 | AMR | Adaptive Maze Routing |
@@ -58,3 +58,18 @@ categories:
 | VLSI | Very Large-Scale Integration |
 | XSMT | X-architecture Steiner Minimum Tree |
 
+## I. INTRODUCTION
+
+The whole process of PD is usually divided into serveral phases: partition, floorplanning, layout, placement, routing. One of the most ciritcal steps is Global Routing (GR), a stage where signal nets are connected coarsely under a given placement so that wire/via spaces are allocated to each signal net.  
+Given points on a plane, an SMT connects these points through some extra points (Steiner points) to achieve a minimum total length. An SMT is usually used in initial topology creation for noncritical nets. For timing critical nets, wirelength minimization is not the only goal. However, most nets are noncritical in routing phase and an SMT gives the most desirable route of such a net. Thus, SMT is often used as accurate estimations for congestion and wirelength during floorplanning and placement.  
+Nowadays, timing and power cconsumption issues have become increasingly prominent. More and more constraints have emerged in GR and Steiner tree construction, which leads to the fact that the traditional routing algorithms or SMT algorithms cannot adapt to such multi-objective tasks well. Thus, GR and SMT algorithms face new challenges.  
+
+## II. BASIC ROUTING STRATEGIES
+
+### A. MULTI-PIN NET DECOMPOSITION
+
+Multi-pin net decomposition is often used in the GR algorithms. A net with more than two pins is often decomposed into two-pin subnets, and then point-to-point routing for each subnet is performed in some order.
+
+### B. MAZE ROUTING
+
+A subproblem often encountered in GR is finding the shortest path connecting the two pins in the presence of blockages. The most widely known solution to this problem is the <span class="custom-highlight" markdown="1">Lee's algorithm</span>, that is, maze routing algorithm. Maze routing is a grid-based search algorithm that has long been considered a brute-force algorithm since it allows all possible paths. Johann and Reis used the A\* algorithm to improve the Lee's algorithm to speed up the convergence.
