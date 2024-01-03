@@ -72,6 +72,7 @@ Multi-pin net decomposition is often used in the GR algorithms. A net with more 
 
 ### B. MAZE ROUTING
 
+
 A subproblem often encountered in GR is finding the shortest path connecting the two pins in the presence of blockages. The most widely known solution to this problem is the <span class="custom-highlight" markdown="1">Lee's algorithm</span>, that is, maze routing algorithm. Maze routing is a grid-based search algorithm that has long been considered a brute-force algorithm since it allows all possible paths. Johann and Reis used the A\* algorithm to improve the Lee's algorithm to speed up the convergence.  
 
 ### C. MULTI-SOURCE AND MULTI-SINK MAZE ROUTING
@@ -91,4 +92,3 @@ Maze routing methods such as Dijkstra's algorithm and A\* search can be used to 
 Assuming that the given source point is at the bottom left of the receiving point, monotonic routing can only move up or to the right from the grid point.
 
 ### G. INTEGER LINEAR PROGRAMMING (ILP) ROUTING
-
