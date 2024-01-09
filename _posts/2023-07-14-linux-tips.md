@@ -19,5 +19,5 @@ tar -zxvf [압축파일명]
 ## `tar.gz` 압축하기
 
 ```bash
-tar -zxvf [압축파일명] [압푹할 파일 혹은 폴더]
+tar -zcvf [압축파일명.tar.gz] [압푹할 파일 혹은 폴더]
 ```

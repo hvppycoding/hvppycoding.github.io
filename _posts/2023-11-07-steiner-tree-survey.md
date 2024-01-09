@@ -72,4 +72,23 @@ Multi-pin net decomposition is often used in the GR algorithms. A net with more 
 
 ### B. MAZE ROUTING
 
-A subproblem often encountered in GR is finding the shortest path connecting the two pins in the presence of blockages. The most widely known solution to this problem is the <span class="custom-highlight" markdown="1">Lee's algorithm</span>, that is, maze routing algorithm. Maze routing is a grid-based search algorithm that has long been considered a brute-force algorithm since it allows all possible paths. Johann and Reis used the A\* algorithm to improve the Lee's algorithm to speed up the convergence.
+
+A subproblem often encountered in GR is finding the shortest path connecting the two pins in the presence of blockages. The most widely known solution to this problem is the <span class="custom-highlight" markdown="1">Lee's algorithm</span>, that is, maze routing algorithm. Maze routing is a grid-based search algorithm that has long been considered a brute-force algorithm since it allows all possible paths. Johann and Reis used the A\* algorithm to improve the Lee's algorithm to speed up the convergence.  
+
+### C. MULTI-SOURCE AND MULTI-SINK MAZE ROUTING
+
+Multi-source and multi-sink maze routing evolved from traditional maze routing, which is an improvement over traditional routing, considering more and better routing paths.
+
+### D. STEINER TREE CONSTRUCTION
+
+Both the maze routing and the line probe approach are designed for the connection of a two-pin net. However, in practical design, routing problems often encounter some nets with more than two pins. A common approach to deal with multi-pin nets is to decompose them into a set of two-pin nets. One way to perform this decomposition is to first construct an MST on these pins and then perform maze routing on each pair of pins corresponding to each edge of the MST. The total length of the routing tree can usually be reduced by adding additional points(steiner points) outside of given pins and constructing an MST on all these nodes.  
+
+### E. PATTERN ROUTING
+
+Maze routing methods such as Dijkstra's algorithm and A\* search can be used to guarantee a shortest path between two pins. In practice, many nets' routes are not only short but also have few bends. Pattern routing uses a predefined pattern for routing the two-pin nets, which limits point-to-point connections to a small number of fixed shapes.
+
+### F. MONOTONIC ROUTING
+
+Assuming that the given source point is at the bottom left of the receiving point, monotonic routing can only move up or to the right from the grid point.
+
+### G. INTEGER LINEAR PROGRAMMING (ILP) ROUTING
