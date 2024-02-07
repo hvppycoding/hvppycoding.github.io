@@ -81,11 +81,13 @@ I'm 22-years old.
 
 ## Variable Sweep
 
-여러 조건에 대해 sweep하고 싶다면, 아래와 같은 `run` 스크립트를 만들어보자.
+여러 조건에 대해 sweep하고 싶을 경우가 있다.
+그런 경우 아래와 같은 `run` 스크립트를 만들 수 있다.
 
 ```sh
 make NAME=Jack AGE=64
 make NAME=Tom AGE=33
+make NAME=Eva AGE=28
 ```
 
 스크립트에 실행 권한을 주고 실행하자.
@@ -102,4 +104,6 @@ My name is Jack.
 I'm 64-years old.
 My name is Tom.
 I'm 33-years old.
+My name is Eva.
+I'm 28-years old.
 ```
