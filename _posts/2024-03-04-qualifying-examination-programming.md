@@ -1,5 +1,5 @@
 ---
-title: "Qualifying Examination"
+title: "Qualifying Examination - Programming"
 excerpt: "Programming"
 date: 2024-03-04 10:00:00 +0900
 header:

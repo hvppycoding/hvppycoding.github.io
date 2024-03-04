@@ -1,5 +1,5 @@
 ---
-title: "Qualifying Examination"
+title: "Qualifying Examination - Logic Design"
 excerpt: "Logic Design"
 date: 2024-03-04 09:00:00 +0900
 header:
@@ -59,3 +59,116 @@ mathjax: "true"
 
 ## 2020-2
 
+1\. Answer the following questions.  
+
+a. (7) Given the following PLA(Programmable Logic Array), represent each of the four outputs F1, F2, F3, and F4 as a minimized sum-of-products expression.  
+
+![2020-2 1]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-2-1.png){: .align-center}
+
+b. (10) We like to implement the four outputs in problem 1.a with PAL(Programmable Array Logic) as shown below. Notice that each output is connected to 2-input OR gate. You cannot add new wires or gates. Just mark x's on the intersection points of wires which have to be connected. The spare OR gate can be used freely if it is necessary.  
+
+![2020-2 2]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-2-2.png){: .align-center}
+
+----------
+
+2\. (15) Implement the following state diagram into a synchronous Mealy FSM using output-oriented encoding and draw your implemented FSM. Try to implement with the smallest number of gates.  
+
+![2020-2 3]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-2-3.png){: .align-center}
+
+----------
+
+3\. Answer the following questions  
+
+a. (8) Draw a state transition table from the following state transition diagram for Moore machine.  
+
+![2020-2 4]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-2-4.png){: .align-center}
+
+b. (10) Using the implication chart method, reduce the state machine to an equivalent machine with the minimal number of states. Tell which states are merged to form new states, and represent the new state machine by illustrating a state transition diagram.  
+
+----------
+
+## 2021-1
+
+1\. Drive a simplified **Sum-of-Products(SOP)** of the following truth table using Karnaugh map. and draw the gate-level structure of the simplified SOP using 2-input AND, 2-input OR, and INVERTER gates only.  
+
+| ABC | F |
+|-----|---|
+| 000 | 1 |
+| 001 | 1 |
+| 010 | 0 |
+| 011 | 1 |
+| 100 | 1 |
+| 101 | 0 |
+| 110 | 0 |
+| 111 | 1 |
+
+----------
+
+2\. Implement the function F specified in the truth table introduced in problem 1 using a **single** 4:1 multiplexor component.(S1 and S0 are two select ports of the multiplexor and should be respectively connected to B and C; it is allowed to use any number of INVERTER gates for the implementation, if needed.)  
+
+{% capture solution2021-1-2 %}
+**Solution Example**:
+* You can include lists
+* and even fenced code blocks:
+
+```html
+<html>
+  <body>Some body.<body>
+</html>
+```
+
+![2020-2 4]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-2-4.png){: .align-center}
+
+{% endcapture %}
+
+<div class="notice--warning">{{ solution2021-1-2 | markdownify }}</div>
+
+----------
+
+3\. Reimplement the 4:1 multiplexor-based design produced in problem 2 by using only **2:1 multiplexor components**. (Reimplemented design should use the smallest number of 2:1 multiplexors; it is allowed to use any number of INVERTER gates for the implementation, if needed.)  
+
+## 2021-2
+
+1\. (30) You have a boolean function F as below:  
+$F(a, b, c, d) = \sum{m(1, 2, 3, 5, 7) + d(10, 11, 12, 13, 14, 15)}$  
+// d means "don't care"
+
+(1) Draw F's karnaumap  
+
+| AB ＼ CD | 00 | 01 | 11 | 10 |
+|----------|----|----|----|----|
+| 00 | | | | |
+| 01 | | | | |
+| 11 | | | | |
+| 10 | | | | |
+
+(2) Write F's prime implicants and essential prim implicants  
+Prime implicants:  
+Essential prime implicants:  
+
+----------
+
+2\. (40)  
+
+(a) RS latch is shown below with its input-output truth table.  
+
+![2021-2 2a]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2021-2-2a.png){: .align-center}
+
+Draw its gate diagram using two inverters and two 2-input NAND gates.  
+
+(b) Gated/level-sensitive latch uses clock-based input(CLK) to solve the problem of RS latch.  
+
+* What is the proble of RS latch solved by a gated/level sensitive latch?
+* Draw the gate diagram of gated/level-sensitive latch using one clock and four 2-input NAND gates.
+
+(c) Below is a master-slave flip-flop using two RS-latch blocks with extra gates.  
+
+![2021-2 2c]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2021-2-2c.png){: .align-center}
+
+Master-slave flip-flop sovles a key problem of the gated/level-sensitive latch. What is the problem? How dos this master-slave flip-flop solve the problem?
+
+(d) Draw a D flip-flop which solves a critical problem of a master-slave flip-flop(above). What is the problem? How does this D flip-flop solve the problem?  
+
+![2021-2 2d]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2021-2-2d.png){: .align-center}
+
+----------
