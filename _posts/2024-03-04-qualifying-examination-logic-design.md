@@ -1,6 +1,6 @@
 ---
 title: "Qualifying Examination"
-excerpt: "Logic Design & Fundamental of Programming"
+excerpt: "Logic Design"
 date: 2024-03-04 09:00:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg
@@ -12,7 +12,7 @@ classes: wide
 mathjax: "true"
 ---
 
-## Logic Design 2020-1
+## 2020-1
 
 1\. (5) Answer the followings for the logic structure.
 
@@ -56,3 +56,6 @@ mathjax: "true"
  B. (5) What is the minimal value of clock period which does not violate all setup time constrains in DESIGN_TEST when x0 = x1 = 0. Justify your answer.  
 
 ----------
+
+## 2020-2
+
