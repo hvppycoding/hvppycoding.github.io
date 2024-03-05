@@ -7,7 +7,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - SNU
+  - C++
 classes: wide
 mathjax: "true"
 ---

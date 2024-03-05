@@ -7,7 +7,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - SNU
+  - VLSI
 classes: wide
 mathjax: "true"
 ---
@@ -23,13 +23,34 @@ mathjax: "true"
  C. (1) Specify re-convergent paths if exist?  
  D. (2) Convert the logic structure into the structure with 2-input NOR and NOT gates.  
 
+{% capture solution2020-1-1 %}
+A. t1, t2  
+B. t2  
+C. There are 2 re-convergent paths  
+(1) a → and1 → t1 → or1 → z와 a → invB → abar → and2 → t2 → or1 → z  
+(2) b → and2 → t2 → or1 → z와 b → invA → bbar → and1 → t1 → or1 → z  
+D.  
+
+![2020-1 1D Solution]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-1-1d-sol.drawio.svg)  
+
+{% endcapture %}
+
+<div class="notice--warning">{{ solution2020-1-1 | markdownify }}</div>
+
 ----------
 
 2\. (10) Given a Boolean function $F(A, B, C) = m0 + m1 + \pmb{d3} + \pmb{d4} + m6$, answer the following.  
  A. (3) Find a minimized SoP(sum of products) of F using Karnaugh-map method. Show your process.  
  B. (2) Similar to problem 2.A, find a minimized PoS(product of sums) of F using Karnaugh-map method. Show your process.  
  C. (2) List all prime implicant(s) of F.  
- D. (3) List all essential(s) of F. In addition, draw the covering table of F, which is used in the Quine-McClusky Method.  
+ D. (3) List all essential(s) of F. In addition, draw the covering table of F, which is used in the Quine-McClusky Method.
+
+{% capture solution2020-1-2 %}
+![2020-1 2 Solution]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-1-2-sol.drawio.svg)  
+
+{% endcapture %}
+
+<div class="notice--warning">{{ solution2020-1-2 | markdownify }}</div>  
 
 ----------
 
@@ -105,23 +126,6 @@ b. (10) Using the implication chart method, reduce the state machine to an equiv
 ----------
 
 2\. Implement the function F specified in the truth table introduced in problem 1 using a **single** 4:1 multiplexor component.(S1 and S0 are two select ports of the multiplexor and should be respectively connected to B and C; it is allowed to use any number of INVERTER gates for the implementation, if needed.)  
-
-{% capture solution2021-1-2 %}
-**Solution Example**:
-* You can include lists
-* and even fenced code blocks:
-
-```html
-<html>
-  <body>Some body.<body>
-</html>
-```
-
-![2020-2 4]({{site.baseurl}}/assets/images/2024-03-04-logic-design-2020-2-4.png){: .align-center}
-
-{% endcapture %}
-
-<div class="notice--warning">{{ solution2021-1-2 | markdownify }}</div>
 
 ----------
 
