@@ -1,0 +1,22 @@
+<mxfile host="Electron" modified="2024-03-05T03:29:06.688Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.1.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="XslUfm4Jmh4LapLrFO3e" version="23.1.5" type="device">
+  <diagram name="페이지-1" id="qSHpXhcsfzvB4XJorAeH">
+    <mxGraphModel dx="1221" dy="823" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2smdXw136wwaaQwkMmS9-2" value="A" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="180" y="380" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="2smdXw136wwaaQwkMmS9-3" value="B" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="240" y="380" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="2smdXw136wwaaQwkMmS9-4" value="C" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="300" y="380" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="2smdXw136wwaaQwkMmS9-5" value="D" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="360" y="380" width="40" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
