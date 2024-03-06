@@ -207,3 +207,135 @@ int main()
 (b) We can implement a **Set** using an array or linked list. What is the advantage of linked list compared to array? What is the disadvantage?  
 
 ----------
+
+## 2021-1
+
+1\. The following is the description on the Pascal's triangle.  
+
+* The first row consist of a single entry $a_{00}$, and its value is one.
+* If $a_{nk}$ is the entry ant the n-th row and k-th column, its value is:
+
+$$
+\begin{align}
+ a_{n0} &= 1\\
+ a_{nn} &= 1\\
+ a_{nk} &= a_{n-1 k-1} + a_{n-1 k} && (n, k \ge 1)\\
+\end{align}
+$$
+
+The following code inputs the number of rows and prints out the Pascal's triangle. Answer the following questions.  
+
+```cpp
+/*
+    | j0 | j1 | j2 | j3 | j4 | j5 |
+----+----+----+----+----+----+----+
+ i0 |  1
+ i1 |  1    1
+ i2 |  1    2    1
+ i3 |  1    3    3    1
+ i4 |  1    4    6    4    1
+ i5 |  1    5   10   10    5    1
+*/
+#include <iostream>
+using namespace std;
+
+int pascal(unsigned int row, unsigned int col) {
+  // problem (1)
+}
+
+void main() {
+  unsigned int nRow;
+  cin >> nRow;
+
+  int** pascal_triangle;
+  // problem (2)
+
+  for (unsigned int i = 0; i < nRow; i++)
+    for (unsigned int j = 0; j < i + 1; j++) 
+      pascal_triangle[i][j] = pascal(i, j);
+
+  for (unsigned int i = 0; i < nRow; i++) {
+    for (unsigned int j = 0; j < i + 1; j++) 
+      cout << pascal_triangle[i][j] << " ";
+    cout << endl;
+  }
+  // problem (3)
+}
+```
+
+(1) Using recursion, program the function pascal that returns the entry at the n-th row and k-th column. (Both i and j start from zero.)  
+
+(2) The pointer `pascal_triangle` is used to store the return values from the pascal function. In order to make the main function work properly, add a fragment of code (to the main function) that allocates memory to `pascal_triangle`.  
+
+(3) Add a fragment of code at the end of the main function, so that all the heap memory allocated by (2) is returned.  
+
+----------
+
+## 2021-2
+
+1\. (24) Consider the following program:  
+
+```cpp
+void main()
+{
+  int a=7, c;
+  double b=2.6, d, e;
+  c = a/2 + 0.6;
+  d = a/2 + 0.6;
+  e = (int)(b/2 + 3.9);
+}
+```
+
+Write the values of c, d, and e after the execution of the above program, and expalin why.  
+
+----------
+
+2\. (30) Write a C or C++ program that receives one alphabet character among 'A', 'a', 'B', 'b', 'C', 'c' from the keyboard, and output some message according to the received character. If the character is 'A' or 'a', output "Excellent", and if it is 'B' or 'b', output "Good", and if it is 'C' or  'c', output "Not too bad". If the received character is none of them, repeat the above procedure again. Your program will repeat this procedure until the received character is one of the proper character.  
+
+----------
+
+3\. (21) Write the output of the following codes. (You only need to write the output values.)  
+
+```cpp
+int *p1, *p2;
+p1 = new int(6);
+p2 = p1;
+cout << *p1 << " " << *p2 << endl;
+
+*p2 = 7;
+cout << *p1 << " " << *p2 << endl;
+p2 = new int(9);
+cout << *p1 << " " << *p2 << endl;
+```
+
+-----------
+
+4\. (25) Consider the following program. Write the output of the program. Now suppose that you change the second line of the program "`void draw() {`" to "`virtual void draw() {`". Write the output of the new program. Explain why the difference happens.  
+
+```cpp
+class Figure {
+  void draw() {
+    cout << "Figure::draw()\n";
+  }
+  void center() {
+    cout << "Erase\n";
+    cout << "Move to center\n";
+    draw();
+  }
+};
+
+class Circle : public Figure {
+  void draw() {
+    cout << "Circle::draw()\n";
+  }
+};
+
+int main(void) {
+  Figure f;
+  Circle c;
+  f.center();
+  c.center();
+}
+```
+
+----------
