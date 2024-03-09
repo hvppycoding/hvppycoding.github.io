@@ -47,3 +47,13 @@ ALT키의 역할을 변경시키자.
 <HNGL> = 108;
 ...
 ```
+
+## Fn키가 Multi-Media로 동작될 때
+
+한성키보드 GK893B Pro를 Forcelink(무선)으로 연결하니 Fn키가 Multi-Media로 동작되었다. 
+나는 `F1`-`F12` 키를 그대로 사용하고 싶었기 때문에 이를 고치고 싶었다. 
+Stackoverflow에 있는 [이 글](https://askubuntu.com/questions/818413/how-can-i-toggle-the-fn-function-key)을 참고하여 해결하였다.  
+
+```sh
+echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode
+```
