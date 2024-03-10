@@ -58,9 +58,10 @@ Stack Overflow에 있는 [이 글](https://askubuntu.com/questions/818413/how-ca
 echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode
 ```
 
-컴퓨터 재시작 후에 다시 설정이 리셋되었다. 
-검색을 통해 Stack Overflow에서 [이 글](https://askubuntu.com/questions/1230890/i-set-sys-module-hid-apple-parameters-fnmode-to-2-and-it-gets-overwritten-to-1)을 참고해서 아래와 같이 설정하였다. 
+위 커맨드로는 컴퓨터 재시작 후에 설정이 다시 리셋된다. 
+[이 글](https://unix.stackexchange.com/questions/121395/on-an-apple-keyboard-under-linux-how-do-i-make-the-function-keys-work-without-t)을 참고해서 아래와 같이 설정하였다. 
 
 ```sh
-sudo update-initramfs -u
+echo options hid_apple fnmode=2 | sudo tee -a /etc/modprobe.d/hid_apple.conf
+sudo update-initramfs -u -k all
 ```
