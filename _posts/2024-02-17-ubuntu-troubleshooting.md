@@ -65,3 +65,18 @@ echo 2 | sudo tee /sys/module/hid_apple/parameters/fnmode
 echo options hid_apple fnmode=2 | sudo tee -a /etc/modprobe.d/hid_apple.conf
 sudo update-initramfs -u -k all
 ```
+
+## Docker Qt GUI 관련
+
+내 컴퓨터의 Terminal에 입력
+
+```sh
+xhost +local:docker
+```
+
+키보드 입력 문제가 있을 때,
+
+```sh
+# Docker 내에서 Qt Application 실행 전 입력
+export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
+```
