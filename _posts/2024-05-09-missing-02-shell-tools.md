@@ -184,9 +184,9 @@ find . -name '*.tmp' -exec rm {} \;
 find . -name '*.png' -exec convert {} {.}.jpg \;
 ```
 
-`find`의 편리성에도 불구하고, 그 구문을 기억하기가 까다로울 수 있습니다.예를 들어, 어떤 패턴 `PATTERN`과 일치하는 파일을 찾으려면 `find -name PATTERN` (또는 패턴의 대소문자를 구분하지 않으려면 `-iname`)를 실행해야 합니다. 이러한 상황에 대비해서 별칭을 만들어서 편리하게 쓸 수 있지만, 쉘 철학의 일부는 대안을 탐색하는 것이 좋다는 것입니다. 쉘의 가장 좋은 속성 중 하나는 프로그램을 호출하는 것이므로 일부 대체 방법을 찾거나 직접 작성할 수 있다는 점을 기억하십시오. 예를 들어 [fd](https://github.com/sharkdp/fd)는`find`에 대한 간단하고 빠른 사용자 친화적 대안입니다. `fd`는 색상화된 출력, 기본 정규식 일치 및 유니 코드 지원과 같은 멋진 기본값을 제공합니다. 또한 제 생각에는 보다 직관적인 것 같습니다. 예를 들어 패턴 `PATTERN`을 찾는 구문은 `fd PATTERN`입니다.
+`find`의 편리성에도 불구하고, 그 구문을 기억하기가 까다로울 수 있습니다.예를 들어, 어떤 패턴 `PATTERN`과 일치하는 파일을 찾으려면 `find -name PATTERN` (또는 패턴의 대소문자를 구분하지 않으려면 `-iname`)를 실행해야 합니다. 이러한 상황에 대비해서 별칭을 만들어서 편리하게 쓸 수 있지만, 쉘 철학의 일부는 대안을 탐색하는 것이 좋다는 것입니다. 쉘의 가장 좋은 속성 중 하나는 프로그램을 호출하는 것이므로 일부 대체 방법을 찾거나 직접 작성할 수 있다는 점을 기억하십시오. 예를 들어 [fd](https://github.com/sharkdp/fd)는 `find`에 대한 간단하고 빠른 사용자 친화적 대안입니다. `fd`는 색상화된 출력, 기본 정규식 일치 및 유니 코드 지원과 같은 멋진 기본값을 제공합니다. 또한 제 생각에는 보다 직관적인 것 같습니다. 예를 들어 패턴 `PATTERN`을 찾는 구문은 `fd PATTERN`입니다.
 
-대부분의 사람들은`find`와`fd` 둘 다 좋다는 데 동의할 것입니다. 그러나 여러분 중 일부는 빠른 검색을 위해 어떤 종류의 인덱스나 데이터베이스를 컴파일하는 것과 비교하여 매번 파일을 찾는 것의 효율성에 대해 궁금해 할 것입니다. 그것이 바로 [locate](https://www.man7.org/linux/man-pages/man1/locate.1.html)의 목적입니다. `locate`는 [updatedb](https://www.man7.org/linux/man-pages/man1/updatedb.1.html)를 사용하여 업데이트 된 데이터베이스를 사용합니다. 대부분의 시스템에서`updatedb`는 [cron](https://www.man7.org/linux/man-pages/man8/cron.8.html)을 통해 매일 업데이트됩니다. 따라서 둘 사이에서 한 가지 고려해야 할 점은 탐색 속도와 최신화입니다. 또한 `find` 와 유사한 도구는 파일 크기, 수정 시간 또는 파일 권한과 같은 속성을 사용하여 파일을 찾을 수도 있지만 `find`는 파일 이름만 사용합니다. 보다 자세한 비교는 [여기](https://unix.stackexchange.com/questions/60205/locate-vs-find-usage-pros-and-cons-of-each-other)에서 확인할 수 있습니다.
+대부분의 사람들은 `find`와 `fd` 둘 다 좋다는 데 동의할 것입니다. 그러나 여러분 중 일부는 빠른 검색을 위해 어떤 종류의 인덱스나 데이터베이스를 컴파일하는 것과 비교하여 매번 파일을 찾는 것의 효율성에 대해 궁금해 할 것입니다. 그것이 바로 [locate](https://www.man7.org/linux/man-pages/man1/locate.1.html)의 목적입니다. `locate`는 [updatedb](https://www.man7.org/linux/man-pages/man1/updatedb.1.html)를 사용하여 업데이트 된 데이터베이스를 사용합니다. 대부분의 시스템에서 `updatedb`는 [cron](https://www.man7.org/linux/man-pages/man8/cron.8.html)을 통해 매일 업데이트됩니다. 따라서 둘 사이에서 한 가지 고려해야 할 점은 탐색 속도와 최신화입니다. 또한 `find` 와 유사한 도구는 파일 크기, 수정 시간 또는 파일 권한과 같은 속성을 사용하여 파일을 찾을 수도 있지만 `find`는 파일 이름만 사용합니다. 보다 자세한 비교는 [여기](https://unix.stackexchange.com/questions/60205/locate-vs-find-usage-pros-and-cons-of-each-other)에서 확인할 수 있습니다.
 
 ## 코드 찾기
 
@@ -194,7 +194,7 @@ find . -name '*.png' -exec convert {} {.}.jpg \;
 
 지금은 `grep`에 매우 다양한 도구를 제공하는 많은 플래그가 있음을 알고 있습니다. 제가 자주 사용하는 것들은 일치하는 줄 주위에 **C**ontext를 가져 오기 위해 `-C` 옵션을 사용하고, 일치하는 줄을 **V**erting하는 데 사용하기 위한 `-v`입니다. 즉, 일치하지 **않는** 모든 줄을 출력합니다. 예를 들어, `grep -C 5`는 일치하는 전 후 다섯 줄을 출력해줍니다. 많은 파일을 빠르게 검색할 때 `-R`을 사용하는 것이 좋습니다. 이는 **R**ecursively 하게 디렉토리로 이동하여 일치하는 문자열에 대한 파일을 검색하기 때문입니다.
  
-그러나`grep -R`은 다중 CPU 지원, & c를 사용하여`.git` 폴더를 무시하는 등 여러가지 방법으로 개선할 수 있습니다. [ack](https://beyondgrep.com/), [ag](https://github.com/ggreer/the_silver_searcher) 및 [rg](https://github.com/BurntSushi/ripgrep)를 포함한 많은 것들이 `grep`의 대안으로 개발되었습니다. `grep`의 대안으로 나온 저 모든 것들은 환상적이며 거의 동일한 기능을 제공합니다. 지금은 얼마나 빠르고 직관적인지를 고려할 때 ripgrep(`rg`)를 사용하고 있습니다. 몇 가지 예 :
+그러나`grep -R`은 다중 CPU 지원, & c를 사용하여 `.git` 폴더를 무시하는 등 여러가지 방법으로 개선할 수 있습니다. [ack](https://beyondgrep.com/), [ag](https://github.com/ggreer/the_silver_searcher) 및 [rg](https://github.com/BurntSushi/ripgrep)를 포함한 많은 것들이 `grep`의 대안으로 개발되었습니다. `grep`의 대안으로 나온 저 모든 것들은 환상적이며 거의 동일한 기능을 제공합니다. 지금은 얼마나 빠르고 직관적인지를 고려할 때 ripgrep(`rg`)를 사용하고 있습니다. 몇 가지 예 :
 
 ```bash
 # Find all python files where I used the requests library
@@ -227,13 +227,13 @@ rg --stats PATTERN
 쉘 별칭을 작성하거나 [ln -s](https://www.man7.org/linux/man-pages/man1/ln.1.html)를 사용하여 심볼릭 링크를 만드는 등 이를 수행할 수 있는 간단한 방법이 많이 있습니다. 하지만 개발자들은 이미 매우 영리하고 정교한 솔루션을 만들어놓았습니다.
 
 이 과정의 주제와 마찬가지로, 당신은 종종 일반적인 경우를 최적화하고자 할 것입니다. [fasd](https://github.com/clvv/fasd) 및 [autojump](https://github.com/wting/)와 같은 도구를 통해 자주 and / or 최근 파일과 디렉토리를 찾을 수 있습니다. Fasd는 [_frecency_](https://developer.mozilla.org/en/The_Places_frecency_algorithm), 즉 _frequency_ 및 _recency_ 별로 파일 및 디렉토리의 순위를 매 깁니다.
-기본적으로 `fasd` 는 _frecent_ 디렉토리의 하위 문자열을 사용하여 빠르게`cd`하는 데 사용할 수있는 `z` 명령을 추가합니다. 예를 들어`/ home / user / files / cool_project`로 자주 이동하는 경우 `z cool` 을 사용하여 바로 이동할 수 있습니다. autojump를 사용하면 `j cool` 을 사용하여 동일한 디렉토리 변경을 수행할 수 있습니다.
+기본적으로 `fasd` 는 _frecent_ 디렉토리의 하위 문자열을 사용하여 빠르게 `cd`하는 데 사용할 수있는 `z` 명령을 추가합니다. 예를 들어`/ home / user / files / cool_project`로 자주 이동하는 경우 `z cool` 을 사용하여 바로 이동할 수 있습니다. autojump를 사용하면 `j cool` 을 사용하여 동일한 디렉토리 변경을 수행할 수 있습니다.
 
 [tree](https://linux.die.net/man/1/tree), [broot](https://github.com/Canop/broot) 또는 [nnn](https://github.com/jarun/nnn) 또는 [ranger](https://github.com/ranger/ranger)와 같은 본격적인 파일 관리자 디렉토리 구조에 대한 개요를 신속하게 파악하기위한 더 복잡한 도구도 존재합니다. 
 
 # 연습문제
 
-1. [man ls](https://www.man7.org/linux/man-pages/man1/ls.1.html)를 읽고 다음과 같은 방식으로 파일을 나열하는`ls` 명령을 작성합니다.
+1. [man ls](https://www.man7.org/linux/man-pages/man1/ls.1.html)를 읽고 다음과 같은 방식으로 파일을 나열하는 `ls` 명령을 작성합니다.
 
     - 모든 파일 포함, 모든 숨겨진 파일 포함
     - 사이즈는 사람이 읽을 수 있을 법한 형식으로 (e.g. 454M instead of 454279954)
@@ -254,8 +254,8 @@ rg --stats PATTERN
 ls -lath --color=auto
 {% endcomment %}
 
-1. 다음을 수행하는 bash 함수`marco` 및`polo`를 작성합니다.
-`marco`를 실행할 때마다 현재 작업 디렉토리가 어떤 방식으로 저장되어야합니다. 그러면`polo`를 실행할 때 어떤 디렉토리에 있든 상관없이 `polo` 가`cd`를 수행해서 `marco` 를 실행한 디렉토리로 돌아갑니다.
+1. 다음을 수행하는 bash 함수 `marco` 및 `polo`를 작성합니다.
+`marco`를 실행할 때마다 현재 작업 디렉토리가 어떤 방식으로 저장되어야합니다. 그러면 `polo`를 실행할 때 어떤 디렉토리에 있든 상관없이 `polo`가 `cd`를 수행해서 `marco`를 실행한 디렉토리로 돌아갑니다.
 디버깅을 쉽게 하기 위해 `marco.sh` 파일에 코드를 작성하고 `source marco.sh`를 실행하여 쉘에 정의를 (재)로드 할 수 있습니다.
 
 {% comment %}
@@ -299,7 +299,7 @@ echo "found error after $count runs"
 cat out.txt
 {% endcomment %}
 
-1. 강의에서 다루었 듯이`find`의`-exec`는 검색하는 파일에 대한 작업을 수행하는데 매우 강력합니다. 
+1. 강의에서 다루었 듯이 `find`의 `-exec`는 검색하는 파일에 대한 작업을 수행하는데 매우 강력합니다. 
 그러나 zip 파일을 만드는 것과 같이 **모든** 파일로 작업을 수행하려면 어떻게해야합니까?
 지금까지 본 것처럼 명령은 인수와 STDIN 모두에서 입력을 받습니다.
 명령을 타이핑 할 때 STDOUT을 STDIN에 연결하지만 `tar`와 같은 일부 명령은 인수에서 입력을 받습니다.
