@@ -1,5 +1,6 @@
 ---
 title: "Missing Semester 03 - Editors (Vim)"
+excerpt: ""
 date: 2024-05-09 15:03:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg

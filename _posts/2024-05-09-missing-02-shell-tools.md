@@ -1,5 +1,6 @@
 ---
 title: "Missing Semester 02 - 셸 툴과 스크립팅"
+excerpt: ""
 date: 2024-05-09 15:02:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg

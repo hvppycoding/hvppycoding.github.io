@@ -1,5 +1,6 @@
 ---
 title: "Missing Semester 06 - Version Control (Git)"
+excerpt: ""
 date: 2024-05-09 15:06:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg

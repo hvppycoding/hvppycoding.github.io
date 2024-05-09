@@ -1,5 +1,6 @@
 ---
 title: "Missing Semester 08 - Metaprogramming"
+excerpt: ""
 date: 2024-05-09 15:08:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg

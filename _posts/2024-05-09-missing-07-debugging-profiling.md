@@ -1,5 +1,6 @@
 ---
 title: "Missing Semester 07 - Debugging and Profiling"
+excerpt: ""
 date: 2024-05-09 15:07:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg

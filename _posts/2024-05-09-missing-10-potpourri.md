@@ -1,5 +1,6 @@
 ---
 title: "Missing Semester 10 - 기타 흥미로운 주제들"
+excerpt: ""
 date: 2024-05-09 15:10:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg
