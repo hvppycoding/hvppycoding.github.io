@@ -1,5 +1,6 @@
 ---
 title: "Missing Semester 01 - 수업 개요 + 셸(SHELL)"
+excerpt: ""
 date: 2024-05-09 15:01:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg
@@ -9,7 +10,7 @@ categories:
   - Missing Semester
 ---
 
-<iframe width="100%" height="auto" src="https://www.youtube-nocookie.com/embed/Z56Jmr9Z34Q?controls=0" frameborder="0" allowfullscreen></iframe>
+<iframe width="100%" height="100vh" src="https://www.youtube-nocookie.com/embed/Z56Jmr9Z34Q?controls=0" frameborder="0" allowfullscreen></iframe>
 
 # 이 수업에 관하여
 
