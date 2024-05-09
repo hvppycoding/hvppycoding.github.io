@@ -10,7 +10,7 @@ categories:
   - Missing Semester
 ---
 
-<iframe width="100%" height="100vh" src="https://www.youtube-nocookie.com/embed/Z56Jmr9Z34Q?controls=0" frameborder="0" allowfullscreen></iframe>
+{% include video id="Z56Jmr9Z34Q" provider="youtube" %}
 
 # 이 수업에 관하여
 
