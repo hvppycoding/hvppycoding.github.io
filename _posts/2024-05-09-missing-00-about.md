@@ -80,7 +80,7 @@ SSH 키 및 터미널 멀티플렉싱을 사용하여 원격 시스템과 작업
 
 아래와 같이 세션을 원격 서버에서 활성 상태로 유지하기 위해 `tmux`를 사용하고 네트워크 로밍과 연결을 지원하기 위해 `mosh`를 사용합니다.
 
-<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
+<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo" height="100vh" width="100%" object-fit="fill" position="absolute">
   <source src="{{site.baseurl}}/assets/media/2024-05-09-ssh.mp4" type="video/mp4">
 </video>
 
