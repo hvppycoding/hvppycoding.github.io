@@ -39,7 +39,7 @@ categories:
 예를 들어, 여러분의 shell history를 빠르게 검색하는 것은 엄청난 시간 절약이 될 수 있습니다.
 아래와 같이 명령 `변환`을 위한 shell history 탐색과 관련된 몇 가지 트릭을 보여 줍니다.
 
-<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
+<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo" height="auto" width="100%" object-fit="fill" position="absolute">
   <source src="{{site.baseurl}}/assets/media/2024-05-09-history.mp4" type="video/mp4">
 </video>
 
@@ -55,7 +55,7 @@ Pull requests로 다른 사람의 프로젝트에 기여하는 방법까지 알�
 
 아래와 같이 `git bisect`를 사용하여 어떤 커밋이 unit test를 깨트렸는지 찾은 후에 `git revert`로 수정하는 것입니다.
 
-<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
+<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo" height="auto" width="100%" object-fit="fill" position="absolute">
   <source src="{{site.baseurl}}/assets/media/2024-05-09-git.mp4" type="video/mp4">
 </video>
 
@@ -67,7 +67,7 @@ Pull requests로 다른 사람의 프로젝트에 기여하는 방법까지 알�
 
 Vim 매크로는 가장 좋은 기능 중 하나인데, 아래와 같이 html 테이블을 중첩된 vim 매크로를 사용하여 csv 형식으로 빠르게 변환시킬 수 있습니다.
 
-<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
+<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo" height="auto" width="100%" object-fit="fill" position="absolute">
   <source src="{{site.baseurl}}/assets/media/2024-05-09-vim.mp4" type="video/mp4">
 </video>
 
@@ -80,7 +80,7 @@ SSH 키 및 터미널 멀티플렉싱을 사용하여 원격 시스템과 작업
 
 아래와 같이 세션을 원격 서버에서 활성 상태로 유지하기 위해 `tmux`를 사용하고 네트워크 로밍과 연결을 지원하기 위해 `mosh`를 사용합니다.
 
-<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo" height="100vh" width="100%" object-fit="fill" position="absolute">
+<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo" height="auto" width="100%" object-fit="fill" position="absolute">
   <source src="{{site.baseurl}}/assets/media/2024-05-09-ssh.mp4" type="video/mp4">
 </video>
 
@@ -92,7 +92,7 @@ SSH 키 및 터미널 멀티플렉싱을 사용하여 원격 시스템과 작업
 아래와 같이 `fd`가 있는 파일과 `rg`가 있는 코드 스니펫을 빠르게 찾아볼 수 있습니다.
 또한 `fasd`를 사용하여 최근/자주 사용하는 파일/폴더도 `cd`와 `vim`을 실행할 수 있습니다.
 
-<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
+<video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo" height="auto" width="100%" object-fit="fill" position="absolute">
   <source src="{{site.baseurl}}/assets/media/2024-05-09-find.mp4" type="video/mp4">
 </video>
 
