@@ -1,12 +1,15 @@
 ---
-layout: lecture
-title: "Version Control (Git)"
-date: 2019-01-22
-ready: true
-video:
-  aspect: 56.25
-  id: 2sjqTHE0zok
+title: "Missing Semester 06 - Version Control (Git)"
+date: 2024-05-09 15:06:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="2sjqTHE0zok" provider="youtube" %}
 
 버전 컨트롤 시스템(VCSs)은 소스코드(또는 기타 파일이나 폴더들의 모음)의 변화를 추적하기 위해 사용되는 도구입니다.
 이름에서 알수 있듯이 이 도구는 변경내역을 유지시켜주며, 나아가 협업을 용이하게 합니다.

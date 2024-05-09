@@ -1,12 +1,15 @@
 ---
-layout: lecture
-title: "Editors (Vim)"
-date: 2019-01-15
-ready: true
-video:
-  aspect: 56.25
-  id: a6Q8Na575qc
+title: "Missing Semester 03 - Editors (Vim)"
+date: 2024-05-09 15:03:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="a6Q8Na575qc" provider="youtube" %}
 
 코드를 작성하는 일은 글을 쓰는 일과 아주 다릅니다. 프로그래밍은 긴 줄글을 쓰는 것과 다르게, 파일을 바꾸거나 코드를 읽고 처리하고 작성하는데 더 많은 시간을 할애하게 됩니다. 그렇기에 서로 다른 종류의 글을 작성하는 프로그램과 코드를 작성하는 프로그램이 있습니다(가령, Microsoft Word와 Visual Studio Code를 비교할 수 있겠지요).
 

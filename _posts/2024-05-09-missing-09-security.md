@@ -1,12 +1,15 @@
 ---
-layout: lecture
-title: "Security and Cryptography"
-date: 2019-01-28
-ready: true
-video:
-  aspect: 56.25
-  id: tjwobAmnKTo
+title: "Missing Semester 09 - Security and Cryptography"
+date: 2024-05-09 15:09:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="tjwobAmnKTo" provider="youtube" %}
 
 지난 해의 [security and privacy lecture](/2019/security/)는 컴퓨터 _사용자_ 측면에서 어떻게 더 안전해 질 수 있는가에 초점을 맞췄습니다. 이번에는, Git에서의 Hash 함수 혹은 키 유도 함수의 사용과 SSH 에서의 대칭/비대칭 암호 시스템과 같이 지난 수업에서 다룬 도구를 이해하는데 관련이 있는 보안과 암호학 개념에 초점을 맞출 것입니다.
 

@@ -1,5 +1,5 @@
 ---
-title: "Missing Semester 00: About"
+title: "Missing Semester 00 - About"
 excerpt: "왜 우리가 이 수업을 가르칠까요?"
 date: 2024-05-09 15:00:00 +0900
 header:

@@ -1,12 +1,15 @@
 ---
-layout: lecture
-title: "Debugging and Profiling"
-date: 2019-01-23
-ready: true
-video:
-  aspect: 56.25
-  id: l812pUnKxME
+title: "Missing Semester 07 - Debugging and Profiling"
+date: 2024-05-09 15:07:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="l812pUnKxME" provider="youtube" %}
 
 프로그래밍에서 가장 중요한 원칙은 '기대한 대로 작동하는 것'이 아니라 '지시내린 대로 작동한다는 것'입니다. 이 격차를 메꾸기는 꽤 어려운 일입니다. 이번 강의에서는 버그가 있거나 리소스를 많이 소비하는 코드를 다루기 위한 기술인 디버깅과 프로파일링에 대해 배웁니다.
 

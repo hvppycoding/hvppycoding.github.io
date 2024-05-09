@@ -1,7 +1,6 @@
 ---
-title: "Missing Semester 01: Course + SHELL"
-excerpt: "수업 개요 + 셸(SHELL)"
-date: 2024-05-09 15:30:00 +0900
+title: "Missing Semester 01 - 수업 개요 + 셸(SHELL)"
+date: 2024-05-09 15:01:00 +0900
 header:
   overlay_image: /assets/images/unsplash-thomas-t-math.jpg
   overlay_filter: 0.5

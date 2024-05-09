@@ -1,12 +1,15 @@
 ---
-layout: lecture
-title: "셸 툴과 스크립팅"
-date: 2019-01-14
-ready: true
-video:
-  aspect: 56.25
-  id: kgII-YWo3Zw
+title: "Missing Semester 02 - 셸 툴과 스크립팅"
+date: 2024-05-09 15:02:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="kgII-YWo3Zw" provider="youtube" %}
 
 이번 강의에서는 배시(bash)를 스크립팅 언어로 사용하기 위해 필요한 기본 사항들과, 여러분이 앞으로 커맨드라인에서 가장 보편적인 작업을 할 때 사용되는 몇 개의 셸 도구들에 대해 소개할 것입니다.
 

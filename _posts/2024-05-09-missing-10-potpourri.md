@@ -1,15 +1,19 @@
 ---
-layout: lecture
-title: "기타 흥미로운 주제들"
-date: 2019-01-29
-ready: true
-video:
-  aspect: 56.25
-  id: JZDt-PRq0uo
+title: "Missing Semester 10 - 기타 흥미로운 주제들"
+date: 2024-05-09 15:10:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="JZDt-PRq0uo" provider="youtube" %}
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [키보드 매핑](#키보드-매핑)
 - [데몬](#데몬)
 - [FUSE](#fuse)
@@ -20,6 +24,7 @@ video:
 - [VPN](#vpn)
 - [마크다운](#마크다운)
 - [해머스푼 (macOS 데스크탑 자동화 프로그램)](#해머스푼-macos-데스크탑-자동화-프로그램)
+  - [참고 자료](#참고-자료)
 - [부팅 + 라이브USB](#부팅--라이브usb)
 - [도커, 베이그런트, 가상 환경, 클라우드, 오픈스택](#도커-베이그런트-가상-환경-클라우드-오픈스택)
 - [노트북 프로그래밍](#노트북-프로그래밍)

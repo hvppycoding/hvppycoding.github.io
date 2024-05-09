@@ -1,12 +1,15 @@
 ---
-layout: lecture
-title: "Data Wrangling"
-date: 2019-01-16
-ready: true
-video:
-  aspect: 56.25
-  id: sz_dsktIjt4
+title: "Missing Semester 04 - Data Wrangling"
+date: 2024-05-09 15:04:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="sz_dsktIjt4" provider="youtube" %}
 
 여러분은 아마 데이터의 한 형식을 다른 형식으로 변환하고 싶었던 적이 있었을 것입니다. 이번 강의는 이러한 주제를 다루고자 합니다. 특히, 데이터가 텍스트 형식이든 바이너리 형식이든, 여러분이 원하는 데이터가 될 때까지 데이터를 조작하는 방법을 다룹니다.
 

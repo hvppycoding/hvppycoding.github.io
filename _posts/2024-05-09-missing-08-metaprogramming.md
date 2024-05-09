@@ -1,13 +1,15 @@
 ---
-layout: lecture
-title: "Metaprogramming"
-details: build systems, dependency management, testing, CI
-date: 2019-01-27
-ready: true
-video:
-    aspect: 56.25
-    id: _Ms1Z4xfqv4
+title: "Missing Semester 08 - Metaprogramming"
+date: 2024-05-09 15:08:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="_Ms1Z4xfqv4" provider="youtube" %}
 
 우리가 메타프로그래밍(metaprogramming)이라고 할 때, 이 용어는 무얼 뜻하는 것일까요?  
 이는 코드를 작성하는 것이나 더 효율적으로 작업하는 것보다는, _"프로세스(process)"_ 에 더 관련된 것들을 두루 일컫는 총칭이라고 할 수 있습니다.  

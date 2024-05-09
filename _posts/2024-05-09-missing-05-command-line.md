@@ -1,12 +1,15 @@
 ---
-layout: lecture
-title: "Command-line Environment"
-date: 2019-01-21
-ready: true
-video:
-  aspect: 56.25
-  id: e8BO_dYxk5c
+title: "Missing Semester 05 - Command-line Environment"
+date: 2024-05-09 15:05:00 +0900
+header:
+  overlay_image: /assets/images/unsplash-thomas-t-math.jpg
+  overlay_filter: 0.5
+  caption: "Photo by [**Thomas T**](https://unsplash.com/@pyssling240) on [**Unsplash**](https://unsplash.com/)"
+categories:
+  - Missing Semester
 ---
+
+{% include video id="e8BO_dYxk5c" provider="youtube" %}
 
 이 강의에서는 shell을 사용할 때 워크플로우를 개선할 수 있는 몇 가지 방법을 살펴볼 것입니다. 
 그동안 우리는 shell을 사용해왔지만, 주로 다른 명령을 실행했습니다. 
