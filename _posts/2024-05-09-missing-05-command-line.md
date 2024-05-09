@@ -311,14 +311,14 @@ fi
 ssh foo@bar.mit.edu
 ```
 
-여러분은 서버 `bar.mit.edu`에서 사용자`foo`로 ssh를 사용하게 됩니다.
+여러분은 서버 `bar.mit.edu`에서 사용자 `foo`로 ssh를 사용하게 됩니다.
 서버는 URL ( 예) `bar.mit.edu` ) 또는 IP ( 예) `foobar @ 192.168.1.42` )로 지정할 수 있습니다. 나중에 ssh 구성 파일을 수정하면 `ssh bar`와 같은 것을 사용하여 액세스 할 수 있음을 알 수 있습니다.
 
 
 ## 명령실행(Executing commands)
 
 놓치기 쉬운 `ssh`의 특징은 명령을 직접 실행할 수 있다는 점입니다.
-`ssh foobar @ server ls`는 foobar의 홈 폴더에서`ls`를 실행합니다.
+`ssh foobar @ server ls`는 foobar의 홈 폴더에서 `ls`를 실행합니다.
 파이프와 함께 작동하므로 `ssh foobar @ server ls | grep PATTERN`은 `ls`의 근처의 원격 출력을 grep하고, `ls | ssh foobar@server grep PATTERN`은 먼 로컬 출력을 grep합니다.
 
 
@@ -358,7 +358,7 @@ ssh를 통해 파일을 복사하는 방법에는 여러 가지가 있습니다.
 
 - `ssh+tee`, 가장 간단한 방법은 `cat localfile | ssh remote_server tee serverfile`을 실행하여 `ssh`명령 실행(command execution) 그리고 STDIN 입력(input)을 사용하는 것입니다. [`tee`](https://www.man7.org/linux/man-pages/man1/tee.1.html)에서 STDIN의 출력을 파일로 작성합니다.
 - [`scp`](https://www.man7.org/linux/man-pages/man1/scp.1.html) 많은 양의 파일/디렉토리를 복사 할 때, 보안 복사 `scp` 명령은 경로를 쉽게 반복 할 수 있으므로 더 편리합니다. 구문은 `scp path/to/local_file remote_host:path/to/remote_file`입니다. 
-- [`rsync`](https://www.man7.org/linux/man-pages/man1/rsync.1.html)는 로컬과 원격에서 동일한 파일을 탐지해 다시 복사하지 못하게 함으로써 `scp`를 향상시킵니다. 또한 심볼릭 링크(symlinks), 권한(permissions)에 대해 보다 세밀한 제어를 제공하며 이전에 중단 된 복사본에서 다시 시작할 수있는`--partial` 플래그(flag)와 같은 추가 기능이 있습니다. `rsync`는 `scp`와 유사한 구문을 가지고 있습니다. 
+- [`rsync`](https://www.man7.org/linux/man-pages/man1/rsync.1.html)는 로컬과 원격에서 동일한 파일을 탐지해 다시 복사하지 못하게 함으로써 `scp`를 향상시킵니다. 또한 심볼릭 링크(symlinks), 권한(permissions)에 대해 보다 세밀한 제어를 제공하며 이전에 중단 된 복사본에서 다시 시작할 수 있는 `--partial` 플래그(flag)와 같은 추가 기능이 있습니다. `rsync`는 `scp`와 유사한 구문을 가지고 있습니다. 
 
 
 ## 포트 포워딩(Port Forwarding)

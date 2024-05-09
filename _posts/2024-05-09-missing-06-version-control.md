@@ -203,7 +203,7 @@ def load_reference(name_or_id):
 
 명령을 입력 할 때마다 명령어가 만들어내는 기본그래프 자료구조의 조작에 대해 생각해보세요.
 반대로 커밋 DAG에 특정 종류의 변경을 시도하는 경우, 
-예를 들어 "커밋되지 않은 변경 사항을 무시하고 'master' reference가 커밋`d83f9e`을 가르키도록 만들어 보세요"
+예를 들어 "커밋되지 않은 변경 사항을 무시하고 'master' reference가 커밋 `d83f9e`을 가르키도록 만들어 보세요"
 이를 수행하는 명령은 있을 수 있습니다 (예 : git checkout master; git reset --hard 5d83f9e).
 
 
