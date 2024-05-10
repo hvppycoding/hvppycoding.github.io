@@ -229,9 +229,9 @@ Vim을 확장하기 위한 플러그인은 아주 많습니다. 여러분이 인
 - [vim-easymotion](https://github.com/easymotion/vim-easymotion): 매직 모션
 
 우리는 여기에 엄청나게 긴 플러그인 목록을 제공하고 싶지는 않습니다. 해당 강의의 교사들이 어떤 플러그인을 사용하는지 닷파일을 확인해보는걸 추천합니다.
-([Anish](https://github.com/anishathalye/dotfiles),
-[Jon](https://github.com/jonhoo/configs),
-[Jose](https://github.com/JJGO/dotfiles))
+([Anish](https://github.com/hvppycoding/anishathalye-dotfiles),
+[Jon](https://github.com/hvppycoding/jonhoo-configs),
+[Jose](https://github.com/hvppycoding/jose-dotfiles))
 [Vim Awesome](https://vimawesome.com/)에서 멋진 Vim 플러그인들을 찾아보세요. 또한 단순히 "best Vim plugins"를 검색하기만 해도 이 주제에 대하여 아주 많은 블로그 글들이 있습니다.
 
 # 다른 프로그램에서 Vim-mode 사용하기
