@@ -178,7 +178,7 @@ End-to-end의 보안은 비대칭 키 암호화에서 부트스트랩 됩니다.
 
 ## SSH
 
-전 강의에서 SSH와 SSH키 사용에 대해 다루었습니다. [earlier lecture](/2020/command-line/#remote-machines)
+전 강의에서 SSH와 SSH키 사용에 대해 다루었습니다. [earlier lecture]({% post_url 2024-05-09-missing-05-command-line %}/#원격-장치remote-machines)
 이것의 암호적 측면을 살펴봅시다.
 
 `ssh-keygen` 실행 시, `public_key, private_key`의 비대칭 키쌍이 생성됩니다. 이는 운영체제에서 제공되는 엔트로피를 사용하여 무작위로 생성됩니다(하드웨어 이벤트 등에서 수집). 

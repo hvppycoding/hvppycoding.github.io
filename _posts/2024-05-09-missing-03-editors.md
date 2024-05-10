@@ -75,14 +75,14 @@ Vim은 "버퍼(buffers)"라고 불리는 열린 파일의 집합을 유지하고
 
 명령어 모드는 일반 모드에서 `:`키를 입력하여 들어갈 수 있습니다. `:`키를 누르면 여러분의 커서가 화면 하단에 있는 커맨드 라인으로 이동하게 됩니다. 이 모드에는 파일 열기, 저장하기, 파일 닫기 그리고 [Vim 종료하기](https://twitter.com/iamdevloper/status/435555976687923200)와 같은 다양한 기능이 있습니다.
 
-- `:q` 종료 (창 닫기)
-- `:w` 저장 ("write"의 앞 글자를 따옴)
-- `:wq` 저장한 뒤 종료
-- `:e {파일의 이름}` 편집을 위해 파일을 열기
-- `:ls` 열려 있는 버퍼들을 보여주기
-- `:help {주제}` 도움말 열기
-    - `:help :w` 명령어 `:w`에 대한 도움말 열기
-    - `:help w` `w`의 동작에 대한 도움말 열기
+- `:q` - 종료 (창 닫기)
+- `:w` - 저장 ("write"의 앞 글자를 따옴)
+- `:wq` - 저장한 뒤 종료
+- `:e {파일의 이름}` - 편집을 위해 파일을 열기
+- `:ls` - 열려 있는 버퍼들을 보여주기
+- `:help {주제}` - 도움말 열기
+    - `:help :w` - 명령어 `:w`에 대한 도움말 열기
+    - `:help w` - `w`의 동작에 대한 도움말 열기
 
 # Vim의 인터페이스는 프로그래밍 언어입니다
 
@@ -209,12 +209,12 @@ def main():
 
 Vim은 Vimscript 명령을 포함하는 `~/.vimrc` 일반-텍스트 구성 파일을 통해 커스터마이징을 할 수 있습니다. 여러분들은 각자 사용하고자 하는 수많은 기본적인 설정들이 있을 것입니다.
 
-우리는 여러분이 출발점으로 사용할 수 있는 문서화된 기본 구성을 제공하고 있습니다. 이들은 Vim의 특별한 기본 동작 중 일부를 수정하기 때문에, 저희가 제공하는 기본 구성을 사용하는 것을 추천드립니다. **[여기](/2020/files/vimrc)에서 저희의 구성을 다운로드하고 `~/.vimrc`에 저장하세요.**
+우리는 여러분이 출발점으로 사용할 수 있는 문서화된 기본 구성을 제공하고 있습니다. 이들은 Vim의 특별한 기본 동작 중 일부를 수정하기 때문에, 저희가 제공하는 기본 구성을 사용하는 것을 추천드립니다. **[여기]({{site.baseurl}}/assets/resources/2024-05-09-vimrc.txt)에서 저희의 구성을 다운로드하고 `~/.vimrc`에 저장하세요.**
 
 Vim은 강력한 커스터마이징 기능을 제공하기 때문에, 커스터마이징 옵션을 찾아보는 시간은 그 자체로 유익할 것입니다. 여러분은 다른 사람들이 깃허브에 올려놓은 닷파일(dotfile)을 살펴보며 영감을 얻을 수도 있을 것입니다. 예를 들어, 해당 강의의 교사의 Vim 구성은 다음과 같습니다.
-([Anish](https://github.com/anishathalye/dotfiles/blob/master/vimrc),
-[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.vim) (uses [neovim](https://neovim.io/)),
-[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc))
+([Anish]({{site.baseurl}}/assets/resources/2024-05-09-anish-vimrc.txt),
+[Jon]({{site.baseurl}}/assets/resources/2024-05-09-jon-init_lua.txt) (uses [neovim](https://neovim.io/)),
+[Jose]({{site.baseurl}}/assets/resources/2024-05-09-jose-vimrc.txt))
 이 주제에 대한 좋은 블로그 게시물들도 많이 있습니다. 하지만 다른 사람의 전체 구성을 복사하여 붙여넣지 말고, 읽고 이해한 후 필요한 내용을 가져가시길 바랍니다.
 
 # Vim 확장하기
@@ -285,7 +285,7 @@ set editing-mode vi
     - 먼저 `q{character}q`로 매크로를 초기화
     - `@{character}`를 사용하여 매크로를 기록하면, 매크로가 재귀적으로 호출됨
     (기록이 끝날 때까지 작동하지 않을 수 있음)
-- 예제: xml을 json으로 변환하기 ([file](/2020/files/example-data.xml))
+- 예제: xml을 json으로 변환하기 ([file]({{site.baseurl}}/assets/resources/2024-05-09-example-data.xml))
     - "name" / "email"이라는 키를 가진 객체의 배열
     - Python을 사용해야만 할까?
     - sed / regexes로 처리하기
@@ -322,7 +322,7 @@ set editing-mode vi
 # 연습문제
 
 1. `vimtutor`를 완료하세요. 참고: Vimtutor는 [80x24](https://en.wikipedia.org/wiki/VT100) (80 columns by 24 lines) 터미널 창에서 가장 잘 보입니다.
-1. 저희의 [basic vimrc](/2020/files/vimrc)를 다운로드하고 `~/.vimrc`에 저장하세요. Vim을 사용하여 주석이 달린 파일을 읽고, Vim이 새로운 구성과 어떤 점이 다른지 확인해보세요.
+1. 저희의 [basic vimrc]({{site.baseurl}}/assets/resources/2024-05-09-vimrc.txt)를 다운로드하고 `~/.vimrc`에 저장하세요. Vim을 사용하여 주석이 달린 파일을 읽고, Vim이 새로운 구성과 어떤 점이 다른지 확인해보세요.
 1. 다음의 플러그인을 설치하고 설정합니다: [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim).
     1. `mkdir -p ~/.vim/pack/vendor/start`로 플러그인 디렉터리를 생성하세요
     1. 플러그인을 다운로드하세요: `cd ~/.vim/pack/vendor/start; git clone https://github.com/ctrlpvim/ctrlp.vim`
@@ -331,4 +331,4 @@ set editing-mode vi
 1. Vim 사용법을 연습하기 위해, 강의해서 진행되었던 [Demo](#demo)를 여러분의 컴퓨터로 다시 반복해보세요.
 1. 다음 달 까지 _모든_ 텍스트 편집에 Vim을 사용해보세요. 뭔가 비효율적으로 느껴지거나, "더 나은 방법이 있을 거야"라고 생각될 때마다, 구글을 검색해보면, 아마 방법은 있을 것입니다. 만약 막히는 부분이 있다면 오피스 아워에 방문하거나 우리에게 이메일을 보내주세요.
 1. Vim 바인딩을 이용하여 여러분의 다른 도구들을 설정해보세요 (관련 설명은 위에서 설명했습니다)
-1. (심화) Vim 매크로를 사용하여 XML을 JSON으로 변환해보세요 ([example file](/2020/files/example-data.xml)). 여러분 혼자 힘으로 해야하지만, 만약 막히는 부분이 있다면, 위의 [매크로](#macros) 섹션을 참고하세요.
+1. (심화) Vim 매크로를 사용하여 XML을 JSON으로 변환해보세요 ([example file]({{site.baseurl}}/assets/resources/2024-05-09-example-data.xml)). 여러분 혼자 힘으로 해야하지만, 만약 막히는 부분이 있다면, 위의 [매크로](#macros) 섹션을 참고하세요.
