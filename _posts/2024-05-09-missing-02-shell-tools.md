@@ -143,7 +143,7 @@ for arg in reversed(sys.argv[1:]):
 ```
 
 
-커널은 스크립트 상단에 [shebang](https://en.wikipedia.org/wiki/Shebang_ (Unix)) 줄을 포함했기 때문에 이 스크립트를 쉘 명령 대신 파이썬 인터프리터로 실행하는 것을 알고 있습니다. [env](https://www.man7.org/linux/man-pages/man1/env.1.html) 명령을 사용하여 명령이 시스템 어디에 있든 확인하는 것을 shebang 줄을 작성하여 연습하는 것이 좋습니다. 이것이 스크립트의 이식성을 증가시킵니다. 위치를 확인하기 위해`env`는 첫 번째 강의에서 소개한 `PATH` 환경 변수를 사용합니다. 이 예에서 shebang 줄은 `#!/usr/bin/env python`과 같습니다.
+커널은 스크립트 상단에 [shebang](https://en.wikipedia.org/wiki/Shebang_ (Unix)) 줄을 포함했기 때문에 이 스크립트를 쉘 명령 대신 파이썬 인터프리터로 실행하는 것을 알고 있습니다. [env](https://www.man7.org/linux/man-pages/man1/env.1.html) 명령을 사용하여 명령이 시스템 어디에 있든 확인하는 것을 shebang 줄을 작성하여 연습하는 것이 좋습니다. 이것이 스크립트의 이식성을 증가시킵니다. 위치를 확인하기 위해 `env`는 첫 번째 강의에서 소개한 `PATH` 환경 변수를 사용합니다. 이 예시에서는 `#!/usr/bin/env python`이 shebang 줄에 해당합니다.
 
 기억해야 할 셸 함수와 스크립트 간의 몇 가지 차이점은 다음과 같습니다.
 - 함수는 쉘과 동일한 언어로 작성되어야 하며 스크립트는 모든 언어로 작성될 수 있습니다. 이것이 스크립트에 shebang을 포함하는 것이 중요한 이유입니다.
@@ -157,7 +157,7 @@ for arg in reversed(sys.argv[1:]):
 
 이 시점에서 `ls -l`, `mv -i` 및 `mkdir -p`와 같은 별칭 섹션에서 명령에 대한 플래그를 찾는 방법이 궁금 할 것입니다. 조금 더 일반적으로 말해, 명령이 주어지면 당신은 어떻게 그 명령어의 기능과 다른 옵션을 찾을 수 있습니까? 당신은 언제든지 구글링을 통해서 검색을 시작할 수 있지만, UNIX가 StackOverflow 보다 이전이므로 특정 명령어에 대한 정보를 가져오는 기본적으로 제공되는 방법이 따로 있습니다.
 
-쉘 강의에서 보았듯이 1차 접근 방식은`-h` 또는 `--help` 플래그를 사용하여 해당 명령들을 찾아보는 것입니다. 혹은, 더 자세한 정보를 알기 위해 `man` 명령을 사용할 수 있습니다. manual의 줄임말인 [man](https://www.man7.org/linux/man-pages/man1/man.1.html)은 사용자가 지정한 명령에 대한 매뉴얼 페이지 (manpage라고 함)를 제공합니다. 예를 들어 `man rm`은 앞서 보여 준 `-i` 플래그를 포함하여 사용할 수 있는 모든 플래그와 함께 `rm` 명령의 동작을 출력합니다. 사실 지금까지의 모든 명령어에 대해 링크는 명령에 대한 Linux 매뉴얼 페이지의 온라인 버전입니다. 기본이 아닌 명령도 개발자가 작성하여 설치 프로세스의 일부로 포함하면 매뉴얼 페이지 항목이 있습니다. ncurses 기반 도구와 같은 대화형 도구의 경우, 프로그램 내에서 `: help` 명령을 사용하거나 `?` 를 입력하여 도움말에 액세스 할 수 있습니다.
+쉘 강의에서 보았듯이 1차 접근 방식은`-h` 또는 `--help` 플래그를 사용하여 해당 명령들을 찾아보는 것입니다. 혹은, 더 자세한 정보를 알기 위해 `man` 명령을 사용할 수 있습니다. manual의 줄임말인 [man](https://www.man7.org/linux/man-pages/man1/man.1.html)은 사용자가 지정한 명령에 대한 매뉴얼 페이지 (manpage라고 함)를 제공합니다. 예를 들어 `man rm`은 앞서 보여 준 `-i` 플래그를 포함하여 사용할 수 있는 모든 플래그와 함께 `rm` 명령의 동작을 출력합니다. 사실 지금까지의 모든 명령어에 대해 링크는 명령에 대한 Linux 매뉴얼 페이지의 온라인 버전입니다. 기본이 아닌 명령도 개발자가 작성하여 설치 프로세스의 일부로 포함하면 매뉴얼 페이지 항목이 있습니다. ncurses 기반 도구와 같은 대화형 도구의 경우, 프로그램 내에서 `:help` 명령을 사용하거나 `?` 를 입력하여 도움말에 액세스 할 수 있습니다.
 
 때때로 man 페이지는 명령에 대한 지나치게 자세한 설명을 제공하여 일반적인 사용 사례에 사용할 플래그 / 구문을 해독하기 어렵게 만듭니다. [TLDR 페이지](https://tldr.sh/)는 사용할 옵션을 신속하게 파악할 수 있도록 명령의 사용 사례를 제공하는 데 초점을 맞춘 멋진 보완 솔루션입니다. 예를 들어, 저의 경우 [tar](https://tldr.ostera.io/tar) 및 [ffmpeg](https://tldr.ostera.io/ffmpeg)에 대한 tldr 페이지를 메뉴얼 페이지보다 더 자주 참조합니다. 
 
@@ -227,7 +227,7 @@ rg --stats PATTERN
 쉘 별칭을 작성하거나 [ln -s](https://www.man7.org/linux/man-pages/man1/ln.1.html)를 사용하여 심볼릭 링크를 만드는 등 이를 수행할 수 있는 간단한 방법이 많이 있습니다. 하지만 개발자들은 이미 매우 영리하고 정교한 솔루션을 만들어놓았습니다.
 
 이 과정의 주제와 마찬가지로, 당신은 종종 일반적인 경우를 최적화하고자 할 것입니다. [fasd](https://github.com/clvv/fasd) 및 [autojump](https://github.com/wting/)와 같은 도구를 통해 자주 and / or 최근 파일과 디렉토리를 찾을 수 있습니다. Fasd는 [_frecency_](https://developer.mozilla.org/en/The_Places_frecency_algorithm), 즉 _frequency_ 및 _recency_ 별로 파일 및 디렉토리의 순위를 매 깁니다.
-기본적으로 `fasd` 는 _frecent_ 디렉토리의 하위 문자열을 사용하여 빠르게 `cd`하는 데 사용할 수있는 `z` 명령을 추가합니다. 예를 들어`/ home / user / files / cool_project`로 자주 이동하는 경우 `z cool` 을 사용하여 바로 이동할 수 있습니다. autojump를 사용하면 `j cool` 을 사용하여 동일한 디렉토리 변경을 수행할 수 있습니다.
+기본적으로 `fasd` 는 _frecent_ 디렉토리의 하위 문자열을 사용하여 빠르게 `cd`하는 데 사용할 수있는 `z` 명령을 추가합니다. 예를 들어`/home/user/files/cool_project`로 자주 이동하는 경우 `z cool` 을 사용하여 바로 이동할 수 있습니다. autojump를 사용하면 `j cool` 을 사용하여 동일한 디렉토리 변경을 수행할 수 있습니다.
 
 [tree](https://linux.die.net/man/1/tree), [broot](https://github.com/Canop/broot) 또는 [nnn](https://github.com/jarun/nnn) 또는 [ranger](https://github.com/ranger/ranger)와 같은 본격적인 파일 관리자 디렉토리 구조에 대한 개요를 신속하게 파악하기위한 더 복잡한 도구도 존재합니다. 
 
@@ -304,7 +304,7 @@ cat out.txt
 지금까지 본 것처럼 명령은 인수와 STDIN 모두에서 입력을 받습니다.
 명령을 타이핑 할 때 STDOUT을 STDIN에 연결하지만 `tar`와 같은 일부 명령은 인수에서 입력을 받습니다.
 이러한 문제를 해결하기 위해 STDIN을 인수로 사용하여 명령을 실행하는 [xargs](https://www.man7.org/linux/man-pages/man1/xargs.1.html) 명령이 있습니다.
-예를 들어`ls | xargs rm`은 현재 디렉토리의 파일을 삭제합니다.
+예를 들어 `ls | xargs rm`은 현재 디렉토리의 파일을 삭제합니다.
 
     당신의 임무는 폴더에서 모든 HTML 파일을 재귀적으로 찾아서 zip 파일을 만드는 명령을 작성하는 것입니다. 파일에 공백이 있어도 명령은 작동되어야 합니다. (hint: check `-d` flag for `xargs`)
     {% comment %}
