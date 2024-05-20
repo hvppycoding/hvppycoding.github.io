@@ -42,7 +42,7 @@ git clone --recursive -b final https://github.com/hvppycoding/OpenROAD-flow-scri
 ```sh
 cd OpenROAD-flow-scripts
 source setup.sh
-./build_openroad.sh --local
+./build_openroad.sh --no_init --local --threads 8
 ```
 
 ## 5. Run
