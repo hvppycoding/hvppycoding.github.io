@@ -56,11 +56,13 @@ Here is a [fork](https://github.com/yongshiwo/abc.git) of ABC containing Agdmap,
 
 ### yosys
 
-yosys – Yosys Open SYnthesis Suite
+[yosys](https://github.com/The-OpenROAD-Project/yosys) – Yosys Open SYnthesis Suite
 
 This is a framework for RTL synthesis tools. It currently has extensive Verilog-2005 support and provides a basic set of synthesis algorithms for various application domains.
 
 Yosys can be adapted to perform any synthesis job by combining the existing passes (algorithms) using synthesis scripts and adding additional passes as needed by extending the yosys C++ code base.
+
+* C. Wolf, J. Glaser. Yosys - A Free Verilog Synthesis Suite. In Proceedings of Austrochip 2013. [download pdf](https://yosyshq.net/yosys/files/yosys-austrochip2013.pdf)
 
 ## `do-floorplan`
 
