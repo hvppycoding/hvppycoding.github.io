@@ -96,6 +96,7 @@ author:
   name             : "Hvppy Coding"
   avatar           : "/assets/images/icon.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "-"
+  home             : "https://hvppycoding.github.io"
   location         : South Korea
   email            :
   links:
@@ -104,7 +105,7 @@ author:
       url: mailto:hvppycoding@gmail.com
     - label: "Website"
       icon: "fas fa-fw fa-link"
-      # url: "https://your-website.com"
+      url: "https://hvppycoding.github.io"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       # url: "https://twitter.com/"
