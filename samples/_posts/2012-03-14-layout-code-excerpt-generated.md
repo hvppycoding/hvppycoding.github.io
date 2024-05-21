@@ -1,8 +1,7 @@
 ---
 title: "Layout: Code Excerpt (Generated)"
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - content
   - excerpt

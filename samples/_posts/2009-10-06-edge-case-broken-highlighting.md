@@ -1,7 +1,7 @@
 ---
 title: "Edge Case: Invalid syntax highlight languages"
 categories:
-  - Edge Case
+  - Samples
 tags:
   - content
   - css

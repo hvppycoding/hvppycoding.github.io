@@ -8,6 +8,8 @@ tags:
 toc: true
 toc_label: "Unique Title"
 toc_icon: "heart"
+categories:
+  - Samples
 ---
 
 Enable table of contents on post or page by adding `toc: true` to its YAML Front Matter. The title and icon can also be changed with:

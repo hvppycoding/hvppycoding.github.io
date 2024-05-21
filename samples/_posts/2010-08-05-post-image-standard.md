@@ -1,7 +1,7 @@
 ---
 title: "Post: Image (Standard)"
 categories:
-  - Post Formats
+  - Samples
 tags:
   - image
   - Post Formats

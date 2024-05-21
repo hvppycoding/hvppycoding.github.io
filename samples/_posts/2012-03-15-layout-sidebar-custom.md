@@ -11,6 +11,8 @@ sidebar:
   - title: "Another Title"
     text: "More text here."
     nav: sidebar-sample
+categories:
+  - Samples
 ---
 
 This post has a custom sidebar set in the post's YAML Front Matter.

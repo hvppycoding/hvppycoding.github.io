@@ -1,7 +1,7 @@
 ---
 title: "Markup: Image Alignment"
 categories:
-  - Markup
+  - Samples
 tags:
   - alignment
   - captions

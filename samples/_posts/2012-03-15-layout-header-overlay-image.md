@@ -7,8 +7,7 @@ header:
     - label: "Learn more"
       url: "https://unsplash.com"
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - edge case
   - image

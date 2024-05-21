@@ -2,8 +2,7 @@
 title: "Layout: Related Posts Enabled"
 related: true
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - related posts
   - layout

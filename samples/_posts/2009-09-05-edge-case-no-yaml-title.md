@@ -1,6 +1,6 @@
 ---
 categories:
-  - Edge Case
+  - Samples
 tags:
   - edge case
   - layout

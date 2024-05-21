@@ -4,8 +4,7 @@ header:
   image: /assets/images/unsplash-image-6.jpg
   caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - edge case
   - featured image

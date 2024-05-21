@@ -2,6 +2,8 @@
 title: "Layout: Post with Nested Table of Contents via Helper"
 tags:
   - table of contents
+categories:
+  - Samples
 ---
 
 Tests table of contents with multiple levels to verify indentation is readible via helper include (deprecated).

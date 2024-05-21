@@ -3,7 +3,7 @@ title: "Markup: HTML Tags and Formatting"
 header:
   teaser: "assets/images/markup-syntax-highlighting-teaser.jpg"
 categories:
-  - Markup
+  - Samples
 tags:
   - content
   - css

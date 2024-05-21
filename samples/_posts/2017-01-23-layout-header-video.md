@@ -5,8 +5,7 @@ header:
     id: -PVofD2A9t8
     provider: youtube
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - video
   - layout

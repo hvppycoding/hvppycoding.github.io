@@ -4,8 +4,7 @@ header:
   image: /assets/images/page-header-image.png
   og_image: /assets/images/page-header-og-image.png
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - edge case
   - image

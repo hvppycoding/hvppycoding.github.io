@@ -2,8 +2,7 @@
 title: "Layout: Comments Enabled"
 comments: true
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - comments
   - layout

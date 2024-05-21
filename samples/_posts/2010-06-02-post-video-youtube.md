@@ -1,7 +1,7 @@
 ---
 title: "Post: Video (YouTube)"
 categories:
-  - Post Formats
+  - Samples
 tags:
   - Post Formats
 ---

@@ -2,8 +2,7 @@
 title: "Layout: Social Sharing Links Disabled"
 share: false
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - social
   - layout

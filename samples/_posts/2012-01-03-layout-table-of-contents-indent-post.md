@@ -3,6 +3,8 @@ title: "Layout: Post with Nested Table of Contents"
 tags:
   - table of contents
 toc: true
+categories:
+  - Samples
 ---
 
 Tests table of contents with multiple levels to verify indentation is readible.

@@ -15,7 +15,6 @@ mathjax: "true"
 
 원문: [CMake Tutorial](https://gist.github.com/luncliff/6e2d4eb7ca29a0afd5b592f72b80cb5c)  
 
-
 > CMake를 왜 쓰는거죠?  
 > 좋은 툴은 Visual Studio 뿐입니다. 그 이외에는 전부 사도(邪道)입니다 사도! - 작성자
 

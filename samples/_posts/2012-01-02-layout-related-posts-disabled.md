@@ -2,8 +2,7 @@
 title: "Layout: Related Posts Disabled"
 related: false
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - related posts
   - layout

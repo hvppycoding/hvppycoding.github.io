@@ -2,8 +2,7 @@
 title: "Layout: More Tag"
 excerpt_separator: <!--more-->
 categories:
-  - Layout
-  - Uncategorized
+  - Samples
 tags:
   - content
   - read more

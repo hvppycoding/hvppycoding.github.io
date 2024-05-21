@@ -1,7 +1,7 @@
 ---
 title: "Post: Image (with Link)"
 categories:
-  - Post Formats
+  - Samples
 tags:
   - image
   - Post Formats

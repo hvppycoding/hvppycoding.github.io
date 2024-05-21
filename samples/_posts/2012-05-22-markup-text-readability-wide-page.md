@@ -6,6 +6,8 @@ tags:
   - sample post
   - readability
   - test
+categories:
+  - Samples
 ---
 
 When using `layout: single` add the following front matter to a page or post to widen the main content:

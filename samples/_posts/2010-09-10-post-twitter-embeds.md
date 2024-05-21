@@ -1,7 +1,7 @@
 ---
 title: "Post: Twitter Embed"
 categories:
-  - Media
+  - Samples
 tags:
   - content
   - embeds

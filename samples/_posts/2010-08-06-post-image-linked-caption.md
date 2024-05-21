@@ -1,7 +1,7 @@
 ---
 title: "Post: Image (Linked with Caption)"
 categories:
-  - Post Formats
+  - Samples
 tags:
   - image
   - Post Formats
