@@ -213,9 +213,8 @@ paginate_path: /page:num/
 timezone: Asia/Seoul # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 collections:
-  docs:
+  samples:
     output: true
-    permalink: /:collection/:path/
 
 # Plugins (previously gems:)
 plugins:
