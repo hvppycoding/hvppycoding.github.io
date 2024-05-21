@@ -44,6 +44,25 @@ OpenROAD의 Flow는 `flow/Makefile` 파일에 정의되어 있다.
 
 [Stage Tutorial](https://openroad-flow-scripts.readthedocs.io/en/latest/tutorials/FlowTutorial.html#understanding-and-analyzing-openroad-flow-stages-and-results)
 
+## `do-yosys`
+
+### ABC
+
+ABC: System for Sequential Logic Synthesis and Formal Verification
+
+Here is a [fork](https://github.com/yongshiwo/abc.git) of ABC containing Agdmap, a novel technology mapper for LUT-based FPGAs. Agdmap is based on a technology mapping algorithm with adaptive gate decomposition.
+
+* L. Fan and C. Wu, ["FPGA technology mapping with adaptive gate decomposition"](https://dl.acm.org/doi/10.1145/3543622.3573048), ACM/SIGDA FPGA International Symposium on FPGAs, 2023.
+
+### yosys
+
+yosys – Yosys Open SYnthesis Suite
+
+This is a framework for RTL synthesis tools. It currently has extensive Verilog-2005 support and provides a basic set of synthesis algorithms for various application domains.
+
+Yosys can be adapted to perform any synthesis job by combining the existing passes (algorithms) using synthesis scripts and adding additional passes as needed by extending the yosys C++ code base.
+
 ## `do-floorplan`
 
 ### `floorplan.tcl`
+A
