@@ -12,6 +12,8 @@ categories:
 
 ## 1. Flow
 
+OpenROAD Stage별 설명 자료: [Stage Tutorial](https://openroad-flow-scripts.readthedocs.io/en/latest/tutorials/FlowTutorial.html#understanding-and-analyzing-openroad-flow-stages-and-results)
+
 OpenROAD의 Flow는 `flow/Makefile` 파일에 정의되어 있다.
 
 순서는 다음과 같다.
@@ -42,7 +44,6 @@ OpenROAD의 Flow는 `flow/Makefile` 파일에 정의되어 있다.
   1. `density_fill.tcl`: `6_1_fill`
   2. `final_report.tcl`: `6_report`, `6_final.def`, `6_final.v`, `6_final.spef`
 
-[Stage Tutorial](https://openroad-flow-scripts.readthedocs.io/en/latest/tutorials/FlowTutorial.html#understanding-and-analyzing-openroad-flow-stages-and-results)
 
 ## `do-yosys`
 
@@ -67,4 +68,19 @@ Yosys can be adapted to perform any synthesis job by combining the existing pass
 ## `do-floorplan`
 
 ### `floorplan.tcl`
-A
+
+```tcl
+# init_floorplan
+source "helpers.tcl"
+read_lef Nangate45/Nangate45.lef
+read_liberty Nangate45/Nangate45_typ.lib
+read_verilog reg1.v
+link_design top
+initialize_floorplan -die_area "0 0 1000 1000" \
+  -core_area "100 100 900 900" \
+  -site FreePDK45_38x28_10R_NP_162NW_34O
+
+set def_file [make_result_file init_floorplan1.def]
+write_def $def_file
+diff_files init_floorplan1.defok $def_file
+```
