@@ -10,6 +10,10 @@ categories:
   - VLSI
 ---
 
+## References
+
+- [vlsi.pro](https://vlsi.pro/)
+
 ## 1. Flow
 
 OpenROAD Stage별 설명 자료: [Stage Tutorial](https://openroad-flow-scripts.readthedocs.io/en/latest/tutorials/FlowTutorial.html#understanding-and-analyzing-openroad-flow-stages-and-results)
