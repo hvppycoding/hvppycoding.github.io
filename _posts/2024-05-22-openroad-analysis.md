@@ -37,7 +37,8 @@ OpenROAD의 Flow는 `flow/Makefile` 파일에 정의되어 있다.
   1. `global_place_skip_io.tcl`: STEP 1: Global placement without placed IOs, timing-driven, and routability-driven, `3_1_place_gp_skip_io`
   2. `io_placement.tcl`: STEP 2: IO placement (non-random), `3_2_place_iop`
   3. `global_place.tcl`: STEP 3: Global placement with placed IOs, timing-driven, and routability-driven, `3_3_place_gp`
-  4. `resize`: STEP 4: Resizing & Buffering, `3_4_place_resize`
+  4. `resize.tcl`: STEP 4: Resizing & Buffering, `3_4_place_resized`
+  5. `detail_place.tcl`: STEP 5: Detail placement, `3_5_place_dp`
 * `do-cts`
   1. `cts.tcl`: Run TritonCTS, `4_1_cts`
 * `do-route`
