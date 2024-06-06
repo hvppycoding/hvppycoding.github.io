@@ -63,10 +63,47 @@ EDA 도구도 설계 효율화를 위해 발전하고 있다.
 
 ![Inverter]({{site.baseurl}}/assets/images/2024-06-04-inverter.png){: .align-center}
 
+- Metal 1과 2 사이에는 Via가 존재한다.
+
+#### Design Rules
+
+- Size rules: segment의 길이가 일정 길이 이상이어야 한다(minimum length rule). minimum width rule도 존재한다. 
+- Seperation rules: 두 segment 사이의 거리가 일정 거리 이상이어야 한다.
+- Overlap rules: Overlap이 있다면 일정 길이 이상이어야 한다.
+
+![2024-06-04-design-rules.png]({{site.baseurl}}/assets/images/2024-06-04-design-rules.png){: .align-center}
+
 ### Physical Design Optimizations
+
+- Technology constraints: 공정 기술에 따라 제약이 달라진다.
+- Electrical constraints: 전기적 특성
+- Geometry constraints: Standard cell 위치 제약, Routing 방향(Horizontal, Vertical layer)
 
 ### Algorithms and Complexity
 
+- Runtime complexity: big-O notation
+- Example: Exhaustively Enumerating All Placement Possibilities
+  - Given: *n* cells
+  - Task: find a single-row placement of *n* celles with minimum total wirelength by using exhaustive enumeration
+  - Solution: The solution space has *n!* placement options
+- 많은 문제들이 NP-hard이다. → Heuristic algorithm 사용
+
+#### Heuristic Algorithms
+
+- Deterministic: 알고리즘에 의해 확정적으로 결과가 나오며, repeatable하다.
+- Stochastic: Randomness를 사용하여 결과가 나오며, repeatable하지 않다. e.g. Simulated Annealing
+
+- Heuristic algorithm 일반적 접근법
+  - Constructive: incomplete solution에 component들을 채워가며 complete solution을 얻는 방식
+  - Iterative: complete solution으로 시작하여 반복적으로 현재의 solution을 개선하는 방식
+
+![2024-06-04-heuristic-algorithms.png]({{site.baseurl}}/assets/images/2024-06-04-heuristic-algorithms.png){: .align-center}
+
 ### Graph Theory Terminology
 
+- Graph: Edge가 2개의 vertex를 연결하는 자료구조
+- Hypergraph: Circuit의 Net은 Hyperedge 모델링 가능(3개 이상의 vertex를 연결)
+
 ### Common EDA Terminology
+
+![2024-06-04-netlist.png]({{site.baseurl}}/assets/images/2024-06-04-netlist.png){: .align-center}
