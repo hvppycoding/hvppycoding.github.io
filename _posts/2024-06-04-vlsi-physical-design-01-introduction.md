@@ -55,9 +55,13 @@ EDA 도구도 설계 효율화를 위해 발전하고 있다.
 - Common digital cells: Transistor를 직접 에디팅하지 않고, 미리 만들어진 Cell을 사용(AND, OR, ...) → 동일한 Row height를 가지며, Row-based ASIC 설계 수행
 - Over the cell(OTC): Cell 위로 시그널 라우팅
 - Layout with macro cells: Macro block 배치(standard cell 배치와 라우팅 시 blockage로 작용)
-- Field programmable gate arrays(FPGAs): Manufacturing 없이 동작 프로그래밍 가능한 회로
+- Field programmable gate arrays(FPGAs): Manufacturing 없이 동작 프로그래밍 가능한 회로, Design 빠르게 구현할 수 있으며 프로토타이핑에 적합하다.
 
 ### Layout Layers and Design Rules
+
+- 설계할 때 공정을 고려해서 디자인을 해야한다.
+
+![Inverter]({{site.baseurl}}/assets/images/2024-06-04-inverter.png){: .align-center}
 
 ### Physical Design Optimizations
 
