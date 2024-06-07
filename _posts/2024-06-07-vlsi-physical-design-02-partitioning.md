@@ -32,7 +32,7 @@ mathjax: true
 ### Kernighan-Lin (KL) Algorithm
 
 - *2n*개 노드를 가진 그래프가 주어짐. 각 노드의 weight는 동일하다.
-- 목표: minimum cut cost인 2 disjoint subset $A$와 $B$로 나눈다. $|A| = |B| = n$를 만족하도록 한다.
+- 목표: minimum cut cost인 2 disjoint subset A와 B로 나눈다. $\lvert A \rvert = \lvert B \rvert = n$를 만족하도록 한다.
 
 어떤 노드 $v$를 반대 subset으로 옮길 때 cost를 $D(v)$라고 하자.
 
