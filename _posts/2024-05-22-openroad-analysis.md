@@ -91,6 +91,12 @@ diff_files init_floorplan1.defok $def_file
 
 ## `do-place`
 
+### gpl 개요
+
+물리적 설계 도구(gpl)에서 `-timing_driven` 플래그를 사용할 때, 가상 `repair_design`을 수행하여 슬랙을 찾고 슬랙이 낮은 넷에 가중치를 부여합니다. 최악의 슬랙을 (`timing_driven_nets_percentage`로 수정된) 멀티플라이어를 사용하여 조정합니다. 멀티플라이어는 최악의 슬랙에 대한 전체 값에서 `timing_driven_nets_percentage` 지점에서 1.0까지 스케일됩니다. `set_wire_rc` 명령을 사용하여 타이밍에 사용되는 추정된 배선의 저항과 커패시턴스를 설정합니다.
+
+라우팅 가능성 최적화 옵션이 활성화된 경우, 각 반복은 FastRoute를 실행하여 라우팅 혼잡 추정을 제공합니다. 이는 일반적으로 실행 시간 면에서 비용이 많이 듭니다. 혼잡한 타일은 라우팅 혼잡을 줄이기 위해 논리 셀의 면적이 팽창됩니다. 반복은 최종 RC (라우팅 혼잡)와 비교하여 목표 RC를 달성하려고 시도합니다. 라우팅 가능성 최적화 실행 중 알고리즘이 너무 오래 걸리면 목표 RC 값을 높여 제약을 완화하는 것이 좋습니다. 최종 RC 값은 가중치 계수를 기반으로 계산됩니다. 알고리즘은 3번 연속으로 RC가 감소하지 않으면 중지됩니다.
+
 ### Global Placement
 
 ePlace: Electrostatics based Placement using Fast Fourier Transform and Nesterov’s Method([paper](https://cseweb.ucsd.edu/~jlu/papers/eplace-todaes14/paper.pdf)
