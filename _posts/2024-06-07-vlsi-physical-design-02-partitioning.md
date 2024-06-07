@@ -86,11 +86,11 @@ $$\Delta g(c) = FS(c) - TE(c)$$
 
 ![2024-06-07-fm-algorithm-example.png]({{site.baseurl}}/assets/images/2024-06-07-fm-algorithm-example.png){: .align-center}
 
-Cell 1: FS(1) = 2 TE(1) = 1 Δg(1) = 1
-Cell 2: FS(2) = 0 TE(2) = 1 Δg(2) = -1
-Cell 3: FS(3) = 1 TE(3) = 1 Δg(3) = 0
-Cell 4: FS(4) = 1 TE(4) = 1 Δg(4) = 0
-Cell 5: FS(5) = 1 TE(5) = 0 Δg(5) = 1
+Cell 1: FS(1)=2, TE(1)=1, Δg(1)=1  
+Cell 2: FS(2)=0, TE(2)=1, Δg(2)=-1  
+Cell 3: FS(3)=1, TE(3)=1, Δg(3)=0  
+Cell 4: FS(4)=1, TE(4)=1, Δg(4)=0  
+Cell 5: FS(5)=1, TE(5)=0, Δg(5)=1  
 
 Δg(1)과 Δg(5)가 최선이므로 둘 중 하나를 이동시킨다.
 
