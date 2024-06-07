@@ -37,7 +37,8 @@ OpenROAD의 Flow는 `flow/Makefile` 파일에 정의되어 있다.
   1. `global_place_skip_io.tcl`: STEP 1: Global placement without placed IOs, timing-driven, and routability-driven, `3_1_place_gp_skip_io`
   2. `io_placement.tcl`: STEP 2: IO placement (non-random), `3_2_place_iop`
   3. `global_place.tcl`: STEP 3: Global placement with placed IOs, timing-driven, and routability-driven, `3_3_place_gp`
-  4. `resize`: STEP 4: Resizing & Buffering, `3_4_place_resize`
+  4. `resize.tcl`: STEP 4: Resizing & Buffering, `3_4_place_resized`
+  5. `detail_place.tcl`: STEP 5: Detail placement, `3_5_place_dp`
 * `do-cts`
   1. `cts.tcl`: Run TritonCTS, `4_1_cts`
 * `do-route`
@@ -229,7 +230,29 @@ End Algorithm
 
 #### `doNestrobPlace();`
 
+### Global Placement
 
+wire-length, routability, power 등 팩터를 고려하여 최적화한다. 
+이 과정에서는 legalization은 무시한다.  
+
+### Legalization
+
+Heuristic approach와 Analytic approach가 있다.  
+Heuristic approach는 trial-and-error 방식으로 최적 솔루션을 찾는다.
+이 방법은 빠르지만 최적 솔루션을 보장하지 않는다.
+Analytic approach는 수학적 모델을 사용하며, objective function을 적용하여 globally-optimal solution을 찾는다.
+Fence region이 단순하다면 optimal solution을 찾을 수 있지만, 복잡한 경우에는 어렵다.
+
+#### Single-deck Standard Cell Legalization
+
+Standard cell들이 동일한 height를 가진다. Multi-deck standard cell legalization보다 비교적 간단하다. Analytical approach는 복잡하기 때문에 주로 heuristic approach를 사용한다. Tetris와 Abacus가 널리 사용되는 알고리즘이다.
+
+#### Multi-deck Standard Cell Legalization
+
+Multi-deck cell을 움직이는 것은 많은 placement row들에 동시에 영향을 주기 때문에 더 어렵다. Abacus를 확장한 방법과 Dynamic Programming을 사용하는 방법이 있다. 
+최근 연구에서는 Analytical approach를 사용한다. Linear Programming 기반으로 dynamic programming을 통해 refinement한다. 
+
+Legalization 문제를 LCP(Linear Complementarity Problem)로 변환하여 해결한다. 하지만 이 방식은 fence region이 있을 경우 효과적이지 않다. LCP-based legalization은 vertical cell movement를 고려하지 않는다. 그래서 많은 셀들이 fence region을 위반할 수 있다. 이 한계는 space utilization이 높을수록 더 심해진다.
 
 ### GUI에서 결과보기
 
