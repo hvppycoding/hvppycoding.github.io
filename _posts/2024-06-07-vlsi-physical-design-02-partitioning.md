@@ -32,7 +32,7 @@ mathjax: true
 ### Kernighan-Lin (KL) Algorithm
 
 - *2n*개 노드를 가진 그래프가 주어짐. 각 노드의 weight는 동일하다.
-- 목표: minimum cut cost인 2 disjoint subset $A$와 $B$로 나눈다. $|A| = |B| = n$를 만족하도록 한다.
+- 목표: minimum cut cost인 2 disjoint subset A와 B로 나눈다. $\lvert A \rvert = \lvert B \rvert = n$를 만족하도록 한다.
 
 어떤 노드 $v$를 반대 subset으로 옮길 때 cost를 $D(v)$라고 하자.
 
@@ -86,11 +86,11 @@ $$\Delta g(c) = FS(c) - TE(c)$$
 
 ![2024-06-07-fm-algorithm-example.png]({{site.baseurl}}/assets/images/2024-06-07-fm-algorithm-example.png){: .align-center}
 
-Cell 1: FS(1) = 2 TE(1) = 1 Δg(1) = 1
-Cell 2: FS(2) = 0 TE(2) = 1 Δg(2) = -1
-Cell 3: FS(3) = 1 TE(3) = 1 Δg(3) = 0
-Cell 4: FS(4) = 1 TE(4) = 1 Δg(4) = 0
-Cell 5: FS(5) = 1 TE(5) = 0 Δg(5) = 1
+Cell 1: FS(1)=2, TE(1)=1, Δg(1)=1  
+Cell 2: FS(2)=0, TE(2)=1, Δg(2)=-1  
+Cell 3: FS(3)=1, TE(3)=1, Δg(3)=0  
+Cell 4: FS(4)=1, TE(4)=1, Δg(4)=0  
+Cell 5: FS(5)=1, TE(5)=0, Δg(5)=1  
 
 Δg(1)과 Δg(5)가 최선이므로 둘 중 하나를 이동시킨다.
 
