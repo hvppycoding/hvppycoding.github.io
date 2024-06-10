@@ -115,7 +115,7 @@ Interconnect delay를 고려하여 placement를 수행하는 방법이다. Criti
 - Partitioning-based algorithms
   - netlist와 layout을 작은 sub-netlist와 sub-region으로 나눈다.
   - 반복을 통해 optimal하게 처리할 수 있을 때까지 작게 나눈다.
-  - Deailed placement는 작은 영역에 대해 optimal solver를 통해 수행된다.
+  - Detailed placement는 작은 영역에 대해 optimal solver를 통해 수행된다.
   - Example: min-cut placement (KL, FM algorithm)
 - Analytic techniques
   - 전체 netlist가 엮여있는 식으로 모델링
@@ -134,7 +134,7 @@ Interconnect delay를 고려하여 placement를 수행하는 방법이다. Criti
 - Kernighan-Lin (KL) algorithm
 - Fiduccia-Mattheyses (FM) algorithm
 
-![2024-06-09-min-cut-example.svg]({{site.baseurl}}/assets/images/`2024-06-09-min-cut-example.svg`){: .align-center}
+![2024-06-09-min-cut-example.svg]({{site.baseurl}}/assets/images/2024-06-09-min-cut-example.svg){: .align-center}
 
 1 → 2 → 3 → 4 순서로 partitioning 수행
 
@@ -192,11 +192,11 @@ $$L(P) = \frac{1}{2} \sum_{i,j=1}^{n} c_{ij} \left( (x_i - x_j)^2 + (y_i - y_j)^
 - Convex quadratic optimization problem
 - 편미분을 0으로 만들어 x, y 값을 찾을 수 있다.
 
+![2024-06-09-quadratic-placement-equation.svg]({{site.baseurl}}/assets/images/2024-06-09-quadratic-placement-equation.svg){: .align-center}
+
 where A is a matrix with $A[i][j] = -c(i,j)$ when $i \neq j$, and $A[i][i] =$ the sum of incident connection weights of cell i.  
 X is a vector of all the x-coordinates of the non-fixed cells, and bx is a vector with $bx[i] =$ the sum of x-coordinates of all fixed cells attached to i.  
 Y is a vector of all the y-coordinates of the non-fixed cells, and by is a vector with $by[i] =$ the sum of y-coordinates of all fixed cells attached to i.  
-
-![2024-06-09-quadratic-placement-equation.svg]({{site.baseurl}}/assets/images/2024-06-09-quadratic-placement-equation.svg){: .align-center}
 
 ![2024-06-09-quadratic-placement-example.png]({{site.baseurl}}/assets/images/2024-06-09-quadratic-placement-example.png){: .align-center}
 
@@ -362,3 +362,4 @@ Optimization의 여러 영역에서 사용되는 방법이다. 하지만 시간�
 - Legalization과 Detailed placement는 software 구현에서 함께 구현되는 경우가 많다.
 
 ![2024-06-09-legalization-intro.svg]({{site.baseurl}}/assets/images/2024-06-09-legalization-intro.svg){: .align-center}
+
