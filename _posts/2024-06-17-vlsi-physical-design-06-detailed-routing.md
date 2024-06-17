@@ -21,7 +21,7 @@ mathjax: true
 - global routing과 유사
   - connection을 위해 physical wires를 사용
   - Estimating the wire resistance and capacitance, 설계가 timing requirements를 만족하는지 확인
-    - $5\micron$ 이하의 길이는 linear delay model로 근사할 수 있고, 그 이상은 Elmore delay model로 근사
+    - $5\mu$ 이하의 길이는 linear delay model로 근사할 수 있고, 그 이상은 Elmore delay model로 근사
 - routing regions 내에서 Detailed routing techniques 적용됨
   - [channels](#channel-routing-algorithms), [switchboxes](#switchbox-routing), and [global routing cells](#over-the-cell-routing-algorithms)
 - Detailed routers는 manufacturing rules과 manufacturing faults를 고려해야 한다.[Modern Challenges in Detailed Routing](#modern-challenges-in-detailed-routing)
