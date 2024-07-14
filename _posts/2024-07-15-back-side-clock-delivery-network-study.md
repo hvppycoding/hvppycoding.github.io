@@ -111,3 +111,14 @@ Our proposed back-side clock routing methodology flow.
 
 ### 3.2. Metal Stack and Parasitics Update
 
+back-side와 front-side의 resistance와 pitch는 아래 테이블에 나타나있다. back-side layer의 값은 front-side의 Mz 레이어와 유사한 값을 가진다. nTSV의 size와 pitch는 최근의 technology를 기반으로 한다. 이 값들은 advanced technology 기준이므로 scaling을 수행하였다.
+
+flow를 가능하게 하기 위해 tech-LEF와 captables/ICT 파일을 편집하였다. 16nm ICT file을 구할 수 없어 captable을 사용하였다.
+
+![2024-07-15-technology-spec.svg]({{site.baseurl}}/assets/images/2024-07-15-technology-spec.svg){: .align-center}
+
+### 3.3. Routing Blockage Creation
+
+tech-LEF와 captable로 back-side metal layer들이 모델링되므로, PnR 툴이 nTSV를 logic이나 memory cell 아래에 두는 경우가 있다. 정상적인 back-side CDN에서는 nTSV가 standard cell이나 memory macro cell과 short되어서는 안되므로 cell frame 아래의 nTSV layer에 routing blockage를 생성한다. 
+
+![2024-07-15-routing-blockages.svg]({{site.baseurl}}/assets/images/2024-07-15-routing-blockages.svg){: .align-center}
