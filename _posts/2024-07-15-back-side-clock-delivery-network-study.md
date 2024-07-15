@@ -59,7 +59,7 @@ mathjax: true
   - top: trunk net들 중 일부를 top net으로 정의함(optimization purpose)
   - 위쪽의 그림 참고
 - industry standard Place-and-Route(PnR) 툴은 다양한 input parameter를 가짐
-  - target skew, ID; 사용 가능한 buffer/inverter cells; fanout, transition, capacitance limits, user-defined skew-groups; Non-Default Routes(NDR)
+  - target skew, ID(insertion delay?); 사용 가능한 buffer/inverter cells; fanout, transition, capacitance limits, user-defined skew-groups; Non-Default Routes(NDR)
 - BS-PDN은 power distribution이 back-side metal layer에서 이루어지는 power delivery scheme이다.
 - BS-PDN을 위해 nano-scale Through-Silicon-Vias(nTSV)가 사용된다.
 - 이 방법론은 signal과 power delivery를 분리하여 less congested, voltage-drop resilient, high-performance design 가능하게 함
@@ -122,3 +122,18 @@ flow를 가능하게 하기 위해 tech-LEF와 captables/ICT 파일을 편집하
 tech-LEF와 captable로 back-side metal layer들이 모델링되므로, PnR 툴이 nTSV를 logic이나 memory cell 아래에 두는 경우가 있다. 정상적인 back-side CDN에서는 nTSV가 standard cell이나 memory macro cell과 short되어서는 안되므로 cell frame 아래의 nTSV layer에 routing blockage를 생성한다. 
 
 ![2024-07-15-routing-blockages.svg]({{site.baseurl}}/assets/images/2024-07-15-routing-blockages.svg){: .align-center}
+
+### 3.4. Clock Net Layer Assignment
+
+Flow에서 layer assignment 지정 - clock top, trunk를 back-side layer(Mb)로, leaf를 front-side Mx metal layer로 지정한다.
+
+### 3.5. Routing with Layer Enforcement
+
+![2024-07-15-layer-enforcement.svg]({{site.baseurl}}/assets/images/2024-07-15-layer-enforcement.svg){: .align-center}
+
+layer assignment만 지정 시 PnR 툴이 정확하게 준수하지 않는다.
+signal net과 clock leaf net이 모두 back-side layers를 사용하는 상태이다.
+signal net들이 front-side 전체 레이어를 사용하도록 할당한다.
+leaf nets는 Mx layer를 사용하고, top과 trunk net은 Mb layer를 사용하도록 한다.
+layer enforcement에 따라 5,761개의 total nTSV가 1,766개로 감소.
+
