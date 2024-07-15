@@ -134,6 +134,17 @@ Flow에서 layer assignment 지정 - clock top, trunk를 back-side layer(Mb)로,
 layer assignment만 지정 시 PnR 툴이 정확하게 준수하지 않는다.
 signal net과 clock leaf net이 모두 back-side layers를 사용하는 상태이다.
 signal net들이 front-side 전체 레이어를 사용하도록 할당한다.
-leaf nets는 Mx layer를 사용하고, top과 trunk net은 Mb layer를 사용하도록 한다.
-layer enforcement에 따라 5,761개의 total nTSV가 1,766개로 감소.
+leaf nets는 Mx layer를 사용하고, top과 trunk net은 Mb layer를 사용하도록 강제하였다.
+layer enforcement에 따라 5,761개의 total nTSV가 1,766개로 감소함(Performance degradation 없이).
 
+## 4. Results & Discussion
+
+### 4.1. Benchmark Architecture Selection Process
+
+### 4.2. Clock Metrics Analysis
+
+![2024-07-15-clock-metric-comparison.svg]({{site.baseurl}}/assets/images/2024-07-15-clock-metric-comparison.svg){: .align-center}
+
+### 4.3. Full-chip Metrics Analysis
+
+![2024-07-15-full-chip-metric-comparison.svg]({{site.baseurl}}/assets/images/2024-07-15-full-chip-metric-comparison.svg){: .align-center}
