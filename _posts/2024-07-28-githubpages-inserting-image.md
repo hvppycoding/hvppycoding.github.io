@@ -37,7 +37,7 @@ VS Code Extension 중 `Paste Image` 설치한다. [Link to Paste Image Extension
 2. `baseImage.basePath`: 이미지의 url을 자동으로 생성하여 markdown 파일에 넣어주는데, 이 때 url의 상대 경로 기준점이 된다. 앞의 설정대로 `${projectRoot}`로 이 값을 설정하면 `assets/images/{현재 Markdown 파일명}/{이미지 파일 이름}`로 url이 생성된다.
 3. `baseImage.defaultName`: 이미지 파일명을 자동으로 생성할 때 사용하는 기본 이름이다. 기본적으로 시간을 기반으로 자동으로 정해지며, 바꾸고 싶다면 input box 팝업창에서 직접 입력할 수 있다.
 4. `pasteImage.showFilePathConfirmInputBox`: 이미지 파일을 붙여넣을 때 팝업창을 띄워서 이미지 파일 경로를 확인할 수 있다.
-5. `pasteImage.prefix`: 이미지 url을 붙여넣을 때 이미지 파일 경로 앞에 붙는 prefix이다. 우리의 최종 목표는 {% raw %}`![]({{site.baseurl}}/assets/images/{현재 Markdown 파일명}/{이미지 파일명})`{% endraw %}과 같은 형태가 되는 것이 목표이므로 `{{site.baseurl}}/`를 prefix를 입력한다.
+5. `pasteImage.prefix`: 이미지 url을 붙여넣을 때 이미지 파일 경로 앞에 붙는 prefix이다. 우리의 최종 목표는 <span class="custom-highlight" markdown="1">{% raw %}`![]({{site.baseurl}}/assets/images/{현재 Markdown 파일명}/{이미지 파일명})`{% endraw %}</span>과 같은 형태가 되는 것이 목표이므로 {% raw %}`{{site.baseurl}}/`{% endraw %}를 prefix로 설정하였다.
 
 ## 이미지 쉽게 붙여넣기
 
