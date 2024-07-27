@@ -19,17 +19,13 @@ VS Code Extension 중 `Paste Image` 설치한다. [Link to Paste Image Extension
 `Shift+Ctrl+P`로 팔레트 연 후 `Preferences: Open User Settings` 열어 json 파일 편집한다.  
 열어진 json 파일에 아래 내용을 추가하자.  
 
-{% raw %}
-
 ```json
 "pasteImage.path": "${projectRoot}/assets/images/${currentFileNameWithoutExt}",
 "pasteImage.basePath": "${projectRoot}",
 "pasteImage.defaultName": "YMMDD-HHmmss",
 "pasteImage.showFilePathConfirmInputBox": true,
-"pasteImage.prefix": "{{site.baseurl}}/",
+"pasteImage.prefix": {% raw %}"{{site.baseurl}}/"{% endraw %},
 ```
-
-{% endraw %}
 
 각 설정 내용의 의미는 다음과 같다. 자세한 내용은 [Paste Image Extension](https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image)에서 확인할 수 있다.  
 나의 Github Page 프로젝트 구성은 다음과 같으니 설정 시 참고하자.  
