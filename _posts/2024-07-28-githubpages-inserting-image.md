@@ -47,7 +47,3 @@ VS Code Extension 중 `Paste Image` 설치한다. [Link to Paste Image Extension
 예를 들어 나는 `example.png`로 이미지 파일명을 변경하였다. 결과적으로 이미지 파일이 잘 생성되며, markdown 파일에 아래와 같이 이미지가 url과 함께 자동으로 삽입된다.
 
 ![]({{site.baseurl}}/assets/images/2024-07-28-githubpages-inserting-image/example.png)
-
-
-
-
