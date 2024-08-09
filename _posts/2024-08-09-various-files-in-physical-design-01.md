@@ -1,6 +1,6 @@
 ---
-title: "LIB, DB, Verilog file"
-excerpt: "Vaarious files in Physical Design"
+title: "Ch1. LIB, DB, Verilog file"
+excerpt: "Various files in Physical Design"
 date: 2024-08-09 06:00:00 +0900
 header:
   overlay_image: /assets/images/unsplash-Umberto.jpg
@@ -73,3 +73,37 @@ PnR Flow{: .custom-caption}
   - Cell name
   - pg pin
   - Leakage power
+  - area
+  - **For each pins**
+    - Pin name
+    - Pin direction
+    - Power
+    - Capacitance
+    - Fanout load
+    - Rise capacitance
+    - Fall capacitance
+    - Function(output pin일 경우)
+- Characterization of cell
+  - Timing and power parameters of cell - 다양한 조건에서 cell simulation을 통해 얻어짐
+  - Two techniques to characterize a cell and generate `.lib` file
+    - Composite current source(CCS)
+    - Non-linear delay model(NLDM)
+  - CCS technique는 current source가 사용되고, NLDM은 voltage source가 사용됨
+  - CCS가 NLDM보다 더 많은 controlling parameter가 있고, CCS가 더 정확함 - CCS의 Runtime 더 길며, 파일 사이즈가 더 큼
+  - Cadence tool Liberate를 통해 custom cell의 `.lib` 파일을 생성할 수 있음
+
+## `.db` file
+
+- LIB file의 compiled version
+- 앞에서 설명한 LIB file과 동일한 정보를 가지고 있다.
+- LIB 파일을 가지고 있으면 `.db` 파일로 변환할 수 있음(Synopsys Library Compiler)
+- `.db` 파일은 Synopsys의 native format으로, synopsys 툴에서 빠르게 처리 가능
+- Synopsys tools(Design Compiler, IC Compiler)에서는 `.db` 파일 사용, Cadence tools(Genus, Innovus)에서는 `.lib` 파일 사용
+- `.db` 파일은 binary format으로 바로 읽을 수 없음
+- Logic synthesis(Design Compiler, Genus)과 PnR(IC Compiler, Innovus) 툴 사용시 필요함
+
+![synthesis-flow-db]({{site.baseurl}}/assets/images/2024-08-09-various-files-in-physical-design-01/synthesis-flow-db.png){: .align-center}
+Synthesis flow에서의 `.db` 파일{: .custom-caption}
+
+![pnr-flow-db]({{site.baseurl}}/assets/images/2024-08-09-various-files-in-physical-design-01/pnr-flow-db.png){: .align-center}
+PnR flow에서의 `.db` 파일{: .custom-caption}
