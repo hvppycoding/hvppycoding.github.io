@@ -50,10 +50,12 @@ mathjax: true
 - Verilog와 syntax는 다르나, 비슷한 정보를 담고있음
 
 ![synthesis flow]({{site.baseurl}}/assets/images/2024-08-09-various-files-in-physical-design-01/synthesis-flow.png){: .align-center}
-Synthesis Flow{: .custom-caption}
+Synthesis Flow
+{: .custom-caption}
 
 ![pnr flow]({{site.baseurl}}/assets/images/2024-08-09-various-files-in-physical-design-01/pnr-flow.png){: .align-center}
-PnR Flow{: .custom-caption}
+PnR Flow
+{: .custom-caption}
 
 ## `.lib` file
 
@@ -103,7 +105,9 @@ PnR Flow{: .custom-caption}
 - Logic synthesis(Design Compiler, Genus)과 PnR(IC Compiler, Innovus) 툴 사용시 필요함
 
 ![synthesis-flow-db]({{site.baseurl}}/assets/images/2024-08-09-various-files-in-physical-design-01/synthesis-flow-db.png){: .align-center}
-Synthesis flow에서의 `.db` 파일{: .custom-caption}
+Synthesis flow에서의 `.db` 파일
+{: .custom-caption}
 
 ![pnr-flow-db]({{site.baseurl}}/assets/images/2024-08-09-various-files-in-physical-design-01/pnr-flow-db.png){: .align-center}
-PnR flow에서의 `.db` 파일{: .custom-caption}
+PnR flow에서의 `.db` 파일
+{: .custom-caption}
