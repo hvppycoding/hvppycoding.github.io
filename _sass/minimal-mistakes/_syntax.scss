@@ -349,7 +349,6 @@ Example:
     pre.highlight {
       margin: 0;
       padding: 1em;
-      white-space: pre-wrap;
     }
   }
   
@@ -387,6 +386,7 @@ Example:
 
   .highlight pre {
     width: 100%;
+    white-space: pre-wrap;
   }
 
   .highlight .hll {
