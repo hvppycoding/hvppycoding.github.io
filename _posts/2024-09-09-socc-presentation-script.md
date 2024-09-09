@@ -12,8 +12,9 @@ categories:
 mathjax: true
 ---
 
-<audio controls>
+<audio controls loop>
   <source src="{{site.baseurl}}/assets/media/2024-09-09-socc-presentation-script.mp3" type="audio/mp3">
+  Your browser does not support the audio element.
 </audio>
 
 Hello everyone. My name is Jayoung Yang, a Master's student at Seoul National University.
