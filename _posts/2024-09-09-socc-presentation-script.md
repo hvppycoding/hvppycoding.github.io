@@ -1,7 +1,7 @@
 ---
 title: "SOCC2024"
 excerpt: ""
-date: 2024-09-09 01:00:00 +0900
+date: 2024-09-09 12:00:00 +0900
 classes: wide
 header:
   overlay_image: /assets/images/unsplash-Umberto.jpg
