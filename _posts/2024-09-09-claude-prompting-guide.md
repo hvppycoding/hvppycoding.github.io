@@ -24,15 +24,20 @@ mathjax: true
 
 Bad prompt:
 
+<div class="no-highlight" markdown="1">
 ```text
 "Help me with a presentation."
 ```
+</div>
 
 Good prompt:
 
+<div class="no-highlight" markdown="1">
 ```text
-"I need help creating a 10-slide presentation for our quarterly sales meeting. The presentation should cover our Q2 sales performance, top-selling products, and sales targets for Q3. Please provide an outline with key points for each slide."
+"I need help creating a 10-slide presentation for our quarterly sales meeting. 
+The presentation should cover our Q2 sales performance, top-selling products, and sales targets for Q3. Please provide an outline with key points for each slide."
 ```
+</div>
 
 Why it's better: The good prompt provides specific details about the task, including the number of slides, the purpose of the presentation, and the key topics to be covered.
 
