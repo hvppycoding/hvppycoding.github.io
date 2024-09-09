@@ -2,6 +2,7 @@
 title: "Claude prompting guide"
 excerpt: ""
 date: 2024-09-09 01:00:00 +0900
+classes: wide
 header:
   overlay_image: /assets/images/unsplash-Umberto.jpg
   overlay_filter: 0.5
