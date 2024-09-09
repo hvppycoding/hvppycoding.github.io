@@ -17,19 +17,19 @@ mathjax: true
   Your browser does not support the audio element.
 </audio>
 
-![20240909-151915]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-151915.png){: .align-center}  20240909-151915{: .custom-caption}
+![20240909-151915]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-151915.png){: .align-center}  
 
 Hello everyone. My name is Jayoung Yang, a Master's student at Seoul National University.
 Today, I'll be presenting our work titled "Improving Timing Quality Through Net Topology Optimization in Global Routing".
 
-![20240909-151944]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-151944.png){: .align-center}  20240909-151944{: .custom-caption}
+![20240909-151944]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-151944.png){: .align-center}  
 
 This slide outlines my presentation.
 I'll begin with an introduction to our work, followed by an explanation of the background on net topology structures.
 Then, I'll describe our proposed methodology and experimental results.
 Finally, I'll summarize the key points of this talk.
 
-![20240909-151952]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-151952.png){: .align-center}  20240909-151952{: .custom-caption}
+![20240909-151952]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-151952.png){: .align-center}  
 
 This slide introduces our research.
 Our study aims to improve global routing in the physical design process.
@@ -43,17 +43,17 @@ Many existing global routing tools focused on minimizing wirelength (WL).
 However, as chips have become faster, focusing solely on WL reduction can lead to longer pathlengths, negatively impacting critical path timing.
 Therefore, we propose a practical net topology refinement that enhances chip timing characteristics with minimal WL increase.
 
-![20240909-152000]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152000.png){: .align-center}  20240909-152000{: .custom-caption}
+![20240909-152000]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152000.png){: .align-center}  
 
 Now, I'll compare the related works on net topology structures.
 
-![20240909-152051]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152051.png){: .align-center}  20240909-152051{: .custom-caption}
+![20240909-152051]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152051.png){: .align-center}  
 
 I'd like to compare different net topology generation methodologies using two example nets and explain our motivation.
 Case 1 represents a net composed of non-critical pins, while Case 2 includes a critical pin.
 The physical locations of pins are identical in both cases.
 
-![20240909-152059]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152059.png){: .align-center}  20240909-152059{: .custom-caption}
+![20240909-152059]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152059.png){: .align-center}  
 
 Here, we have RSMT, a commonly used algorithm.
 RSMT stands for Rectilinear Steiner Minimum Tree.
@@ -61,7 +61,7 @@ Its goal is to connect pins with minimal wirelength.
 Well-known algorithms include FLUTE and REST.
 As mentioned earlier, this can lead to longer pathlengths, potentially degrading timing quality.
 
-![20240909-152105]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152105.png){: .align-center}  20240909-152105{: .custom-caption}
+![20240909-152105]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152105.png){: .align-center}  
 
 As chips became faster, RSSLT algorithms were developed to consider pathlength as well.
 RSSLT stands for Rectilinear Steiner Shallow-Light Tree.
@@ -70,17 +70,17 @@ Notable examples include PD-II and SALT.
 They ensure reasonable pathlengths for all pins.
 However, in cases like Case 1, where pins have sufficient timing margin, these algorithms may reduce pathlengths unnecessarily. This can increase wirelength, negatively impacting power consumption and routing congestion.
 
-![20240909-152111]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152111.png){: .align-center}  20240909-152111{: .custom-caption}
+![20240909-152111]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152111.png){: .align-center}  
 
 Existing approaches have a limitation. They simplify the problem by ignoring the timing information of the pins.
 Our approach balances pin delay and wirelength while considering the overall circuit timing. As a result, it not only improves timing but also achieves reasonable wirelength, enhancing power efficiency.
 For instance, in Case 1, we favor the shortest wirelength. In contrast, for Case 2, we reduce the pathlength to the critical pin while minimally increasing wirelength.
 
-![20240909-152116]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152116.png){: .align-center}  20240909-152116{: .custom-caption}
+![20240909-152116]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152116.png){: .align-center}  
 
 Now, I will discuss our proposed methodology in detail.
 
-![20240909-152122]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152122.png){: .align-center}  20240909-152122{: .custom-caption}
+![20240909-152122]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152122.png){: .align-center}  
 
 This is the overall flow of our proposed methodology.
 We iteratively improve the topology until timing enhancement in global routing stops.
@@ -92,7 +92,7 @@ In Step 2, Parallelization, we identify a set of nets whose topologies can be im
 In Step 3, we apply our refinement algorithm to each net. I'll explain this in detail on the next slides.
 Finally, we complete global routing by performing the remaining GR steps for the modified net topologies.
 
-![20240909-152132]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152132.png){: .align-center}  20240909-152132{: .custom-caption}
+![20240909-152132]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152132.png){: .align-center}  
 
 I'll now explain our proposed Timing-Driven Topology Refinement Method.
 We initialize the initial Net Topology using traditional methodologies.
@@ -106,7 +106,7 @@ For each candidate edge, we calculate the slack time gain after connecting it.
 I'll explain the slack time gain formulation on the next slide.
 Finally, we create a new tree by adding the edge with the highest gain.
 
-![20240909-152144]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152144.png){: .align-center}  20240909-152144{: .custom-caption}
+![20240909-152144]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152144.png){: .align-center}  
 
 The equation for calculating timing improvement for a topology perturbation η is as follows:
 It consists of two terms.
@@ -114,7 +114,7 @@ The first term represents the gain obtained from changes in wire delay to the pi
 The second term accounts for the impact due to changes in cell delay.
 I'll explain each of these terms in more detail.
 
-![20240909-152201]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152201.png){: .align-center}  20240909-152201{: .custom-caption}
+![20240909-152201]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152201.png){: .align-center}  
 
 The first term in the Gain equation represents the value obtained from changes in wire delay.
 The Gain is calculated differently for each pin based on its slack value, which we obtain from the previous STA.
@@ -127,7 +127,7 @@ We estimated delay changes by modeling the topology as a pi-model and using Elmo
 The change in wire delay is estimated using the difference in Elmore delay before and after perturbation.
 For this, we use the resistance and capacitance per unit length conditions of Metal 3.
 
-![20240909-152207]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152207.png){: .align-center}  20240909-152207{: .custom-caption}
+![20240909-152207]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152207.png){: .align-center}  
 
 The second term in the Gain equation represents the change in cell delay.
 Cell delay can be affected by net topology perturbation because it's influenced by load capacitance.
@@ -137,7 +137,7 @@ The capacitance before perturbation, C_WL, is obtained from the previous parasit
 We can calculate the final cell delay change using the NLDM cell library.
 This term prevents excessive increases in WL, ultimately reducing power consumption and routing congestion.
 
-![20240909-152215]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152215.png){: .align-center}  20240909-152215{: .custom-caption}
+![20240909-152215]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152215.png){: .align-center}  
 
 To perform Net topology refinement in parallel while preventing redundant modifications of timing-dependent nets, we proposed a parallelization step.
 This begins by creating an adjacency matrix M from the netlist.
@@ -146,11 +146,11 @@ We can calculate this using the Floyd-Warshall algorithm.
 From M\*, we find the maximal net subset where nets are not connected to each other.
 We can solve this by formulating it as a maximal independent set problem.
 
-![20240909-152221]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152221.png){: .align-center}  20240909-152221{: .custom-caption}
+![20240909-152221]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152221.png){: .align-center}  
 
 Now I will describe experimental setup and results.
 
-![20240909-152241]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152241.png){: .align-center}  20240909-152241{: .custom-caption}
+![20240909-152241]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152241.png){: .align-center}  
 
 We implemented our methodology in OpenROAD, a state-of-the-art open-source physical design tool.
 OpenROAD's Global router, FastRoute, operates in five stages.
@@ -160,14 +160,14 @@ For our experiments, we used ASAP7nm and Nangate45nm process design kits, and te
 To compare our proposed method with others, we used two different algorithms.
 These algorithms are built into OpenROAD by default: FLUTE for RSMT, and PD-II for RSSLT.
 
-![20240909-152247]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152247.png){: .align-center}  20240909-152247{: .custom-caption}
+![20240909-152247]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152247.png){: .align-center}  
 
 First, we evaluated the accuracy of our delay change estimation method.
 We compared our predicted changes with those calculated by the STA engine after global routing.
 The correlation coefficient for cell delay was 0.785, and for wire delay, it was 0.877.
 We suspect the main sources of error are layer assignment and detours caused by routing congestion, which are difficult to predict at the early estimation stage.
 
-![20240909-152252]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152252.png){: .align-center}  20240909-152252{: .custom-caption}
+![20240909-152252]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152252.png){: .align-center}  
 
 This slide shows the experimental results after completing global routing.
 We compared key PPA metrics like Worst Negative Slack (WNS), Total Negative Slack (TNS), and Power consumption.
@@ -179,7 +179,7 @@ FLUTE shows similar power consumption to ours but has poor timing characteristic
 The figure below shows a real example before and after applying our algorithm.
 When applying our refinement algorithm, we can see significant improvement in delay to the critical pin (colored red) while minimizing the increase in total wire length.
 
-![20240909-152258]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152258.png){: .align-center}  20240909-152258{: .custom-caption}
+![20240909-152258]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152258.png){: .align-center}  
 
 This table shows the results after the post-route stage.
 We compared WNS, TNS, Power, and total wirelength.
@@ -189,7 +189,7 @@ FLUTE had the lowest total wirelength but showed the worst timing results.
 Our algorithm demonstrated the best characteristics in terms of power.
 Considering that cell sizes often need to be increased or lower threshold processes used to improve timing characteristics, the potential power improvement effect could be even more significant.
 
-![20240909-152304]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152304.png){: .align-center}  20240909-152304{: .custom-caption}
+![20240909-152304]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152304.png){: .align-center}  
 
 To wrap up our presentation, I'd like to summarize the key points of our work.
 We proposed a practical net topology refinement method that enhances timing robustness in the early stages of chip implementation.
