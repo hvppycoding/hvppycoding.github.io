@@ -26,7 +26,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Help me with a presentation."
+Help me with a presentation.
 ```
 </div>
 
@@ -34,7 +34,7 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I need help creating a 10-slide presentation for our quarterly sales meeting. The presentation should cover our Q2 sales performance, top-selling products, and sales targets for Q3. Please provide an outline with key points for each slide."
+I need help creating a 10-slide presentation for our quarterly sales meeting. The presentation should cover our Q2 sales performance, top-selling products, and sales targets for Q3. Please provide an outline with key points for each slide.
 ```
 </div>
 
@@ -49,7 +49,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Write a professional email."
+Write a professional email.
 ```
 </div>
 
@@ -57,7 +57,7 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I need to write a professional email to a client about a project delay. Here's a similar email I've sent before:
+I need to write a professional email to a client about a project delay. Here's a similar email I've sent before:
 
 'Dear [Client],
 I hope this email finds you well. I wanted to update you on the progress of [Project Name]. Unfortunately, we've encountered an unexpected issue that will delay our completion date by approximately two weeks. We're working diligently to resolve this and will keep you updated on our progress.
@@ -65,7 +65,7 @@ Please let me know if you have any questions or concerns.
 Best regards,
 [Your Name]'
 
-Help me draft a new email following a similar tone and structure, but for our current situation where we're delayed by a month due to supply chain issues."
+Help me draft a new email following a similar tone and structure, but for our current situation where we're delayed by a month due to supply chain issues.
 ```
 </div>
 
@@ -73,14 +73,14 @@ Why it's better: The good prompt provides a concrete example of the desired styl
 
 ### 3. Encourage thinking
 
-- For complex tasks, ask Claude to "think step-by-step" or "explain your reasoning."
+- For complex tasks, ask Claude to "think step-by-step" or "explain your reasoning.
 - This can lead to more accurate and detailed responses.
 
 Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"How can I improve team productivity?"
+How can I improve team productivity?
 ```
 </div>
 
@@ -88,13 +88,13 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I'm looking to improve my team's productivity. Think through this step-by-step, considering the following factors:
+I'm looking to improve my team's productivity. Think through this step-by-step, considering the following factors:
 1. Current productivity blockers (e.g., too many meetings, unclear priorities)
 2. Potential solutions (e.g., time management techniques, project management tools)
 3. Implementation challenges
 4. Methods to measure improvement
 
-For each step, please provide a brief explanation of your reasoning. Then summarize your ideas at the end."
+For each step, please provide a brief explanation of your reasoning. Then summarize your ideas at the end.
 ```
 </div>
 
@@ -103,13 +103,13 @@ Why it's better: The good prompt asks Claude to think through the problem system
 ### 4. Iterative refinement
 
 - If Claude's first response isn't quite right, ask for clarifications or modifications.
-- You can always say "That's close, but can you adjust X to be more like Y?"
+- You can always say "That's close, but can you adjust X to be more like Y?
 
 Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Make it better."
+Make it better.
 ```
 </div>
 
@@ -117,10 +117,10 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"That’s a good start, but please refine it further. Make the following adjustments:
+That’s a good start, but please refine it further. Make the following adjustments:
 1. Make the tone more casual and friendly
 2. Add a specific example of how our product has helped a customer
-3. Shorten the second paragraph to focus more on the benefits rather than the features"
+3. Shorten the second paragraph to focus more on the benefits rather than the features
 ```
 </div>
 
@@ -135,7 +135,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"What is marketing? How do I do it?"
+What is marketing? How do I do it?
 ```
 </div>
 
@@ -143,13 +143,13 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I'm developing a marketing strategy for a new eco-friendly cleaning product line. Can you provide an overview of current trends in green marketing? Please include:
+I'm developing a marketing strategy for a new eco-friendly cleaning product line. Can you provide an overview of current trends in green marketing? Please include:
 1. Key messaging strategies that resonate with environmentally conscious consumers
 2. Effective channels for reaching this audience
 3. Examples of successful green marketing campaigns from the past year
 4. Potential pitfalls to avoid (e.g., greenwashing accusations)
 
-This information will help me shape our marketing approach."
+This information will help me shape our marketing approach.
 ```
 </div>
 
@@ -163,7 +163,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Help me prepare for a negotiation."
+Help me prepare for a negotiation.
 ```
 </div>
 
@@ -171,12 +171,12 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"You are a fabric supplier for my backpack manufacturing company. I'm preparing for a negotiation with this supplier to reduce prices by 10%. As the supplier, please provide:
+You are a fabric supplier for my backpack manufacturing company. I'm preparing for a negotiation with this supplier to reduce prices by 10%. As the supplier, please provide:
 1. Three potential objections to our request for a price reduction
 2. For each objection, suggest a counterargument from my perspective
 3. Two alternative proposals the supplier might offer instead of a straight price cut
 
-Then, switch roles and provide advice on how I, as the buyer, can best approach this negotiation to achieve our goal."
+Then, switch roles and provide advice on how I, as the buyer, can best approach this negotiation to achieve our goal.
 ```
 </div>
 
@@ -194,7 +194,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Write something about cybersecurity."
+Write something about cybersecurity.
 ```
 </div>
 
@@ -202,12 +202,12 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I need to write a blog post about cybersecurity best practices for small business owners. The audience is not very tech-savvy, so the content should be:
+I need to write a blog post about cybersecurity best practices for small business owners. The audience is not very tech-savvy, so the content should be:
 1. Easy to understand, avoiding technical jargon where possible
 2. Practical, with actionable tips they can implement quickly
 3. Engaging and slightly humorous to keep their interest
 
-Please provide an outline for a 1000-word blog post that covers the top 5 cybersecurity practices these business owners should adopt."
+Please provide an outline for a 1000-word blog post that covers the top 5 cybersecurity practices these business owners should adopt.
 ```
 </div>
 
@@ -222,7 +222,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Write a product description."
+Write a product description.
 ```
 </div>
 
@@ -230,13 +230,13 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Please help me write a product description for our new ergonomic office chair. Use a professional but engaging tone. Our brand voice is friendly, innovative, and health-conscious. The description should:
+Please help me write a product description for our new ergonomic office chair. Use a professional but engaging tone. Our brand voice is friendly, innovative, and health-conscious. The description should:
 1. Highlight the chair's key ergonomic features
 2. Explain how these features benefit the user's health and productivity
 3. Include a brief mention of the sustainable materials used
 4. End with a call-to-action encouraging readers to try the chair
 
-Aim for about 200 words."
+Aim for about 200 words.
 ```
 </div>
 
@@ -250,7 +250,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Create a presentation on our company results."
+Create a presentation on our company results.
 ```
 </div>
 
@@ -258,14 +258,14 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I need to create a presentation on our Q2 results. Structure this with the following sections:
+I need to create a presentation on our Q2 results. Structure this with the following sections:
 1. Overview
 2. Sales Performance
 3. Customer Acquisition
 4. Challenges
 5. Q3 Outlook
 
-For each section, suggest 3-4 key points to cover, based on typical business presentations. Also, recommend one type of data visualization (e.g., graph, chart) that would be effective for each section."
+For each section, suggest 3-4 key points to cover, based on typical business presentations. Also, recommend one type of data visualization (e.g., graph, chart) that would be effective for each section.
 ```
 </div>
 
@@ -293,7 +293,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Summarize this report for me."
+Summarize this report for me.
 ```
 </div>
 
@@ -301,12 +301,12 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I've attached a 50-page market research report called 'Tech Industry Trends 2023'. Can you provide a 2-paragraph summary focusing on AI and machine learning trends? Then, please answer these questions:
+I've attached a 50-page market research report called 'Tech Industry Trends 2023'. Can you provide a 2-paragraph summary focusing on AI and machine learning trends? Then, please answer these questions:
 1. What are the top 3 AI applications in business for this year?
 2. How is machine learning impacting job roles in the tech industry?
 3. What potential risks or challenges does the report mention regarding AI adoption?
 
-Please cite specific sections or page numbers when answering these questions."
+Please cite specific sections or page numbers when answering these questions.
 ```
 </div>
 
@@ -322,7 +322,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Analyze our sales data."
+Analyze our sales data.
 ```
 </div>
 
@@ -330,7 +330,7 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I've attached a spreadsheet called 'Sales Data 2023'. Can you analyze this data and present the key findings in the following format:
+I've attached a spreadsheet called 'Sales Data 2023'. Can you analyze this data and present the key findings in the following format:
 
 1. Executive Summary (2-3 sentences)
 2. Key Metrics:
@@ -342,7 +342,7 @@ Good prompt:
 4. Recommendations:
    - Provide 3 data-driven recommendations, each with a brief rationale
 
-After the analysis, suggest three types of data visualizations that would effectively communicate these findings."
+After the analysis, suggest three types of data visualizations that would effectively communicate these findings.
 ```
 </div>
 
@@ -358,7 +358,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Give me some team-building ideas."
+Give me some team-building ideas.
 ```
 </div>
 
@@ -366,14 +366,14 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"We need to come up with team-building activities for our remote team of 20 people. Can you help me brainstorm by:
+We need to come up with team-building activities for our remote team of 20 people. Can you help me brainstorm by:
 1. Suggesting 10 virtual team-building activities that promote collaboration
 2. For each activity, briefly explain how it fosters teamwork
 3. Indicate which activities are best for:
    a) Ice-breakers
    b) Improving communication
    c) Problem-solving skills
-4. Suggest one low-cost option and one premium option."
+4. Suggest one low-cost option and one premium option.
 ```
 </div>
 
@@ -385,7 +385,7 @@ Bad Prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Compare project management software options."
+Compare project management software options.
 ```
 </div>
 
@@ -393,13 +393,13 @@ Good Prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"We're considering three different project management software options: Asana, Trello, and Microsoft Project. Can you compare these in a table format using the following criteria:
+We're considering three different project management software options: Asana, Trello, and Microsoft Project. Can you compare these in a table format using the following criteria:
 1. Key Features
 2. Ease of Use
 3. Scalability
 4. Pricing (include specific plans if possible)
 5. Integration capabilities
-6. Best suited for (e.g., small teams, enterprise, specific industries)"
+6. Best suited for (e.g., small teams, enterprise, specific industries)
 ```
 </div>
 
@@ -429,7 +429,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Help me create a marketing strategy."
+Help me create a marketing strategy.
 ```
 </div>
 
@@ -437,7 +437,7 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"As a senior marketing consultant, I need your help developing a comprehensive marketing strategy for our new eco-friendly smartphone accessory line. Our target audience is environmentally conscious millennials and Gen Z consumers. Please provide a detailed strategy that includes:
+As a senior marketing consultant, I need your help developing a comprehensive marketing strategy for our new eco-friendly smartphone accessory line. Our target audience is environmentally conscious millennials and Gen Z consumers. Please provide a detailed strategy that includes:
 
 1. Market Analysis:
    - Current trends in eco-friendly tech accessories
@@ -462,7 +462,7 @@ Good prompt:
 
 Please present this information in a structured format with headings and bullet points. Where relevant, explain your reasoning or provide brief examples.
 
-After outlining the strategy, please identify any potential challenges or risks we should be aware of, and suggest mitigation strategies for each."
+After outlining the strategy, please identify any potential challenges or risks we should be aware of, and suggest mitigation strategies for each.
 ```
 </div>
 
@@ -474,7 +474,7 @@ Bad prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"Analyze this financial report."
+Analyze this financial report.
 ```
 </div>
 
@@ -482,7 +482,7 @@ Good prompt:
 
 <div class="no-highlight" markdown="1">
 ```text
-"I've attached our company's Q2 financial report titled 'Q2_2023_Financial_Report.pdf'. Act as a seasoned CFO and analyze this report and prepare a briefing for our board of directors. Please structure your analysis as follows:
+I've attached our company's Q2 financial report titled 'Q2_2023_Financial_Report.pdf'. Act as a seasoned CFO and analyze this report and prepare a briefing for our board of directors. Please structure your analysis as follows:
 
 1. Executive Summary (3-4 sentences highlighting key points)
 2. Financial Performance Overview:
@@ -512,7 +512,7 @@ Please use charts or tables where appropriate to visualize data. For any assumpt
 
 After completing the analysis, please generate 5 potential questions that board members might ask about this report, along with suggested responses.
 
-Finally, summarize this entire analysis into a single paragraph that I can use as an opening statement in the board meeting."
+Finally, summarize this entire analysis into a single paragraph that I can use as an opening statement in the board meeting.
 ```
 </div>
 
@@ -532,7 +532,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"프레젠테이션 만드는 것을 도와주세요."
+프레젠테이션 만드는 것을 도와주세요.
 ```
 </div>
 
@@ -540,7 +540,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"분기별 판매 회의를 위한 10장 분량의 프레젠테이션 작성에 도움이 필요합니다. 프레젠테이션은 Q2 판매 실적, 최고 판매 제품, Q3 판매 목표를 다뤄야 합니다. 각 슬라이드의 주요 포인트를 포함한 개요를 제공해 주세요."
+분기별 판매 회의를 위한 10장 분량의 프레젠테이션 작성에 도움이 필요합니다. 프레젠테이션은 Q2 판매 실적, 최고 판매 제품, Q3 판매 목표를 다뤄야 합니다. 각 슬라이드의 주요 포인트를 포함한 개요를 제공해 주세요.
 ```
 </div>
 
@@ -555,7 +555,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"전문적인 이메일을 작성해 주세요."
+전문적인 이메일을 작성해 주세요.
 ```
 </div>
 
@@ -563,7 +563,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"프로젝트 지연에 대해 고객에게 보낼 전문적인 이메일을 작성해야 합니다. 다음은 제가 이전에 보낸 유사한 이메일입니다:
+프로젝트 지연에 대해 고객에게 보낼 전문적인 이메일을 작성해야 합니다. 다음은 제가 이전에 보낸 유사한 이메일입니다:
 
 '안녕하세요 [고객명님],
 이메일 드리게 되어 반갑습니다. [프로젝트명]의 진행 상황에 대해 알려드리고자 합니다. 안타깝게도 예상치 못한 문제가 발생하여 완료 일정이 약 2주 정도 지연될 것 같습니다. 저희는 이 문제를 해결하기 위해 열심히 노력하고 있으며 진행 상황을 계속 알려드리겠습니다.
@@ -571,7 +571,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 감사합니다.
 [귀하의 이름]'
 
-이와 유사한 어조와 구조를 따르되, 공급망 문제로 인해 한 달 지연되는 현재 상황에 맞는 새로운 이메일을 작성하는 데 도움을 주세요."
+이와 유사한 어조와 구조를 따르되, 공급망 문제로 인해 한 달 지연되는 현재 상황에 맞는 새로운 이메일을 작성하는 데 도움을 주세요.
 ```
 </div>
 
@@ -586,7 +586,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"팀 생산성을 어떻게 향상시킬 수 있을까요?"
+팀 생산성을 어떻게 향상시킬 수 있을까요?
 ```
 </div>
 
@@ -594,13 +594,13 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"제 팀의 생산성을 향상시키고자 합니다. 다음 요소를 고려하여 단계별로 생각해 주세요:
+제 팀의 생산성을 향상시키고자 합니다. 다음 요소를 고려하여 단계별로 생각해 주세요:
 1. 현재 생산성 저해 요인 (예: 너무 많은 회의, 불명확한 우선순위)
 2. 잠재적 해결책 (예: 시간 관리 기술, 프로젝트 관리 도구)
 3. 실행 과정에서의 도전 과제
 4. 개선을 측정하는 방법
 
-각 단계에 대해 귀하의 추론 과정을 간략히 설명해 주세요. 그리고 마지막에 아이디어를 요약해 주세요."
+각 단계에 대해 귀하의 추론 과정을 간략히 설명해 주세요. 그리고 마지막에 아이디어를 요약해 주세요.
 ```
 </div>
 
@@ -615,7 +615,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"더 좋게 만들어 주세요."
+더 좋게 만들어 주세요.
 ```
 </div>
 
@@ -623,10 +623,10 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"좋은 시작입니다만, 조금 더 다듬어 주시겠어요? 다음과 같이 수정해 주세요:
+좋은 시작입니다만, 조금 더 다듬어 주시겠어요? 다음과 같이 수정해 주세요:
 1. 어조를 더 캐주얼하고 친근하게 만들어 주세요
 2. 우리 제품이 고객에게 어떻게 도움이 되었는지에 대한 구체적인 예시를 추가해 주세요
-3. 두 번째 문단을 줄이고 기능보다는 이점에 더 초점을 맞춰주세요"
+3. 두 번째 문단을 줄이고 기능보다는 이점에 더 초점을 맞춰주세요
 ```
 </div>
 
@@ -641,7 +641,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"마케팅이 뭐예요? 어떻게 하는 거죠?"
+마케팅이 뭐예요? 어떻게 하는 거죠?
 ```
 </div>
 
@@ -649,13 +649,13 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"새로운 친환경 청소용품 라인을 위한 마케팅 전략을 개발 중입니다. 녹색 마케팅의 현재 트렌드에 대한 개요를 제공해 주시겠어요? 다음 내용을 포함해 주세요:
+새로운 친환경 청소용품 라인을 위한 마케팅 전략을 개발 중입니다. 녹색 마케팅의 현재 트렌드에 대한 개요를 제공해 주시겠어요? 다음 내용을 포함해 주세요:
 1. 환경 의식이 있는 소비자들에게 공감을 얻는 주요 메시징 전략
 2. 이 대상 고객층에 도달하기 위한 효과적인 채널
 3. 지난 1년 동안의 성공적인 녹색 마케팅 캠페인 사례
 4. 피해야 할 잠재적 함정 (예: 그린워싱 비난)
 
-이 정보는 우리의 마케팅 접근 방식을 형성하는 데 도움이 될 것입니다."
+이 정보는 우리의 마케팅 접근 방식을 형성하는 데 도움이 될 것입니다.
 ```
 </div>
 
@@ -669,7 +669,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"협상 준비를 도와주세요."
+협상 준비를 도와주세요.
 ```
 </div>
 
@@ -677,12 +677,12 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"당신은 제 백팩 제조 회사의 원단 공급업체입니다. 가격을 10% 낮추기 위해 이 공급업체와의 협상을 준비하고 있습니다. 공급업체로서 다음을 제공해 주세요:
+당신은 제 백팩 제조 회사의 원단 공급업체입니다. 가격을 10% 낮추기 위해 이 공급업체와의 협상을 준비하고 있습니다. 공급업체로서 다음을 제공해 주세요:
 1. 가격 인하 요청에 대한 세 가지 잠재적 반대 의견
 2. 각 반대 의견에 대해, 제 입장에서의 반론 제안
 3. 단순 가격 인하 대신 공급업체가 제안할 수 있는 두 가지 대안 제안
 
-그런 다음 역할을 바꿔서 구매자인 제가 목표를 달성하기 위해 이 협상에 어떻게 접근하는 것이 가장 좋을지 조언해 주세요."
+그런 다음 역할을 바꿔서 구매자인 제가 목표를 달성하기 위해 이 협상에 어떻게 접근하는 것이 가장 좋을지 조언해 주세요.
 ```
 </div>
 
@@ -700,7 +700,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"사이버 보안에 대해 뭔가 써주세요."
+사이버 보안에 대해 뭔가 써주세요.
 ```
 </div>
 
@@ -708,12 +708,12 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"소규모 사업주를 위한 사이버 보안 모범 사례에 대한 블로그 포스트를 작성해야 합니다. 독자층은 기술에 능숙하지 않으므로 콘텐츠는 다음과 같아야 합니다:
+소규모 사업주를 위한 사이버 보안 모범 사례에 대한 블로그 포스트를 작성해야 합니다. 독자층은 기술에 능숙하지 않으므로 콘텐츠는 다음과 같아야 합니다:
 1. 이해하기 쉽고, 가능한 한 전문 용어를 피하세요
 2. 빠르게 구현할 수 있는 실용적인 팁을 제공하세요
 3. 독자의 관심을 유지하기 위해 약간의 유머를 곁들인 매력적인 내용이어야 합니다
 
-이 사업주들이 채택해야 할 상위 5가지 사이버 보안 관행을 다루는 1000단어 분량의 블로그 포스트 개요를 제공해 주세요."
+이 사업주들이 채택해야 할 상위 5가지 사이버 보안 관행을 다루는 1000단어 분량의 블로그 포스트 개요를 제공해 주세요.
 ```
 </div>
 
@@ -728,7 +728,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"제품 설명을 작성해 주세요."
+제품 설명을 작성해 주세요.
 ```
 </div>
 
@@ -736,13 +736,13 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"새로운 인체공학적 사무용 의자에 대한 제품 설명을 작성하는 데 도움이 필요합니다. 전문적이지만 매력적인 어조를 사용해 주세요. 우리 브랜드의 목소리는 친근하고, 혁신적이며, 건강을 중시합니다. 설명에는 다음 내용이 포함되어야 합니다:
+새로운 인체공학적 사무용 의자에 대한 제품 설명을 작성하는 데 도움이 필요합니다. 전문적이지만 매력적인 어조를 사용해 주세요. 우리 브랜드의 목소리는 친근하고, 혁신적이며, 건강을 중시합니다. 설명에는 다음 내용이 포함되어야 합니다:
 1. 의자의 주요 인체공학적 특징 강조
 2. 이러한 특징이 사용자의 건강과 생산성에 어떤 이점을 주는지 설명
 3. 사용된 지속 가능한 재료에 대한 간단한 언급
 4. 독자가 의자를 직접 체험해보도록 권유하는 행동 유도 문구로 마무리
 
-약 200단어 분량으로 작성해 주세요."
+약 200단어 분량으로 작성해 주세요.
 ```
 </div>
 
@@ -756,7 +756,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"우리 회사 결과에 대한 프레젠테이션을 만들어 주세요."
+우리 회사 결과에 대한 프레젠테이션을 만들어 주세요.
 ```
 </div>
 
@@ -764,14 +764,14 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"Q2 결과에 대한 프레젠테이션을 만들어야 합니다. 다음 섹션으로 구성해 주세요:
+Q2 결과에 대한 프레젠테이션을 만들어야 합니다. 다음 섹션으로 구성해 주세요:
 1. 개요
 2. 판매 실적
 3. 고객 확보
 4. 도전 과제
 5. Q3 전망
 
-각 섹션에 대해 일반적인 비즈니스 프레젠테이션을 기반으로 다룰 3-4가지 주요 포인트를 제안해 주세요. 또한 각 섹션에 효과적일 수 있는 데이터 시각화 유형(예: 그래프, 차트)을 하나씩 추천해 주세요."
+각 섹션에 대해 일반적인 비즈니스 프레젠테이션을 기반으로 다룰 3-4가지 주요 포인트를 제안해 주세요. 또한 각 섹션에 효과적일 수 있는 데이터 시각화 유형(예: 그래프, 차트)을 하나씩 추천해 주세요.
 ```
 </div>
 
@@ -799,7 +799,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"이 보고서를 요약해 주세요."
+이 보고서를 요약해 주세요.
 ```
 </div>
 
@@ -807,12 +807,12 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"'Tech Industry Trends 2023'라는 제목의 50페이지 시장 조사 보고서를 첨부했습니다. AI와 기계 학습 트렌드에 초점을 맞춘 2단락 분량의 요약을 제공해 주시겠어요? 그런 다음 다음 질문에 답해 주세요:
+'Tech Industry Trends 2023'라는 제목의 50페이지 시장 조사 보고서를 첨부했습니다. AI와 기계 학습 트렌드에 초점을 맞춘 2단락 분량의 요약을 제공해 주시겠어요? 그런 다음 다음 질문에 답해 주세요:
 1. 올해 비즈니스에서 가장 중요한 AI 애플리케이션 3가지는 무엇인가요?
 2. 기계 학습이 기술 산업의 직무 역할에 어떤 영향을 미치고 있나요?
 3. 보고서에서 언급한 AI 도입과 관련된 잠재적 위험이나 도전 과제는 무엇인가요?
 
-이 질문들에 답할 때 특정 섹션이나 페이지 번호를 인용해 주세요."
+이 질문들에 답할 때 특정 섹션이나 페이지 번호를 인용해 주세요.
 ```
 </div>
 
@@ -828,7 +828,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"우리 판매 데이터를 분석해 주세요."
+우리 판매 데이터를 분석해 주세요.
 ```
 </div>
 
@@ -836,7 +836,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"'Sales Data 2023'이라는 스프레드시트를 첨부했습니다. 이 데이터를 분석하고 다음 형식으로 주요 결과를 제시해 주실 수 있나요:
+'Sales Data 2023'이라는 스프레드시트를 첨부했습니다. 이 데이터를 분석하고 다음 형식으로 주요 결과를 제시해 주실 수 있나요:
 
 1. 핵심 요약 (2-3문장)
 2. 주요 지표:
@@ -848,7 +848,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 4. 권장 사항:
    - 3가지 데이터 기반 권장 사항을 제시하고 각각에 대한 간단한 근거 제공
 
-분석 후, 이러한 결과를 효과적으로 전달할 수 있는 세 가지 유형의 데이터 시각화를 제안해 주세요."
+분석 후, 이러한 결과를 효과적으로 전달할 수 있는 세 가지 유형의 데이터 시각화를 제안해 주세요.
 ```
 </div>
 
@@ -864,7 +864,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"팀 빌딩 아이디어를 몇 가지 주세요."
+팀 빌딩 아이디어를 몇 가지 주세요.
 ```
 </div>
 
@@ -872,14 +872,14 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"20명으로 구성된 원격 팀을 위한 팀 빌딩 활동을 생각해내야 합니다. 다음과 같이 브레인스토밍을 도와주실 수 있나요:
+20명으로 구성된 원격 팀을 위한 팀 빌딩 활동을 생각해내야 합니다. 다음과 같이 브레인스토밍을 도와주실 수 있나요:
 1. 협업을 촉진하는 10가지 가상 팀 빌딩 활동 제안
 2. 각 활동이 어떻게 팀워크를 강화하는지 간단히 설명
 3. 다음 중 어떤 활동이 가장 적합한지 표시:
    a) 아이스브레이커
    b) 의사소통 개선
    c) 문제 해결 능력
-4. 저비용 옵션 하나와 프리미엄 옵션 하나를 제안"
+4. 저비용 옵션 하나와 프리미엄 옵션 하나를 제안
 ```
 </div>
 
@@ -891,7 +891,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"프로젝트 관리 소프트웨어 옵션을 비교해 주세요."
+프로젝트 관리 소프트웨어 옵션을 비교해 주세요.
 ```
 </div>
 
@@ -899,13 +899,13 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"Asana, Trello, Microsoft Project 세 가지 프로젝트 관리 소프트웨어 옵션을 고려 중입니다. 다음 기준을 사용하여 표 형식으로 이들을 비교해 주실 수 있나요:
+Asana, Trello, Microsoft Project 세 가지 프로젝트 관리 소프트웨어 옵션을 고려 중입니다. 다음 기준을 사용하여 표 형식으로 이들을 비교해 주실 수 있나요:
 1. 주요 기능
 2. 사용 용이성
 3. 확장성
 4. 가격 (가능하면 구체적인 요금제 포함)
 5. 통합 기능
-6. 가장 적합한 사용 사례 (예: 소규모 팀, 기업, 특정 산업)"
+6. 가장 적합한 사용 사례 (예: 소규모 팀, 기업, 특정 산업)
 ```
 </div>
 
@@ -914,7 +914,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 ## 문제 해결, 환각 최소화 및 성능 최대화
 
 1. **Claude가 불확실성을 인정하도록 허용하기**
-   - Claude에게 모르는 경우 모른다고 말해도 된다고 알려주세요. 예: "확실하지 않은 부분이 있다면 모른다고 말해도 됩니다."
+   - Claude에게 모르는 경우 모른다고 말해도 된다고 알려주세요. 예: "확실하지 않은 부분이 있다면 모른다고 말해도 됩니다.
 2. **복잡한 작업 세분화하기**
    - 작업이 너무 크고 Claude가 단계를 놓치거나 특정 단계를 잘 수행하지 못하는 것 같다면, 작은 단계로 나누고 한 번에 한 메시지씩 Claude와 함께 작업을 진행하세요.
 3. **새로운 요청에 모든 맥락 정보 포함하기**
@@ -930,7 +930,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"마케팅 전략을 만드는 데 도와주세요."
+마케팅 전략을 만드는 데 도와주세요.
 ```
 </div>
 
@@ -938,7 +938,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"시니어 마케팅 컨설턴트로서, 우리의 새로운 친환경 스마트폰 액세서리 라인을 위한 포괄적인 마케팅 전략 개발에 도움이 필요합니다. 우리의 목표 고객은 환경을 의식하는 밀레니얼 세대와 Z세대 소비자입니다. 다음을 포함하는 상세한 전략을 제공해 주세요:
+시니어 마케팅 컨설턴트로서, 우리의 새로운 친환경 스마트폰 액세서리 라인을 위한 포괄적인 마케팅 전략 개발에 도움이 필요합니다. 우리의 목표 고객은 환경을 의식하는 밀레니얼 세대와 Z세대 소비자입니다. 다음을 포함하는 상세한 전략을 제공해 주세요:
 
 1. 시장 분석:
   - 친환경 기술 액세서리의 현재 트렌드
@@ -963,7 +963,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 이 정보를 제목과글머리 기호를 사용한 구조화된 형식으로 제시해 주세요. 관련이 있는 경우, 귀하의 추론을 설명하거나 간단한 예시를 제공해 주세요.
 
-전략을 개략적으로 설명한 후, 우리가 인식해야 할 잠재적 도전 과제나 위험을 파악하고 각각에 대한 완화 전략을 제안해 주세요."
+전략을 개략적으로 설명한 후, 우리가 인식해야 할 잠재적 도전 과제나 위험을 파악하고 각각에 대한 완화 전략을 제안해 주세요.
 ```
 </div>
 
@@ -975,7 +975,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"이 재무 보고서를 분석해 주세요."
+이 재무 보고서를 분석해 주세요.
 ```
 </div>
 
@@ -983,7 +983,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 <div class="no-highlight" markdown="1">
 ```text
-"'Q2_2023_Financial_Report.pdf'라는 제목의 우리 회사 Q2 재무 보고서를 첨부했습니다. 베테랑 CFO로서 이 보고서를 분석하고 이사회를 위한 브리핑을 준비해 주세요. 다음과 같은 구조로 분석을 해주세요:
+'Q2_2023_Financial_Report.pdf'라는 제목의 우리 회사 Q2 재무 보고서를 첨부했습니다. 베테랑 CFO로서 이 보고서를 분석하고 이사회를 위한 브리핑을 준비해 주세요. 다음과 같은 구조로 분석을 해주세요:
 
 1. 주요 요약 (주요 포인트를 강조하는 3-4개의 문장)
 2. 재무 성과 개요:
@@ -1013,7 +1013,7 @@ Why it's better: This prompt combines role-playing (as CFO), structured output, 
 
 분석을 완료한 후, 이사회 구성원들이 이 보고서에 대해 할 수 있는 5가지 잠재적 질문을 생성하고 제안된 응답과 함께 제시해 주세요.
 
-마지막으로, 이사회 회의에서 시작 발언으로 사용할 수 있도록 이 전체 분석을 한 단락으로 요약해 주세요."
+마지막으로, 이사회 회의에서 시작 발언으로 사용할 수 있도록 이 전체 분석을 한 단락으로 요약해 주세요.
 ```
 </div>
 
