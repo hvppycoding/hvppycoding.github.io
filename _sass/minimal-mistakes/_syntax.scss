@@ -338,7 +338,7 @@ Example:
   div.highlighter-rouge {
     position: relative;
     margin-bottom: 1em;
-    background: $background-color;
+    background: $base00;
     color: $text-color;
     font-family: $monospace;
     font-size: $type-size-6;
@@ -386,7 +386,7 @@ Example:
 
   .highlight pre {
     width: 100%;
-    white-space: pre-wrap;
+    white-space: pre-wrap;                         /* Modified by hvppycoding */
   }
 
   .highlight .hll {
