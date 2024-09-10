@@ -77,7 +77,7 @@ This can increase wirelength, which in turn negatively impacts power consumption
 Existing approaches have a limitation.  
 They simplify the problem by ignoring the timing information of the pins.  
 Our approach balances pin delay and wirelength while considering the overall circuit timing.  
-As a result, it not only improves timing but also achieves reasonable wirelength, enhancing power efficiency.  
+As a result, it not only improves timing but also achieves reasonable wirelength.  
 For instance, in Case 1, we favor the shortest wirelength.  
 On the other hand, for Case 2, we reduce the pathlength to the critical pin while minimally increasing wirelength.  
 
@@ -150,10 +150,10 @@ As a result, it helps reduce power consumption and routing congestion.
 
 We proposed a parallelization step to perform net topology refinement in parallel.  
 This process prevents modifications of timing-dependent nets.  
-This begins by creating an adjacency matrix $M$ from the netlist.  
-Next, we create a transitive closure matrix $M*$ from the adjacency matrix.  
+This begins by creating an adjacency matrix M from the netlist.  
+Next, we create a transitive closure matrix M\* from the adjacency matrix.  
 We can derive this using the Floyd-Warshall algorithm.  
-From $M*$, we find the maximal net subset where nets are not connected to each other.  
+From M\*, we find the maximal net subset where nets are not connected to each other.  
 This is found by formulating the problem as a maximal independent set problem.  
 
 ![20240909-152221]({{site.baseurl}}/assets/images/2024-09-09-socc-presentation-script/20240909-152221.png){: .align-center}  
