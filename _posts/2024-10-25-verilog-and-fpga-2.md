@@ -100,3 +100,100 @@ mathjax: true
   - $AB + ABC + A\bar{B} + \bar{A}BC = ?$
   - $=A + BC$
 
+### Karnaugh Map
+
+- 시각화하여 풀기 좋다. 4-input 까지는 쉽게 만들 수 있는 방법이다.
+
+![karnaugh_map]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/karnaugh_map.png){: .align-center}
+
+## Sequential Logic
+
+- Sequential logic의 개념
+- Latch & Flip-flop
+- Clock, Reset
+- Sequential logic의 대표 예시
+
+### Overview
+
+- What is Sequential Logic?
+  - output이 ionput 뿐 아니라 output state에 의해 결정될 수도 있다.
+  - EN(Clock): output Q 값이 변할 수 있다.
+  - Reset: output Q 값을 초기화한다.
+
+### Latch 구조 및 동작
+
+#### SR Latch
+
+- SR NOR Latch
+  - 0: 파랑
+  - 1: 빨강
+
+![sr_nor_latch]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/sr_nor_latch.png){: .align-center}
+
+#### Gated SR Latch
+
+- Level-sensitive
+
+![gated_sr_latch]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/gated_sr_latch.png){: .align-center}  
+
+#### Gated D Latch
+
+- S, R이 동시에 1이 되지 않도록 한다.
+
+![gated_d_latch]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/gated_d_latch.png){: .align-center}  
+
+### D Flip-Flop의 구조 및 동작, 활용
+
+#### Flip-Flop
+
+- Flip-Flop
+  - Latch와 다르게 Flip-Flop은 clock(enable)이 high일 때 output Q 값이 변하지 않는다.
+  - rising 이나 falling edge에서 Q의 값을 바꾼다.
+- D Flip-Flop
+  - Verilog design에서 가장 많이 사용된다.
+  - D(input) 값은 clock rising edge에 Q(output)에 반영된다.
+  - 6 NAND gates로 구성된다.
+
+![d_flip_flop]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/d_flip_flop.png){: .align-center}  
+
+#### D Flip-Flop - Behavior
+
+- Clock이 0인 경우
+
+![dff_behavior_1]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_behavior_1.png){: .align-center}
+
+- Clock이 0에서 1로 바뀐 경우
+
+![dff_behavior_2]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_behavior_2.png){: .align-center}  
+
+![dff_behavior_3]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_behavior_3.png){: .align-center}
+
+![dff_behavior_4]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_behavior_4.png){: .align-center}
+
+- Clock이 1이나 0으로 고정되었을 때 데이터가 안 바뀌는지도 중요하다.
+- 왼쪽: data 신호가 기존 0에서 1로 바뀐 경우(기존과 바뀌는게 없다)
+- 오른쪽: data 신호가 기존 1에서 0으로 바뀐 경우(좀 더 신호가 바뀌긴하나 Q에는 영향 없다)
+
+![dff_behavior_5]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_behavior_5.png){: .align-center}  
+
+- Clock이 1 → 0 → 1로 바뀌는 케이스 확인해보자
+
+![dff_behavior_6]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_behavior_6.png){: .align-center}
+
+#### D Flip-Flop Symbol
+
+![dff_symbol]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_symbol.png){: .align-center}
+
+#### D Flip-Flop Verilog coding
+
+![dff_verilog_coding]({{site.baseurl}}/assets/images/2024-10-25-verilog-and-fpga-2/dff_verilog_coding.png){: .align-center}
+
+### Clock
+
+- Toggle 해주는 신호
+- 주요 Properties
+  - frequency: (1/period)
+  - duty cycle: clock 주기 중 신호 1이 차지하는 비율(50%가 이상적)
+  - jitter: 노이즈로 인해 clock이 정확한 주기를 갖지 못한다
+- Clock frequency 결정하기
+  - Period > Gate delay + Setup time + Hold time + Jitter 여야 한다.
