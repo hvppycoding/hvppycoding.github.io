@@ -1,6 +1,6 @@
 ---
-title: "Part1. 반도체 설계 기반 Verilog & FPGA"
-excerpt: "Verilog 소개 및 Concept"
+title: "Part1. Verilog 소개 및 Concept"
+excerpt: ""
 date: 2024-10-25 01:00:00 +0900
 classes: wide
 header:

@@ -1,6 +1,6 @@
 ---
-title: "Part2. 반도체 설계 기반 Verilog & FPGA"
-excerpt: "Digital Logic 및 Verilog Coding 기초"
+title: "Part2-1. Combinational Logic & Sequential Logic"
+excerpt: ""
 date: 2024-10-25 16:00:00 +0900
 classes: wide
 header:
