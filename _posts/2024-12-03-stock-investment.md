@@ -46,3 +46,7 @@ mathjax: true
 - 미국 주간 거래 등락률은 전일 새벽 종료된 (전전일 개장) 시장의 정규장 종가(기준가) 대비로 표기됩니다.
 - 미국 주간 거래의 시간대별 체결량은 누적거래량에 합산되지 않습니다.
 - 기타 미국 주간 거래는 정규시장 거래와의 여러 상이한 점 등으로 거래의 불편함 또는 불리함이 있을 수 있습니다.
+
+## 슈카 단타썰
+
+![syuka_scalping]({{site.baseurl}}/assets/images/2024-12-03-stock-investment/syuka_scalping.png){: .align-center}  
