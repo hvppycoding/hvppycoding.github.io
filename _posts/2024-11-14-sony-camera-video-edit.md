@@ -21,3 +21,9 @@ categories:
 - 참고 1: [StackOverflow: How can I reduce a video's size with ffmpeg](https://unix.stackexchange.com/questions/28803/how-can-i-reduce-a-videos-size-with-ffmpeg)
 - 참고 2: [StackOverflow: Retrieving and saving media metadata using ffmpeg](https://stackoverflow.com/questions/9464617/retrieving-and-saving-media-metadata-using-ffmpeg)
 - 참고 3: [FFmpeg Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.264)
+
+## 엔비디아 그래픽 카드를 이용한 가속화
+
+- [해볼 것](https://superuser.com/questions/1663872/cant-convert-with-ffmpeg-using-nvenc-10-bit-encode-not-supported)
+
+`ffmpeg -y -vsync 0 -i D:\foldee\examplefile.mkv -c:a copy -c:v h264_nvenc -pix_fmt yuv420p -b:v 5M D:\transcode\waawe.mkv`
