@@ -1,7 +1,7 @@
 ---
 title: "Ch 2. 허깅페이스 실습 - Autoregressive Models"
 excerpt: ""
-date: 2025-02-11 01:00:00 +0900
+date: 2025-02-12 01:00:00 +0900
 classes: wide
 header:
   overlay_image: /assets/images/unsplash-emile-perron.jpg
