@@ -8,7 +8,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Emile Perron**](https://unsplash.com/@emilep) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - Hugging Face
+  - Diffusers
 ---
 
 ## Diffusers 개요
@@ -112,7 +112,7 @@ image = pipeline("An image of a squirrel in Picasso style").images[0]
 image.show()
 ```
 
-![squirrel_picasso]({{site.baseurl}}/assets/images/2025-02-13-diffusers-study/squirrel_picasso.png){: .align-center}  
+![squirrel_picasso]({{site.baseurl}}/assets/images/2025-02-13-diffusers-quicktour/squirrel_picasso.png){: .align-center}  
 
 `save` 메서드를 사용하여 이미지를 저장할 수 있다.
 
@@ -286,7 +286,7 @@ for i, t in enumerate(tqdm.tqdm(scheduler.timesteps)):
         display_sample(sample, i + 1)
 ```
 
-![cat_steps]({{site.baseurl}}/assets/images/2025-02-13-diffusers-study/cat_steps.png){: .align-center}  
+![cat_steps]({{site.baseurl}}/assets/images/2025-02-13-diffusers-quicktour/cat_steps.png){: .align-center}  
 
 ### 사용한 전체 코드
 
