@@ -1,5 +1,5 @@
 ---
-title: "Diffusers Study"
+title: "Diffusers Quicktour"
 excerpt: ""
 date: 2025-02-13 03:00:00 +0900
 classes: wide
