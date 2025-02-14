@@ -11,6 +11,8 @@ categories:
   - Diffusers
 ---
 
+참고한 문서: [Diffusers Quicktour](https://huggingface.co/docs/diffusers/quicktour)
+
 ## Diffusers 개요
 
 diffusers는 이미지, 오디오 및 분자의 3D 구조까지도 생성할 수 있는 최첨단 사전 훈련 모델을 위한 라이브러리입니다. 간단한 추론 솔루션, 자신만의 디퓨젼 모델 훈련도 지원합니다.
