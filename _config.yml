@@ -97,7 +97,7 @@ author:
   avatar           : "/assets/images/icon.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "-"
   home             : "https://hvppycoding.github.io"
-  location         : South Korea
+  location         : 
   email            :
   links:
     - label: "Email"
