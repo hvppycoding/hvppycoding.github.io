@@ -51,9 +51,9 @@ I hope this document can be helpful to anyone who is somewhat seriously interest
 좋은 데이터 세트를 얻는 것에 대해서는 다른 곳에서 광범위하게 다루므로 가장 중요한 부분만 포함했습니다.
 
 - 고품질 입력은 고품질 출력을 의미합니다.
-- 더 많은 양과 더 많은 다양성이 더 좋습니다.
+- 데이터셋은 크고 다양할수록 좋습니다.
 - 품질과 양 중에서 선택해야 하는 경우 항상 품질이 우선입니다.
-- 최후의 수단으로 업스케일하고 가능하면 피하십시오. 업스케일해야 할 때 Automatic1111을 통해 LDSR을 사용합니다.
+- 최후의 수단으로 업스케일하고 가능하면 피하십시오. 업스케일해야 할 때는 Automatic1111 툴의 LDSR을 사용합니다.
 
 Obtaining a good dataset is talked about extensively elsewhere, so I've only included the most important parts:
 
@@ -78,8 +78,8 @@ The following recommendations are based on my experiments, my background work wi
 
 - BLIP과 deepbooru는 흥미롭지만 아직은 시기상조라고 생각합니다.
 - 종종 실수가 많고 지나치게 반복적인 캡션을 발견하는데, 이를 정리하는 데 시간이 걸립니다.
-- 컨텍스트와 상대적 중요성을 파악하는 데 어려움을 겪습니다.
-- BLIP/deepbooru가 만든 실수를 수정하고 여전히 수동으로 캡션을 작성하는 것보다 수동으로 캡션을 작성하는 것이 더 빠르다고 생각합니다.
+- 컨텍스트와 상대적 중요성을 잘 파악하지 못합니다.
+- BLIP/deepbooru의 오류를 수정하는 것보다 수동으로 캡션을 작성하는 것이 더 빠르다고 생각합니다.
 
 - BLIP and deepbooru are exciting, but I think it is a bit early for them yet.
 - I often find mistakes and extremely repetitive captions, which take awhile to clean up.
@@ -89,8 +89,8 @@ The following recommendations are based on my experiments, my background work wi
 ### 프롬프트하는 방식과 동일한 방식으로 캡션을 작성하세요<sup>Caption in the same manner you prompt</sup>
 
 - 캡션 작성과 프롬프트는 관련이 있습니다.
-- 일반적으로 어떻게 프롬프트하는지 인식하십시오. 장황한 문장? 짧은 설명? 모호한가요? 자세한가요?
-- 프롬프트할 때 사용하는 것과 유사한 스타일과 장황함으로 캡션을 작성하십시오.
+- 자신이 어떤 방식으로 프롬프트를 작성하는지 확인하세요. 장황한 문장인가요? 짧은 설명를 주로 하나요? 모호하게 설명한가요? 아니면 자세한가요?
+- 프롬프트할 때 사용하는 것과 유사한 스타일로 캡션을 작성하십시오.
 
 - Captioning and prompting are related.
 - Recognize how you typically prompt. Verbose sentences? Short descriptions? Vague? Detailed?
@@ -98,8 +98,8 @@ The following recommendations are based on my experiments, my background work wi
 
 ### 개념별로 설정된 구조를 따르십시오<sup>Follow a set structure per concept</sup>
 
-- 구조를 따르면 프로세스가 더 쉬워지고, 객관적인 증거는 없지만 데이터 세트를 설명하는 데 일관된 구조를 사용하면 학습 프로세스에 도움이 될 것이라고 직감합니다.
-- 사진에 사용하는 구조와 일러스트레이션에 사용하는 구조가 다를 수 있습니다. 하지만 단일 데이터 세트에 캡션을 추가할 때 구조를 혼합하고 일치시키는 것을 피하십시오.
+- 구조를 따르면 프로세스가 더 쉬워지고, 객관적인 증거는 없지만 직관적으로는 데이터 세트를 설명하는 데 일관된 구조를 사용하면 학습 프로세스에 도움이 될 것이라고 생각합니다.
+- 사진에 사용하는 구조와 일러스트레이션에 사용하는 구조가 다를 수 있습니다. 하지만 단일 데이터 세트에 캡션을 추가할 때 구조를 혼합시키는 것을 피하십시오.
 - 아래에서 일반적으로 사용하는 구조를 설명했으며 예제로 사용할 수 있습니다.
 
 - Following a structure makes the process easier on you, and although I have no objective evidence, my intuition says that using a consistent structure to describe your dataset will benefit the learning process.
@@ -125,10 +125,10 @@ The following recommendations are based on my experiments, my background work wi
 1. 일반 클래스 태그를 사용하면 전체 클래스가 훈련 데이터 쪽으로 편향됩니다. 이는 목표에 따라 바람직할 수도 있고 그렇지 않을 수도 있습니다.
 2. 일반 클래스 태그를 사용하면 학습 프로세스에 컨텍스트를 제공합니다. 개념적으로 모델이 이미 "얼굴"에 대한 합리적인 근사값을 가지고 있을 때 "얼굴"이 무엇인지 배우는 것이 더 쉽습니다.
 
-- 모델의 전체 클래스를 훈련 이미지 쪽으로 편향시키려면 특정 태그 대신 광범위한 클래스 태그를 사용하십시오. 예: 모델에게 모든 남자가 브래드 피트처럼 보이도록 가르치려면 캡션에 "남자" 태그가 포함되어야 하지만 그보다 더 구체적이어서는 안 됩니다. 이렇게 하면 프롬프트에서 "남자"라는 단어를 사용할 때마다 모델이 브래드 피트처럼 보이는 남자를 생성하도록 영향을 미칩니다. 또한 이렇게 하면 모델이 훈련 중에 이미 알고 있는 "남자"라는 개념을 활용할 수 있습니다.
-- 전체 클래스에 대한 훈련의 영향을 줄이려면 특정 태그를 포함하고 클래스 태그를 강조하지 마십시오. 예: 모델에게 "ohwxman"만 브래드 피트처럼 보이도록 가르치고 모든 "남자"가 브래드 피트처럼 보이도록 하지 않으려면 "남자"를 태그로 사용하지 않고 "ohwxman"으로만 태그를 지정합니다. 이렇게 하면 훈련 이미지가 "남자" 태그에 미치는 영향이 줄어들고 훈련 이미지가 "ohwxman"과 강력하게 연결됩니다. 모델은 "ohwxman"에 대해 알고 있는 것을 활용합니다. 이는 사실상 아무것도 아닙니다. \*NOTE 참고\*, 따라서 거의 전적으로 훈련 이미지에서 지식을 쌓아 매우 강력한 연관성을 만듭니다.
+- 모델의 전체 클래스를 훈련 이미지 쪽으로 편향시키려면 특정 태그 대신 광범위한 클래스 태그를 사용하십시오. `예: 모델에게 모든 남자가 브래드 피트처럼 보이도록 가르치려면 캡션에 "남자" 태그가 포함되어야 하지만 그보다 더 구체적이어서는 안 됩니다. 이렇게 하면 프롬프트에서 "남자"라는 단어를 사용할 때마다 모델이 브래드 피트처럼 보이는 남자를 생성하도록 영향을 미칩니다. 또한 이렇게 하면 모델이 훈련 중에 이미 알고 있는 "남자"라는 개념을 활용할 수 있습니다.`
+- 전체 클래스에 대한 훈련의 영향을 줄이려면 특정 태그를 포함하고 클래스 태그를 강조하지 마십시오. `예: 모델에게 "ohwxman"만 브래드 피트처럼 보이도록 가르치고 모든 "남자"가 브래드 피트처럼 보이도록 하지 않으려면 "남자"를 태그로 사용하지 않고 "ohwxman"으로만 태그를 지정합니다. 이렇게 하면 훈련 이미지가 "남자" 태그에 미치는 영향이 줄어들고 훈련 이미지가 "ohwxman"과 강력하게 연결됩니다. 모델은 "ohwxman"에 대해 알고 있는 것을 활용합니다. 이는 실질적으로 아무것도 아닙니다. \*NOTE 참고\*, 따라서 거의 전적으로 훈련 이미지에서 지식을 쌓아 매우 강력한 연관성을 만듭니다.`
 
-\*NOTE\* 이해를 돕기 위해 단순화되었습니다. 이것은 실제로 "ohwx"와 "man"이라는 두 개의 토큰으로 토큰화되지만 이러한 토큰은 훈련 목적으로 강력하게 상관관계가 있으므로 캡션에서 "man"을 토큰으로 사용하여 훈련할 때와 비교하여 "man"의 전체 클래스에 대한 영향을 줄여야 합니다. 모든 수학은 상당히 복잡하며 여기서는 다루지 않습니다.
+\*NOTE\* 앞의 설명은 이해를 돕기 위해 단순화되었습니다. 이것은 실제로 "ohwx"와 "man"이라는 두 개의 토큰으로 토큰화되지만 이러한 토큰은 훈련 목적으로 강력하게 상관관계가 있으므로 캡션에서 "man"을 토큰으로 사용하여 훈련할 때와 비교하여 "man"의 전체 클래스에 대한 영향을 줄여야 합니다. 모든 수학은 상당히 복잡하며 여기서는 다루지 않습니다.
 {: .notice--info}
 
 - There are two concepts here.
@@ -144,7 +144,7 @@ The following recommendations are based on my experiments, my background work wi
 
 ### 관된 캡션 작성<sup>Consistent Captioning</sup>
 
-- 모든 교육에서 일관된 캡션을 사용하십시오. 이렇게 하면 프롬프트할 때 개념을 더 잘 일관되게 호출하는 데 도움이 됩니다. 저는 항상 동일한 캡션을 사용하도록 이를 돕는 프로그램을 사용합니다.
+- 모든 훈련에서 일관된 캡션을 사용하십시오. 이렇게 하면 프롬프트할 때 개념을 더 잘 일관되게 작성하는 데 도움이 됩니다. 저는 항상 동일한 캡션을 사용하도록 이를 돕는 프로그램을 사용합니다.
 - 데이터 세트에서 일관되지 않은 태그를 사용하면 SD가 개념과 해당 개념에 대한 다양한 표현을 모두 학습해야 하므로 가르치려는 개념을 파악하기가 더 어려워집니다. 단일 용어로 개념을 배우는 것이 훨씬 좋습니다.
 - `예를 들어, 다리를 공중에 든 사람이라는 단일 개념을 가르치려는 경우 "공중에 든 다리"와 "든 다리"를 모두 사용하지 않으려고 합니다. 프롬프트에서 이 포즈를 일관되게 호출할 수 있도록 하려면 캡션을 작성하는 한 가지 방법을 선택하세요.`
 
@@ -175,11 +175,11 @@ As an example, I often find myself repeating the word "background" too much. I m
 ### 모델의 기존 지식을 활용하십시오<sup>Use Your Models Existing Knowledge to Your Advantage</sup>
 
 - 모델은 이미 괜찮은 결과를 생성하고 프롬프트하는 내용을 합리적으로 이해합니다. 프롬프트에서 이미 잘 작동하는 단어로 캡션을 작성하여 이를 활용하십시오.
-- 설명적인 단어를 사용하고 싶지만 너무 모호하거나 틈새 시장에 있는 단어를 사용하면 기존 지식을 많이 활용할 수 없습니다. 예: "sarcrastic"이라고 말할 수도 있고 "mordacious"라고 말할 수도 있습니다. SD는 "sarcastic"이 전달하는 내용에 대한 아이디어가 있지만 "mordacious"가 무엇인지 전혀 모릅니다.
+- 설명적인 단어를 사용하고 싶지만 너무 모호하거나 틈새 시장에 있는 단어를 사용하면 기존 지식을 많이 활용할 수 없습니다. `예: "sarcrastic"이라고 말할 수도 있고 "mordacious"라고 말할 수도 있습니다. SD는 "sarcastic"이 전달하는 내용에 대한 아이디어가 있지만 "mordacious"가 무엇인지 전혀 모릅니다.`
 - 반대의 관점에서도 볼 수 있습니다. "mordacious"라는 개념을 가르치려는 경우 "sarcastic"을 전달하는 이미지로 든 데이터 세트가 있을 수 있으며, "sarcastic"과 "mordacious"라는 태그를 나란히 캡션에 추가합니다(상대적 가중치가 가깝도록).
 
 - Your model already produces decent results and reasonably understands what you are prompting. Take advantage of that by captioning with words that already work well in your prompts.
-- You want to use descriptive words, but if you use words that are too obscure/niche, you likely can't leverage much of the existing knowledge. Example: you could say "sarcrastic" or you could say "mordacious". SD has some idea of what "sarcastic" conveys, but it likely has no clue what "mordacious" is.
+- You want to use descriptive words, but if you use words that are too obscure/niche, you likely can't leverage much of the existing knowledge. `Example: you could say "sarcrastic" or you could say "mordacious". SD has some idea of what "sarcastic" conveys, but it likely has no clue what "mordacious" is.`
 - You can also look at this from the opposite perspective. If you were trying to teach the concept of "mordacious", you might have a dataset full of images that convey "sarcrastic" and caption them with both the tags "sarcastic" and "mordacious" side by side (so that they are close in relative weighting).
 
 ## 캡션 작성<sup>CAPTIONING</sup> - 구조<sup>STRUCTURE</sup>
@@ -194,9 +194,9 @@ I want to emphasize again that I am not saying this is the only or best way to c
 
 ### 일반 형식<sup>General format</sup>
 
-- `<전역> <유형/관점/"...의"> <동작 단어> <주제 설명> <주목할 만한 세부 사항> <배경/위치> <느슨한 연관성>`
+- `<전역> <유형/관점/...의> <동작 단어> <주제 설명> <주목할 만한 세부 사항> <배경/위치> <느슨한 연관성>`
 
-- `<Globals> <Type/Perspective/"Of a..."> <Action Words> <Subject Descriptions> <Notable Details> <Background/Location> <Loose Associations>`
+- `<Globals> <Type/Perspective/Of_a...> <Action Words> <Subject Descriptions> <Notable Details> <Background/Location> <Loose Associations>`
 
 ### 전역<sup>Globals</sup>
 
@@ -204,11 +204,11 @@ I want to emphasize again that I am not saying this is the only or best way to c
 
 - This is where I would stick a rare token (e.g. "ohwx") that I want heavily associated with the concept I am training, or anything that is both important to the training and uniform across the dataset `Examples: man, woman, anime`
 
-### 유형/관점/"...의<sup>"Type/Perspective/"of a..."</sup>
+### 유형/관점/...의<sup>Type/Perspective/of_a...</sup>
 
 - 컨텍스트를 제공하기 위한 이미지에 대한 광범위한 설명입니다. 저는 일반적으로 이 작업을 "레이어"로 수행합니다.
 - 무엇인가요? `예: 사진, 일러스트레이션, 그림, 초상화, 렌더링, 애니메이션.`
--...의 `예: 여자, 남자, 산, 나무, 숲, 판타지 장면, 도시 풍경`
+- ...의 `예: 여자, 남자, 산, 나무, 숲, 판타지 장면, 도시 풍경`
 - X는 어떤 유형인가요(x = 위의 선택)? `예: 전신, 클로즈업, 카우보이 샷, 자른, 필터링된, 흑백, 풍경, 80년대 스타일`
 - X의 관점은 무엇인가요? `예: 위에서, 아래에서, 앞에서, 뒤에서, 측면에서, 강제 원근법, 틸트 시프트, 피사계 심도`
 
@@ -245,8 +245,8 @@ I want to emphasize again that I am not saying this is the only or best way to c
 - 저는 이것을 "배경"이라고 생각하지 않는 모든 것(또는 배경이지만 강조하고 싶은 것)이지만 주요 주제도 아닌 것에 대한 일종의 만능으로 사용합니다.
 - 일반적으로 이 지점에 들어가는 캡션 부분은 하나 또는 몇 개의 훈련 이미지에만 고유합니다.
 - 저는 주로 Danbooru 스타일의 짧은 캡션을 사용하지만 더 복잡한 것을 설명해야 하는 경우 여기에 넣습니다.
-- 예를 들어, 해변 사진에서 "노란색과 파란색 줄무늬 우산이 앞쪽에서 부분적으로 열려 있습니다"라고 넣을 수 있습니다.
-- 예를 들어, 초상화에서 "그는 휴대폰을 귀에 대고 있습니다"라고 넣을 수 있습니다.
+- `예를 들어, 해변 사진에서 "노란색과 파란색 줄무늬 우산이 앞쪽에서 부분적으로 열려 있습니다"라고 넣을 수 있습니다.`
+- `예를 들어, 초상화에서 "그는 휴대폰을 귀에 대고 있습니다"라고 넣을 수 있습니다.`
 
 - I use this as a sort of catch-all for anything that I don't think is quite "background" (or something that is background but I want to emphasize) but also isn't the main subject.
 - Normally the part of the caption going in this spot is unique to one or just a few training images.
@@ -259,16 +259,16 @@ I want to emphasize again that I am not saying this is the only or best way to c
 - 꽤 자명합니다. 이미지 배경에서 일어나고 있는 일에 대해 최대한 자세하게 설명하십시오. 저는 또한 몇 가지 "레이어"로 이 작업을 수행하여 세부 사항을 좁힙니다. 이는 여러 사진에 캡션을 추가할 때 도움이 됩니다.
 - `예를 들어, 해변 사진의 경우 세 가지 "레이어"로 구분하여 다음과 같이 넣을 수 있습니다.`
 
-1. 야외, 해변, 모래, 물, 해안, 일몰
-2. 작은 파도, 바다에 있는 배, 모래성, 수건
-3. 배는 빨간색과 흰색이고, 모래성 주변에는 해자가 있고, 수건은 노란색 줄무늬가 있는 빨간색입니다.
+1. `야외, 해변, 모래, 물, 해안, 일몰`
+2. `작은 파도, 바다에 있는 배, 모래성, 수건`
+3. `배는 빨간색과 흰색이고, 모래성 주변에는 해자가 있고, 수건은 노란색 줄무늬가 있는 빨간색입니다.`
 
 - Fairly self-explanatory. Be as descriptive as possible about what is happening in the images background. I tend to do this in a few "layers" as well, narrowing down to specifics, which helps when captioning several photos.
 - `For example, for a beach photo I might put (separated by the three "layers"):`
 
-1. Outdoors, beach, sand, water, shore, sunset
-2. Small waves, ships out at sea, sandcastle, towels
-3. the ships are red and white, the sandcastle has a moat around it, the towels are red with yellow stripes
+1. `Outdoors, beach, sand, water, shore, sunset`
+2. `Small waves, ships out at sea, sandcastle, towels`
+3. `the ships are red and white, the sandcastle has a moat around it, the towels are red with yellow stripes`
 
 ### 느슨한 연관성<sup>Loose Associations</sup>
 
@@ -284,16 +284,16 @@ I want to emphasize again that I am not saying this is the only or best way to c
 
 ## Booru 데이터 세트 태그 관리자<sup>THE BOORU DATASET TAG MANAGER</sup>
 
-데이터 세트가 있습니다. 구조를 결정했습니다. 캡션 작성을 시작할 준비가 되었습니다. 이제 워크플로의 마법 같은 부분인 [BooruDatasetTagManager](https://github.com/starik222/BooruDatasetTagManager)(BDTM)를 사용할 차례입니다. 이 편리한 소프트웨어는 워크플로의 속도를 크게 높여주는 두 가지 매우 중요한 작업을 수행합니다.
+이제 데이터 세트와 구조를 결정했습니다. 캡션 작성을 시작할 준비가 되었습니다. 이제 워크플로의 마법 같은 부분인 [BooruDatasetTagManager](https://github.com/starik222/BooruDatasetTagManager)(BDTM)를 사용할 차례입니다. 이 편리한 소프트웨어는 워크플로의 속도를 크게 높여주는 두 가지 매우 중요한 작업을 수행합니다.
 
-1. 태그는 \*\\tags\\list.tag에 미리 로드되며 편집할 수 있습니다. 이렇게 하면 일반적인 태그에 대한 자동 완성 기능이 제공되고 일반적인 태그를 두 번 클릭하여 입력할 필요가 없도록 하는 등의 이점이 있습니다.
+1. 태그는 `*\tags\list.tag`에 미리 로드되며 편집할 수 있습니다. 이렇게 하면 일반적인 태그에 대한 자동 완성 기능이 제공되고 일반적인 태그를 두 번 클릭하여 입력할 필요가 없도록 하는 등의 이점이 있습니다.
 2. 이미 사용된 캡션을 표시하여 입력하지 않고도 이미지에 쉽게 추가할 수 있도록 하여 캡션 작성을 쉽게 일관성 있게 유지할 수 있습니다.
 
 추가 보너스로, 건망증이 있을 때 도움이 됩니다. 가끔 한쪽 발에 체중을 대부분 싣고 서 있는 것(하지만 두 발은 모두 땅에 붙이고)을 콘트라포스토라고 하는 것을 잊어버립니다. 하지만 태그로 저장해 두었고 보통 "contra"로 시작한다는 것을 기억합니다. 고맙게도 자동 완성 기능이 있어서 문제를 해결할 수 있습니다. 진지하게, 이러한 모든 태그를 손끝에서 사용할 수 있다는 것은 많은 태그를 기억하거나 다른 탭에서 booru 사이트를 열어 두는 것과는 큰 차이가 있습니다.
 
 You've got a dataset. You've decided on a structure. You're ready to start captioning. Now it's time for the magic part of the workflow: [BooruDatasetTagManager](https://github.com/starik222/BooruDatasetTagManager)(BDTM). This handy piece of software will do two extremely important things for us which greatly speeds up the workflow:
 
-1. Tags are preloaded in \*\\tags\\list.tag, which can be edited. This gives us auto-complete for common tags, allows us to double-click common tags so we don't need to type it out, etc.
+1. Tags are preloaded in `*\tags\list.tag`, which can be edited. This gives us auto-complete for common tags, allows us to double-click common tags so we don't need to type it out, etc.
 2. It enables you to easily be consistent with your captioning by displaying already-used captions so that you can easily add it to an image without typing it out.
 
 As an added bonus, it helps when you're forgetful. Sometimes I forget that standing with most of your weight on one foot (but with both feet on the ground) is called contrapposto. But I have it saved as a tag, and usually remember it starts as "contra". Thankfully auto-complete is there to save the day. Seriously, having all of these tags at your fingertips is a huge difference from trying to remember a bunch of tags or having booru sites open in other tabs.
@@ -303,24 +303,24 @@ As an added bonus, it helps when you're forgetful. Sometimes I forget that stand
 1. 모든 이미지를 폴더에 넣은 다음 BDTM UI에서 해당 폴더로 이동하여 이미지가 있는 폴더를 선택합니다.
 2. 상단에서 "보기"를 누른 다음 "미리보기 표시"를 눌러 선택한 이미지를 봅니다.
 3. 전역적으로 적용할 수 있는 태그가 있는 경우 UI 오른쪽에 추가합니다. 이러한 전역 태그가 나타나는 위치(상단, 하단 또는 목록의 특정 위치)를 선택할 수 있습니다.
-4. 왼쪽에서 이미지를 선택하고 태그를 추가하기 시작합니다. 가능한 한 구조를 따르는 것을 잊지 마십시오. 입력하면 태그에 list.tag 파일의 자동 완성 옵션이 표시되며 선택하거나 사용자 지정 태그를 입력할 수 있습니다.
-5. 해당 데이터 세트의 어느 곳에서나 사용한 각 태그는 오른쪽( "모든 태그" 아래)에 표시됩니다. "모든 태그" 섹션에서 태그를 두 번 클릭하여 현재 선택한 이미지에 적용할 수 있으므로 많은 시간을 절약하고 데이터 세트 전체에서 태그 일관성을 보장할 수 있습니다.
+4. 왼쪽에서 이미지를 선택하고 태그를 추가하기 시작합니다. 가능한 한 구조를 따르는 것을 잊지 마십시오. 입력하면 태그에 `list.tag` 파일의 자동 완성 옵션이 표시되며 선택하거나 사용자 지정 태그를 입력할 수 있습니다.
+5. 해당 데이터 세트의 어느 곳에서나 사용한 각 태그는 오른쪽("모든 태그" 아래)에 표시됩니다. "모든 태그" 섹션에서 태그를 두 번 클릭하여 현재 선택한 이미지에 적용할 수 있으므로 많은 시간을 절약하고 데이터 세트 전체에서 태그 일관성을 보장할 수 있습니다.
 6. 모든 이미지에 태그가 지정되면 처음으로 돌아가 다시 수행합니다. 이번에는 태그를 보고 원하는 가중치에 따라 적절하게 정렬되었는지 확인하고(필요한 경우 끌어서 순서를 변경할 수 있음), 구조를 따르는지 확인하고, 누락된 태그가 있는지 확인하는 등의 작업을 수행합니다.
 
 그리고 그게 다입니다. 저는 모든 이미지를 주의 깊게 보고 적용 가능하다고 생각되는 태그를 추가하여 프롬프트 구조의 각 범주에 하나 또는 두 개의 태그가 있도록 합니다. 일반적으로 이미지당 8~20개의 태그를 지정하지만 때로는 더 많이 지정할 수도 있습니다.
 
-시간이 지남에 따라 제공된 list.tag 파일을 편집하여 사용하지 않을 많은 태그를 제거하고 자주 사용하는 태그를 추가하여 전체 프로세스를 더 쉽게 만들었습니다.
+시간이 지남에 따라 제공된 `list.tag` 파일을 편집하여 사용하지 않을 많은 태그를 제거하고 자주 사용하는 태그를 추가하여 전체 프로세스를 더 쉽게 만들었습니다.
 
 1. Place all of your images in a folder and then navigate there in the BDTM UI, selecting the folder with your images.
 2. At the top, press "View" and then "Show preview" to see the selected image.
 3. If you have any globally applicable tags, add them on the right side of the UI. You can select where these global tags appear (top, bottom, or at a specific position in the list).
-4. Select your image on the left and begin adding tags, remembering to follow you structure as best as possible. As you type, the tags will show auto-complete options from the list.tag file which you can select, or you can type in your own custom ones.
+4. Select your image on the left and begin adding tags, remembering to follow you structure as best as possible. As you type, the tags will show auto-complete options from the `list.tag` file which you can select, or you can type in your own custom ones.
 5. Each tag you have used anywhere in that dataset will show on the right side (under "All tags"). You can double-click a tag from the "All tags" section to apply it to the currently selected image, saving tons of time and ensuring tag consistency across your dataset
 6. Once all of your images are tagged, go back to the start and do it again. This time look at your tags and make sure they are ordered appropriately according to the weighting you want (you can drag them to reorder if necessary), make sure they follow your structure, check for missing tags, etc.
 
 And that's it. I patiently look at every image and add any tags I think are applicable, aiming to have at least one to two tags in each of the categories of my prompt structure. I usually have between 8 and 20 tags per image, though sometimes I might have even more.
 
-Over time, I have edited the provided list.tag file removing many of the tags I'll never use and adding a bunch of tags that I use frequently, making the whole process even easier.
+Over time, I have edited the provided `list.tag` file removing many of the tags I'll never use and adding a bunch of tags that I use frequently, making the whole process even easier.
 
 ## 단일 이미지의 전체 예<sup>FULL EXAMPLE OF A SINGLE IMAGE</sup>
 
@@ -363,7 +363,7 @@ Time to start training! I don't have much to write here other than experiment. T
 ## 기타 생각과 참고 자료<sup>MISC THOUGHTS AND REFERENCES</sup>
 
 - 저는 항상 우리가 학습 과정을 부드럽게 안내할 뿐 통제하지 않는다는 것을 상기시키려고 노력합니다. 캡션은 학습 과정을 올바른 방향으로 안내하는 데 도움이 되지만 캡션이 절대적인 것은 아닙니다. 캡션이 지정되지 않은 이미지의 항목에 대한 추론이 이루어지고 의도하지 않은 이미지 부분과 태그 간의 연관성이 생성되는 등의 작업이 수행됩니다. 안내는 하되 훈련과 이미지 품질도 신뢰하십시오.
-- Danbooru/safebooru 태그는 훌륭합니다. 제 말은 의미가 없는 쓰레기 태그가 많지만 예를 들어 Danbooru 위키에서 태그 그룹 "자세"를 살펴보십시오. 다양한 팔 위치, 다리 위치 등에 대한 수십 가지의 특정 단어가 있습니다. danbooru 태그와 위키를 크롤링하여 스타일/포즈/조명/무엇이든 설명하는 데 필요한 특정 단어를 찾을 수 있습니다. 발가락이 아래로 향한 발레리나 스타일의 발로 포즈를 취한 사람을 항상 원했을 것입니다. 글쎄, 그것은 발바닥 굴곡이라고 합니다. danbooru 태그 덕분입니다.
+- Danbooru/safebooru 태그는 훌륭합니다. 제 말은 의미가 없는 쓰레기 태그가 많지만 예를 들어 Danbooru 위키에서 태그 그룹 "[자세](https://danbooru.donmai.us/wiki_pages/tag_group%3Aposture)"를 살펴보십시오. 다양한 팔 위치, 다리 위치 등에 대한 수십 가지의 특정 단어가 있습니다. danbooru 태그와 위키를 크롤링하여 스타일/포즈/조명/무엇이든 설명하는 데 필요한 특정 단어를 찾을 수 있습니다. 발가락이 아래로 향한 발레리나 스타일의 발로 포즈를 취한 사람을 항상 원했을 것입니다. 글쎄, 그것은 발바닥 굴곡이라고 합니다. danbooru 태그 덕분입니다.
 
 - I always try to remind myself that we are just gently guiding the learning process, not controlling it. Your captions help point the learning process in the right direction, but the captions are not absolute. Inferences will be made on things in the image that weren't captioned, associations will be made between tags and parts of the image you didn't intend, etc. Try to guide, but trust in the training and the quality of your images as well.
-- Danbooru/safebooru tags are great. I mean, there's a lot of trash ones that hold no meaning, but take a look at the Danbooru wiki for tag group "Posture" as an example. Dozens of specific words for different arm positions, leg positions, etc. You might just find that one specific word you've been searching for that describes the style/pose/lighting/whatever by crawling through the danbooru tags and wiki. Maybe you've always wanted someone posing with that ballerina style foot where the toes are pointed downwards. Well it's called plantar flexion; thanks danbooru tags.
+- Danbooru/safebooru tags are great. I mean, there's a lot of trash ones that hold no meaning, but take a look at the Danbooru wiki for tag group "[Posture](https://danbooru.donmai.us/wiki_pages/tag_group%3Aposture)" as an example. Dozens of specific words for different arm positions, leg positions, etc. You might just find that one specific word you've been searching for that describes the style/pose/lighting/whatever by crawling through the danbooru tags and wiki. Maybe you've always wanted someone posing with that ballerina style foot where the toes are pointed downwards. Well it's called plantar flexion; thanks danbooru tags.
