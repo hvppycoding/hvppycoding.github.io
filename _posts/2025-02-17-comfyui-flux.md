@@ -8,7 +8,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Emile Perron**](https://unsplash.com/@emilep) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - FLUX
+  - Stable Diffusion
 ---
 
 This post is an archive of the [ComfyUI - FLUX Examples](https://comfyanonymous.github.io/ComfyUI_examples/flux/).

@@ -8,7 +8,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Emile Perron**](https://unsplash.com/@emilep) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - Diffusers
+  - Stable Diffusion
 ---
 
 ## 이미지 데이터셋 만들기

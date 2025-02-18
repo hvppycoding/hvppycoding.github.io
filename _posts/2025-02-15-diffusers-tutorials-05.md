@@ -8,7 +8,7 @@ header:
   overlay_filter: 0.5
   caption: "Photo by [**Emile Perron**](https://unsplash.com/@emilep) on [**Unsplash**](https://unsplash.com/)"
 categories:
-  - Diffusers
+  - Stable Diffusion
 ---
 
 참고한 문서: [LoRA training](https://huggingface.co/docs/diffusers/training/lora)
