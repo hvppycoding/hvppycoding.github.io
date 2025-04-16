@@ -1,0 +1,21 @@
+---
+title: "필립스 소닉케어 메뉴얼"
+excerpt: ""
+date: 2025-04-15 09:00:00 +0900
+classes: wide
+categories:
+  - Manuals
+  - Tools
+---
+
+<div id="adobe-dc-view" style="width: 100%;"></div>
+<script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
+<script type="text/javascript">
+	document.addEventListener("adobe_dc_view_sdk.ready", function(){ 
+		var adobeDCView = new AdobeDC.View({clientId: "5c4184fd7735476b829cb3e69527dd61", divId: "adobe-dc-view"});
+		adobeDCView.previewFile({
+			content:{location: {url: "{{ site.url }}{{ site.baseurl }}/assets/resources/PHILIPS_SONICARE_3100_MANUAL.pdf"}},
+			metaData:{fileName: "TA25GZ9_MANUAL.pdf"}
+		}, {embedMode: "IN_LINE"});
+	});
+</script>
