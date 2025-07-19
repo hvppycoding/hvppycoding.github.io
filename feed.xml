@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-07-19T16:26:29+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppyarchive</name></author><entry><title type="html">Hello World 코드 예제</title><link href="http://localhost:4000/hello-world/" rel="alternate" type="text/html" title="Hello World 코드 예제" /><published>2025-07-19T02:37:36+09:00</published><updated>2025-07-19T02:37:36+09:00</updated><id>http://localhost:4000/hello-world</id><content type="html" xml:base="http://localhost:4000/hello-world/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-19T16:56:20+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Hello World 코드 예제</title><link href="https://hvppycoding.github.io/hello-world/" rel="alternate" type="text/html" title="Hello World 코드 예제" /><published>2025-07-19T02:37:36+09:00</published><updated>2025-07-19T02:37:36+09:00</updated><id>https://hvppycoding.github.io/hello-world</id><content type="html" xml:base="https://hvppycoding.github.io/hello-world/"><![CDATA[<p class="chat--user">
 
 Hello world 코드를 여러 언어로 작성해줘.
 
@@ -134,4 +134,4 @@ Hello world 코드를 여러 언어로 작성해줘.
 </ul>
 
 <p>요약하자면, <strong>무조건 좋은 언어는 없습니다. 목적에 맞는 언어가 있을 뿐입니다.</strong><br />
-그러니 “좋다”는 건 맥락 없이 말하면 무의미하다고 봅니다.</p>]]></content><author><name>hvppyarchive</name></author><summary type="html"><![CDATA[]]></summary></entry></feed>
+그러니 “좋다”는 건 맥락 없이 말하면 무의미하다고 봅니다.</p>]]></content><author><name>hvppycoding</name></author><summary type="html"><![CDATA[]]></summary></entry></feed>
