@@ -10,4 +10,10 @@ var store = [{
         "tags": [],
         "url": "/dev/github-ssh/",
         "teaser": null
+      },{
+        "title": "Python dotenv 설명",
+        "excerpt":"  python dotenv가 뭐야?     python-dotenv는 환경 변수(environment variables)를 .env 파일에서 로드해서 Python 애플리케이션에서 쉽게 사용할 수 있게 도와주는 라이브러리입니다. 주로 민감한 정보(예: API 키, 데이터베이스 비밀번호 등)를 코드에 직접 쓰지 않고 .env 파일로 분리해서 관리할 때 사용합니다.   왜 쓰는가?           보안 : 비밀번호나 API 키를 코드에 하드코딩하지 않음.            유지보수 : 환경 설정을 코드와 분리해서 관리할 수 있음.            환경 분리 : 개발/테스트/운영 환경을 쉽게 전환할 수 있음.       예시      .env 파일:     ini       SECRET_KEY=abcd1234 DB_HOST=localhost DB_PORT=5432                 Python 코드에서 사용:     python       from dotenv import load_dotenv import os       load_dotenv()  # .env 파일을 불러옴       secret_key = os.getenv(\"SECRET_KEY\") db_host = os.getenv(\"DB_HOST\") db_port = os.getenv(\"DB_PORT\")       print(secret_key, db_host, db_port)                 설치 방법  bash  pip install python-dotenv    필요 없다고 생각할 수 있지만, 프로젝트가 커지거나 배포 환경이 생기면 이게 거의 필수가 됩니다. .env 파일은 보통 .gitignore에 추가해서 Git에 올리지 않습니다.   궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.  ","categories": ["dev"],
+        "tags": [],
+        "url": "/dev/python-dotenv/",
+        "teaser": null
       }]
