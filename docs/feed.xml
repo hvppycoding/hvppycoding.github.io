@@ -1,4 +1,112 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-19T16:56:20+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Hello World 코드 예제</title><link href="https://hvppycoding.github.io/hello-world/" rel="alternate" type="text/html" title="Hello World 코드 예제" /><published>2025-07-19T02:37:36+09:00</published><updated>2025-07-19T02:37:36+09:00</updated><id>https://hvppycoding.github.io/hello-world</id><content type="html" xml:base="https://hvppycoding.github.io/hello-world/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-20T02:15:52+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Mac SSH GitHub 추가</title><link href="https://hvppycoding.github.io/dev/github-ssh/" rel="alternate" type="text/html" title="Mac SSH GitHub 추가" /><published>2025-07-20T02:00:04+09:00</published><updated>2025-07-20T02:00:04+09:00</updated><id>https://hvppycoding.github.io/dev/github-ssh</id><content type="html" xml:base="https://hvppycoding.github.io/dev/github-ssh/"><![CDATA[<p class="chat--user">
+
+mac의 ssh github 추가
+
+</p>
+
+<p>Mac에서 GitHub에 SSH 키를 추가하는 방법을 단계별로 설명드리겠습니다. 중간 생략 없이 하나씩 따라오시면 됩니다.</p>
+
+<hr />
+
+<h3 id="-1-ssh-키-생성-기존에-없다면">✅ 1. SSH 키 생성 (기존에 없다면)</h3>
+
+<p>터미널을 열고 다음 명령어를 입력하세요:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen <span class="nt">-t</span> ed25519 <span class="nt">-C</span> <span class="s2">"your_email@example.com"</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">your_email@example.com</code> 은 GitHub 계정 이메일로 바꾸세요.</p>
+</blockquote>
+
+<p><strong>출력 예시:</strong></p>
+
+<pre><code class="language-vbnet">Generating public/private ed25519 key pair.
+Enter file in which to save the key (/Users/yourname/.ssh/id_ed25519):
+</code></pre>
+
+<p>그대로 엔터 → 패스프레이즈 입력은 선택.</p>
+
+<hr />
+
+<h3 id="-2-ssh-에이전트-실행-및-키-추가">✅ 2. SSH 에이전트 실행 및 키 추가</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span>ssh-agent <span class="nt">-s</span><span class="si">)</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>SSH config 파일이 없다면 생성 후 열기:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch</span> ~/.ssh/config
+open ~/.ssh/config
+</code></pre></div></div>
+
+<p>그리고 다음 내용 추가:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host github.com
+  AddKeysToAgent <span class="nb">yes
+  </span>IdentityFile ~/.ssh/id_ed25519
+</code></pre></div></div>
+
+<p>그 후 키를 에이전트에 추가:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-add ~/.ssh/id_ed25519
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-3-공개-키-복사">✅ 3. 공개 키 복사</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pbcopy &lt; ~/.ssh/id_ed25519.pub
+</code></pre></div></div>
+
+<p>클립보드에 복사됩니다.</p>
+
+<hr />
+
+<h3 id="-4-github에-키-등록">✅ 4. GitHub에 키 등록</h3>
+
+<ol>
+  <li>
+    <p>GitHub 로그인</p>
+  </li>
+  <li>
+    <p>우측 상단 프로필 → <code class="language-plaintext highlighter-rouge">Settings</code></p>
+  </li>
+  <li>
+    <p>좌측 메뉴에서 <code class="language-plaintext highlighter-rouge">SSH and GPG keys</code> 클릭</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">New SSH key</code> 버튼 클릭</p>
+  </li>
+  <li>
+    <p>Title 입력 후, Key에는 위에서 복사한 값 붙여넣기</p>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="-5-테스트">✅ 5. 테스트</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-T</span> git@github.com
+</code></pre></div></div>
+
+<p><strong>성공 메시지 예시:</strong></p>
+
+<pre><code class="language-vbnet">Hi yourusername! You've successfully authenticated, but GitHub does not provide shell access.
+</code></pre>
+
+<p>이 메시지가 나와야 제대로 연결된 것입니다.</p>
+
+<hr />
+
+<p>필요하면 Git에서 SSH를 기본 사용으로 설정하세요:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> url.<span class="s2">"git@github.com:"</span>.insteadOf <span class="s2">"https://github.com/"</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>궁금한 점 있으시면 구체적으로 말씀해 주세요. "잘 안 된다"는 말보단 어떤 에러 메시지가 나오는지를 알려주셔야 진단이 가능합니다.</p>]]></content><author><name>hvppycoding</name></author><category term="dev" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Hello World 코드 예제</title><link href="https://hvppycoding.github.io/dev/hello-world/" rel="alternate" type="text/html" title="Hello World 코드 예제" /><published>2025-07-19T02:37:36+09:00</published><updated>2025-07-19T02:37:36+09:00</updated><id>https://hvppycoding.github.io/dev/hello-world</id><content type="html" xml:base="https://hvppycoding.github.io/dev/hello-world/"><![CDATA[<p class="chat--user">
 
 Hello world 코드를 여러 언어로 작성해줘.
 
@@ -134,4 +242,4 @@ Hello world 코드를 여러 언어로 작성해줘.
 </ul>
 
 <p>요약하자면, <strong>무조건 좋은 언어는 없습니다. 목적에 맞는 언어가 있을 뿐입니다.</strong><br />
-그러니 “좋다”는 건 맥락 없이 말하면 무의미하다고 봅니다.</p>]]></content><author><name>hvppycoding</name></author><summary type="html"><![CDATA[]]></summary></entry></feed>
+그러니 “좋다”는 건 맥락 없이 말하면 무의미하다고 봅니다.</p>]]></content><author><name>hvppycoding</name></author><category term="dev" /><summary type="html"><![CDATA[]]></summary></entry></feed>
