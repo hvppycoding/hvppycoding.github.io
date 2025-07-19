@@ -16,4 +16,10 @@ var store = [{
         "tags": [],
         "url": "/dev/python-dotenv/",
         "teaser": null
+      },{
+        "title": "subprocess check=True 옵션",
+        "excerpt":"  python에서 subprocess run 할 때 check=True는 어떤 옵션이야?     subprocess.run() 함수에서 check=True 옵션은 명령어 실행이 실패했을 때 예외를 발생시키도록 하는 옵션입니다.   구체적으로 설명드리면:           check=False (기본값):  명령어가 실패하더라도 (예: 반환 코드가 0이 아니더라도) 그냥 CompletedProcess 객체를 반환하고 끝납니다.            check=True:  명령어 실행 결과가 0이 아닌 경우, 즉 에러가 발생하면subprocess.CalledProcessError 예외가 발생합니다. 이 예외에는 실패한 명령, 반환 코드, 표준 출력/표준 에러 등의 정보가 포함됩니다.         예시:   import subprocess  # 이 명령은 실패할 가능성이 높습니다 subprocess.run([\"ls\", \"nonexistent_dir\"], check=True)           위 코드는 nonexistent_dir가 존재하지 않으면 CalledProcessError 예외를 발생시킵니다.            만약 check=False였다면 예외 없이 그냥 종료됩니다.         언제 check=True를 쓰는가?           스크립트 실행 흐름 중간에 실패를 바로 감지하고 중단하고 싶을 때 유용합니다.            CI/CD 스크립트, 배포 자동화, 테스트 스크립트 등에서는 오류 무시가 치명적일 수 있기 때문에 check=True를 자주 사용합니다.         의문점      예외가 필요한가? 그냥 returncode로 판단하면 되지 않나?  → 맞습니다. check=True는 단순히 편의성과 명확성을 위해 존재합니다. 명령어 실패를 구조적으로 다루고자 할 때 유용할 뿐, 기능적으로 필수는 아닙니다.     결론적으로, check=True는 명령어 실패를 예외로 다루고 싶은가 에 대한 선택입니다. 코드의 신뢰성을 높이고 싶다면 사용하는 것이 좋습니다.  ","categories": ["python"],
+        "tags": [],
+        "url": "/python/python-subprocess-check/",
+        "teaser": null
       }]
