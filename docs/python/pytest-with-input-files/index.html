@@ -1,4 +1,193 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-21T01:14:16+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">테스트 코드 작성 방법</title><link href="https://hvppycoding.github.io/python/pytest-with-input-files/" rel="alternate" type="text/html" title="테스트 코드 작성 방법" /><published>2025-07-21T01:14:12+09:00</published><updated>2025-07-21T01:14:12+09:00</updated><id>https://hvppycoding.github.io/python/pytest-with-input-files</id><content type="html" xml:base="https://hvppycoding.github.io/python/pytest-with-input-files/"><![CDATA[<p class="chat--user">
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>테스트 코드 작성 방법 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="테스트 코드 작성 방법">
+<meta property="og:url" content="https://hvppycoding.github.io/python/pytest-with-input-files/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-21T01:14:12+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/python/pytest-with-input-files/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="테스트 코드 작성 방법">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-21T01:14:12+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/python/pytest-with-input-files/" itemprop="url">테스트 코드 작성 방법
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-21T01:14:12+09:00">2025-07-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
 
 파이썬 패키지를 개발 중이야. 테스트코드 작성을 도와줘. 예를 들어서 <code class="language-plaintext highlighter-rouge">pip install .</code> 하면 mypackage라는 패키지가
 설치돼. 프로젝트 소스 폴더 안에는 pyproject.toml, mypackage(*.py 소스 보관)이 있어. 이 상태에서
@@ -1002,1148 +1191,303 @@ def test_something(filename): 이 함수 위쪽에 저걸 쓰면 되는거지?
 <span class="bp">...</span>
 </code></pre></div></div>
 
-<p>이 구조, 제대로 작동합니다. 정확하게 짚으셨습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Git pull 병합 설정</title><link href="https://hvppycoding.github.io/git/github-divergent-branches/" rel="alternate" type="text/html" title="Git pull 병합 설정" /><published>2025-07-20T02:52:07+09:00</published><updated>2025-07-20T02:52:07+09:00</updated><id>https://hvppycoding.github.io/git/github-divergent-branches</id><content type="html" xml:base="https://hvppycoding.github.io/git/github-divergent-branches/"><![CDATA[<p class="chat--user">
+<p>이 구조, 제대로 작동합니다. 정확하게 짚으셨습니다.</p>
 
-hint: You have divergent branches and need to specify how to reconcile them.
-hint: You can do so by running one of the following commands sometime before
-hint: your next pull: hint: hint: git config pull.rebase false # merge hint:
-git config pull.rebase true # rebase hint: git config pull.ff only # fast-
-forward only hint: hint: You can replace "git config" with "git config
-–global" to set a default hint: preference for all repositories. You can also
-pass –rebase, –no-rebase, hint: or –ff-only on the command line to override
-the configured default per hint: invocation.
+        
+      </section>
 
-</p>
+      <footer class="page__meta">
+        
+        
 
-<p>이 메시지는 <code class="language-plaintext highlighter-rouge">git pull</code>을 실행하려고 할 때 로컬 브랜치와 원격 브랜치 간에 <strong>서로 다른 커밋이 존재</strong> 해서 Git이 <strong>어떻게
-병합할지 결정할 수 없을 때</strong> 나옵니다. 즉, <strong>분기(divergent)</strong>가 생긴 상태입니다. 이 상황에서 Git은 자동으로 병합하거나
-리베이스하지 않고, 당신이 어떻게 처리할지 명시하라고 요구합니다.</p>
 
-<h3 id="해결-방법">해결 방법</h3>
+  
 
-<p>당신이 원하는 병합 방식에 따라 아래 중 하나를 실행하시면 됩니다:</p>
 
-<hr />
+  
 
-<h4 id="1-기본-병합-방식-merge-사용">1. <strong>기본 병합 방식 (merge) 사용</strong></h4>
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#python" class="page__taxonomy-item p-category" rel="tag">python</a>
+    
+    </span>
+  </p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config pull.rebase <span class="nb">false</span>
-</code></pre></div></div>
 
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">git pull</code>은 <code class="language-plaintext highlighter-rouge">fetch</code> 후 <code class="language-plaintext highlighter-rouge">merge</code>를 수행합니다.</p>
-  </li>
-  <li>
-    <p>커밋 기록이 병합 커밋을 포함해 비교적 복잡해질 수 있습니다.</p>
-  </li>
-</ul>
+        
 
-<hr />
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-21T01:14:12+09:00">2025-07-21</time></p>
 
-<h4 id="2-리베이스-rebase-사용">2. <strong>리베이스 (rebase) 사용</strong></h4>
+      </footer>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config pull.rebase <span class="nb">true</span>
-</code></pre></div></div>
+      
 
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">git pull</code>은 <code class="language-plaintext highlighter-rouge">fetch</code> 후 <code class="language-plaintext highlighter-rouge">rebase</code>를 수행합니다.</p>
-  </li>
-  <li>
-    <p>깔끔한 커밋 히스토리를 원할 때 좋지만, 충돌 시 더 복잡할 수 있습니다.</p>
-  </li>
-</ul>
+      
+  <nav class="pagination">
+    
+      <a href="/git/github-divergent-branches/" class="pagination--pager" title="Git pull 병합 설정">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
 
-<hr />
 
-<h4 id="3-fast-forward만-허용-충돌이나-병합-안-함">3. <strong>fast-forward만 허용 (충돌이나 병합 안 함)</strong></h4>
+    </div>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config pull.ff only
-</code></pre></div></div>
+    
+  </article>
 
-<ul>
-  <li>
-    <p>현재 브랜치가 원격 브랜치의 조상(commit)일 때만 병합이 일어납니다.</p>
-  </li>
-  <li>
-    <p>divergence가 생기면 pull이 실패합니다. 안전하지만 융통성 없음.</p>
-  </li>
-</ul>
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
 
-<hr />
 
-<h3 id="전역-설정으로-바꾸려면">전역 설정으로 바꾸려면</h3>
 
-<p>모든 저장소에서 동일한 방식으로 사용하려면 <code class="language-plaintext highlighter-rouge">--global</code> 옵션을 추가합니다:</p>
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/git/github-divergent-branches/" rel="permalink">Git pull 병합 설정
+</a>
+      
+    </h2>
+    
 
-<p>예:</p>
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-20T02:52:07+09:00">2025-07-20</time>
+      </span>
+    
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> pull.rebase <span class="nb">false</span>
-</code></pre></div></div>
+    
 
-<hr />
+    
+  </p>
 
-<h3 id="단발성으로-실행하려면">단발성으로 실행하려면</h3>
 
-<p>다음 pull 명령어에서만 적용하려면 아래와 같이 옵션을 추가하십시오:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull <span class="nt">--rebase</span>
-</code></pre></div></div>
-
-<p>또는</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull <span class="nt">--no-rebase</span>
-</code></pre></div></div>
-
-<p>또는</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull <span class="nt">--ff-only</span>
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="요약하자면">요약하자면</h3>
-
-<p>Git이 자동으로 선택하지 않고, 당신에게 병합 전략을 정하라고 말하는 중입니다. 설정을 안 하면 다음에 또 같은 경고가 나옵니다.</p>
-
-<blockquote>
-  <p>개인적으로는 협업 중이라면 <strong>rebase는 신중히 사용</strong> 하고, 단순히 최신 상태로만 만들고 싶다면 <code class="language-plaintext highlighter-rouge">--ff-only</code>나
-<code class="language-plaintext highlighter-rouge">--no-rebase</code>가 안전합니다.</p>
-</blockquote>
-
-<p>어떤 방식을 기본값으로 정하실지 확실하지 않다면 사용 중인 워크플로우나 팀 규칙을 먼저 확인하시는 게 좋습니다.</p>
-
-<p class="chat--user">
-
-나는 그냥 github에서 워크플로우 파일 하나 지웠을 뿐이거든? 이걸 왜 자동으로 병합 안해주는거야?
+    <p class="archive__item-excerpt" itemprop="description">
 
 </p>
+  </article>
+</div>
 
-<p>좋은 의문입니다. 요점만 말씀드리면:</p>
+    
+      
+      
 
-<blockquote>
-  <p>Git은 <strong>양쪽 브랜치에 변화가 있는 경우엔 자동 병합을 하지 않습니다</strong> , 심지어 그게 사소한 것처럼 보여도요.</p>
-</blockquote>
 
-<p>당신이 GitHub에서 워크플로우 파일을 삭제했는데, <strong>로컬에서도 뭔가 다른 작업(커밋)을 이미 한 상태</strong> 라면, Git 입장에선 이렇게
-생각합니다:</p>
 
-<ul>
-  <li>
-    <p><strong>원격:</strong> 워크플로우 파일이 삭제됨 (A)</p>
-  </li>
-  <li>
-    <p><strong>로컬:</strong> 예를 들어 다른 파일 수정 또는 커밋이 있음 (B)</p>
-  </li>
-</ul>
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-subprocess-check/" rel="permalink">subprocess check=True 옵션
+</a>
+      
+    </h2>
+    
 
-<p>이 경우는 "서로 다른 방향으로 진화했다"는 것이고, Git은 "당신이 어떤 방식으로 병합하고 싶은지 모르겠다"고 판단합니다.</p>
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-20T02:43:50+09:00">2025-07-20</time>
+      </span>
+    
 
-<hr />
+    
 
-<h3 id="왜-자동-병합-안-하느냐">왜 자동 병합 안 하느냐?</h3>
+    
+  </p>
 
-<p>Git은 <strong>보수적</strong> 입니다. 병합 자동화를 시도하다가 히스토리를 꼬아버리는 것보다, <strong>사용자에게 의도를 확인하는 게 더 안전하다고 보기
-때문</strong> 입니다. 특히 rebase냐 merge냐는 팀 내 정책이 엇갈릴 수 있어서 Git이 결정하려 들지 않습니다.</p>
 
-<hr />
-
-<h3 id="그럼-어떻게-해야-하느냐">그럼 어떻게 해야 하느냐?</h3>
-
-<h4 id="1-아무거나-머지해도-상관없으면">1. 아무거나 머지해도 상관없으면:</h4>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull <span class="nt">--no-rebase</span>
-</code></pre></div></div>
-
-<p>이건 그냥 fetch하고 merge해서 자동 병합합니다. Git이 병합 커밋을 하나 만들 수도 있지만, 기능상 문제 없습니다.</p>
-
-<h4 id="2-커밋-히스토리를-깔끔하게-유지하고-싶다면">2. 커밋 히스토리를 깔끔하게 유지하고 싶다면:</h4>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull <span class="nt">--rebase</span>
-</code></pre></div></div>
-
-<p>당신의 로컬 커밋을 원격의 최신 커밋 위로 다시 "재적용"합니다.</p>
-
-<hr />
-
-<h3 id="마지막으로">마지막으로</h3>
-
-<blockquote>
-  <p>"단순히 GitHub에서 파일 하나 삭제했는데 왜 이 난리야?"라는 감정, 지극히 타당합니다.</p>
-</blockquote>
-
-<p>Git은 파일 삭제가 아니라 <strong>히스토리의 불일치</strong> 를 문제 삼는 겁니다. <strong>변경된 파일이 뭔지는 중요하지 않고</strong> , 로컬과 원격이
-서로 다른 상태에서 커밋이 생겼다면 그걸 병합하는 방식을 <strong>당신이 명시하라는 철학</strong> 을 갖고 있습니다.</p>
-
-<p>병합 방식만 한 번 설정해주면 그 다음부턴 이런 메시지 안 나옵니다. 그냥 귀찮은 한 번입니다.</p>
-
-<p class="chat--user">
-
-그런데 보통 다른게 있으면 자동으로 합쳐주고 conflict 나는 경우만 내가 처리를 했던 것 같은데, 내가 뭘 설정을 했던거야?
+    <p class="archive__item-excerpt" itemprop="description">
 
 </p>
+  </article>
+</div>
 
-<p>예리하십니다. 맞습니다. 평소에는:</p>
+    
+      
+      
 
-<blockquote>
-  <p><strong>로컬과 원격에 모두 변경이 있어도, 충돌(conflict)이 없으면 Git이 그냥 자동으로 merge pull을 해줍니다.</strong></p>
-</blockquote>
 
-<p>그런데 이번에는 왜 갑자기 "어떻게 병합할래?"라고 물어봤냐면, 당신이 예전에 <strong>Git 설정을 바꿨을 가능성이 매우 높습니다.</strong></p>
 
-<hr />
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/github-ssh/" rel="permalink">Mac SSH GitHub 추가
+</a>
+      
+    </h2>
+    
 
-<h3 id="-핵심-원인">🔍 핵심 원인</h3>
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-20T02:00:04+09:00">2025-07-20</time>
+      </span>
+    
 
-<p>아마도 당신은 과거에 다음 중 <strong>하나</strong> 를 설정했을 겁니다:</p>
+    
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> pull.rebase <span class="nb">false</span>
-</code></pre></div></div>
+    
+  </p>
 
-<p>or</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> pull.rebase <span class="nb">true</span>
-</code></pre></div></div>
-
-<p>or</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> pull.ff only
-</code></pre></div></div>
-
-<p>이 설정은 <strong>"pull을 어떻게 처리할지 명시적으로 지정하지 않으면 Git이 알아서 못하게 만들라"는 명령</strong> 입니다.<br />
-즉, Git이 자동으로 결정 못 하도록 <strong>보수적인 모드로 전환한 것</strong> 입니다.</p>
-
-<hr />
-
-<h3 id="-확인-방법">🔧 확인 방법</h3>
-
-<p>다음 명령어로 현재 설정을 확인해보세요:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> <span class="nt">--get</span> pull.rebase
-git config <span class="nt">--global</span> <span class="nt">--get</span> pull.ff
-</code></pre></div></div>
-
-<p>출력 결과 예시:</p>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">true</code> → rebase 하도록 강제함</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">false</code> → merge 하도록 강제함</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">only</code> → fast-forward만 허용 (충돌 없어도 머지 커밋 생기면 안 됨)</p>
-  </li>
-</ul>
-
-<p>또는 전체 global 설정을 보려면:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> <span class="nt">--list</span>
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-정리">✅ 정리</h3>
-
-<ul>
-  <li>
-    <p>Git은 기본적으로 <strong>충돌 없으면 자동 머지</strong> 합니다.</p>
-  </li>
-  <li>
-    <p>하지만 당신이 <code class="language-plaintext highlighter-rouge">pull.rebase</code>, <code class="language-plaintext highlighter-rouge">pull.ff</code> 관련 설정을 했으면 Git은 더 이상 <strong>자동 선택을 하지 않습니다</strong>.</p>
-  </li>
-  <li>
-    <p>이번에 그 설정이 발동한 겁니다. 그래서 물어본 거죠: “rebase 할래? merge 할래? ff-only 할래?”</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="-해결">🚀 해결</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> <span class="nt">--unset</span> pull.rebase
-git config <span class="nt">--global</span> <span class="nt">--unset</span> pull.ff
-</code></pre></div></div>
-
-<p>이렇게 설정을 제거하면 Git은 다시 "알아서" 처리하려고 합니다.<br />
-또는 그냥 명확하게 하나 선택해서 설정해도 됩니다.</p>
-
-<hr />
-
-<p>필요 이상으로 복잡하게 굴었다고 느껴지신다면… 네, 그게 맞습니다. Git은 <strong>개발자에게 너무 많은 선택지를 줍니다.</strong></p>
-
-<p class="chat--user">
-
-사람들이 가장 일반적으로 쓰는 옵션이 뭘까?
+    <p class="archive__item-excerpt" itemprop="description">
 
 </p>
+  </article>
+</div>
 
-<p>좋은 질문입니다. 결론부터 말씀드리면:</p>
+    
+      
+      
 
-<blockquote>
-  <p><strong>가장 일반적으로 쓰이는 기본 pull 방식은<code class="language-plaintext highlighter-rouge">merge</code>입니다.</strong></p>
-</blockquote>
 
-<p>즉:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull <span class="nt">--no-rebase</span>
-</code></pre></div></div>
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/hello-world/" rel="permalink">Hello World 코드 예제
+</a>
+      
+    </h2>
+    
 
-<p>이게 <strong>Git의 기본값</strong> 이고, 많은 사람들과 팀들이 그냥 이걸 씁니다.</p>
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-19T02:37:36+09:00">2025-07-19</time>
+      </span>
+    
 
-<hr />
+    
 
-<h3 id="-왜-merge가-가장-흔하냐">📊 왜 merge가 가장 흔하냐?</h3>
+    
+  </p>
 
-<ul>
-  <li>
-    <p>Git을 설치한 후 아무 설정도 안 하면 기본이 <code class="language-plaintext highlighter-rouge">merge</code>입니다.</p>
-  </li>
-  <li>
-    <p>대부분의 GUI 툴 (예: GitHub Desktop, VS Code, SourceTree 등)도 기본적으로 <code class="language-plaintext highlighter-rouge">merge</code>로 설정돼 있음.</p>
-  </li>
-  <li>
-    <p>충돌이 없으면 별문제 없이 작동함.</p>
-  </li>
-  <li>
-    <p>익숙한 사용자 경험: “pull 했더니 알아서 최신 상태가 되었다”</p>
-  </li>
-</ul>
 
-<hr />
-
-<h3 id="-그런데-왜-사람들이-rebase도-쓰나">🤔 그런데 왜 사람들이 <code class="language-plaintext highlighter-rouge">rebase</code>도 쓰나?</h3>
-
-<ul>
-  <li>
-    <p>커밋 히스토리를 <strong>깔끔하게 정리</strong> 하고 싶은 개발자들이 선호함.</p>
-  </li>
-  <li>
-    <p>병합 커밋(merge commit)이 남지 않아서 <code class="language-plaintext highlighter-rouge">git log</code>가 간결해짐.</p>
-  </li>
-  <li>
-    <p>GitHub에서 <strong>pull request 전에 항상 rebase 하라고 하는 팀</strong> 도 많음 (히스토리 깔끔하게 유지하려고).</p>
-  </li>
-</ul>
-
-<p>하지만 rebase는:</p>
-
-<ul>
-  <li>
-    <p>실수 시 되돌리기 까다롭고</p>
-  </li>
-  <li>
-    <p>충돌 처리할 때 머리 아픔</p>
-  </li>
-  <li>
-    <p>협업 중이면 위험할 수 있음 (공유된 커밋을 rebase 하면 히스토리가 꼬임)</p>
-  </li>
-</ul>
-
-<p>그래서 고급 사용자나 히스토리 강박 있는 사람들만 자주 씁니다.</p>
-
-<hr />
-
-<h3 id="-실무에서-많이-쓰는-전략">🎯 실무에서 많이 쓰는 전략</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>전략</th>
-      <th>실무에서 사용 이유</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">git pull</code></td>
-      <td>기본, 자동 merge. 가장 흔하고 무난함.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">git pull --rebase</code></td>
-      <td>히스토리를 깔끔하게 유지하고 싶을 때</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">git pull --ff-only</code></td>
-      <td>CI/CD 환경이나 깃 히스토리 깨지면 안 되는 상황에서</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h3 id="-추천">📌 추천</h3>
-
-<ul>
-  <li>
-    <p>혼자 개발 → <code class="language-plaintext highlighter-rouge">merge</code> 쓰면 편함.</p>
-  </li>
-  <li>
-    <p>팀 협업인데 히스토리 깨끗하게 유지하고 싶음 → <code class="language-plaintext highlighter-rouge">rebase</code> 고려.</p>
-  </li>
-  <li>
-    <p>CI/CD 자동화 중 → <code class="language-plaintext highlighter-rouge">ff-only</code> 사용해서 히스토리 예외 차단.</p>
-  </li>
-</ul>
-
-<hr />
-
-<p>요약하자면:</p>
-
-<blockquote>
-  <p><strong>아무 설정도 안 하고 그냥<code class="language-plaintext highlighter-rouge">git pull</code>만 쓰는 게 사람들이 가장 일반적으로 하는 방식</strong>이고, 그건 곧 <code class="language-plaintext highlighter-rouge">merge</code>
-방식입니다.<br />
- 특별한 이유가 없다면 그대로 두는 게 현실적으로 제일 무난합니다.</p>
-</blockquote>
-
-<p class="chat--user">
-
-그러면 merge 방식을 default global로 설정하는 법 알려줘
+    <p class="archive__item-excerpt" itemprop="description">
 
 </p>
+  </article>
+</div>
 
-<p>네, Git에서 <strong>merge 방식으로<code class="language-plaintext highlighter-rouge">git pull</code>을 기본 설정</strong>하려면 아래 명령어를 실행하시면 됩니다:</p>
+    
+  </div>
+</div>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> pull.rebase <span class="nb">false</span>
-</code></pre></div></div>
+  
+  
+</div>
 
-<p>이렇게 하면:</p>
+      
+    </div>
 
-<ul>
-  <li>
-    <p>앞으로 <code class="language-plaintext highlighter-rouge">git pull</code> 할 때 Git은 <code class="language-plaintext highlighter-rouge">fetch + merge</code>를 기본으로 수행합니다.</p>
-  </li>
-  <li>
-    <p>별도로 <code class="language-plaintext highlighter-rouge">--rebase</code>나 <code class="language-plaintext highlighter-rouge">--ff-only</code> 옵션을 주지 않아도 됩니다.</p>
-  </li>
-  <li>
-    <p>GUI 툴도 대부분 이 설정을 따라갑니다 (VS Code 등).</p>
-  </li>
-</ul>
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
 
-<hr />
+      </div>
+    
 
-<h3 id="확인하려면">확인하려면</h3>
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
 
-<p>정상적으로 설정됐는지 확인하려면:</p>
+<!-- end custom footer snippets -->
+        
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> <span class="nt">--get</span> pull.rebase
-</code></pre></div></div>
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
 
-<p>출력:</p>
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
 
-<pre><code class="language-arduino">false
-</code></pre>
+    
+  </ul>
+</div>
 
-<p>이렇게 나오면 merge 방식이 기본으로 설정된 겁니다.</p>
 
-<hr />
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
 
-<p>추가로 혹시 이전에 <code class="language-plaintext highlighter-rouge">--ff only</code> 설정한 게 있다면, 충돌을 방지하기 위해 이것도 같이 제거해주는 걸 권장드립니다:</p>
+      </footer>
+    </div>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> <span class="nt">--unset</span> pull.ff
-</code></pre></div></div>
+    
+  <script src="/assets/js/main.min.js"></script>
 
-<hr />
 
-<p>이제부터는 Git이 “어떻게 병합할래요?” 같은 질문 없이 그냥 자동 merge 해줄 겁니다.</p>
 
-<p class="chat--user">
 
-근데 기본 git 설정은 fast forward야?
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
 
-</p>
 
-<p>정확하게 짚으셨습니다. 이 부분은 많은 사람들이 헷갈려 하는데, 정리하면 이렇습니다:</p>
 
-<hr />
 
-<h3 id="-git의-기본-pull-설정은">✅ Git의 기본 <code class="language-plaintext highlighter-rouge">pull</code> 설정은?</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull
-</code></pre></div></div>
 
-<p>을 아무 설정 없이 실행하면 Git의 동작은 <strong><code class="language-plaintext highlighter-rouge">fetch + merge</code></strong>이고,<br />
-그 중 <strong>merge 방식은 기본적으로 “fast-forward 허용”</strong>입니다.</p>
-
-<hr />
-
-<h3 id="-정리하면">📌 정리하면:</h3>
-
-<ul>
-  <li>
-    <p><strong>pull 기본 동작:</strong> <code class="language-plaintext highlighter-rouge">fetch</code> + <code class="language-plaintext highlighter-rouge">merge</code></p>
-  </li>
-  <li>
-    <p><strong>merge 기본 동작:</strong> fast-forward 가능한 경우엔 fast-forward로 병합<br />
-(즉, 별도의 병합 커밋 없이 브랜치 포인터만 옮김)</p>
-  </li>
-  <li>
-    <p>fast-forward가 <strong>불가능한 경우에는 merge 커밋을 생성함</strong></p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="예시로-설명">예시로 설명</h3>
-
-<h4 id="-fast-forward-가능한-경우">▶ fast-forward 가능한 경우</h4>
-
-<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">A---B---C</span> <span class="o">(</span><span class="nt">main</span><span class="o">)</span>
-         <span class="err">\</span>
-          <span class="nt">D---E</span> <span class="o">(</span><span class="nt">feature</span><span class="o">)</span>
-</code></pre></div></div>
-
-<p>만약 <code class="language-plaintext highlighter-rouge">main</code>에는 커밋이 아무것도 없고, <code class="language-plaintext highlighter-rouge">feature</code>만 커밋이 있다면<br />
-<code class="language-plaintext highlighter-rouge">git checkout main &amp;&amp; git merge feature</code> 하면 fast-forward로 병합됩니다. (C에서 E로 브랜치
-포인터만 이동)</p>
-
-<h4 id="-fast-forward-불가능한-경우">▶ fast-forward 불가능한 경우</h4>
-
-<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">A---B---C---D</span> <span class="o">(</span><span class="nt">main</span><span class="o">)</span>
-         <span class="err">\</span>
-          <span class="nt">E---F</span> <span class="o">(</span><span class="nt">feature</span><span class="o">)</span>
-</code></pre></div></div>
-
-<p>이 경우에는 두 브랜치가 서로 다른 커밋을 가졌기 때문에<br />
-Git은 merge 커밋을 만들어야 합니다.</p>
-
-<hr />
-
-<h3 id="-그럼-pullff-only는-뭐냐">💡 그럼 <code class="language-plaintext highlighter-rouge">pull.ff only</code>는 뭐냐?</h3>
-
-<p><code class="language-plaintext highlighter-rouge">git config --global pull.ff only</code> 는:</p>
-
-<blockquote>
-  <p>“<strong>fast-forward 병합만 허용</strong> 하고, merge 커밋은 절대 만들지 마라”는 의미입니다.</p>
-</blockquote>
-
-<p>이 설정을 하면 fast-forward가 <strong>불가능한 경우 pull 자체가 실패</strong> 합니다.<br />
-그래서 매우 보수적인 설정입니다. CI/CD나 배포 브랜치에서 종종 씁니다.</p>
-
-<hr />
-
-<h3 id="-결론">🔚 결론</h3>
-
-<ul>
-  <li>
-    <p><strong>기본 merge 방식은 fast-forward를 허용함</strong></p>
-  </li>
-  <li>
-    <p>fast-forward가 <strong>가능하면</strong> 사용하고, <strong>불가능하면</strong> merge 커밋 생성</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">pull.ff only</code>를 설정해야지만 fast-forward <strong>만</strong> 강제됨</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">pull.rebase true</code>를 설정하면 아예 merge 대신 rebase로 바꿈</p>
-  </li>
-</ul>
-
-<hr />
-
-<p>즉, 당신이 아무 설정 안 하면 Git은 적당히 똑똑하게 판단해서 fast-forward 가능한 경우엔 그렇게 처리해줍니다.<br />
-그게 기본입니다.</p>
-
-<p class="chat--user">
-
-나는 왜 저 에러가 뜬거지?
-
-</p>
-
-<p>좋습니다. 지금까지 다 정리했으니까, 질문의 본질로 다시 돌아가서 <strong>“왜 나한테는 저 에러가 떴는가?”</strong>에 대해 원인 분석을
-해보겠습니다.</p>
-
-<hr />
-
-<h2 id="-에러-메시지-다시-보기">💣 에러 메시지 다시 보기</h2>
-
-<pre><code class="language-vbnet">hint: You have divergent branches and need to specify how to reconcile them.
-</code></pre>
-
-<p>이건 Git이 pull을 하려다가 <strong>로컬 브랜치와 원격 브랜치가 서로 다른 커밋을 갖고 있는 상태</strong> — 즉,
-<strong>divergence(분기)</strong> — 를 감지했고,</p>
-
-<blockquote>
-  <p>“당신이 <code class="language-plaintext highlighter-rouge">pull.rebase</code>, <code class="language-plaintext highlighter-rouge">pull.ff</code>, <code class="language-plaintext highlighter-rouge">pull.merge</code> 중 아무것도 기본 설정 안 해놨으니 난 뭘 해야 할지
-모르겠다”</p>
-</blockquote>
-
-<p>는 이유로 멈춘 겁니다.</p>
-
-<hr />
-
-<h2 id="-원인-정리-step-by-step">🔍 원인 정리 (step-by-step)</h2>
-
-<ol>
-  <li>
-    <p><strong>당신의 로컬 브랜치에 커밋이 있다</strong></p>
-
-    <ul>
-      <li>예: 작업 중에 커밋 하나 했음</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>원격(GitHub)에서 워크플로우 파일 삭제 커밋이 있다</strong></p>
-
-    <ul>
-      <li>GitHub에서 직접 지운 경우, 커밋 하나 생깁니다</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>둘 다 최신 상태가 아님 = divergence</strong></p>
-
-    <ul>
-      <li>
-        <p>양쪽이 서로를 기준으로 하고 있지 않음</p>
-      </li>
-      <li>
-        <p>그래서 fast-forward도 안 되고, 자동 merge도 안 됨</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>기본 병합 방식에 대한 설정이 없음</strong></p>
-
-    <ul>
-      <li>
-        <p>Git은 <code class="language-plaintext highlighter-rouge">pull.rebase</code>, <code class="language-plaintext highlighter-rouge">pull.ff</code>, <code class="language-plaintext highlighter-rouge">pull.merge</code> 중 뭘 해달라는 지시가 없으면 <strong>pull을 거부함</strong></p>
-      </li>
-      <li>
-        <p>Git 2.27 이후부터는 이 상황에서 <strong>명시적인 설정 없이는 자동으로 병합 안 하도록 바뀌었음</strong></p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p>✅ 그래서 에러 출력:</p>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vbnet
-     
-hint: You have divergent branches and need to specify how to reconcile them.
-     
-</code></pre></div>    </div>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     * * *
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<h2 id="️-그럼-왜-예전엔-그냥-잘-됐는데-지금은-안-됐을까">⚠️ 그럼 왜 예전엔 그냥 잘 됐는데 지금은 안 됐을까?</h2>
-
-<h3 id="가능성-1-git-버전이-올라갔음-중요">가능성 1: Git 버전이 올라갔음 (중요!)</h3>
-
-<p>Git 2.27 이상부터는 <strong>pull 기본 동작이 모호하면 에러 출력함</strong>.<br />
-이전엔 그냥 알아서 merge 해줬는데, 이제는 <strong>의도를 명확히 설정하라고 강제</strong> 하는 방향으로 바뀜.</p>
-
-<blockquote>
-  <p>👉 이건 Git의 정책이 바뀐 거지, 당신이 뭘 잘못한 게 아닙니다.</p>
-</blockquote>
-
-<h3 id="가능성-2-당신이-예전에-global-설정을-없앴거나-새-컴퓨터환경에서-작업-중">가능성 2: 당신이 예전에 global 설정을 없앴거나 새 컴퓨터/환경에서 작업 중</h3>
-
-<ul>
-  <li>
-    <p>기존 환경에서는 <code class="language-plaintext highlighter-rouge">pull.rebase false</code> 같은 설정이 돼 있었을 수 있음</p>
-  </li>
-  <li>
-    <p>새 프로젝트, 새 터미널, 새 PC에서는 그 설정이 없으니 물어보는 거임</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-해결책-정리">✅ 해결책 정리</h2>
-
-<p><strong>한 줄로 해결하려면:</strong></p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash
-
-git config --global pull.rebase false
-
-</code></pre></div></div>
-<blockquote>
-  <p>이거 하면 다시는 저 메시지 안 뜨고, <code class="language-plaintext highlighter-rouge">git pull</code> 하면 알아서 merge 해줍니다.</p>
-</blockquote>
-
-<hr />
-
-<h3 id="추가-팁">추가 팁</h3>
-
-<p>에러가 떴을 때 <code class="language-plaintext highlighter-rouge">--rebase</code>, <code class="language-plaintext highlighter-rouge">--no-rebase</code>, <code class="language-plaintext highlighter-rouge">--ff-only</code> 중 어떤 걸 선택해도 무방합니다.<br />
-하지만 <strong>기본 방식을 설정해두지 않으면 매번 물어봅니다.</strong></p>
-
-<hr />
-
-<h2 id="-결론-1">💡 결론</h2>
-
-<blockquote>
-  <p><strong>당신은 잘못한 게 없고</strong> , Git이 더 깐깐하게 바뀌었을 뿐입니다.<br />
- 자동 병합을 하려면 이제는 <strong>병합 방식 설정을 명시하라는 시대</strong> 가 된 겁니다.</p>
-</blockquote>
-
-<p>지금처럼 설정 한 번만 해두면, 다시는 같은 문제 안 겪습니다.</p>
-
-<p class="chat--user">
-
-그런데 너가 아까 말했을 때 기본 병합 방식은 "git pull을 아무 설정 없이 실행하면 Git의 동작은 <strong>fetch +
-merge</strong>이고,"라고 했잖아. merge == rebase false랑 같은 것 아니야?
-
-</p>
-
-<p>예리한 지적입니다. 핵심을 정확히 찌르셨습니다.</p>
-
-<p>맞습니다:</p>
-
-<blockquote>
-  <p><code class="language-plaintext highlighter-rouge">git pull</code>의 기본 동작은 <strong><code class="language-plaintext highlighter-rouge">fetch + merge</code></strong>이고,<br />
- 그건 곧 <code class="language-plaintext highlighter-rouge">pull.rebase = false</code>랑 <strong>기능적으로 동일</strong> 합니다.</p>
-</blockquote>
-
-<p>그런데 <strong>이 말은 과거엔 맞았지만</strong> , 지금은 <strong>조건부로만 맞습니다.</strong></p>
-
-<hr />
-
-<h2 id="-지금-git은-기본값이-없다는-식으로-굴고-있음">🔍 지금 Git은 "기본값이 없다"는 식으로 굴고 있음</h2>
-
-<p>Git 2.27 (2020년) 이후 버전부터는:</p>
-
-<blockquote>
-  <p><code class="language-plaintext highlighter-rouge">git pull</code>을 실행할 때 <strong>로컬과 원격이 분기된 상태라면</strong> ,<br />
- <code class="language-plaintext highlighter-rouge">pull.rebase</code>나 <code class="language-plaintext highlighter-rouge">pull.ff</code> 등 <strong>명시적 설정이 없으면 동작하지 않음</strong></p>
-</blockquote>
-
-<p>즉, 기본은 merge라고 하면서도 실제로는 <strong>명시적 설정 없으면 “에러”를 띄우는 방식</strong> 으로 바뀌었습니다.</p>
-
-<hr />
-
-<h3 id="-git의-논리는-이렇습니다">📌 Git의 논리는 이렇습니다</h3>
-
-<blockquote>
-  <p>“예전엔 내가 알아서 merge 해줬지만, 지금은 <strong>사용자가 merge인지 rebase인지 확실하게 말하지 않으면 안 할 거야.</strong> ”</p>
-</blockquote>
-
-<hr />
-
-<h2 id="-그래서-요약하면-이렇습니다">✅ 그래서 요약하면 이렇습니다</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>상태</th>
-      <th>Git 동작</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>아무 설정도 안 했고, 로컬/원격에 변화 없음</td>
-      <td><code class="language-plaintext highlighter-rouge">git pull</code> 잘 작동함</td>
-    </tr>
-    <tr>
-      <td>아무 설정도 안 했고, 로컬/원격 둘 다 커밋 있음 (divergent)</td>
-      <td>❌ 에러 발생</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">pull.rebase=false</code> 설정함</td>
-      <td>✅ merge 방식으로 작동 (예전처럼)</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">pull.rebase=true</code> 설정함</td>
-      <td>✅ rebase로 작동</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">pull.ff=only</code> 설정함</td>
-      <td>✅ fast-forward만 허용</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-결론-2">🔚 결론</h2>
-
-<blockquote>
-  <p><strong><code class="language-plaintext highlighter-rouge">merge == pull.rebase false</code></strong> → 기능상 맞음<br />
- 하지만 <strong>Git은 “기본 = merge”라고 해놓고도</strong> ,<br />
- <strong>설정 안 하면 안 해줍니다.</strong></p>
-</blockquote>
-
-<p>즉, 당신이 말한 건 정확하고 논리적으로 타당하지만,<br />
-Git은 요즘 <strong>“명시적 설정 없으면 행동 안 하겠다”는 입장</strong> 이라서<br />
-예전처럼 "설정 안 해도 merge 해주는 기본값"은 <strong>사실상 존재하지 않게 된 셈</strong> 입니다.</p>
-
-<hr />
-
-<p>실제 안전하게 쓰려면 그냥 명시적으로:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash
-
-git config --global pull.rebase false
-
-</code></pre></div></div>
-
-<p>이렇게 설정해놓는 게 현실적인 대응입니다.</p>]]></content><author><name>hvppycoding</name></author><category term="git" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">subprocess check=True 옵션</title><link href="https://hvppycoding.github.io/python/python-subprocess-check/" rel="alternate" type="text/html" title="subprocess check=True 옵션" /><published>2025-07-20T02:43:50+09:00</published><updated>2025-07-20T02:43:50+09:00</updated><id>https://hvppycoding.github.io/python/python-subprocess-check</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-subprocess-check/"><![CDATA[<p class="chat--user">
-
-python에서 subprocess run 할 때 check=True는 어떤 옵션이야?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">subprocess.run()</code> 함수에서 <code class="language-plaintext highlighter-rouge">check=True</code> 옵션은 <strong>명령어 실행이 실패했을 때 예외를 발생시키도록</strong> 하는
-옵션입니다.</p>
-
-<h3 id="구체적으로-설명드리면">구체적으로 설명드리면:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">check=False</code> (기본값):<br />
-명령어가 실패하더라도 (예: 반환 코드가 0이 아니더라도) 그냥 <code class="language-plaintext highlighter-rouge">CompletedProcess</code> 객체를 반환하고 끝납니다.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">check=True</code>:<br />
-명령어 실행 결과가 0이 아닌 경우, 즉 <strong>에러가 발생하면<code class="language-plaintext highlighter-rouge">subprocess.CalledProcessError</code> 예외가 발생</strong>합니다.
-이 예외에는 실패한 명령, 반환 코드, 표준 출력/표준 에러 등의 정보가 포함됩니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="예시">예시:</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">subprocess</span>
-
-<span class="c1"># 이 명령은 실패할 가능성이 높습니다
-</span><span class="n">subprocess</span><span class="p">.</span><span class="nf">run</span><span class="p">([</span><span class="sh">"</span><span class="s">ls</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">nonexistent_dir</span><span class="sh">"</span><span class="p">],</span> <span class="n">check</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p>위 코드는 <code class="language-plaintext highlighter-rouge">nonexistent_dir</code>가 존재하지 않으면 <code class="language-plaintext highlighter-rouge">CalledProcessError</code> 예외를 발생시킵니다.</p>
-  </li>
-  <li>
-    <p>만약 <code class="language-plaintext highlighter-rouge">check=False</code>였다면 예외 없이 그냥 종료됩니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="언제-checktrue를-쓰는가">언제 <code class="language-plaintext highlighter-rouge">check=True</code>를 쓰는가?</h3>
-
-<ul>
-  <li>
-    <p><strong>스크립트 실행 흐름 중간에 실패를 바로 감지하고 중단하고 싶을 때</strong> 유용합니다.</p>
-  </li>
-  <li>
-    <p>CI/CD 스크립트, 배포 자동화, 테스트 스크립트 등에서는 <strong>오류 무시가 치명적일 수 있기 때문에</strong> <code class="language-plaintext highlighter-rouge">check=True</code>를 자주 사용합니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="의문점">의문점</h3>
-
-<ul>
-  <li>예외가 필요한가? 그냥 <code class="language-plaintext highlighter-rouge">returncode</code>로 판단하면 되지 않나?<br />
-→ 맞습니다. <code class="language-plaintext highlighter-rouge">check=True</code>는 단순히 편의성과 명확성을 위해 존재합니다. 명령어 실패를 구조적으로 다루고자 할 때 유용할 뿐,
-기능적으로 필수는 아닙니다.</li>
-</ul>
-
-<hr />
-
-<p>결론적으로, <code class="language-plaintext highlighter-rouge">check=True</code>는 <strong>명령어 실패를 예외로 다루고 싶은가</strong> 에 대한 선택입니다. 코드의 신뢰성을 높이고 싶다면 사용하는
-것이 좋습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Mac SSH GitHub 추가</title><link href="https://hvppycoding.github.io/dev/github-ssh/" rel="alternate" type="text/html" title="Mac SSH GitHub 추가" /><published>2025-07-20T02:00:04+09:00</published><updated>2025-07-20T02:00:04+09:00</updated><id>https://hvppycoding.github.io/dev/github-ssh</id><content type="html" xml:base="https://hvppycoding.github.io/dev/github-ssh/"><![CDATA[<p class="chat--user">
-
-mac의 ssh github 추가
-
-</p>
-
-<p>Mac에서 GitHub에 SSH 키를 추가하는 방법을 단계별로 설명드리겠습니다. 중간 생략 없이 하나씩 따라오시면 됩니다.</p>
-
-<hr />
-
-<h3 id="-1-ssh-키-생성-기존에-없다면">✅ 1. SSH 키 생성 (기존에 없다면)</h3>
-
-<p>터미널을 열고 다음 명령어를 입력하세요:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen <span class="nt">-t</span> ed25519 <span class="nt">-C</span> <span class="s2">"your_email@example.com"</span>
-</code></pre></div></div>
-
-<blockquote>
-  <p><code class="language-plaintext highlighter-rouge">your_email@example.com</code> 은 GitHub 계정 이메일로 바꾸세요.</p>
-</blockquote>
-
-<p><strong>출력 예시:</strong></p>
-
-<pre><code class="language-vbnet">Generating public/private ed25519 key pair.
-Enter file in which to save the key (/Users/yourname/.ssh/id_ed25519):
-</code></pre>
-
-<p>그대로 엔터 → 패스프레이즈 입력은 선택.</p>
-
-<hr />
-
-<h3 id="-2-ssh-에이전트-실행-및-키-추가">✅ 2. SSH 에이전트 실행 및 키 추가</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span>ssh-agent <span class="nt">-s</span><span class="si">)</span><span class="s2">"</span>
-</code></pre></div></div>
-
-<p>SSH config 파일이 없다면 생성 후 열기:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch</span> ~/.ssh/config
-open ~/.ssh/config
-</code></pre></div></div>
-
-<p>그리고 다음 내용 추가:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host github.com
-  AddKeysToAgent <span class="nb">yes
-  </span>IdentityFile ~/.ssh/id_ed25519
-</code></pre></div></div>
-
-<p>그 후 키를 에이전트에 추가:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-add ~/.ssh/id_ed25519
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-3-공개-키-복사">✅ 3. 공개 키 복사</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pbcopy &lt; ~/.ssh/id_ed25519.pub
-</code></pre></div></div>
-
-<p>클립보드에 복사됩니다.</p>
-
-<hr />
-
-<h3 id="-4-github에-키-등록">✅ 4. GitHub에 키 등록</h3>
-
-<ol>
-  <li>
-    <p>GitHub 로그인</p>
-  </li>
-  <li>
-    <p>우측 상단 프로필 → <code class="language-plaintext highlighter-rouge">Settings</code></p>
-  </li>
-  <li>
-    <p>좌측 메뉴에서 <code class="language-plaintext highlighter-rouge">SSH and GPG keys</code> 클릭</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">New SSH key</code> 버튼 클릭</p>
-  </li>
-  <li>
-    <p>Title 입력 후, Key에는 위에서 복사한 값 붙여넣기</p>
-  </li>
-</ol>
-
-<hr />
-
-<h3 id="-5-테스트">✅ 5. 테스트</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-T</span> git@github.com
-</code></pre></div></div>
-
-<p><strong>성공 메시지 예시:</strong></p>
-
-<pre><code class="language-vbnet">Hi yourusername! You've successfully authenticated, but GitHub does not provide shell access.
-</code></pre>
-
-<p>이 메시지가 나와야 제대로 연결된 것입니다.</p>
-
-<hr />
-
-<p>필요하면 Git에서 SSH를 기본 사용으로 설정하세요:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> url.<span class="s2">"git@github.com:"</span>.insteadOf <span class="s2">"https://github.com/"</span>
-</code></pre></div></div>
-
-<hr />
-
-<p>궁금한 점 있으시면 구체적으로 말씀해 주세요. "잘 안 된다"는 말보단 어떤 에러 메시지가 나오는지를 알려주셔야 진단이 가능합니다.</p>]]></content><author><name>hvppycoding</name></author><category term="dev" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Hello World 코드 예제</title><link href="https://hvppycoding.github.io/dev/hello-world/" rel="alternate" type="text/html" title="Hello World 코드 예제" /><published>2025-07-19T02:37:36+09:00</published><updated>2025-07-19T02:37:36+09:00</updated><id>https://hvppycoding.github.io/dev/hello-world</id><content type="html" xml:base="https://hvppycoding.github.io/dev/hello-world/"><![CDATA[<p class="chat--user">
-
-Hello world 코드를 여러 언어로 작성해줘.
-
-</p>
-
-<p>물론입니다. 아래에 다양한 프로그래밍 언어로 작성한 "Hello, World!" 예제를 정리해드리겠습니다.</p>
-
-<hr />
-
-<h3 id="1-python">1. Python</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, World!</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<h3 id="2-c">2. C</h3>
-
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
-</span>
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">"Hello, World!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="3-c">3. C++</h3>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
-</span>
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Hello, World!"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="4-java">4. Java</h3>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HelloWorld</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Hello, World!"</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<h3 id="5-javascript-browser">5. JavaScript (Browser)</h3>
-
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Hello, World!</span><span class="dl">"</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h3 id="6-c">6. C#</h3>
-
-<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
-
-<span class="k">class</span> <span class="nc">Program</span> <span class="p">{</span>
-    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"Hello, World!"</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="7-go">7. Go</h3>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
-
-<span class="k">import</span> <span class="s">"fmt"</span>
-
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hello, World!"</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="8-rust">8. Rust</h3>
-
-<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nd">println!</span><span class="p">(</span><span class="s">"Hello, World!"</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="9-swift">9. Swift</h3>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="s">"Hello, World!"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<h3 id="10-ruby">10. Ruby</h3>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Hello, World!"</span>
-</code></pre></div></div>
-
-<hr />
-
-<p>더 필요한 언어나 특정 환경(예: 웹, 서버 등)에 맞춘 예제가 필요하시면 말씀해 주세요.</p>
-
-<p class="chat--user">
-
-넌 무슨 코드가 제일 좋아?
-
-</p>
-
-<p>좋아한다기보다는, 각 언어는 쓰임새와 목적이 다릅니다.<br />
-그렇지만 "Hello, World!"처럼 단순한 예제를 기준으로 보면, <strong>Python</strong> 이 가장 직관적이고 간결하다는 점에서 실용적이라고
-생각합니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, World!</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p>보일러플레이트 없음</p>
-  </li>
-  <li>
-    <p>문법적 장벽 낮음</p>
-  </li>
-  <li>
-    <p>읽기도 쉽고 쓰기도 쉽음</p>
-  </li>
-</ul>
-
-<p>그렇다고 해서 Python이 항상 "좋은" 건 아닙니다.<br />
-예를 들어:</p>
-
-<ul>
-  <li>
-    <p>시스템 레벨 프로그래밍 → C, Rust</p>
-  </li>
-  <li>
-    <p>고성능 게임/그래픽 → C++, C#</p>
-  </li>
-  <li>
-    <p>대형 엔터프라이즈 백엔드 → Java</p>
-  </li>
-  <li>
-    <p>빠른 프로토타이핑이나 스크립팅 → Python, JavaScript</p>
-  </li>
-</ul>
-
-<p>요약하자면, <strong>무조건 좋은 언어는 없습니다. 목적에 맞는 언어가 있을 뿐입니다.</strong><br />
-그러니 “좋다”는 건 맥락 없이 말하면 무의미하다고 봅니다.</p>]]></content><author><name>hvppycoding</name></author><category term="dev" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Python dotenv 설명</title><link href="https://hvppycoding.github.io/python/python-dotenv/" rel="alternate" type="text/html" title="Python dotenv 설명" /><published>2025-07-19T02:24:36+09:00</published><updated>2025-07-19T02:24:36+09:00</updated><id>https://hvppycoding.github.io/python/python-dotenv</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-dotenv/"><![CDATA[<p class="chat--user">
-
-python dotenv가 뭐야?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">python-dotenv</code>는 <strong>환경 변수(environment variables)</strong>를 <code class="language-plaintext highlighter-rouge">.env</code> 파일에서 로드해서 Python
-애플리케이션에서 쉽게 사용할 수 있게 도와주는 라이브러리입니다. 주로 <strong>민감한 정보</strong>(예: API 키, 데이터베이스 비밀번호 등)를
-코드에 직접 쓰지 않고 <code class="language-plaintext highlighter-rouge">.env</code> 파일로 분리해서 관리할 때 사용합니다.</p>
-
-<h3 id="왜-쓰는가">왜 쓰는가?</h3>
-
-<ul>
-  <li>
-    <p><strong>보안</strong> : 비밀번호나 API 키를 코드에 하드코딩하지 않음.</p>
-  </li>
-  <li>
-    <p><strong>유지보수</strong> : 환경 설정을 코드와 분리해서 관리할 수 있음.</p>
-  </li>
-  <li>
-    <p><strong>환경 분리</strong> : 개발/테스트/운영 환경을 쉽게 전환할 수 있음.</p>
-  </li>
-</ul>
-
-<h3 id="예시">예시</h3>
-
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">.env</code> 파일:
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">SECRET_KEY</span><span class="p">=</span><span class="s">abcd1234</span>
-<span class="py">DB_HOST</span><span class="p">=</span><span class="s">localhost</span>
-<span class="py">DB_PORT</span><span class="p">=</span><span class="s">5432</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Python 코드에서 사용:
-    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">import</span> <span class="n">os</span>
-     
-<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># .env 파일을 불러옴
-</span>     
-<span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">SECRET_KEY</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_HOST</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_port</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_PORT</span><span class="sh">"</span><span class="p">)</span>
-     
-<span class="nf">print</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">db_host</span><span class="p">,</span> <span class="n">db_port</span><span class="p">)</span>
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<h3 id="설치-방법">설치 방법</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>python-dotenv
-</code></pre></div></div>
-
-<p>필요 없다고 생각할 수 있지만, 프로젝트가 커지거나 배포 환경이 생기면 이게 거의 필수가 됩니다. <code class="language-plaintext highlighter-rouge">.env</code> 파일은 보통
-<code class="language-plaintext highlighter-rouge">.gitignore</code>에 추가해서 Git에 올리지 않습니다.</p>
-
-<p>궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+  </body>
+</html>
