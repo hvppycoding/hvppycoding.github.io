@@ -10,7 +10,7 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Python dotenv 설명 - ARCHIVE</title>
+<!-- begin _includes/seo.html --><title>예외 처리 디버깅 방법 - ARCHIVE</title>
 <meta name="description" content="">
 
 
@@ -23,8 +23,8 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="ARCHIVE">
-<meta property="og:title" content="Python dotenv 설명">
-<meta property="og:url" content="https://hvppycoding.github.io/python/python-dotenv/">
+<meta property="og:title" content="예외 처리 디버깅 방법">
+<meta property="og:url" content="https://hvppycoding.github.io/python/python-exception-debug/">
 
 
   <meta property="og:description" content="">
@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-07-20T02:24:48+09:00">
+  <meta property="article:published_time" content="2025-07-21T15:12:37+09:00">
 
 
 
@@ -46,7 +46,7 @@
   
 
 
-<link rel="canonical" href="https://hvppycoding.github.io/python/python-dotenv/">
+<link rel="canonical" href="https://hvppycoding.github.io/python/python-exception-debug/">
 
 
 
@@ -150,16 +150,16 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Python dotenv 설명">
+    <meta itemprop="headline" content="예외 처리 디버깅 방법">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-07-20T02:24:48+09:00">
+    <meta itemprop="datePublished" content="2025-07-21T15:12:37+09:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
           <h1 id="page-title" class="page__title" itemprop="headline">
-            <a href="https://hvppycoding.github.io/python/python-dotenv/" itemprop="url">Python dotenv 설명
+            <a href="https://hvppycoding.github.io/python/python-exception-debug/" itemprop="url">예외 처리 디버깅 방법
 </a>
           </h1>
           
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-07-20T02:24:48+09:00">2025-07-20</time>
+        <time datetime="2025-07-21T15:12:37+09:00">2025-07-21</time>
       </span>
     
 
@@ -189,61 +189,75 @@
         
         <p class="chat--user">
 
-python dotenv가 뭐야?
+python에서 예외 처리를 <code class="language-plaintext highlighter-rouge">catch Exception as e: print(e)</code>로 했더니 자세한 내용이 없어서 디버깅이 어려워.
+어떻게 바꾸는게 좋을까?
 
 </p>
 
-<p><code class="language-plaintext highlighter-rouge">python-dotenv</code>는 <strong>환경 변수(environment variables)</strong>를 <code class="language-plaintext highlighter-rouge">.env</code> 파일에서 로드해서 Python
-애플리케이션에서 쉽게 사용할 수 있게 도와주는 라이브러리입니다. 주로 <strong>민감한 정보</strong>(예: API 키, 데이터베이스 비밀번호 등)를
-코드에 직접 쓰지 않고 <code class="language-plaintext highlighter-rouge">.env</code> 파일로 분리해서 관리할 때 사용합니다.</p>
+<p>예외를 <code class="language-plaintext highlighter-rouge">catch Exception as e: print(e)</code>처럼 단순히 출력하면, 에러 메시지만 나오고 <strong>스택 트레이스</strong> 같은
+디버깅에 유용한 정보는 나오지 않기 때문에 디버깅이 어려워집니다.<br />
+아래처럼 <code class="language-plaintext highlighter-rouge">traceback</code> 모듈을 사용하면 <strong>예외 발생 위치와 호출 스택</strong> 까지 출력할 수 있어 훨씬 유용합니다:</p>
 
-<h3 id="왜-쓰는가">왜 쓰는가?</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">traceback</span>
+
+<span class="k">try</span><span class="p">:</span>
+<span class="c1"># 오류가 발생할 수 있는 코드
+</span><span class="nf">risky_function</span><span class="p">()</span>
+<span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">An error occurred:</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">traceback</span><span class="p">.</span><span class="nf">print_exc</span><span class="p">()</span>  <span class="c1"># 전체 traceback 출력
+</span></code></pre></div></div>
+
+<h3 id="설명">설명:</h3>
 
 <ul>
   <li>
-    <p><strong>보안</strong> : 비밀번호나 API 키를 코드에 하드코딩하지 않음.</p>
+    <p><code class="language-plaintext highlighter-rouge">traceback.print_exc()</code>는 <strong>현재 예외에 대한 전체 traceback 정보</strong> 를 stderr로 출력합니다.</p>
   </li>
   <li>
-    <p><strong>유지보수</strong> : 환경 설정을 코드와 분리해서 관리할 수 있음.</p>
-  </li>
-  <li>
-    <p><strong>환경 분리</strong> : 개발/테스트/운영 환경을 쉽게 전환할 수 있음.</p>
+    <p><code class="language-plaintext highlighter-rouge">print(e)</code>는 단순히 예외 메시지(e.g., <code class="language-plaintext highlighter-rouge">'division by zero'</code>)만 출력하므로 정보가 부족합니다.</p>
   </li>
 </ul>
 
-<h3 id="예시">예시</h3>
+<hr />
 
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">.env</code> 파일:
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">SECRET_KEY</span><span class="p">=</span><span class="s">abcd1234</span>
-<span class="py">DB_HOST</span><span class="p">=</span><span class="s">localhost</span>
-<span class="py">DB_PORT</span><span class="p">=</span><span class="s">5432</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Python 코드에서 사용:
-    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">import</span> <span class="n">os</span>
-     
-<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># .env 파일을 불러옴
-</span>     
-<span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">SECRET_KEY</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_HOST</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_port</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_PORT</span><span class="sh">"</span><span class="p">)</span>
-     
-<span class="nf">print</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">db_host</span><span class="p">,</span> <span class="n">db_port</span><span class="p">)</span>
-</code></pre></div>    </div>
-  </li>
-</ol>
+<h3 id="추가-팁">추가 팁:</h3>
 
-<h3 id="설치-방법">설치 방법</h3>
+<h4 id="1-로그-파일에-남기고-싶다면">1. 로그 파일에 남기고 싶다면:</h4>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>python-dotenv
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">traceback</span>
+<span class="kn">import</span> <span class="n">logging</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sh">'</span><span class="s">error.log</span><span class="sh">'</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+<span class="nf">risky_function</span><span class="p">()</span>
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+<span class="n">logging</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">Unhandled exception occurred</span><span class="sh">"</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>필요 없다고 생각할 수 있지만, 프로젝트가 커지거나 배포 환경이 생기면 이게 거의 필수가 됩니다. <code class="language-plaintext highlighter-rouge">.env</code> 파일은 보통
-<code class="language-plaintext highlighter-rouge">.gitignore</code>에 추가해서 Git에 올리지 않습니다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">exc_info=True</code>로 설정하면 <code class="language-plaintext highlighter-rouge">traceback</code> 정보까지 로그에 남습니다.</li>
+</ul>
 
-<p>궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.</p>
+<h4 id="2-직접-문자열로-저장하고-싶다면">2. 직접 문자열로 저장하고 싶다면:</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
+<span class="nf">risky_function</span><span class="p">()</span>
+<span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="n">error_message</span> <span class="o">=</span> <span class="n">traceback</span><span class="p">.</span><span class="nf">format_exc</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">traceback.format_exc()</code>는 <code class="language-plaintext highlighter-rouge">print_exc()</code> 대신 <strong>문자열로 traceback을 반환</strong> 하므로 파일 저장, 메시지 전송 등에 적합합니다.</li>
+</ul>
+
+<hr />
+
+<p>요약하면, 예외 메시지만 보는 건 거의 무의미합니다. <code class="language-plaintext highlighter-rouge">traceback.print_exc()</code> 또는 <code class="language-plaintext highlighter-rouge">logging</code>을 써야 실질적인
+디버깅이 가능합니다.<br />
+예외 처리할 땐 "보여주지 않으면 모른다"는 태도로, 무조건 스택 트레이스를 확인하십시오.</p>
 
         
       </section>
@@ -270,7 +284,7 @@ python dotenv가 뭐야?
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-20T02:24:48+09:00">2025-07-20</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-21T15:12:37+09:00">2025-07-21</time></p>
 
       </footer>
 
@@ -279,10 +293,10 @@ python dotenv가 뭐야?
       
   <nav class="pagination">
     
-      <a href="/dev/github-ssh/" class="pagination--pager" title="Mac SSH GitHub 추가">Previous</a>
+      <a href="/python/python-import-formatter/" class="pagination--pager" title="파이썬 import 정리 방법">Previous</a>
     
     
-      <a href="/python/python-subprocess-check/" class="pagination--pager" title="subprocess check=True 옵션">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
@@ -299,47 +313,6 @@ python dotenv가 뭐야?
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/python/python-exception-debug/" rel="permalink">예외 처리 디버깅 방법
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-07-21T15:12:37+09:00">2025-07-21</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
     
       
       
@@ -448,6 +421,47 @@ python dotenv가 뭐야?
         -->
         
         <time datetime="2025-07-21T01:14:12+09:00">2025-07-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/git/github-divergent-branches/" rel="permalink">Git pull 병합 설정
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-20T02:52:07+09:00">2025-07-20</time>
       </span>
     
 

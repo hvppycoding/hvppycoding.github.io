@@ -46,4 +46,10 @@ var store = [{
         "tags": [],
         "url": "/python/python-import-formatter/",
         "teaser": null
+      },{
+        "title": "예외 처리 디버깅 방법",
+        "excerpt":"  python에서 예외 처리를 catch Exception as e: print(e)로 했더니 자세한 내용이 없어서 디버깅이 어려워. 어떻게 바꾸는게 좋을까?     예외를 catch Exception as e: print(e)처럼 단순히 출력하면, 에러 메시지만 나오고 스택 트레이스 같은 디버깅에 유용한 정보는 나오지 않기 때문에 디버깅이 어려워집니다.  아래처럼 traceback 모듈을 사용하면 예외 발생 위치와 호출 스택 까지 출력할 수 있어 훨씬 유용합니다:   import traceback  try: # 오류가 발생할 수 있는 코드 risky_function() except Exception as e: print(\"An error occurred:\") traceback.print_exc()  # 전체 traceback 출력   설명:           traceback.print_exc()는 현재 예외에 대한 전체 traceback 정보 를 stderr로 출력합니다.            print(e)는 단순히 예외 메시지(e.g., 'division by zero')만 출력하므로 정보가 부족합니다.         추가 팁:   1. 로그 파일에 남기고 싶다면:   import traceback import logging  logging.basicConfig(filename='error.log', level=logging.ERROR)  try: risky_function() except Exception: logging.error(\"Unhandled exception occurred\", exc_info=True)      exc_info=True로 설정하면 traceback 정보까지 로그에 남습니다.   2. 직접 문자열로 저장하고 싶다면:   try: risky_function() except Exception as e: error_message = traceback.format_exc() print(error_message)      traceback.format_exc()는 print_exc() 대신 문자열로 traceback을 반환 하므로 파일 저장, 메시지 전송 등에 적합합니다.     요약하면, 예외 메시지만 보는 건 거의 무의미합니다. traceback.print_exc() 또는 logging을 써야 실질적인 디버깅이 가능합니다.  예외 처리할 땐 \"보여주지 않으면 모른다\"는 태도로, 무조건 스택 트레이스를 확인하십시오.  ","categories": ["python"],
+        "tags": [],
+        "url": "/python/python-exception-debug/",
+        "teaser": null
       }]
