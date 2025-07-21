@@ -1,4 +1,262 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-21T01:27:34+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Git config 차이점 설명</title><link href="https://hvppycoding.github.io/git/git-config-scope/" rel="alternate" type="text/html" title="Git config 차이점 설명" /><published>2025-07-21T01:27:30+09:00</published><updated>2025-07-21T01:27:30+09:00</updated><id>https://hvppycoding.github.io/git/git-config-scope</id><content type="html" xml:base="https://hvppycoding.github.io/git/git-config-scope/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-21T10:21:57+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">파이썬 import 정리 방법</title><link href="https://hvppycoding.github.io/python/python-import-formatter/" rel="alternate" type="text/html" title="파이썬 import 정리 방법" /><published>2025-07-21T10:21:52+09:00</published><updated>2025-07-21T10:21:52+09:00</updated><id>https://hvppycoding.github.io/python/python-import-formatter</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-import-formatter/"><![CDATA[<p class="chat--user">
+
+파이썬 import 문들 자동으로 정리해주는 vscode 확장이나 커맨드라인이라도 있어? 예를 들어 안 쓰는 import를 정리한다든지
+순서를 정리해주는 기능이 있으면 좋겠어.
+
+</p>
+
+<p>네, 파이썬 <code class="language-plaintext highlighter-rouge">import</code> 문을 자동으로 정리해주는 VS Code 확장과 커맨드라인 도구가 있습니다. 대표적으로 다음 두 가지가 가장 많이
+쓰입니다:</p>
+
+<hr />
+
+<h3 id="1-isort-import-sorter">1. <strong><code class="language-plaintext highlighter-rouge">isort</code> (Import Sorter)</strong></h3>
+
+<ul>
+  <li>
+    <p><strong>기능</strong> :</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">import</code> 문 정렬 (표준 라이브러리, 서드파티, 로컬 모듈 순으로)</p>
+      </li>
+      <li>
+        <p>알파벳 순 정렬</p>
+      </li>
+      <li>
+        <p>그룹 분리</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>불필요한<code class="language-plaintext highlighter-rouge">import</code> 제거는 안 함</strong> → <code class="language-plaintext highlighter-rouge">autoflake</code> 또는 <code class="language-plaintext highlighter-rouge">ruff</code>와 병행 필요</p>
+  </li>
+  <li><strong>설치</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>isort
+</code></pre></div>    </div>
+  </li>
+  <li><strong>사용 예시 (CLI)</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isort your_script.py
+</code></pre></div>    </div>
+  </li>
+  <li><strong>VS Code 설정 연동 (settings.json)</strong> :
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"python.sortImports.args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--profile"</span><span class="p">,</span><span class="w"> </span><span class="s2">"black"</span><span class="p">]</span><span class="err">,</span><span class="w">
+</span><span class="nl">"editor.codeActionsOnSave"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="nl">"source.organizeImports"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="2-autoflake">2. <strong><code class="language-plaintext highlighter-rouge">autoflake</code></strong></h3>
+
+<ul>
+  <li>
+    <p><strong>기능</strong> :</p>
+
+    <ul>
+      <li>
+        <p>사용하지 않는 <code class="language-plaintext highlighter-rouge">import</code> 제거</p>
+      </li>
+      <li>
+        <p>사용되지 않는 변수 제거 (옵션 설정 시)</p>
+      </li>
+    </ul>
+  </li>
+  <li><strong>설치</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>autoflake
+</code></pre></div>    </div>
+  </li>
+  <li><strong>사용 예시</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>autoflake <span class="nt">--in-place</span> <span class="nt">--remove-unused-variables</span> <span class="nt">--remove-all-unused-imports</span> your_script.py
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="3-ruff-올인원-정적-분석기">3. <strong><code class="language-plaintext highlighter-rouge">ruff</code></strong> (올인원 정적 분석기)</h3>
+
+<ul>
+  <li>
+    <p><strong>기능</strong> :</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">isort</code> 기능 포함 (<code class="language-plaintext highlighter-rouge">import</code> 정렬)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">autoflake</code> 기능 포함 (<code class="language-plaintext highlighter-rouge">unused import</code> 제거)</p>
+      </li>
+      <li>
+        <p>매우 빠름, 추가 린트도 가능</p>
+      </li>
+    </ul>
+  </li>
+  <li><strong>설치</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>ruff
+</code></pre></div>    </div>
+  </li>
+  <li><strong>사용 예시</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruff check your_script.py <span class="nt">--fix</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>VS Code 플러그인</strong> : "Ruff" 설치 가능</li>
+</ul>
+
+<hr />
+
+<h3 id="결론">결론</h3>
+
+<p>가장 효율적인 조합은:</p>
+
+<ul>
+  <li>
+    <p>정렬: <code class="language-plaintext highlighter-rouge">isort</code></p>
+  </li>
+  <li>
+    <p>제거: <code class="language-plaintext highlighter-rouge">autoflake</code> 또는 <code class="language-plaintext highlighter-rouge">ruff</code></p>
+  </li>
+  <li>
+    <p>통합: <code class="language-plaintext highlighter-rouge">ruff</code> 하나로 정리하는 것도 가능</p>
+  </li>
+</ul>
+
+<p>VS Code에서는 <code class="language-plaintext highlighter-rouge">ruff</code> 확장 설치 후 <code class="language-plaintext highlighter-rouge">"editor.codeActionsOnSave"</code> 설정해두면 저장 시 자동 정리까지 됩니다.</p>
+
+<hr />
+
+<p>필요하시면 VS Code에 적용할 <code class="language-plaintext highlighter-rouge">.vscode/settings.json</code> 템플릿도 드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+근데 import를 보통 어떤 방식으로 정렬해? 단순 이름순으로 하기보다는 파이썬 내장 패키지, 써드파티 패키지, 현재 개발 중인 패키지로
+나누는 것도 좋을 것 같은데
+
+</p>
+
+<p>맞습니다. 단순히 알파벳 순으로 정렬하는 건 실무에서는 별로 의미가 없습니다. 보통은 <strong>"Import 그룹 분리 + 그룹 내부 알파벳
+정렬"</strong> 방식이 표준처럼 사용됩니다. 이건 PEP8 스타일 가이드도 권장하는 방식입니다.</p>
+
+<hr />
+
+<h2 id="-일반적으로-사용하는-import-정렬-방식-pep8--isort-기본-스타일">✅ 일반적으로 사용하는 import 정렬 방식 (PEP8 + isort 기본 스타일)</h2>
+
+<ol>
+  <li>
+    <p><strong>표준 라이브러리</strong></p>
+  </li>
+  <li>
+    <p><strong>써드파티 패키지</strong></p>
+  </li>
+  <li>
+    <p><strong>로컬/자체 개발 패키지</strong></p>
+  </li>
+</ol>
+
+<p>각 그룹은 <strong>한 줄 공백으로 구분</strong> 하고, <strong>그룹 내부에서는 알파벳 정렬</strong> 합니다.</p>
+
+<hr />
+
+<h3 id="-예시">📌 예시</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">sys</span>
+
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="n">requests</span>
+
+<span class="kn">import</span> <span class="n">myproject.utils</span>
+<span class="kn">from</span> <span class="n">myproject.config</span> <span class="kn">import</span> <span class="n">settings</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">os</code>, <code class="language-plaintext highlighter-rouge">sys</code> → 표준 라이브러리</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">numpy</code>, <code class="language-plaintext highlighter-rouge">requests</code> → 서드파티</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">myproject.*</code> → 로컬 프로젝트</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-isort로-이-구조-맞추기">🔧 <code class="language-plaintext highlighter-rouge">isort</code>로 이 구조 맞추기</h2>
+
+<p><code class="language-plaintext highlighter-rouge">isort</code>는 기본적으로 위의 구조를 따르며, 세부 설정도 가능합니다.</p>
+
+<h3 id="예시-설정-pyprojecttoml">예시 설정 (<code class="language-plaintext highlighter-rouge">pyproject.toml</code>)</h3>
+
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[tool.isort]</span>
+<span class="py">profile</span> <span class="p">=</span> <span class="s">"black"</span>
+<span class="py">known_first_party</span> <span class="p">=</span> <span class="p">[</span><span class="s">"myproject"</span><span class="p">]</span>
+<span class="py">line_length</span> <span class="p">=</span> <span class="mi">88</span>
+<span class="py">multi_line_output</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="py">include_trailing_comma</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="py">force_grid_wrap</span> <span class="p">=</span> <span class="mi">0</span>
+<span class="py">use_parentheses</span> <span class="p">=</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">known_first_party</code> → 현재 프로젝트 이름</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">profile = "black"</code> → Black 스타일과 호환</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-참고-다른-스타일도-존재함">📌 참고: 다른 스타일도 존재함</h2>
+
+<p>일부 회사나 팀은 다음과 같이 세분화해서 정렬하기도 합니다:</p>
+
+<ol>
+  <li>
+    <p><strong>Built-in</strong> (Python 내장)</p>
+  </li>
+  <li>
+    <p><strong>Standard library</strong></p>
+  </li>
+  <li>
+    <p><strong>Third-party</strong></p>
+  </li>
+  <li>
+    <p><strong>First-party (자사 모듈)</strong></p>
+  </li>
+  <li>
+    <p><strong>Relative imports</strong></p>
+  </li>
+</ol>
+
+<p>하지만 대부분은 <code class="language-plaintext highlighter-rouge">isort</code>의 3단계 분리(표준 / 써드파티 / 로컬)로 충분합니다.</p>
+
+<hr />
+
+<h2 id="결론-1">결론</h2>
+
+<ul>
+  <li>
+    <p>단순 알파벳 정렬은 실용적이지 않음</p>
+  </li>
+  <li>
+    <p><strong>그룹별로 나누고, 각 그룹 안에서 정렬</strong> 하는 방식이 일반적</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">isort</code>나 <code class="language-plaintext highlighter-rouge">ruff</code>에서 자동화 가능</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">known_first_party</code>, <code class="language-plaintext highlighter-rouge">known_third_party</code> 등의 설정이 중요</p>
+  </li>
+</ul>
+
+<p>필요하면 예제 설정 파일도 만들어 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Git config 차이점 설명</title><link href="https://hvppycoding.github.io/git/git-config-scope/" rel="alternate" type="text/html" title="Git config 차이점 설명" /><published>2025-07-21T01:27:30+09:00</published><updated>2025-07-21T01:27:30+09:00</updated><id>https://hvppycoding.github.io/git/git-config-scope</id><content type="html" xml:base="https://hvppycoding.github.io/git/git-config-scope/"><![CDATA[<p class="chat--user">
 
 그냥 git config 와 –global 붙였을때의 차이가 뭐야?
 
