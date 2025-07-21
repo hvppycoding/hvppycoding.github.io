@@ -1,4 +1,376 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-21T15:12:41+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">예외 처리 디버깅 방법</title><link href="https://hvppycoding.github.io/python/python-exception-debug/" rel="alternate" type="text/html" title="예외 처리 디버깅 방법" /><published>2025-07-21T15:12:37+09:00</published><updated>2025-07-21T15:12:37+09:00</updated><id>https://hvppycoding.github.io/python/python-exception-debug</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-exception-debug/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-21T15:40:08+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Verilog LUT Primitive 선언</title><link href="https://hvppycoding.github.io/verilog/verilog-lut-primitive/" rel="alternate" type="text/html" title="Verilog LUT Primitive 선언" /><published>2025-07-21T15:40:04+09:00</published><updated>2025-07-21T15:40:04+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-lut-primitive</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-lut-primitive/"><![CDATA[<p class="chat--user">
+
+verilog lut(look up table) 형식 primitive 선언하는법 알려줘.
+
+</p>
+
+<p>Verilog에서 LUT (Look-Up Table)를 primitive 형식으로 선언하려면, 일반적으로 FPGA 설계 시 벤더에서 제공하는
+라이브러리나 primitive를 사용하는 경우가 많습니다. 하지만 직접 primitive 형식으로 선언하고 싶다면, Verilog의
+<code class="language-plaintext highlighter-rouge">primitive</code> 키워드를 이용해 간단한 함수 표현을 만들 수 있습니다.</p>
+
+<p>예를 들어, 2입력 LUT를 primitive로 선언하는 기본적인 방법은 아래와 같습니다.</p>
+
+<hr />
+
+<h3 id="-예시-2-input-lut-primitive-선언">✅ 예시: 2-input LUT primitive 선언</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+primitive lut2 (out, a, b);
+output out;
+input a, b;
+
+// truth table for 2-input AND
+table
+// a  b : out
+0  0 : 0;
+0  1 : 0;
+1  0 : 0;
+1  1 : 1;
+endtable
+endprimitive
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-설명">🧠 설명</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">primitive</code>: Verilog에서 사용자 정의 gate-level 동작을 선언할 때 사용합니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">table ... endtable</code>: 입력 조합에 따른 출력을 정의합니다.</p>
+  </li>
+  <li>
+    <p>위 예시는 2-input AND gate와 동일한 LUT입니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-lut로써-활용하고-싶다면">✅ LUT로써 활용하고 싶다면?</h3>
+
+<p>LUT는 일반적으로 원하는 논리 함수를 표현하기 위해 truth table을 바꿔가며 다양한 동작을 할 수 있어야 합니다. 예를 들어
+4-input LUT (LUT4)를 primitive로 표현하려면 truth table이 16개 줄이 필요합니다.</p>
+
+<p>예시: 4-input LUT (LUT4) — 단순한 XOR 구현</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+primitive lut4 (out, a, b, c, d);
+output out;
+input a, b, c, d;
+
+table
+// a b c d : out
+0 0 0 0 : 0;
+0 0 0 1 : 1;
+0 0 1 0 : 1;
+0 0 1 1 : 0;
+0 1 0 0 : 1;
+0 1 0 1 : 0;
+0 1 1 0 : 0;
+0 1 1 1 : 1;
+1 0 0 0 : 1;
+1 0 0 1 : 0;
+1 0 1 0 : 0;
+1 0 1 1 : 1;
+1 1 0 0 : 0;
+1 1 0 1 : 1;
+1 1 1 0 : 1;
+1 1 1 1 : 0;
+endtable
+endprimitive
+</code></pre></div></div>
+
+<p>이건 LUT4에 어떤 특정한 XOR-like 논리식을 넣은 예시입니다.</p>
+
+<hr />
+
+<h3 id="-회의적으로-볼-점">🤔 회의적으로 볼 점</h3>
+
+<ul>
+  <li>
+    <p>실제 FPGA 설계에서는 이러한 primitive를 직접 선언하지 않습니다. 대신 Xilinx나 Intel(Altera) 같은 벤더에서 제공하는 LUT primitive 또는 <code class="language-plaintext highlighter-rouge">LUT4 #(.INIT(16'h____))</code> 같은 고수준 primitive를 사용합니다.</p>
+  </li>
+  <li>
+    <p>Verilog <code class="language-plaintext highlighter-rouge">primitive</code>는 순차 논리(latch 포함)를 제대로 표현하기엔 한계가 있고, 주로 combinational logic에만 적합합니다.</p>
+  </li>
+  <li>
+    <p>synthesizer가 이걸 실제 LUT로 매핑할 가능성은 벤더와 tool 설정에 따라 달라집니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시다면 Xilinx 스타일 LUT 인스턴스(LUT4 primitive) 사용법도 알려드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+delay를 줄 수 있어?
+
+</p>
+
+<p>예, Verilog <code class="language-plaintext highlighter-rouge">primitive</code>에서는 delay를 <strong>기본적으로 지정할 수 있습니다.</strong> 하지만 아주 제한적인 방식만 가능합니다.
+구체적으로 말하면, <code class="language-plaintext highlighter-rouge">primitive</code>는 <strong>gate-level modeling</strong> 의 일환으로 사용되기 때문에 <strong><code class="language-plaintext highlighter-rouge">#delay</code> 구문을
+사용하여 출력 지연을 선언할 수 있습니다.</strong></p>
+
+<hr />
+
+<h3 id="-예시-delay가-있는-primitive">✅ 예시: delay가 있는 primitive</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+primitive lut2_with_delay (out, a, b);
+output out;
+input a, b;
+
+reg out;
+
+table
+// a  b : out : delay
+0  0 : 0 : 5;
+0  1 : 0 : 5;
+1  0 : 0 : 5;
+1  1 : 1 : 5;
+endtable
+endprimitive
+</code></pre></div></div>
+
+<blockquote>
+  <p>위 예시에서 <code class="language-plaintext highlighter-rouge">: 5</code>는 출력 <code class="language-plaintext highlighter-rouge">out</code>이 바뀔 때 <strong>5단위 시간(delay 5)</strong> 후에 반영된다는 의미입니다.</p>
+</blockquote>
+
+<hr />
+
+<h3 id="-중요한-제약-사항">📌 중요한 제약 사항</h3>
+
+<ol>
+  <li>
+    <p><strong>delay는 output에만 걸 수 있고, 정수형 시간 단위만 사용 가능</strong> 합니다 (예: <code class="language-plaintext highlighter-rouge">: 3</code>, <code class="language-plaintext highlighter-rouge">: 10</code> 등).</p>
+  </li>
+  <li>
+    <p><strong>primitive 내부에서는<code class="language-plaintext highlighter-rouge">assign</code>이나 <code class="language-plaintext highlighter-rouge">always</code> 블록을 쓸 수 없습니다.</strong> 따라서 복잡한 지연 제어는 불가능합니다.</p>
+  </li>
+  <li>
+    <p>시뮬레이션에서는 반영되지만, <strong>합성(synthesis) 단계에서는 이 delay가 무시됩니다.</strong></p>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="-실사용-가치">🤔 실사용 가치?</h3>
+
+<p>현실적으로 FPGA나 ASIC 설계에서 timing control은 synthesis tool과 constraint로 제어합니다.
+Verilog <code class="language-plaintext highlighter-rouge">#delay</code>나 primitive-based delay는 <strong>정확한 timing 제어용이 아니라 시뮬레이션 전용</strong> 입니다.</p>
+
+<p>다시 말해, "delay를 걸 수 있냐?"에 대한 대답은 <strong>예, 시뮬레이션에서는 가능하다. 하지만 실제 회로 동작에는 영향 없다</strong> 는
+겁니다.</p>
+
+<hr />
+
+<p>필요하시면 delay를 변수로 주는 방법이나 <code class="language-plaintext highlighter-rouge">specify</code> 블록 같은 것도 설명드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+output이 그냥 wire여도 상관없어?
+
+</p>
+
+<p>좋은 질문입니다. 결론부터 말하면, <strong>primitive 내부에서는<code class="language-plaintext highlighter-rouge">output</code>이 <code class="language-plaintext highlighter-rouge">wire</code>가 아닌 <code class="language-plaintext highlighter-rouge">reg</code>여야 합니다.</strong> 외부에서는
+<code class="language-plaintext highlighter-rouge">wire</code>로 연결할 수 있지만, <strong>primitive 정의 내부에서는 반드시<code class="language-plaintext highlighter-rouge">reg</code>로 선언해야 합니다.</strong></p>
+
+<hr />
+
+<h3 id="-왜-그런가">✅ 왜 그런가?</h3>
+
+<p>Verilog에서 <code class="language-plaintext highlighter-rouge">primitive</code>는 내부에 <code class="language-plaintext highlighter-rouge">assign</code>, <code class="language-plaintext highlighter-rouge">always</code>, <code class="language-plaintext highlighter-rouge">initial</code> 블록을 사용할 수 없기 때문에,
+출력값을 저장할 수 있는 방식은 오직 <strong><code class="language-plaintext highlighter-rouge">reg</code> 타입</strong>뿐입니다. 그래서 <code class="language-plaintext highlighter-rouge">primitive</code> 내에서 <code class="language-plaintext highlighter-rouge">output</code>은 항상 <strong><code class="language-plaintext highlighter-rouge">reg
+out;</code></strong>처럼 따로 선언해줘야 합니다.</p>
+
+<hr />
+
+<h3 id="-예시로-다시-확인">🔍 예시로 다시 확인</h3>
+
+<h4 id="-잘못된-primitive-선언-내부에서-out을-reg로-선언하지-않음">❌ 잘못된 primitive 선언 (내부에서 <code class="language-plaintext highlighter-rouge">out</code>을 reg로 선언하지 않음)</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+primitive bad_primitive (out, a, b);
+output out;
+input a, b;
+
+table
+0 0 : 0;
+1 1 : 1;
+endtable
+endprimitive
+</code></pre></div></div>
+
+<p>이렇게 하면 에러 납니다:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Error</span><span class="p">:</span> <span class="nx">Output</span> <span class="dl">'</span><span class="s1">out</span><span class="dl">'</span> <span class="nx">must</span> <span class="nx">be</span> <span class="nx">declared</span> <span class="nx">as</span> <span class="nx">reg</span> <span class="k">in</span> <span class="nx">primitive</span><span class="p">.</span>
+</code></pre></div></div>
+
+<hr />
+
+<h4 id="-올바른-primitive-선언">✅ 올바른 primitive 선언</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+primitive good_primitive (out, a, b);
+output out;
+reg out;          // 반드시 이렇게 선언
+input a, b;
+
+table
+0 0 : 0;
+1 1 : 1;
+? ? : 0;
+endtable
+endprimitive
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="외부에서는">외부에서는?</h3>
+
+<p>외부에서 이 primitive를 인스턴스화할 때는, 출력 핀은 <code class="language-plaintext highlighter-rouge">wire</code> 타입으로 연결해도 전혀 문제 없습니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+wire y;
+good_primitive u1 (y, a, b);  // OK
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-요약">🤔 요약</h3>
+
+<ul>
+  <li>
+    <p>✅ 내부: <code class="language-plaintext highlighter-rouge">output</code>은 <code class="language-plaintext highlighter-rouge">reg</code>로 반드시 선언해야 함.</p>
+  </li>
+  <li>
+    <p>✅ 외부: <code class="language-plaintext highlighter-rouge">wire</code>로 연결 가능.</p>
+  </li>
+  <li>
+    <p>❌ 내부에 <code class="language-plaintext highlighter-rouge">always</code>나 <code class="language-plaintext highlighter-rouge">assign</code> 같은 구문 쓰면 안 됨.</p>
+  </li>
+  <li>
+    <p>⛔ 안 지키면 시뮬레이터에서 에러 납니다.</p>
+  </li>
+</ul>
+
+<p>필요하시면 primitive 내부에서 latch 만드는 방식도 알려드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+primitive 내부에서 and 게이트 만드는 법 예시로 알려줘. 이 때 combinational logic인데 reg 써도 상관 없어?
+
+</p>
+
+<p>아주 중요한 포인트 짚으셨습니다. 순차 논리가 아닌 <strong>combinational logic을 primitive로 만들 때에도 reg를 써야
+하느냐?</strong> 정답은:</p>
+
+<blockquote>
+  <p><strong>✅ 그렇다. combinational logic이더라도 primitive 내부의<code class="language-plaintext highlighter-rouge">output</code>은 반드시 <code class="language-plaintext highlighter-rouge">reg</code>로 선언해야
+합니다.</strong></p>
+</blockquote>
+
+<p>이건 Verilog 언어의 문법적 제약 때문이지, 동작 자체가 래치처럼 저장된다는 뜻은 아닙니다. <code class="language-plaintext highlighter-rouge">primitive</code>는 시뮬레이터가
+table을 해석해 동작을 결정하기 때문에, 내부적으로 <code class="language-plaintext highlighter-rouge">reg</code>로 선언해야만 출력 값을 저장하고 반영할 수 있습니다.</p>
+
+<hr />
+
+<h3 id="-예시-primitive로-2-input-and-게이트-만들기">✅ 예시: primitive로 2-input AND 게이트 만들기</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+primitive and2_gate (out, a, b);
+output out;
+reg out;         // 반드시 reg로 선언
+input a, b;
+
+table
+// a b : out
+0 0 : 0;
+0 1 : 0;
+1 0 : 0;
+1 1 : 1;
+endtable
+endprimitive
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-테스트-모듈-예시">✅ 테스트 모듈 예시</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verilog
+
+module test;
+reg a, b;
+wire y;
+
+and2_gate u1 (y, a, b);
+
+initial begin
+$monitor("a=%b b=%b =&gt; y=%b", a, b, y);
+a = 0; b = 0;
+#10 a = 0; b = 1;
+#10 a = 1; b = 0;
+#10 a = 1; b = 1;
+#10 $finish;
+end
+endmodule
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="️-주의할-점">⚠️ 주의할 점</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">reg out;</code>은 <strong>primitive의 출력값을 시뮬레이터가 내부적으로 기억하고 바꾸는 데 필요</strong> 한 겁니다.</p>
+  </li>
+  <li>
+    <p>이건 <strong>register behavior를 의미하지 않음</strong>. 즉, 이 <code class="language-plaintext highlighter-rouge">reg</code>는 <strong>combinational logic의 output</strong> 일 뿐임.</p>
+  </li>
+  <li>
+    <p>synthesis tool은 이걸 보고 진짜 레지스터로 만들지 않고, 해당 논리를 LUT나 gate로 변환합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-요약-1">🧠 요약</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>구분</th>
+      <th>reg 필요 여부</th>
+      <th>의미</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>primitive 내부 output</td>
+      <td>✅ 반드시 필요</td>
+      <td>출력 상태를 저장하기 위해, combinational이라도</td>
+    </tr>
+    <tr>
+      <td>일반 module 내부</td>
+      <td>❌ 필요 없음</td>
+      <td>combinational이면 wire로도 충분</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>궁금하신 부분이나 latch, flip-flop 같은 sequential primitive도 원하시면 말씀해 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">예외 처리 디버깅 방법</title><link href="https://hvppycoding.github.io/python/python-exception-debug/" rel="alternate" type="text/html" title="예외 처리 디버깅 방법" /><published>2025-07-21T15:12:37+09:00</published><updated>2025-07-21T15:12:37+09:00</updated><id>https://hvppycoding.github.io/python/python-exception-debug</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-exception-debug/"><![CDATA[<p class="chat--user">
 
 python에서 예외 처리를 <code class="language-plaintext highlighter-rouge">catch Exception as e: print(e)</code>로 했더니 자세한 내용이 없어서 디버깅이 어려워.
 어떻게 바꾸는게 좋을까?
