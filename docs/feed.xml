@@ -1,4 +1,195 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-22T13:46:52+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-undercursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-22T13:46:48+09:00</published><updated>2025-07-22T13:46:48+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-undercursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-undercursor/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-22T13:53:38+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-22T13:53:35+09:00</published><updated>2025-07-22T13:53:35+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-under-cursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/"><![CDATA[<p class="chat--user">
+
+gvim 설정에서 cursor 밑에 있는 파일을 새 탭으로 여는 함수 작성해줘. 이 때 파일 경로가 상대경로일 경우 현재 열려있는 파일로부터
+상대 경로로 찾아야 해. 그리고 만약 파일이 없으면 input() 으로 새로 해당 파일을 만들지 질문하고 y로 답할 경우 만들고 열어줘.
+
+</p>
+
+<p>아래는 <code class="language-plaintext highlighter-rouge">gvim</code>에서 사용할 수 있는 Vimscript 함수입니다. 커서 아래 있는 단어(파일 경로로 간주)를 새 탭으로 열되, 상대경로일
+경우 현재 열려 있는 파일 기준으로 처리하고, 해당 파일이 존재하지 않으면 생성 여부를 묻는 기능을 포함하고 있습니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  " 커서 아래 단어 가져오기
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 현재 버퍼의 디렉토리 기준으로 상대경로 처리
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = fnamemodify(l:filename, ':p')
+  if !isdirectory(fnamemodify(l:filename, ':h'))
+    let l:fullpath = resolve(l:current_dir . '/' . l:filename)
+  endif
+
+  " 파일 존재 여부 확인
+  if filereadable(l:fullpath)
+    " 새 탭으로 열기
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 파일 생성 여부 확인
+    let l:answer = input("File does not exist. Create it? (y/N): ")
+    if l:answer ==? 'y'
+      " 디렉토리 없으면 생성
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      " 새 탭으로 열기 (파일 생성 포함)
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+
+" 매핑 예시 (원하는 키로 변경 가능)
+nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
+</code></pre></div></div>
+
+<h3 id="요점-정리">요점 정리:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">expand('&lt;cfile&gt;')</code>을 사용하여 커서 아래 파일명 추출.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">expand('%:p:h')</code>로 현재 파일 기준 경로 가져와서 상대경로 처리.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">filereadable()</code>로 존재 여부 확인 후 <code class="language-plaintext highlighter-rouge">tabedit</code>로 새 탭에서 열기.</p>
+  </li>
+  <li>
+    <p>없을 경우 <code class="language-plaintext highlighter-rouge">input()</code>으로 사용자에게 파일 생성 여부 묻기.</p>
+  </li>
+</ul>
+
+<h3 id="참고-사항">참고 사항:</h3>
+
+<ul>
+  <li>
+    <p>상대경로 처리에서 Vim이 <code class="language-plaintext highlighter-rouge">:p</code>로 풀지 못하는 경우가 있어 <code class="language-plaintext highlighter-rouge">resolve()</code>와 디렉토리 접합을 함께 사용함.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mkdir(..., 'p')</code>는 상위 디렉토리까지 포함해 생성함.</p>
+  </li>
+</ul>
+
+<p>테스트 후 의도대로 작동하지 않는 부분이 있으면 알려주세요. 삽질 없이 바로 고칠 수 있도록 도와드리겠습니다.</p>
+
+<p class="chat--user">
+
+만들지 물을 때 절대 경로를 보여주고 물어주면 좋겠어.
+
+</p>
+
+<p>아래는 요청하신 대로 <strong>파일이 없을 때 절대 경로를 보여주고</strong> 생성 여부를 묻도록 수정한 버전입니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  " 커서 아래 단어 가져오기
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 현재 파일 기준 디렉토리에서 상대경로 처리
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+
+  " 파일 존재 확인
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 경고 및 절대 경로 출력
+    let l:answer = input("File does not exist: " . l:fullpath . "\nCreate it? (y/N): ")
+    if l:answer ==? 'y'
+      " 디렉토리 없으면 생성
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+
+" 예시 키 매핑
+nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
+</code></pre></div></div>
+
+<h3 id="변경-사항-요약">변경 사항 요약:</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">input()</code> 메시지에 <code class="language-plaintext highlighter-rouge">l:fullpath</code> (절대 경로)를 출력함으로써 사용자가 어떤 경로에 파일을 만들게 되는지 명확하게 보여줌.</li>
+</ul>
+
+<p>이제 실수로 엉뚱한 위치에 파일을 만드는 일은 줄어들 겁니다. 더 개선하고 싶은 점 있으시면 말씀해 주세요.</p>
+
+<p class="chat--user">
+
+질문에 색깔을 넣을 수도 있어?
+
+</p>
+
+<p>네, <strong>GVim이나 터미널 Vim에서 색깔을 넣는 건 제한적</strong> 입니다.<br />
+하지만 <strong>GVim</strong> , 특히 GUI 환경에서는 <code class="language-plaintext highlighter-rouge">:echohl</code>을 활용하면 <strong>색상 강조</strong> 를 넣을 수 있습니다. 단,
+<code class="language-plaintext highlighter-rouge">input()</code> 자체는 하이라이팅을 직접 지원하지 않아서 <strong>질문 전체를 색상 있게 출력하고, 입력은 따로 받는 방식</strong> 으로 우회해야
+합니다.</p>
+
+<p>예시 코드는 다음과 같습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 강조된 질문 메시지 출력
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    " 입력은 따로 처리
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+</code></pre></div></div>
+
+<h3 id="설명">설명:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">echohl</code>은 특정 하이라이트 그룹으로 색상을 바꿉니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Question</code>, <code class="language-plaintext highlighter-rouge">Directory</code> 같은 기본 하이라이트 그룹을 사용했지만, <code class="language-plaintext highlighter-rouge">:highlight</code>로 사용자 지정도 가능함.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">echon</code>은 개행 없이 출력합니다. <code class="language-plaintext highlighter-rouge">getchar()</code>로 입력을 따로 받아야 <code class="language-plaintext highlighter-rouge">input()</code> 없이 색상 출력이 가능합니다.</p>
+  </li>
+</ul>
+
+<h3 id="참고">참고:</h3>
+
+<ul>
+  <li>
+    <p>터미널 Vim에서는 색이 보이지 않거나 제한될 수 있습니다. GVim이나 색상 지원 터미널에서 확인하세요.</p>
+  </li>
+  <li>
+    <p>원하는 색감이 아니면 <code class="language-plaintext highlighter-rouge">:highlight Question</code> 등의 명령어로 색상 조정 가능합니다.</p>
+  </li>
+</ul>
+
+<p>필요하시면 사용자 정의 색상까지 설정하는 방법도 알려드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="vim" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-undercursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-22T13:46:48+09:00</published><updated>2025-07-22T13:46:48+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-undercursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-undercursor/"><![CDATA[<p class="chat--user">
 
 gvim 설정에서 cursor 밑에 있는 파일을 새 탭으로 여는 함수 작성해줘. 이 때 파일 경로가 상대경로일 경우 현재 열려있는 파일로부터
 상대 경로로 찾아야 해. 그리고 만약 파일이 없으면 input() 으로 새로 해당 파일을 만들지 질문하고 y로 답할 경우 만들고 열어줘.
@@ -4373,112 +4564,4 @@ python dotenv가 뭐야?
 <p>필요 없다고 생각할 수 있지만, 프로젝트가 커지거나 배포 환경이 생기면 이게 거의 필수가 됩니다. <code class="language-plaintext highlighter-rouge">.env</code> 파일은 보통
 <code class="language-plaintext highlighter-rouge">.gitignore</code>에 추가해서 Git에 올리지 않습니다.</p>
 
-<p>궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Mac SSH GitHub 추가</title><link href="https://hvppycoding.github.io/dev/github-ssh/" rel="alternate" type="text/html" title="Mac SSH GitHub 추가" /><published>2025-07-20T02:00:04+09:00</published><updated>2025-07-20T02:00:04+09:00</updated><id>https://hvppycoding.github.io/dev/github-ssh</id><content type="html" xml:base="https://hvppycoding.github.io/dev/github-ssh/"><![CDATA[<p class="chat--user">
-
-mac의 ssh github 추가
-
-</p>
-
-<p>Mac에서 GitHub에 SSH 키를 추가하는 방법을 단계별로 설명드리겠습니다. 중간 생략 없이 하나씩 따라오시면 됩니다.</p>
-
-<hr />
-
-<h3 id="-1-ssh-키-생성-기존에-없다면">✅ 1. SSH 키 생성 (기존에 없다면)</h3>
-
-<p>터미널을 열고 다음 명령어를 입력하세요:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen <span class="nt">-t</span> ed25519 <span class="nt">-C</span> <span class="s2">"your_email@example.com"</span>
-</code></pre></div></div>
-
-<blockquote>
-  <p><code class="language-plaintext highlighter-rouge">your_email@example.com</code> 은 GitHub 계정 이메일로 바꾸세요.</p>
-</blockquote>
-
-<p><strong>출력 예시:</strong></p>
-
-<pre><code class="language-vbnet">Generating public/private ed25519 key pair.
-Enter file in which to save the key (/Users/yourname/.ssh/id_ed25519):
-</code></pre>
-
-<p>그대로 엔터 → 패스프레이즈 입력은 선택.</p>
-
-<hr />
-
-<h3 id="-2-ssh-에이전트-실행-및-키-추가">✅ 2. SSH 에이전트 실행 및 키 추가</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span>ssh-agent <span class="nt">-s</span><span class="si">)</span><span class="s2">"</span>
-</code></pre></div></div>
-
-<p>SSH config 파일이 없다면 생성 후 열기:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch</span> ~/.ssh/config
-open ~/.ssh/config
-</code></pre></div></div>
-
-<p>그리고 다음 내용 추가:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host github.com
-  AddKeysToAgent <span class="nb">yes
-  </span>IdentityFile ~/.ssh/id_ed25519
-</code></pre></div></div>
-
-<p>그 후 키를 에이전트에 추가:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-add ~/.ssh/id_ed25519
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-3-공개-키-복사">✅ 3. 공개 키 복사</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pbcopy &lt; ~/.ssh/id_ed25519.pub
-</code></pre></div></div>
-
-<p>클립보드에 복사됩니다.</p>
-
-<hr />
-
-<h3 id="-4-github에-키-등록">✅ 4. GitHub에 키 등록</h3>
-
-<ol>
-  <li>
-    <p>GitHub 로그인</p>
-  </li>
-  <li>
-    <p>우측 상단 프로필 → <code class="language-plaintext highlighter-rouge">Settings</code></p>
-  </li>
-  <li>
-    <p>좌측 메뉴에서 <code class="language-plaintext highlighter-rouge">SSH and GPG keys</code> 클릭</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">New SSH key</code> 버튼 클릭</p>
-  </li>
-  <li>
-    <p>Title 입력 후, Key에는 위에서 복사한 값 붙여넣기</p>
-  </li>
-</ol>
-
-<hr />
-
-<h3 id="-5-테스트">✅ 5. 테스트</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-T</span> git@github.com
-</code></pre></div></div>
-
-<p><strong>성공 메시지 예시:</strong></p>
-
-<pre><code class="language-vbnet">Hi yourusername! You've successfully authenticated, but GitHub does not provide shell access.
-</code></pre>
-
-<p>이 메시지가 나와야 제대로 연결된 것입니다.</p>
-
-<hr />
-
-<p>필요하면 Git에서 SSH를 기본 사용으로 설정하세요:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> url.<span class="s2">"git@github.com:"</span>.insteadOf <span class="s2">"https://github.com/"</span>
-</code></pre></div></div>
-
-<hr />
-
-<p>궁금한 점 있으시면 구체적으로 말씀해 주세요. "잘 안 된다"는 말보단 어떤 에러 메시지가 나오는지를 알려주셔야 진단이 가능합니다.</p>]]></content><author><name>hvppycoding</name></author><category term="dev" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>

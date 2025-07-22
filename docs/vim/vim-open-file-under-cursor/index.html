@@ -24,7 +24,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="ARCHIVE">
 <meta property="og:title" content="GVim 파일 탭 열기">
-<meta property="og:url" content="https://hvppycoding.github.io/vim/vim-open-file-undercursor/">
+<meta property="og:url" content="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/">
 
 
   <meta property="og:description" content="">
@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-07-22T13:46:48+09:00">
+  <meta property="article:published_time" content="2025-07-22T13:53:35+09:00">
 
 
 
@@ -46,7 +46,7 @@
   
 
 
-<link rel="canonical" href="https://hvppycoding.github.io/vim/vim-open-file-undercursor/">
+<link rel="canonical" href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/">
 
 
 
@@ -152,14 +152,14 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="GVim 파일 탭 열기">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-07-22T13:46:48+09:00">
+    <meta itemprop="datePublished" content="2025-07-22T13:53:35+09:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
           <h1 id="page-title" class="page__title" itemprop="headline">
-            <a href="https://hvppycoding.github.io/vim/vim-open-file-undercursor/" itemprop="url">GVim 파일 탭 열기
+            <a href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" itemprop="url">GVim 파일 탭 열기
 </a>
           </h1>
           
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-07-22T13:46:48+09:00">2025-07-22</time>
+        <time datetime="2025-07-22T13:53:35+09:00">2025-07-22</time>
       </span>
     
 
@@ -262,6 +262,124 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
 
 <p>테스트 후 의도대로 작동하지 않는 부분이 있으면 알려주세요. 삽질 없이 바로 고칠 수 있도록 도와드리겠습니다.</p>
 
+<p class="chat--user">
+
+만들지 물을 때 절대 경로를 보여주고 물어주면 좋겠어.
+
+</p>
+
+<p>아래는 요청하신 대로 <strong>파일이 없을 때 절대 경로를 보여주고</strong> 생성 여부를 묻도록 수정한 버전입니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  " 커서 아래 단어 가져오기
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 현재 파일 기준 디렉토리에서 상대경로 처리
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+
+  " 파일 존재 확인
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 경고 및 절대 경로 출력
+    let l:answer = input("File does not exist: " . l:fullpath . "\nCreate it? (y/N): ")
+    if l:answer ==? 'y'
+      " 디렉토리 없으면 생성
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+
+" 예시 키 매핑
+nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
+</code></pre></div></div>
+
+<h3 id="변경-사항-요약">변경 사항 요약:</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">input()</code> 메시지에 <code class="language-plaintext highlighter-rouge">l:fullpath</code> (절대 경로)를 출력함으로써 사용자가 어떤 경로에 파일을 만들게 되는지 명확하게 보여줌.</li>
+</ul>
+
+<p>이제 실수로 엉뚱한 위치에 파일을 만드는 일은 줄어들 겁니다. 더 개선하고 싶은 점 있으시면 말씀해 주세요.</p>
+
+<p class="chat--user">
+
+질문에 색깔을 넣을 수도 있어?
+
+</p>
+
+<p>네, <strong>GVim이나 터미널 Vim에서 색깔을 넣는 건 제한적</strong> 입니다.<br />
+하지만 <strong>GVim</strong> , 특히 GUI 환경에서는 <code class="language-plaintext highlighter-rouge">:echohl</code>을 활용하면 <strong>색상 강조</strong> 를 넣을 수 있습니다. 단,
+<code class="language-plaintext highlighter-rouge">input()</code> 자체는 하이라이팅을 직접 지원하지 않아서 <strong>질문 전체를 색상 있게 출력하고, 입력은 따로 받는 방식</strong> 으로 우회해야
+합니다.</p>
+
+<p>예시 코드는 다음과 같습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 강조된 질문 메시지 출력
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    " 입력은 따로 처리
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+</code></pre></div></div>
+
+<h3 id="설명">설명:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">echohl</code>은 특정 하이라이트 그룹으로 색상을 바꿉니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Question</code>, <code class="language-plaintext highlighter-rouge">Directory</code> 같은 기본 하이라이트 그룹을 사용했지만, <code class="language-plaintext highlighter-rouge">:highlight</code>로 사용자 지정도 가능함.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">echon</code>은 개행 없이 출력합니다. <code class="language-plaintext highlighter-rouge">getchar()</code>로 입력을 따로 받아야 <code class="language-plaintext highlighter-rouge">input()</code> 없이 색상 출력이 가능합니다.</p>
+  </li>
+</ul>
+
+<h3 id="참고">참고:</h3>
+
+<ul>
+  <li>
+    <p>터미널 Vim에서는 색이 보이지 않거나 제한될 수 있습니다. GVim이나 색상 지원 터미널에서 확인하세요.</p>
+  </li>
+  <li>
+    <p>원하는 색감이 아니면 <code class="language-plaintext highlighter-rouge">:highlight Question</code> 등의 명령어로 색상 조정 가능합니다.</p>
+  </li>
+</ul>
+
+<p>필요하시면 사용자 정의 색상까지 설정하는 방법도 알려드릴게요.</p>
+
         
       </section>
 
@@ -287,7 +405,7 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-22T13:46:48+09:00">2025-07-22</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-22T13:53:35+09:00">2025-07-22</time></p>
 
       </footer>
 
@@ -296,10 +414,10 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
       
   <nav class="pagination">
     
-      <a href="/python/python-logging/" class="pagination--pager" title="파이썬 로그 시스템">Previous</a>
+      <a href="/vim/vim-open-file-undercursor/" class="pagination--pager" title="GVim 파일 탭 열기">Previous</a>
     
     
-      <a href="/vim/vim-open-file-under-cursor/" class="pagination--pager" title="GVim 파일 탭 열기">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
@@ -327,7 +445,7 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/vim/vim-open-file-under-cursor/" rel="permalink">GVim 파일 탭 열기
+        <a href="/vim/vim-open-file-undercursor/" rel="permalink">GVim 파일 탭 열기
 </a>
       
     </h2>
@@ -341,7 +459,7 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-07-22T13:53:35+09:00">2025-07-22</time>
+        <time datetime="2025-07-22T13:46:48+09:00">2025-07-22</time>
       </span>
     
 
