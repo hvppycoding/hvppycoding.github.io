@@ -1,4 +1,479 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-22T22:19:42+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">tmux 기본 조작법</title><link href="https://hvppycoding.github.io/linux/tmux-basic/" rel="alternate" type="text/html" title="tmux 기본 조작법" /><published>2025-07-22T22:19:37+09:00</published><updated>2025-07-22T22:19:37+09:00</updated><id>https://hvppycoding.github.io/linux/tmux-basic</id><content type="html" xml:base="https://hvppycoding.github.io/linux/tmux-basic/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-22T22:58:24+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Python dotenv 설명</title><link href="https://hvppycoding.github.io/python/python-dotenv/" rel="alternate" type="text/html" title="Python dotenv 설명" /><published>2025-07-22T22:58:21+09:00</published><updated>2025-07-22T22:58:21+09:00</updated><id>https://hvppycoding.github.io/python/python-dotenv</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-dotenv/"><![CDATA[<p class="chat--user">
+
+python dotenv가 뭐야?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">python-dotenv</code>는 <strong>환경 변수(environment variables)</strong>를 <code class="language-plaintext highlighter-rouge">.env</code> 파일에서 로드해서 Python
+애플리케이션에서 쉽게 사용할 수 있게 도와주는 라이브러리입니다. 주로 <strong>민감한 정보</strong>(예: API 키, 데이터베이스 비밀번호 등)를
+코드에 직접 쓰지 않고 <code class="language-plaintext highlighter-rouge">.env</code> 파일로 분리해서 관리할 때 사용합니다.</p>
+
+<h3 id="왜-쓰는가">왜 쓰는가?</h3>
+
+<ul>
+  <li>
+    <p><strong>보안</strong> : 비밀번호나 API 키를 코드에 하드코딩하지 않음.</p>
+  </li>
+  <li>
+    <p><strong>유지보수</strong> : 환경 설정을 코드와 분리해서 관리할 수 있음.</p>
+  </li>
+  <li>
+    <p><strong>환경 분리</strong> : 개발/테스트/운영 환경을 쉽게 전환할 수 있음.</p>
+  </li>
+</ul>
+
+<h3 id="예시">예시</h3>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">.env</code> 파일:
+    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">SECRET_KEY</span><span class="p">=</span><span class="s">abcd1234</span>
+<span class="py">DB_HOST</span><span class="p">=</span><span class="s">localhost</span>
+<span class="py">DB_PORT</span><span class="p">=</span><span class="s">5432</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Python 코드에서 사용:
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span> <span class="n">os</span>
+     
+<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># .env 파일을 불러옴
+</span>     
+<span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">SECRET_KEY</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_HOST</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">db_port</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_PORT</span><span class="sh">"</span><span class="p">)</span>
+     
+<span class="nf">print</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">db_host</span><span class="p">,</span> <span class="n">db_port</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="설치-방법">설치 방법</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>python-dotenv
+</code></pre></div></div>
+
+<p>필요 없다고 생각할 수 있지만, 프로젝트가 커지거나 배포 환경이 생기면 이게 거의 필수가 됩니다. <code class="language-plaintext highlighter-rouge">.env</code> 파일은 보통
+<code class="language-plaintext highlighter-rouge">.gitignore</code>에 추가해서 Git에 올리지 않습니다.</p>
+
+<p>궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.</p>
+
+<p class="chat--user">
+
+.env 파일은 어디 둬야해?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">.env</code> 파일은 <strong>프로젝트 루트 디렉토리</strong> , 즉 <strong><code class="language-plaintext highlighter-rouge">load_dotenv()</code>를 호출하는 스크립트와 같은 위치</strong>에 두는 게
+기본입니다. 예를 들어 구조가 이렇다면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_project/
+├── .env
+├── main.py
+├── utils/
+│   └── helper.py
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">main.py</code> 안에서 <code class="language-plaintext highlighter-rouge">load_dotenv()</code>를 호출하면 <code class="language-plaintext highlighter-rouge">.env</code>는 <code class="language-plaintext highlighter-rouge">my_project/.env</code>에 있으면 됩니다.<br />
+하지만 실제로는 <code class="language-plaintext highlighter-rouge">load_dotenv()</code>가 <strong>어디서 불러오는지를 명확히 알아야</strong> 제대로 작동합니다.</p>
+
+<hr />
+
+<h3 id="디폴트-동작">디폴트 동작</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">load_dotenv</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>아무 인자 없이 호출하면, <strong>현재 작업 디렉토리(working directory)</strong>에서 <code class="language-plaintext highlighter-rouge">.env</code> 파일을 찾습니다. 즉,
+<code class="language-plaintext highlighter-rouge">main.py</code>를 실행한 위치 기준입니다.</p>
+
+<p>예를 들어:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python main.py
+</code></pre></div></div>
+
+<p>이면 <code class="language-plaintext highlighter-rouge">.env</code>는 <code class="language-plaintext highlighter-rouge">main.py</code>가 있는 폴더에 있어야 합니다.</p>
+
+<hr />
+
+<h3 id="직접-경로-지정도-가능">직접 경로 지정도 가능</h3>
+
+<p>만약 <code class="language-plaintext highlighter-rouge">.env</code> 파일이 다른 위치에 있다면 이렇게 명시할 수 있습니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="nf">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="sh">"</span><span class="s">/absolute/or/relative/path/to/.env</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="정리하면">정리하면:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">.env</code>는 일반적으로 <code class="language-plaintext highlighter-rouge">main.py</code>와 같은 위치 (프로젝트 루트)에 둡니다.</p>
+  </li>
+  <li>
+    <p>서브모듈에서 <code class="language-plaintext highlighter-rouge">.env</code>를 쓰려면 경로를 정확히 지정하거나 <code class="language-plaintext highlighter-rouge">load_dotenv(find_dotenv())</code> 방식으로 찾게 만들 수 있습니다.</p>
+  </li>
+  <li>
+    <p>경로가 꼬이면 <code class="language-plaintext highlighter-rouge">load_dotenv()</code>는 조용히 실패하고, <code class="language-plaintext highlighter-rouge">os.getenv()</code>는 <code class="language-plaintext highlighter-rouge">None</code>을 반환합니다. 눈치채기 어렵기 때문에 경로를 확실히 하셔야 합니다.</p>
+  </li>
+</ul>
+
+<p>필요하면 경로 문제 디버깅하는 방법도 알려드릴게요.</p>
+
+<p class="chat--user">
+
+만약에 내가 개발한 프로젝트를 PyPI에 배포했다고 치자. 유저가 내 패키지를 쓸 때는 어떻게 해?
+
+</p>
+
+<p>좋은 질문입니다. <strong>PyPI에 배포된 패키지를 사용하는 유저 입장</strong> 에서는 <code class="language-plaintext highlighter-rouge">.env</code> 파일이 필요할 수도 있고, 아닐 수도 있습니다.
+이건 전적으로 <strong>패키지를 만든 당신이<code class="language-plaintext highlighter-rouge">.env</code>를 어떻게 썼는가에 달려 있습니다.</strong></p>
+
+<hr />
+
+<h2 id="-전제-env를-왜-썼는가">✅ 전제: <code class="language-plaintext highlighter-rouge">.env</code>를 왜 썼는가?</h2>
+
+<ol>
+  <li>
+    <p><strong>내부에서 비공개 설정값을 로드하려고<code class="language-plaintext highlighter-rouge">.env</code>를 썼다</strong> → 유저도 <code class="language-plaintext highlighter-rouge">.env</code>를 만들어야 함.</p>
+  </li>
+  <li>
+    <p><strong>테스트나 개발 편의용으로만<code class="language-plaintext highlighter-rouge">.env</code>를 썼다</strong> → PyPI 유저는 몰라도 됨.</p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="시나리오-1-유저도-env가-필요함">시나리오 1: 유저도 <code class="language-plaintext highlighter-rouge">.env</code>가 필요함</h2>
+
+<p>예: 당신이 만든 패키지가 환경변수로부터 API 키를 받도록 설계되어 있다면,</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">MY_API_KEY</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이건 결국 유저가 <code class="language-plaintext highlighter-rouge">.env</code>에 그 값을 넣거나, 직접 환경변수를 설정해야 한다는 뜻입니다.</p>
+
+<p>그럴 땐:</p>
+
+<ul>
+  <li>문서에 <strong>명확히</strong> 안내해야 합니다. 예:</li>
+</ul>
+
+<blockquote>
+  <p>Before using <code class="language-plaintext highlighter-rouge">yourpackage</code>, create a <code class="language-plaintext highlighter-rouge">.env</code> file in your working directory
+with the following:
+    ```
+    ini</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MY_API_KEY=your-api-key-here
+ 
+```
+</code></pre></div>  </div>
+</blockquote>
+
+<ul>
+  <li>아니면 예외를 던지거나, 기본값을 주는 방식을 고려해야 합니다.</li>
+</ul>
+
+<hr />
+
+<h2 id="시나리오-2-개발-편의를-위한-것-일반적-권장-방식">시나리오 2: 개발 편의를 위한 것 (일반적 권장 방식)</h2>
+
+<p>이건 진짜 중요합니다.</p>
+
+<h3 id="-권장-pypi-배포-시-env는-전혀-관여하지-않게-하세요">🔥 권장: PyPI 배포 시 <code class="language-plaintext highlighter-rouge">.env</code>는 <strong>전혀 관여하지 않게</strong> 하세요.</h3>
+
+<p><strong>왜?</strong></p>
+
+<ul>
+  <li>
+    <p>패키지는 <strong>라이브러리</strong> 입니다. 외부에서 환경 설정을 어떻게 하든 상관없이 동작해야 합니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">python-dotenv</code>는 개발자 본인이 쓰는 거지, 라이브러리 사용자에게 강요하면 안 됩니다.</p>
+  </li>
+</ul>
+
+<h3 id="해결책">해결책:</h3>
+
+<ul>
+  <li>
+    <p>라이브러리 내부에서는 절대 <code class="language-plaintext highlighter-rouge">load_dotenv()</code>를 쓰지 마세요.</p>
+  </li>
+  <li>
+    <p>대신, 유저가 환경변수를 직접 설정하도록 요구하거나, 함수 인자로 값을 받으세요.</p>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ❌ 이렇게 하면 안 됩니다 (라이브러리 내부에 hardcoded)
+</span><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="nf">load_dotenv</span><span class="p">()</span>
+
+<span class="c1"># ✅ 이렇게 하세요 (환경변수는 바깥에서 정해진다고 가정)
+</span><span class="kn">import</span> <span class="n">os</span>
+
+<span class="k">def</span> <span class="nf">connect</span><span class="p">():</span>
+    <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">MY_API_KEY</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span><span class="sh">"</span><span class="s">MY_API_KEY not set in environment</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>유저가 환경변수를 직접 설정할 수 있도록 문서에만 안내하면 됩니다.</p>
+
+<hr />
+
+<h2 id="정리">정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>케이스</th>
+      <th>유저가 <code class="language-plaintext highlighter-rouge">.env</code> 필요?</th>
+      <th>권장 방식</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>환경변수를 필수로 요구하는 경우</td>
+      <td>O</td>
+      <td>문서화 + 예외 처리</td>
+    </tr>
+    <tr>
+      <td>개발자 내부 설정용</td>
+      <td>X</td>
+      <td><code class="language-plaintext highlighter-rouge">.env</code>는 개발 중에만 쓰고 배포에선 제거</td>
+    </tr>
+    <tr>
+      <td>PyPI에 올리는 라이브러리</td>
+      <td>X</td>
+      <td><code class="language-plaintext highlighter-rouge">load_dotenv()</code>는 쓰지 마세요</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="결론">결론</h2>
+
+<blockquote>
+  <p><strong>라이브러리나 패키지를 PyPI에 배포할 땐,<code class="language-plaintext highlighter-rouge">.env</code>를 직접 다루지 마세요. 유저가 <code class="language-plaintext highlighter-rouge">.env</code>를 쓰든 말든, 그건 그들의
+자유입니다.</strong></p>
+</blockquote>
+
+<p>혹시 유저가 <code class="language-plaintext highlighter-rouge">.env</code>를 쓸 수 있게 옵션을 주고 싶다면, <code class="language-plaintext highlighter-rouge">yourpackage.load_env()</code> 같은 별도 함수로 분리해 두는 식이
+적절합니다.<br />
+필요하다면 그 패턴도 알려드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+그러면 dotenv는 패키지 배포를 위한 개발자용은 아닌가봐? 개인 프로젝트에서만 쓰는거야?
+
+</p>
+
+<p>아닙니다. <code class="language-plaintext highlighter-rouge">dotenv</code>는 <strong>"개인 프로젝트에서만 쓰는 용도"가 아니라</strong> , 정확히 말하면 <strong>"애플리케이션 레벨에서 실행 환경을
+분리할 때 쓰는 도구"</strong>입니다. 그래서 아래와 같이 상황에 따라 쓰거나 안 쓰는 게 맞습니다:</p>
+
+<hr />
+
+<h2 id="-dotenv가-유용한-경우--개발자용-또는-애플리케이션용">✅ <code class="language-plaintext highlighter-rouge">dotenv</code>가 유용한 경우 (= 개발자용 또는 애플리케이션용)</h2>
+
+<ol>
+  <li>
+    <p><strong>웹 애플리케이션</strong> (Flask, Django 등)</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">.env</code>에 비밀 키, DB 연결정보, API 토큰 등을 저장.</p>
+      </li>
+      <li>
+        <p>개발, 스테이징, 프로덕션 환경을 쉽게 전환.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">.env</code>는 <code class="language-plaintext highlighter-rouge">.gitignore</code>에 추가되어 Git에 안 올림.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>스크립트 실행형 프로젝트</strong></p>
+
+    <ul>
+      <li>
+        <p>예: <code class="language-plaintext highlighter-rouge">data_etl.py</code> 같은 파일이 외부 API에 접근할 때</p>
+      </li>
+      <li>
+        <p>API 키나 대상 URL을 <code class="language-plaintext highlighter-rouge">.env</code>에 넣어두면 코드 수정 없이 운용 가능.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Docker, CI/CD와 연동</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">.env</code>는 환경변수로 넘겨줄 때 쓰기 좋음.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">.env</code>를 기반으로 docker-compose 등이 환경변수 주입 가능.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-dotenv를-쓰지-말아야-할-경우">❌ <code class="language-plaintext highlighter-rouge">dotenv</code>를 쓰지 말아야 할 경우</h2>
+
+<ol>
+  <li>
+    <p><strong>라이브러리/패키지 제작 및 PyPI 배포</strong></p>
+
+    <ul>
+      <li>
+        <p>사용자가 어떤 환경에서 패키지를 실행할지 알 수 없음.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">dotenv</code>를 내부에 넣어버리면, 유저가 <code class="language-plaintext highlighter-rouge">.env</code>를 안 만들었을 때 조용히 <code class="language-plaintext highlighter-rouge">None</code>을 반환하고 이상한 버그가 생길 수 있음.</p>
+      </li>
+      <li>
+        <p>→ 대신 <code class="language-plaintext highlighter-rouge">os.getenv()</code>만 쓰고, <code class="language-plaintext highlighter-rouge">.env</code> 로딩 여부는 유저에게 맡기는 게 맞음.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>공식 Python 모듈 수준의 유틸 제작</strong></p>
+
+    <ul>
+      <li>표준적이고 일반적인 Python 코드 작성 시 <code class="language-plaintext highlighter-rouge">.env</code>는 관여하지 않는 게 원칙.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-다시-요약하자면">🔍 다시 요약하자면:</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>대상</th>
+      <th>dotenv 사용 여부</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>웹/CLI 애플리케이션</strong></td>
+      <td>✅ 사용함</td>
+      <td>실행 환경 분리, 민감정보 숨김</td>
+    </tr>
+    <tr>
+      <td><strong>개인 프로젝트</strong></td>
+      <td>✅ 당연히 사용 가능</td>
+      <td>개발 편의성, 키 관리</td>
+    </tr>
+    <tr>
+      <td><strong>PyPI용 라이브러리</strong></td>
+      <td>❌ 쓰지 마세요</td>
+      <td>환경 설정 책임은 유저에게 있음</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h3 id="참고로">참고로,</h3>
+
+<p>Node.js 세계에서는 <code class="language-plaintext highlighter-rouge">dotenv</code>가 거의 표준처럼 쓰이는데, 그건 Node 애플리케이션은 대부분 실행 단위(app)로 쓰이기
+때문입니다. Python도 마찬가지입니다. 실행형 앱에는 유용하지만, 재사용 가능한 패키지에는 안 어울립니다.</p>
+
+<p>의심이 드는 상황이나 예외 케이스가 있다면 말씀 주세요. 상황 따라 판단 달라질 수 있습니다.</p>
+
+<p class="chat--user">
+
+패키지는 아니고 애플리케이션 개발용이다? 라고 이해하면 될까
+
+</p>
+
+<p>네, <strong>정확하게 그렇게 이해하시는 게 맞습니다.</strong></p>
+
+<hr />
+
+<h2 id="-요약해서-말하면">✅ 요약해서 말하면:</h2>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">python-dotenv</code>는 <strong>라이브러리나 패키지를 만들기 위한 도구가 아니라</strong> ,<br />
+ <strong>실행되는 애플리케이션을 개발하고 실행할 때 쓰는 도구</strong> 입니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-다시-구분하자면">🔧 다시 구분하자면:</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>용도</th>
+      <th><code class="language-plaintext highlighter-rouge">dotenv</code> 사용 여부</th>
+      <th>비고</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>웹 서버, CLI, 배치 앱 등 실행형 애플리케이션</strong></td>
+      <td>✅ 적극 권장</td>
+      <td><code class="language-plaintext highlighter-rouge">.env</code>로 설정 관리, 민감정보 분리</td>
+    </tr>
+    <tr>
+      <td><strong>라이브러리 / PyPI 패키지</strong></td>
+      <td>❌ 안 쓰는 게 맞음</td>
+      <td>환경 구성은 사용자에게 맡겨야 함</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-예-애플리케이션에서의-사용">✅ 예: 애플리케이션에서의 사용</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_app/
+├── .env                ← 여기에 설정값들
+├── app.py              ← 실행 진입점
+└── modules/
+    └── core.py
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app.py
+</span><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># 실행 시점에서 한 번만 호출
+</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">API_KEY</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이건 <code class="language-plaintext highlighter-rouge">my_app</code>이라는 <strong>애플리케이션을 실행</strong> 하는 입장이므로 <code class="language-plaintext highlighter-rouge">.env</code> 사용이 매우 적절합니다.</p>
+
+<hr />
+
+<h2 id="-예-pypi-패키지로-배포되는-코드">❌ 예: PyPI 패키지로 배포되는 코드</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># wrong_package/init.py
+</span><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>  <span class="c1"># ❌ 하지 말아야 함
+</span><span class="nf">load_dotenv</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>이러면 라이브러리를 쓰는 유저 입장에서 <strong>자기 코드도 안 썼는데 이상하게<code class="language-plaintext highlighter-rouge">.env</code>를 요구</strong>하는 상황이 발생할 수 있습니다.<br />
+=&gt; 굉장히 안 좋은 사용자 경험.</p>
+
+<hr />
+
+<h2 id="-결론">🔚 결론</h2>
+
+<blockquote>
+  <p>"dotenv는 패키지 개발용이 아니다. 실행되는 애플리케이션 개발용이다."<br />
+ 라는 인식은 <strong>매우 정확하고 실무적으로도 옳습니다.</strong></p>
+</blockquote>
+
+<p>원하시면 실제 구조 예시나, <code class="language-plaintext highlighter-rouge">.env</code>를 사용한 애플리케이션 구조 샘플도 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">tmux 기본 조작법</title><link href="https://hvppycoding.github.io/linux/tmux-basic/" rel="alternate" type="text/html" title="tmux 기본 조작법" /><published>2025-07-22T22:19:37+09:00</published><updated>2025-07-22T22:19:37+09:00</updated><id>https://hvppycoding.github.io/linux/tmux-basic</id><content type="html" xml:base="https://hvppycoding.github.io/linux/tmux-basic/"><![CDATA[<p class="chat--user">
 
 tmux 기본 조작법 알려줘
 
@@ -4925,60 +5400,4 @@ python에서 subprocess run 할 때 check=True는 어떤 옵션이야?
 <hr />
 
 <p>결론적으로, <code class="language-plaintext highlighter-rouge">check=True</code>는 <strong>명령어 실패를 예외로 다루고 싶은가</strong> 에 대한 선택입니다. 코드의 신뢰성을 높이고 싶다면 사용하는
-것이 좋습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Python dotenv 설명</title><link href="https://hvppycoding.github.io/python/python-dotenv/" rel="alternate" type="text/html" title="Python dotenv 설명" /><published>2025-07-20T02:24:48+09:00</published><updated>2025-07-20T02:24:48+09:00</updated><id>https://hvppycoding.github.io/python/python-dotenv</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-dotenv/"><![CDATA[<p class="chat--user">
-
-python dotenv가 뭐야?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">python-dotenv</code>는 <strong>환경 변수(environment variables)</strong>를 <code class="language-plaintext highlighter-rouge">.env</code> 파일에서 로드해서 Python
-애플리케이션에서 쉽게 사용할 수 있게 도와주는 라이브러리입니다. 주로 <strong>민감한 정보</strong>(예: API 키, 데이터베이스 비밀번호 등)를
-코드에 직접 쓰지 않고 <code class="language-plaintext highlighter-rouge">.env</code> 파일로 분리해서 관리할 때 사용합니다.</p>
-
-<h3 id="왜-쓰는가">왜 쓰는가?</h3>
-
-<ul>
-  <li>
-    <p><strong>보안</strong> : 비밀번호나 API 키를 코드에 하드코딩하지 않음.</p>
-  </li>
-  <li>
-    <p><strong>유지보수</strong> : 환경 설정을 코드와 분리해서 관리할 수 있음.</p>
-  </li>
-  <li>
-    <p><strong>환경 분리</strong> : 개발/테스트/운영 환경을 쉽게 전환할 수 있음.</p>
-  </li>
-</ul>
-
-<h3 id="예시">예시</h3>
-
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">.env</code> 파일:
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">SECRET_KEY</span><span class="p">=</span><span class="s">abcd1234</span>
-<span class="py">DB_HOST</span><span class="p">=</span><span class="s">localhost</span>
-<span class="py">DB_PORT</span><span class="p">=</span><span class="s">5432</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Python 코드에서 사용:
-    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">import</span> <span class="n">os</span>
-     
-<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># .env 파일을 불러옴
-</span>     
-<span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">SECRET_KEY</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_HOST</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_port</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_PORT</span><span class="sh">"</span><span class="p">)</span>
-     
-<span class="nf">print</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">db_host</span><span class="p">,</span> <span class="n">db_port</span><span class="p">)</span>
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<h3 id="설치-방법">설치 방법</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>python-dotenv
-</code></pre></div></div>
-
-<p>필요 없다고 생각할 수 있지만, 프로젝트가 커지거나 배포 환경이 생기면 이게 거의 필수가 됩니다. <code class="language-plaintext highlighter-rouge">.env</code> 파일은 보통
-<code class="language-plaintext highlighter-rouge">.gitignore</code>에 추가해서 Git에 올리지 않습니다.</p>
-
-<p>궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+것이 좋습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
