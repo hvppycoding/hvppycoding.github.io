@@ -1,4 +1,276 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-22T13:53:38+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-22T13:53:35+09:00</published><updated>2025-07-22T13:53:35+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-under-cursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-22T17:09:19+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">tmux 기본 조작법</title><link href="https://hvppycoding.github.io/linux/tmux-basic/" rel="alternate" type="text/html" title="tmux 기본 조작법" /><published>2025-07-22T17:09:16+09:00</published><updated>2025-07-22T17:09:16+09:00</updated><id>https://hvppycoding.github.io/linux/tmux-basic</id><content type="html" xml:base="https://hvppycoding.github.io/linux/tmux-basic/"><![CDATA[<p class="chat--user">
+
+tmux 기본 조작법 알려줘
+
+</p>
+
+<p>tmux는 터미널 멀티플렉서로, 하나의 터미널 창에서 여러 세션, 창, 패널을 관리할 수 있게 해줍니다. 아래는 <strong>기본 조작법</strong> 을
+정리한 것입니다.</p>
+
+<hr />
+
+<h3 id="-1-tmux-시작--종료">✅ 1. tmux 시작 / 종료</h3>
+
+<ul>
+  <li><strong>세션 시작</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>또는 세션 이름 지정</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```bash
+tmux new -s mysession
+```
+</code></pre></div></div>
+
+<ul>
+  <li><strong>세션 종료</strong><br />
+패널 내에서 <code class="language-plaintext highlighter-rouge">exit</code> 입력하거나 <code class="language-plaintext highlighter-rouge">Ctrl-b</code> 누른 뒤 <code class="language-plaintext highlighter-rouge">:</code> 입력하고 <code class="language-plaintext highlighter-rouge">kill-session</code> 실행</li>
+</ul>
+
+<hr />
+
+<h3 id="-2-기본-prefix-키">✅ 2. 기본 prefix 키</h3>
+
+<ul>
+  <li><strong>기본 prefix (명령 대기 상태 진입)</strong> : <code class="language-plaintext highlighter-rouge">Ctrl-b</code><br />
+이걸 누르고 나서 단축키를 입력해야 합니다. 예: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">c</code></li>
+</ul>
+
+<hr />
+
+<h3 id="-3-세션--창--패널-관련-주요-단축키">✅ 3. 세션 / 창 / 패널 관련 주요 단축키</h3>
+
+<h4 id="-세션session">🎯 세션(Session)</h4>
+
+<ul>
+  <li>세션 목록 보기:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux <span class="nb">ls</span>
+</code></pre></div>    </div>
+  </li>
+  <li>세션에 attach:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux attach <span class="nt">-t</span> 세션이름
+</code></pre></div>    </div>
+  </li>
+  <li>세션 종료:<br />
+패널에서 <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code> → <code class="language-plaintext highlighter-rouge">kill-session</code></li>
+</ul>
+
+<h4 id="-창window">🪟 창(Window)</h4>
+
+<ul>
+  <li>
+    <p>새 창 생성: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">c</code></p>
+  </li>
+  <li>
+    <p>창 간 이동: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">n</code> (next), <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">p</code> (previous)</p>
+  </li>
+  <li>
+    <p>창 목록: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">w</code></p>
+  </li>
+  <li>
+    <p>창 이름 변경: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">,</code></p>
+  </li>
+  <li>
+    <p>창 닫기: <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-d</code></p>
+  </li>
+</ul>
+
+<h4 id="-패널pane">🔲 패널(Pane)</h4>
+
+<ul>
+  <li>
+    <p>패널 수직 분할: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">"</code></p>
+  </li>
+  <li>
+    <p>패널 수평 분할: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">%</code></p>
+  </li>
+  <li>
+    <p>패널 간 이동: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → 방향키 (<code class="language-plaintext highlighter-rouge">←</code>, <code class="language-plaintext highlighter-rouge">→</code>, <code class="language-plaintext highlighter-rouge">↑</code>, <code class="language-plaintext highlighter-rouge">↓</code>)</p>
+  </li>
+  <li>
+    <p>패널 종료: <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-d</code></p>
+  </li>
+  <li>
+    <p>패널 크기 조절: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code> → <code class="language-plaintext highlighter-rouge">resize-pane -D</code> (아래로 줄이기), <code class="language-plaintext highlighter-rouge">-U</code>, <code class="language-plaintext highlighter-rouge">-L</code>, <code class="language-plaintext highlighter-rouge">-R</code></p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-4-기타-유용한-명령">✅ 4. 기타 유용한 명령</h3>
+
+<ul>
+  <li>
+    <p>명령 모드 진입: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code><br />
+예: <code class="language-plaintext highlighter-rouge">rename-session</code>, <code class="language-plaintext highlighter-rouge">kill-pane</code>, <code class="language-plaintext highlighter-rouge">list-keys</code> 등 입력 가능</p>
+  </li>
+  <li>
+    <p>복사 모드 진입 (스크롤, 복사 등): <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">[</code><br />
+→ 화살표 키로 이동, 스페이스로 복사 시작, Enter로 복사 완료</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-5-세션-유지하고-나가기">✅ 5. 세션 유지하고 나가기</h3>
+
+<ul>
+  <li><strong>detach</strong> : <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">d</code><br />
+세션은 백그라운드에 남고 나중에 다시 attach 가능</li>
+</ul>
+
+<hr />
+
+<p>필요하면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code> 설정이나 키 리매핑에 대해서도 도와드릴 수 있습니다. 더 고급 기능이 필요하신가요?</p>
+
+<p class="chat--user">
+
+Ctrl+d 누르니 Use "logout" to logout 이라고 떠
+
+</p>
+
+<p>네, 그 메시지는 현재 사용 중인 쉘에서 <code class="language-plaintext highlighter-rouge">exit</code>이나 <code class="language-plaintext highlighter-rouge">logout</code> 명령어로 세션을 종료하라는 의미입니다. 자세히 설명드리면 다음과
+같습니다.</p>
+
+<hr />
+
+<h2 id="-문제-원인">🔍 문제 원인</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Ctrl-d</code>는 일반적으로 <strong>EOF (End Of File)</strong> 신호를 보내서 셸을 종료시키는 역할을 합니다.</p>
+  </li>
+  <li>
+    <p>그런데 지금 그 명령이 작동하지 않고 <code class="language-plaintext highlighter-rouge">Use "logout" to logout</code>이라고 나오는 이유는:</p>
+
+    <ul>
+      <li>
+        <p>사용 중인 셸이 <strong><code class="language-plaintext highlighter-rouge">login shell</code></strong>이기 때문입니다.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">login shell</code>에서는 보통 <code class="language-plaintext highlighter-rouge">exit</code>이나 <code class="language-plaintext highlighter-rouge">logout</code> 명시적 명령어를 요구합니다.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>👉 즉, 단순히 <code class="language-plaintext highlighter-rouge">tmux</code>의 문제가 아니라 <strong>쉘 자체 설정</strong> 문제입니다.</p>
+
+<hr />
+
+<h2 id="-해결-방법">🛠 해결 방법</h2>
+
+<ol>
+  <li>
+    <p><strong>그냥<code class="language-plaintext highlighter-rouge">logout</code> 명령 입력</strong><br />
+해당 패널에서 다음 명령을 입력하세요:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">logout</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>또는</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ```bash
+ exit
+ ```
+</code></pre></div></div>
+
+<p>둘 중 하나는 작동할 겁니다.</p>
+
+<ol>
+  <li><strong>login shell 아닌 셸에서 tmux 실행하도록 설정 변경 (선택사항)</strong><br />
+<code class="language-plaintext highlighter-rouge">.bash_profile</code>이나 <code class="language-plaintext highlighter-rouge">.zprofile</code> 같은 데서 강제로 login shell로 만드는 설정이 있을 수도 있습니다. 그것을
+수정할 수도 있지만, 보통은 굳이 그럴 필요 없습니다.</li>
+</ol>
+
+<hr />
+
+<h2 id="-확인용">🧪 확인용</h2>
+
+<p>해당 패널이 login shell인지 확인해보려면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">shopt</span> <span class="nt">-q</span> login_shell <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"login shell"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"not login shell"</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>요약: <code class="language-plaintext highlighter-rouge">Ctrl-d</code>가 안 먹히는 건 <code class="language-plaintext highlighter-rouge">login shell</code>이라서 그렇고, <code class="language-plaintext highlighter-rouge">logout</code> 또는 <code class="language-plaintext highlighter-rouge">exit</code> 명령을 직접 입력하시면
+됩니다. 이게 귀찮으시면 <code class="language-plaintext highlighter-rouge">.bashrc</code>나 <code class="language-plaintext highlighter-rouge">.zshrc</code>를 조금 손보는 방법도 있습니다. 그게 필요하시면 말씀해 주세요.</p>
+
+<p class="chat--user">
+
+tmux 창닫기가 하고 싶어
+
+</p>
+
+<p>tmux에서 "창 닫기"는 정확히 말하면 <strong>현재 활성화된 창(Window)을 종료</strong> 하는 것을 말합니다. 방법은 아래와 같습니다.</p>
+
+<hr />
+
+<h2 id="-tmux-창-닫는-방법-현재-창-종료">✅ tmux 창 닫는 방법 (현재 창 종료)</h2>
+
+<h3 id="1-창-안에서exit-입력">1. <strong>창 안에서<code class="language-plaintext highlighter-rouge">exit</code> 입력</strong></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">exit</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>가장 확실한 방법입니다.</p>
+  </li>
+  <li>
+    <p>해당 창 안의 모든 패널이 종료되면 창 자체가 닫힙니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="2-단축키로-창-닫기">2. <strong>단축키로 창 닫기</strong></h3>
+
+<p><strong>단축키 직접 존재하진 않지만</strong> , 이렇게 할 수 있습니다:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">&amp;</code></li>
+</ul>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Kill window</code> 물어보면 <code class="language-plaintext highlighter-rouge">y</code> 입력</p>
+</blockquote>
+
+<p>이게 창 전체를 강제로 닫는 tmux 기본 키입니다.</p>
+
+<hr />
+
+<h3 id="3-명령-모드에서-닫기">3. <strong>명령 모드에서 닫기</strong></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ctrl-b :
+kill-window
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="️주의할-점">❗️주의할 점</h2>
+
+<ul>
+  <li>
+    <p>창(Window)은 여러 패널(Pane)을 포함할 수 있습니다.</p>
+  </li>
+  <li>
+    <p>창을 닫으면 그 안의 모든 패널도 함께 사라집니다.</p>
+  </li>
+  <li>
+    <p>만약 여러 창을 돌리는 중이고 하나만 닫고 싶을 때, 꼭 확인하세요.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면 특정 번호의 창을 닫거나, 여러 창을 자동으로 정리하는 것도 도와드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-22T13:53:35+09:00</published><updated>2025-07-22T13:53:35+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-under-cursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/"><![CDATA[<p class="chat--user">
 
 gvim 설정에서 cursor 밑에 있는 파일을 새 탭으로 여는 함수 작성해줘. 이 때 파일 경로가 상대경로일 경우 현재 열려있는 파일로부터
 상대 경로로 찾아야 해. 그리고 만약 파일이 없으면 input() 으로 새로 해당 파일을 만들지 질문하고 y로 답할 경우 만들고 열어줘.
@@ -4508,60 +4780,4 @@ python에서 subprocess run 할 때 check=True는 어떤 옵션이야?
 <hr />
 
 <p>결론적으로, <code class="language-plaintext highlighter-rouge">check=True</code>는 <strong>명령어 실패를 예외로 다루고 싶은가</strong> 에 대한 선택입니다. 코드의 신뢰성을 높이고 싶다면 사용하는
-것이 좋습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Python dotenv 설명</title><link href="https://hvppycoding.github.io/python/python-dotenv/" rel="alternate" type="text/html" title="Python dotenv 설명" /><published>2025-07-20T02:24:48+09:00</published><updated>2025-07-20T02:24:48+09:00</updated><id>https://hvppycoding.github.io/python/python-dotenv</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-dotenv/"><![CDATA[<p class="chat--user">
-
-python dotenv가 뭐야?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">python-dotenv</code>는 <strong>환경 변수(environment variables)</strong>를 <code class="language-plaintext highlighter-rouge">.env</code> 파일에서 로드해서 Python
-애플리케이션에서 쉽게 사용할 수 있게 도와주는 라이브러리입니다. 주로 <strong>민감한 정보</strong>(예: API 키, 데이터베이스 비밀번호 등)를
-코드에 직접 쓰지 않고 <code class="language-plaintext highlighter-rouge">.env</code> 파일로 분리해서 관리할 때 사용합니다.</p>
-
-<h3 id="왜-쓰는가">왜 쓰는가?</h3>
-
-<ul>
-  <li>
-    <p><strong>보안</strong> : 비밀번호나 API 키를 코드에 하드코딩하지 않음.</p>
-  </li>
-  <li>
-    <p><strong>유지보수</strong> : 환경 설정을 코드와 분리해서 관리할 수 있음.</p>
-  </li>
-  <li>
-    <p><strong>환경 분리</strong> : 개발/테스트/운영 환경을 쉽게 전환할 수 있음.</p>
-  </li>
-</ul>
-
-<h3 id="예시">예시</h3>
-
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">.env</code> 파일:
-    <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">SECRET_KEY</span><span class="p">=</span><span class="s">abcd1234</span>
-<span class="py">DB_HOST</span><span class="p">=</span><span class="s">localhost</span>
-<span class="py">DB_PORT</span><span class="p">=</span><span class="s">5432</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Python 코드에서 사용:
-    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">import</span> <span class="n">os</span>
-     
-<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># .env 파일을 불러옴
-</span>     
-<span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">SECRET_KEY</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_HOST</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_port</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_PORT</span><span class="sh">"</span><span class="p">)</span>
-     
-<span class="nf">print</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">db_host</span><span class="p">,</span> <span class="n">db_port</span><span class="p">)</span>
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<h3 id="설치-방법">설치 방법</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>python-dotenv
-</code></pre></div></div>
-
-<p>필요 없다고 생각할 수 있지만, 프로젝트가 커지거나 배포 환경이 생기면 이게 거의 필수가 됩니다. <code class="language-plaintext highlighter-rouge">.env</code> 파일은 보통
-<code class="language-plaintext highlighter-rouge">.gitignore</code>에 추가해서 Git에 올리지 않습니다.</p>
-
-<p>궁금한 점이나 의심가는 부분 있으면 말씀해 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+것이 좋습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
