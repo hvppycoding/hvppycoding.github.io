@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-23T09:47:58+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-23T09:47:55+09:00</published><updated>2025-07-23T09:47:55+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-under-cursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-23T09:54:45+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-23T09:54:41+09:00</published><updated>2025-07-23T09:54:41+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-under-cursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/"><![CDATA[<p class="chat--user">
 
 gvim 설정에서 cursor 밑에 있는 파일을 새 탭으로 여는 함수 작성해줘. 이 때 파일 경로가 상대경로일 경우 현재 열려있는 파일로부터
 상대 경로로 찾아야 해. 그리고 만약 파일이 없으면 input() 으로 새로 해당 파일을 만들지 질문하고 y로 답할 경우 만들고 열어줘.
@@ -261,7 +261,107 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
 </ul>
 
 <p>이제 절대 경로와 상대 경로 모두 정확히 처리됩니다.<br />
-필요하면 하이라이트 색상도 커스터마이즈해서 시각적으로 더 분명하게 만들 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="vim" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Python dotenv 설명</title><link href="https://hvppycoding.github.io/python/python-dotenv/" rel="alternate" type="text/html" title="Python dotenv 설명" /><published>2025-07-22T22:58:21+09:00</published><updated>2025-07-22T22:58:21+09:00</updated><id>https://hvppycoding.github.io/python/python-dotenv</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-dotenv/"><![CDATA[<p class="chat--user">
+필요하면 하이라이트 색상도 커스터마이즈해서 시각적으로 더 분명하게 만들 수 있습니다.</p>
+
+<p class="chat--user">
+
+절대 경로 여부 판단 원리가 뭐야? "./abcd"라고하면 상대경로로 인식해야할 것 같은데 절대 경로로 인식하는 것 같음
+
+</p>
+
+<p>좋은 지적입니다. Vim의 <code class="language-plaintext highlighter-rouge">fnamemodify({fname}, ':p')</code>는 <strong>상대 경로를 절대 경로로 변환</strong> 해주기 때문에, 아래와
+같은 판단:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+if fnamemodify(l:filename, ':p') ==# l:filename
+</code></pre></div></div>
+
+<p>은 사실 <strong>절대 경로 판별로는 부정확합니다</strong>. 예를 들어:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"./abcd"</code> → <code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p')</code> 결과는 <code class="language-plaintext highlighter-rouge">/현재경로/abcd</code> → 절대 경로처럼 보임</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"abcd"</code> → 마찬가지로 절대 경로로 변환됨</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"/etc/passwd"</code> → 애초에 절대 경로임</p>
+  </li>
+</ul>
+
+<p>결국 위 조건은 <code class="language-plaintext highlighter-rouge">"./abcd"</code> 같은 <strong>상대 경로도 절대 경로로 인식해버리는</strong> 문제가 있습니다.</p>
+
+<hr />
+
+<h3 id="정확한-절대-경로-판단-방법은">정확한 절대 경로 판단 방법은?</h3>
+
+<p>Vim에서는 <strong>파일 이름이 루트(<code class="language-plaintext highlighter-rouge">/</code>)로 시작하는지</strong> 직접 판단하는 것이 더 정확합니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+if l:filename =~ '^/'
+  " 절대 경로
+else
+  " 상대 경로
+endif
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="수정된-코드-절대-경로-판별-정확하게-반영">수정된 코드 (절대 경로 판별 정확하게 반영):</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 절대 경로 여부: 슬래시로 시작하면 절대 경로
+  if l:filename =~ '^/'
+    let l:fullpath = resolve(l:filename)
+  else
+    let l:current_dir = expand('%:p:h')
+    let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+  endif
+
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="결론">결론:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p') == ...</code>는 절대 경로 판별용으로 <strong>틀림</strong>.</p>
+  </li>
+  <li>
+    <p>파일 경로가 <code class="language-plaintext highlighter-rouge">/</code>로 시작하는지를 직접 정규식(<code class="language-plaintext highlighter-rouge">^/</code>)으로 검사하는 게 <strong>정확하고 신뢰할 수 있는 방법</strong> 입니다.</p>
+  </li>
+</ul>
+
+<p>의심을 잘 하셨습니다. 이 부분에서 실수하는 경우 많습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="vim" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Python dotenv 설명</title><link href="https://hvppycoding.github.io/python/python-dotenv/" rel="alternate" type="text/html" title="Python dotenv 설명" /><published>2025-07-22T22:58:21+09:00</published><updated>2025-07-22T22:58:21+09:00</updated><id>https://hvppycoding.github.io/python/python-dotenv</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-dotenv/"><![CDATA[<p class="chat--user">
 
 python dotenv가 뭐야?
 

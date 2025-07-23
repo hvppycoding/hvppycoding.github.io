@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-07-23T09:47:55+09:00">
+  <meta property="article:published_time" content="2025-07-23T09:54:41+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="GVim 파일 탭 열기">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-07-23T09:47:55+09:00">
+    <meta itemprop="datePublished" content="2025-07-23T09:54:41+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-07-23T09:47:55+09:00">2025-07-23</time>
+        <time datetime="2025-07-23T09:54:41+09:00">2025-07-23</time>
       </span>
     
 
@@ -452,6 +452,106 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
 <p>이제 절대 경로와 상대 경로 모두 정확히 처리됩니다.<br />
 필요하면 하이라이트 색상도 커스터마이즈해서 시각적으로 더 분명하게 만들 수 있습니다.</p>
 
+<p class="chat--user">
+
+절대 경로 여부 판단 원리가 뭐야? "./abcd"라고하면 상대경로로 인식해야할 것 같은데 절대 경로로 인식하는 것 같음
+
+</p>
+
+<p>좋은 지적입니다. Vim의 <code class="language-plaintext highlighter-rouge">fnamemodify({fname}, ':p')</code>는 <strong>상대 경로를 절대 경로로 변환</strong> 해주기 때문에, 아래와
+같은 판단:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+if fnamemodify(l:filename, ':p') ==# l:filename
+</code></pre></div></div>
+
+<p>은 사실 <strong>절대 경로 판별로는 부정확합니다</strong>. 예를 들어:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"./abcd"</code> → <code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p')</code> 결과는 <code class="language-plaintext highlighter-rouge">/현재경로/abcd</code> → 절대 경로처럼 보임</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"abcd"</code> → 마찬가지로 절대 경로로 변환됨</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"/etc/passwd"</code> → 애초에 절대 경로임</p>
+  </li>
+</ul>
+
+<p>결국 위 조건은 <code class="language-plaintext highlighter-rouge">"./abcd"</code> 같은 <strong>상대 경로도 절대 경로로 인식해버리는</strong> 문제가 있습니다.</p>
+
+<hr />
+
+<h3 id="정확한-절대-경로-판단-방법은">정확한 절대 경로 판단 방법은?</h3>
+
+<p>Vim에서는 <strong>파일 이름이 루트(<code class="language-plaintext highlighter-rouge">/</code>)로 시작하는지</strong> 직접 판단하는 것이 더 정확합니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+if l:filename =~ '^/'
+  " 절대 경로
+else
+  " 상대 경로
+endif
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="수정된-코드-절대-경로-판별-정확하게-반영">수정된 코드 (절대 경로 판별 정확하게 반영):</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 절대 경로 여부: 슬래시로 시작하면 절대 경로
+  if l:filename =~ '^/'
+    let l:fullpath = resolve(l:filename)
+  else
+    let l:current_dir = expand('%:p:h')
+    let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+  endif
+
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="결론">결론:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p') == ...</code>는 절대 경로 판별용으로 <strong>틀림</strong>.</p>
+  </li>
+  <li>
+    <p>파일 경로가 <code class="language-plaintext highlighter-rouge">/</code>로 시작하는지를 직접 정규식(<code class="language-plaintext highlighter-rouge">^/</code>)으로 검사하는 게 <strong>정확하고 신뢰할 수 있는 방법</strong> 입니다.</p>
+  </li>
+</ul>
+
+<p>의심을 잘 하셨습니다. 이 부분에서 실수하는 경우 많습니다.</p>
+
         
       </section>
 
@@ -477,7 +577,7 @@ nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-23T09:47:55+09:00">2025-07-23</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-23T09:54:41+09:00">2025-07-23</time></p>
 
       </footer>
 
