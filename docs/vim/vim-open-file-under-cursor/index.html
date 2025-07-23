@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-07-22T13:53:35+09:00">
+  <meta property="article:published_time" content="2025-07-23T09:47:55+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="GVim 파일 탭 열기">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-07-22T13:53:35+09:00">
+    <meta itemprop="datePublished" content="2025-07-23T09:47:55+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-07-22T13:53:35+09:00">2025-07-22</time>
+        <time datetime="2025-07-23T09:47:55+09:00">2025-07-23</time>
       </span>
     
 
@@ -380,6 +380,78 @@ endfunction
 
 <p>필요하시면 사용자 정의 색상까지 설정하는 방법도 알려드릴게요.</p>
 
+<p class="chat--user">
+
+파일 경로가 /로 시작하면 절대 경로니깐 상대 경로로 찾지 말아줘
+
+</p>
+
+<p>네, 그게 맞습니다. 파일 경로가 <code class="language-plaintext highlighter-rouge">/</code>로 시작하면 이미 절대 경로이므로, 상대 경로 계산을 피해야 합니다. 이를 반영한 전체 코드를 아래에
+정리해 드리겠습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 절대 경로 여부 확인
+  if fnamemodify(l:filename, ':p') ==# l:filename
+    let l:fullpath = resolve(l:filename)
+  else
+    let l:current_dir = expand('%:p:h')
+    let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+  endif
+
+  " 파일 존재 여부 확인
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 강조된 메시지 출력 (GVim 또는 컬러 터미널에서 유효)
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+
+" 키 매핑 예시
+nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="핵심-변경-사항">핵심 변경 사항:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p') ==# ...</code> 비교로 절대 경로 여부를 판단함.</p>
+  </li>
+  <li>
+    <p>절대 경로일 경우 상대 경로 붙이지 않고 그대로 <code class="language-plaintext highlighter-rouge">resolve()</code>만 적용.</p>
+  </li>
+  <li>
+    <p>상대 경로일 경우에만 현재 버퍼 기준으로 조합.</p>
+  </li>
+  <li>
+    <p>질문 메시지는 하이라이트(<code class="language-plaintext highlighter-rouge">echohl</code>)로 컬러 출력하며 <code class="language-plaintext highlighter-rouge">getchar()</code>로 직접 입력 받음.</p>
+  </li>
+</ul>
+
+<p>이제 절대 경로와 상대 경로 모두 정확히 처리됩니다.<br />
+필요하면 하이라이트 색상도 커스터마이즈해서 시각적으로 더 분명하게 만들 수 있습니다.</p>
+
         
       </section>
 
@@ -405,7 +477,7 @@ endfunction
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-22T13:53:35+09:00">2025-07-22</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-23T09:47:55+09:00">2025-07-23</time></p>
 
       </footer>
 
@@ -414,10 +486,10 @@ endfunction
       
   <nav class="pagination">
     
-      <a href="/python/python-logging/" class="pagination--pager" title="파이썬 로그 시스템">Previous</a>
+      <a href="/python/python-dotenv/" class="pagination--pager" title="Python dotenv 설명">Previous</a>
     
     
-      <a href="/linux/tmux-basic/" class="pagination--pager" title="tmux 기본 조작법">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
@@ -519,6 +591,7 @@ endfunction
     
       
       
+      
 
 
 
@@ -542,47 +615,6 @@ endfunction
         -->
         
         <time datetime="2025-07-21T23:06:43+09:00">2025-07-21</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/python/python-exception-debug/" rel="permalink">예외 처리 디버깅 방법
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-07-21T15:12:37+09:00">2025-07-21</time>
       </span>
     
 
