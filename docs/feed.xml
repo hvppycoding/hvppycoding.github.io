@@ -1,4 +1,258 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-24T10:20:23+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">MATE Terminal 색상 반영 문제</title><link href="https://hvppycoding.github.io/linux/ls-colors/" rel="alternate" type="text/html" title="MATE Terminal 색상 반영 문제" /><published>2025-07-24T10:20:17+09:00</published><updated>2025-07-24T10:20:17+09:00</updated><id>https://hvppycoding.github.io/linux/ls-colors</id><content type="html" xml:base="https://hvppycoding.github.io/linux/ls-colors/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-24T12:59:41+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Verilog 난독화 코드 작성</title><link href="https://hvppycoding.github.io/verilog/verilog-anonymizer/" rel="alternate" type="text/html" title="Verilog 난독화 코드 작성" /><published>2025-07-24T12:59:37+09:00</published><updated>2025-07-24T12:59:37+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-anonymizer</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-anonymizer/"><![CDATA[<p class="chat--user">
+
+너는 pyverilog의 전문가야. 나를 도와줘. 나는 제품 관련 verilog 파일을 외부에 보내야해. 그런데 모듈명/인스턴스명/input
+포트명, output 포트명, inout 포트명, net 명 등에 제품 정보가 들어가는걸 원치 않아. 그래서 변경하고자 해. module은
+등장 순서대로 MODULE01, MODULE02 이런 식으로 네이밍 하고 input/output/inout 포트명도 in0, in1 이런
+식으로 모두 바꾸는 코드를 작성해줘.
+
+</p>
+
+<p>좋습니다. Verilog 파일에서 민감한 정보를 제거하고 난독화된 형태로 바꾸기 위해서는 다음과 같은 작업이 필요합니다:</p>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">module</code> 이름을 등장 순서대로 <code class="language-plaintext highlighter-rouge">MODULE01</code>, <code class="language-plaintext highlighter-rouge">MODULE02</code>, … 식으로 변경</p>
+  </li>
+  <li>
+    <p>각 모듈의 포트 이름 (input/output/inout) 을 <code class="language-plaintext highlighter-rouge">in0</code>, <code class="language-plaintext highlighter-rouge">out0</code>, <code class="language-plaintext highlighter-rouge">io0</code> 등으로 변경</p>
+  </li>
+  <li>
+    <p>내부 net 이름 (wire, reg 등) 도 모두 <code class="language-plaintext highlighter-rouge">net0</code>, <code class="language-plaintext highlighter-rouge">net1</code>, … 식으로 변경</p>
+  </li>
+  <li>
+    <p>인스턴스 이름도 <code class="language-plaintext highlighter-rouge">inst0</code>, <code class="language-plaintext highlighter-rouge">inst1</code>, … 식으로 변경</p>
+  </li>
+</ol>
+
+<p>이를 수행하는 pyverilog 기반 스크립트를 아래에 작성해 드리겠습니다. Pyverilog의 AST를 활용하여 구문을 파싱하고 이름을
+재매핑합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="n">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
+<span class="kn">from</span> <span class="n">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="n">os</span>
+
+<span class="k">class</span> <span class="nc">VerilogAnonymizer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="s">MODULE</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="sh">"</span>
+
+    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="n">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">net</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">inst</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">description</span>
+
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">description</span><span class="p">.</span><span class="n">definitions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_module_name</span><span class="p">()</span>
+            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="sh">'</span><span class="s">direction</span><span class="sh">'</span><span class="p">):</span>
+                        <span class="n">direction</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">direction</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">direction</span> <span class="o">=</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span>  <span class="c1"># fallback
+</span>                    <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+                    <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">name</span><span class="sh">'</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">portlist</span><span class="sh">'</span><span class="p">):</span>
+                        <span class="c1"># Instance
+</span>                        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_instance_name</span><span class="p">()</span>
+                        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">width</span><span class="sh">'</span><span class="p">):</span>
+                        <span class="c1"># Net
+</span>                        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_net_name</span><span class="p">()</span>
+                        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="n">codegen</span> <span class="o">=</span> <span class="nc">ASTCodeGenerator</span><span class="p">()</span>
+        <span class="n">anonymized_code</span> <span class="o">=</span> <span class="n">codegen</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">anonymized_code</span>
+
+<span class="c1"># 사용 예시
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="sh">"</span><span class="s">input.v</span><span class="sh">"</span>  <span class="c1"># 원본 Verilog 파일
+</span>    <span class="n">anonymizer</span> <span class="o">=</span> <span class="nc">VerilogAnonymizer</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="nf">anonymize</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">anonymized.v</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="주의사항">주의사항</h3>
+
+<ol>
+  <li>
+    <p>이 코드는 간단한 구조의 Verilog 파일을 기준으로 합니다. 복잡한 generate 블록, 매크로, parameterized module 등은 처리에 추가 작업이 필요합니다.</p>
+  </li>
+  <li>
+    <p>pyverilog는 일부 Verilog-2001 이후 문법에 대한 처리가 미흡할 수 있습니다. 컴파일이 안 되면 <code class="language-plaintext highlighter-rouge">iverilog</code>로 사전 확인 필요합니다.</p>
+  </li>
+  <li>
+    <p>identifier 충돌 방지를 위해 기존 이름을 모두 맵핑 테이블로 따로 관리합니다.</p>
+  </li>
+</ol>
+
+<hr />
+
+<p>필요하시면, 해당 스크립트를 확장하여:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">parameter</code>, <code class="language-plaintext highlighter-rouge">localparam</code> 난독화</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">define</code> 이름 변경</p>
+  </li>
+  <li>
+    <p>파일 내부 주석 제거<br />
+도 추가 가능합니다.</p>
+  </li>
+</ul>
+
+<p>계속 도와드릴까요?</p>
+
+<p class="chat--user">
+
+아니면 이런 일을 하는 사용이 툴이 있어?
+
+</p>
+
+<p>예, 이런 작업을 자동으로 수행해주는 도구(툴)가 있긴 하지만, <strong>완전히 안전하게 제품명을 난독화하면서도 Verilog 구조를 유지하는
+범용적 툴은 사실상 없습니다</strong>. 하지만 유사하거나 일부 기능을 제공하는 도구들은 존재합니다:</p>
+
+<hr />
+
+<h3 id="-1-verible-by-google">✅ <strong>1. Verible (by Google)</strong></h3>
+
+<ul>
+  <li>
+    <p>https://github.com/chipsalliance/verible</p>
+  </li>
+  <li>
+    <p><strong>용도</strong> : 포맷터, 파서, 구조 분석기.</p>
+  </li>
+  <li>
+    <p><strong>장점</strong> : SystemVerilog을 파싱하고 분석 가능</p>
+  </li>
+  <li>
+    <p><strong>단점</strong> : 이름 난독화 기능은 직접 스크립트로 만들어야 함</p>
+  </li>
+</ul>
+
+<p>👉 즉, Verible로 코드를 파싱해서 symbol table 만들고, 그 위에 <strong>custom obfuscator 스크립트</strong> 를 짜는
+방식</p>
+
+<hr />
+
+<h3 id="-2-surelog--uhdm">✅ <strong>2. Surelog + UHDM</strong></h3>
+
+<ul>
+  <li>
+    <p>https://github.com/chipsalliance/Surelog</p>
+  </li>
+  <li>
+    <p><strong>용도</strong> : SV 전체 파서 + UHDM(중간 표현) 생성</p>
+  </li>
+  <li>
+    <p><strong>장점</strong> : 매우 강력한 구조 분석 가능 (RTL compiler 수준)</p>
+  </li>
+  <li>
+    <p><strong>단점</strong> : 설정이 복잡하고, 난독화는 기본 지원하지 않음</p>
+  </li>
+  <li>
+    <p>하지만 UHDM 기반으로 symbol rename은 구현 가능</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-3-proprietary-commercial-tools-유료-도구들">✅ <strong>3. Proprietary Commercial Tools (유료 도구들)</strong></h3>
+
+<ul>
+  <li>
+    <p>일부 FPGA/ASIC 회사에서는 내부 obfuscation tool을 쓰기도 함</p>
+  </li>
+  <li>
+    <p>예: <strong>Synopsys Identify</strong> , <strong>Cadence Stratus</strong> 등은 synthesis 도중 일부 renaming 기능 포함</p>
+  </li>
+  <li>
+    <p>하지만 이건 IP 보호 목적이 아니라 컴파일 최적화 목적임</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-4-obfuscation-scripts-custom">✅ <strong>4. Obfuscation Scripts (Custom)</strong></h3>
+
+<ul>
+  <li>
+    <p>현실적으로 대부분의 기업은 pyverilog, verilog-parser, ANTLR4 등으로 직접 custom tool을 짭니다</p>
+  </li>
+  <li>
+    <p>특히:</p>
+
+    <ul>
+      <li>
+        <p>모듈/인스턴스/포트 이름 mapping</p>
+      </li>
+      <li>
+        <p>wire/reg rename</p>
+      </li>
+      <li>
+        <p>주석 제거, define 제거</p>
+      </li>
+      <li>
+        <p>synthesis 안되는 이름 피하기</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="결론">결론:</h3>
+
+<blockquote>
+  <p><strong>정리하면, 네 요구사항(제품명 노출 방지용 난독화)을 자동으로 완벽하게 처리하는 공개 툴은 없음. Verible/Surelog 같은
+툴로 파싱하고, 이름 바꾸는 스크립트를 커스터마이징하는 게 현실적인 해결책입니다.</strong></p>
+</blockquote>
+
+<p>필요하시다면 Verible이나 Surelog 기반으로 만드는 방식으로도 도와드릴 수 있습니다.<br />
+예: Verible로 symbol 목록 추출 → rename map 생성 → 자동 대체 스크립트.</p>
+
+<p>이 방향으로 더 해볼까요?</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">MATE Terminal 색상 반영 문제</title><link href="https://hvppycoding.github.io/linux/ls-colors/" rel="alternate" type="text/html" title="MATE Terminal 색상 반영 문제" /><published>2025-07-24T10:20:17+09:00</published><updated>2025-07-24T10:20:17+09:00</updated><id>https://hvppycoding.github.io/linux/ls-colors</id><content type="html" xml:base="https://hvppycoding.github.io/linux/ls-colors/"><![CDATA[<p class="chat--user">
 
 MATE Terminal color 적용했는데 왜 반영이 안될까
 
@@ -6565,100 +6819,4 @@ python에서 예외 처리를 <code class="language-plaintext highlighter-rouge"
   </li>
 </ul>
 
-<p>필요하면 예제 설정 파일도 만들어 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Git config 차이점 설명</title><link href="https://hvppycoding.github.io/git/git-config-scope/" rel="alternate" type="text/html" title="Git config 차이점 설명" /><published>2025-07-21T01:27:30+09:00</published><updated>2025-07-21T01:27:30+09:00</updated><id>https://hvppycoding.github.io/git/git-config-scope</id><content type="html" xml:base="https://hvppycoding.github.io/git/git-config-scope/"><![CDATA[<p class="chat--user">
-
-그냥 git config 와 –global 붙였을때의 차이가 뭐야?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">git config</code> 명령어에서 <code class="language-plaintext highlighter-rouge">--global</code> 옵션을 붙이느냐 안 붙이느냐의 차이는 <strong>설정 범위(scope)</strong>에 있습니다.</p>
-
-<h3 id="1-git-config---global">1. <code class="language-plaintext highlighter-rouge">git config --global</code></h3>
-
-<ul>
-  <li>
-    <p><strong>사용자 전체(Global scope)</strong>에 설정됩니다.</p>
-  </li>
-  <li>
-    <p>사용자의 홈 디렉토리에 있는 <code class="language-plaintext highlighter-rouge">~/.gitconfig</code> 파일에 저장됩니다.</p>
-  </li>
-  <li>
-    <p>이 설정은 <strong>사용자가 작업하는 모든 Git 저장소에 공통 적용</strong> 됩니다.</p>
-  </li>
-</ul>
-
-<p>예:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> user.name <span class="s2">"Alice"</span>
-git config <span class="nt">--global</span> user.email <span class="s2">"alice@example.com"</span>
-</code></pre></div></div>
-
-<p>→ 모든 저장소에서 기본적으로 이 이름과 이메일을 사용합니다.</p>
-
-<hr />
-
-<h3 id="2-git-config-옵션-없이-사용">2. <code class="language-plaintext highlighter-rouge">git config</code> (옵션 없이 사용)</h3>
-
-<ul>
-  <li>
-    <p><strong>로컬 저장소(Local scope)</strong>에 설정됩니다.</p>
-  </li>
-  <li>
-    <p>해당 Git 저장소 내부의 <code class="language-plaintext highlighter-rouge">.git/config</code> 파일에 저장됩니다.</p>
-  </li>
-  <li>
-    <p>이 설정은 <strong>현재 저장소에만 적용</strong> 되고, 다른 저장소에는 영향을 주지 않습니다.</p>
-  </li>
-</ul>
-
-<p>예:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config user.name <span class="s2">"Bob"</span>
-git config user.email <span class="s2">"bob@example.com"</span>
-</code></pre></div></div>
-
-<p>→ 오직 현재 디렉토리의 Git 저장소에만 이 이름과 이메일이 적용됩니다.</p>
-
-<hr />
-
-<h3 id="요약하자면">요약하자면:</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>명령어</th>
-      <th>설정 범위</th>
-      <th>저장 위치</th>
-      <th>적용 대상</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">git config --global</code></td>
-      <td>사용자 전체</td>
-      <td><code class="language-plaintext highlighter-rouge">~/.gitconfig</code></td>
-      <td>모든 Git 저장소</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">git config</code></td>
-      <td>현재 저장소</td>
-      <td><code class="language-plaintext highlighter-rouge">.git/config</code></td>
-      <td>현재 Git 저장소</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h3 id="참고로">참고로</h3>
-
-<ul>
-  <li>
-    <p>이 외에도 <code class="language-plaintext highlighter-rouge">--system</code>이라는 옵션이 있는데, 이는 시스템 전체에 적용되는 설정입니다 (<code class="language-plaintext highlighter-rouge">/etc/gitconfig</code>). 일반 사용자가 건드릴 일은 거의 없습니다.</p>
-  </li>
-  <li>
-    <p>우선순위는 <code class="language-plaintext highlighter-rouge">system &lt; global &lt; local</code>입니다. 즉, <strong>로컬 설정이 글로벌 설정을 덮어씁니다.</strong></p>
-  </li>
-</ul>
-
-<p>의문 있으시면 더 질문 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="git" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>필요하면 예제 설정 파일도 만들어 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
