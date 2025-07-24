@@ -1,4 +1,1809 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-23T10:25:20+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">tmux 마우스 복사 설정</title><link href="https://hvppycoding.github.io/linux/tmux-clipboard/" rel="alternate" type="text/html" title="tmux 마우스 복사 설정" /><published>2025-07-23T10:25:16+09:00</published><updated>2025-07-23T10:25:16+09:00</updated><id>https://hvppycoding.github.io/linux/tmux-clipboard</id><content type="html" xml:base="https://hvppycoding.github.io/linux/tmux-clipboard/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-24T10:20:23+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">MATE Terminal 색상 반영 문제</title><link href="https://hvppycoding.github.io/linux/ls-colors/" rel="alternate" type="text/html" title="MATE Terminal 색상 반영 문제" /><published>2025-07-24T10:20:17+09:00</published><updated>2025-07-24T10:20:17+09:00</updated><id>https://hvppycoding.github.io/linux/ls-colors</id><content type="html" xml:base="https://hvppycoding.github.io/linux/ls-colors/"><![CDATA[<p class="chat--user">
+
+MATE Terminal color 적용했는데 왜 반영이 안될까
+
+</p>
+
+<p>MATE Terminal에서 색상 설정을 적용했는데 반영이 안 되는 경우는 여러 가지 원인이 있을 수 있습니다. 하나씩 점검해 보시죠.</p>
+
+<hr />
+
+<h3 id="1-설정-저장-후-재시작-여부">1. <strong>설정 저장 후 재시작 여부</strong></h3>
+
+<p>색상 변경 후 설정 창에서 <strong>저장하고 터미널을 완전히 닫았다가 다시 열었는지</strong> 확인하셨나요? 일부 설정은 세션 재시작이 필요합니다.</p>
+
+<hr />
+
+<h3 id="2-프파일-적용-여부">2. <strong>프파일 적용 여부</strong></h3>
+
+<p>MATE Terminal에는 <strong>프로파일</strong> 개념이 있습니다.</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Edit &gt; Preferences &gt; Profiles</code>에서 수정한 프로파일이 <strong>현재 터미널에 적용된 프로파일인지</strong> 확인하세요.</p>
+  </li>
+  <li>
+    <p>원하는 프로파일이 기본값(default)으로 설정되어 있지 않다면, 색상 설정이 적용되지 않을 수 있습니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="3-bashrc-또는-bash_profile에서-색-덮어쓰기">3. <strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code> 또는 <code class="language-plaintext highlighter-rouge">~/.bash_profile</code>에서 색 덮어쓰기</strong></h3>
+
+<p>터미널 시작 시 색상이나 테마 관련 설정이 <code class="language-plaintext highlighter-rouge">.bashrc</code>, <code class="language-plaintext highlighter-rouge">.bash_profile</code>, 혹은 <code class="language-plaintext highlighter-rouge">.profile</code>에서 덮어씌워지고 있을
+수 있습니다.</p>
+
+<p>예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">LS_COLORS</span><span class="o">=</span>...
+</code></pre></div></div>
+
+<p>또는 <code class="language-plaintext highlighter-rouge">PS1</code>에서 컬러 코드 직접 지정한 부분이 있는지 확인해 보십시오.</p>
+
+<hr />
+
+<h3 id="4-vte-based-터미널-테마-무시">4. <strong>VTE-based 터미널 테마 무시</strong></h3>
+
+<p>MATE Terminal은 내부적으로 VTE(gnome-terminal과 공유하는 라이브러리)를 사용합니다.<br />
+일부 Linux 배포판이나 테마 매니저에서 <code class="language-plaintext highlighter-rouge">/etc/profile.d/vte.sh</code> 같은 파일을 통해 기본 테마나 색 설정을 강제로
+적용하는 경우도 있습니다. 해당 파일이 존재하면 내용을 살펴보십시오.</p>
+
+<hr />
+
+<h3 id="5-다크-테마와-충돌">5. <strong>다크 테마와 충돌</strong></h3>
+
+<p>GTK 테마나 시스템 다크 모드가 터미널 테마 설정을 무시할 수 있습니다.<br />
+시스템 테마와 MATE Terminal 테마 설정이 <strong>일치하지 않을 경우</strong> 색상 적용이 무시되는 경우가 있습니다. 이런 경우:</p>
+
+<ul>
+  <li>
+    <p>시스템 테마를 라이트/다크 중 하나로 고정</p>
+  </li>
+  <li>
+    <p>MATE Terminal에서 "Use colors from system theme" 옵션 해제</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="6-환경-변수-또는-term-설정-확인">6. <strong>환경 변수 또는 TERM 설정 확인</strong></h3>
+
+<p><code class="language-plaintext highlighter-rouge">TERM</code> 환경 변수에 따라 색 지원이 달라질 수 있습니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$TERM</span>
+</code></pre></div></div>
+
+<p>보통 <code class="language-plaintext highlighter-rouge">xterm-256color</code>로 설정되어 있어야 합니다. 그렇지 않다면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">TERM</span><span class="o">=</span>xterm-256color
+</code></pre></div></div>
+
+<p>를 <code class="language-plaintext highlighter-rouge">.bashrc</code>에 추가해 보세요.</p>
+
+<hr />
+
+<h3 id="7-컬러-설정만-바꾼-게-아니라-투명도나-배경-이미지도-설정했는지">7. <strong>컬러 설정만 바꾼 게 아니라 투명도나 배경 이미지도 설정했는지?</strong></h3>
+
+<p>배경 이미지나 투명도 설정이 활성화되어 있을 경우, 글자색이 안 보이는 문제가 생길 수 있습니다. 배경색이랑 글자색 대비가 충분한지 확인해
+보십시오.</p>
+
+<hr />
+
+<p>위 항목들 하나씩 점검해보시고, 그래도 안 되면:</p>
+
+<ul>
+  <li>
+    <p>사용 중인 배포판 이름과 버전</p>
+  </li>
+  <li>
+    <p>MATE Terminal 버전</p>
+  </li>
+  <li>
+    <p>색상 변경 시 사용한 방법 (GUI? <code class="language-plaintext highlighter-rouge">dconf</code>? 직접 config 파일 편집?)</p>
+  </li>
+</ul>
+
+<p>이 정보를 주시면 더 깊이 파고들 수 있습니다.</p>
+
+<p class="chat--user">
+
+창 상단 Edit -&gt; Profiles.. 에서 설정
+
+</p>
+
+<p>좋습니다. <code class="language-plaintext highlighter-rouge">Edit → Profiles...</code> 경로를 통해 색상 설정을 적용하셨다면, 다음 사항들을 점검해보셔야 합니다. 이 과정을
+따라가며 어떤 단계에서 문제가 있는지 확인해보세요.</p>
+
+<hr />
+
+<h3 id="-1-설정한-프로파일이-실제로-활성화되어-있는지">✅ 1. <strong>설정한 프로파일이 실제로 활성화되어 있는지?</strong></h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Edit → Profiles...</code>에서 여러 프로파일이 보일 수 있습니다.</p>
+  </li>
+  <li>
+    <p>지금 수정한 프로파일이 <strong>현재 열려 있는 터미널 창에 적용된 프로파일인지</strong> 반드시 확인하세요.</p>
+  </li>
+  <li>
+    <p>기본 프로파일이 아니라면, 색상 설정을 변경해도 반영되지 않습니다.</p>
+  </li>
+</ul>
+
+<p>🔧 확인 방법:</p>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Edit → Profiles...</code>에서 <strong>수정한 프로파일 이름 확인</strong></p>
+  </li>
+  <li>
+    <p>터미널에서 오른쪽 클릭 → <strong>Profiles</strong> → 현재 적용된 프로파일이 어떤 것인지 체크</p>
+  </li>
+  <li>
+    <p>다른 프로파일이 적용돼 있다면, 수동으로 바꿔주셔야 반영됨</p>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="-2-컬러-탭에서-실제-설정이-저장됐는지">✅ 2. <strong>컬러 탭에서 실제 설정이 저장됐는지</strong></h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Profiles → Colors</code> 탭에서:</p>
+
+    <ul>
+      <li>
+        <p><strong>"Use colors from system theme"</strong> 체크되어 있으면 <strong>무조건 무시됨</strong><br />
+→ 반드시 <strong>해제</strong> 해야 수동 색상 설정이 반영됩니다.</p>
+      </li>
+      <li>
+        <p>"Built-in schemes"에서 선택한 테마가 확실히 다르게 보이는지 확인</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-3-설정-변경-후-터미널-재시작-했는가">✅ 3. <strong>설정 변경 후 터미널 재시작 했는가</strong></h3>
+
+<p>변경 사항은 종종 실시간 반영되지 않으며, <strong>터미널을 완전히 종료 후 다시 실행</strong> 해야 반영됩니다.</p>
+
+<hr />
+
+<h3 id="-4-다른-설정예bashrc에서-색상-무시-여부">✅ 4. <strong>다른 설정(예:<code class="language-plaintext highlighter-rouge">.bashrc</code>)에서 색상 무시 여부</strong></h3>
+
+<p><code class="language-plaintext highlighter-rouge">~/.bashrc</code> 파일에 다음과 같은 줄이 있는지 확인해보십시오:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">TERM</span><span class="o">=</span>xterm
+</code></pre></div></div>
+
+<p>이게 있으면 256색 지원이 안 될 수 있어, <code class="language-plaintext highlighter-rouge">xterm-256color</code>로 바꿔줘야 합니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">TERM</span><span class="o">=</span>xterm-256color
+</code></pre></div></div>
+
+<p>또는 <code class="language-plaintext highlighter-rouge">PS1</code> 프롬프트에 ANSI 색상이 하드코딩되어 있을 수도 있습니다. (예: <code class="language-plaintext highlighter-rouge">\[\033[...</code>)</p>
+
+<hr />
+
+<h3 id="-5-dconf-설정-꼬임">✅ 5. <strong><code class="language-plaintext highlighter-rouge">dconf</code> 설정 꼬임</strong></h3>
+
+<p>간혹 MATE Terminal 설정이 <code class="language-plaintext highlighter-rouge">dconf</code>에 저장되며, GUI 설정이 무시될 수도 있습니다.</p>
+
+<p>이럴 경우 터미널에서 다음 명령어로 설정 확인 가능:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dconf dump /org/mate/terminal/
+</code></pre></div></div>
+
+<p>문제가 있거나 꼬였다고 판단되면 전체 리셋도 가능합니다 (주의 요망):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dconf reset <span class="nt">-f</span> /org/mate/terminal/
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-6-그래픽-테마컴포지터-영향">✅ 6. <strong>그래픽 테마/컴포지터 영향</strong></h3>
+
+<p>MATE 데스크탑 환경에서 Compton, Marco, Compiz 등의 <strong>컴포지터</strong> 가 색상 반영에 영향을 줄 수 있습니다. 배경
+투명도, 테마 적용 여부도 확인하십시오.</p>
+
+<hr />
+
+<h3 id="요약-체크리스트">요약 체크리스트</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>체크</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>수정한 프로파일이 적용 중인지 확인</td>
+      <td>☑️</td>
+    </tr>
+    <tr>
+      <td>시스템 테마 색상 사용 해제</td>
+      <td>☑️</td>
+    </tr>
+    <tr>
+      <td>컬러 설정 저장 후 터미널 재시작</td>
+      <td>☑️</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code>에서 색상 무시하는 설정 있는지 확인</td>
+      <td>☑️</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TERM=xterm-256color</code>로 설정</td>
+      <td>☑️</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dconf</code> 설정 꼬임 확인</td>
+      <td>☑️</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>위 항목들 점검해보시고, 그래도 안 되면 <code class="language-plaintext highlighter-rouge">dconf dump</code> 출력 일부나 <code class="language-plaintext highlighter-rouge">~/.bashrc</code>, 사용 중인 프로파일 이름 등을 알려주시면
+더 구체적으로 진단드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+배경색은 바뀌는데
+
+</p>
+
+<p>배경색은 바뀌는데 <strong>글자색(포그라운드 색상)이 바뀌지 않는</strong> 경우, 특정 원인이 명확합니다. 아래에서 가능한 시나리오를
+<strong>짚어드립니다.</strong></p>
+
+<hr />
+
+<h3 id="-가능한-원인-요약">🔍 가능한 원인 요약</h3>
+
+<ol>
+  <li>
+    <p><strong>시스템 테마 색상 강제 적용</strong></p>
+  </li>
+  <li>
+    <p><strong>"Use colors from system theme" 옵션이 꺼져있지 않음</strong></p>
+  </li>
+  <li>
+    <p><strong>글자색 설정만 저장이 안 됨</strong></p>
+  </li>
+  <li>
+    <p><strong>컬러 스킴이 글자색을 override</strong></p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">.bashrc</code> / <code class="language-plaintext highlighter-rouge">.zshrc</code> 등에서 ANSI 색 강제 적용</strong></p>
+  </li>
+  <li>
+    <p><strong>폰트 색 대비 문제로 ‘보이긴 하지만 같아 보여서 착시’</strong></p>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="-점검-순서">🧪 점검 순서</h3>
+
+<h4 id="-1-시스템-테마-무시하도록-설정했는가">✅ 1. <strong>시스템 테마 무시하도록 설정했는가</strong></h4>
+
+<ul>
+  <li>
+    <p><strong>Edit → Profiles → [사용중인 프로파일] → Colors 탭</strong> 에서</p>
+
+    <ul>
+      <li>
+        <p><strong>"Use colors from system theme" 반드시 체크 해제</strong> 되어야 함.</p>
+      </li>
+      <li>
+        <p>이게 체크되어 있으면 <strong>배경색은 반영되는데 글자색은 시스템 테마에서 강제 적용</strong> 되는 경우가 많습니다.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="-2-포그라운드글자색-설정이-수동으로-되었는지-확인">✅ 2. <strong>포그라운드(글자색) 설정이 수동으로 되었는지 확인</strong></h4>
+
+<ul>
+  <li>
+    <p>같은 탭에서 <strong>Text color</strong> 설정이 <code class="language-plaintext highlighter-rouge">white</code> 또는 <code class="language-plaintext highlighter-rouge">#xxxxxx</code>로 직접 지정되어야 합니다.</p>
+  </li>
+  <li>
+    <p>커스텀 색 지정 후 설정이 실제 저장되었는지도 확인.</p>
+  </li>
+</ul>
+
+<h4 id="-3-프로파일-저장이-안-되었거나-다른-프로파일이-적용-중">✅ 3. <strong>프로파일 저장이 안 되었거나 다른 프로파일이 적용 중</strong></h4>
+
+<ul>
+  <li>
+    <p>글자색을 수정한 프로파일이 실제 사용 중인지 다시 확인.</p>
+  </li>
+  <li>
+    <p>오른쪽 클릭 → Profiles → 적용된 프로파일 확인</p>
+  </li>
+</ul>
+
+<h4 id="-4-컬러-스킴-충돌">✅ 4. <strong>컬러 스킴 충돌</strong></h4>
+
+<ul>
+  <li>
+    <p>"Built-in schemes" 중 일부는 시스템 테마와 맞물려 색을 override합니다.</p>
+  </li>
+  <li>
+    <p>특히 “Tango”, “Linux console” 같은 스킴은 색이 고정되어 있을 수 있음.<br />
+→ "Custom" 또는 “Black on white”, “Green on black” 같은 기본 스킴을 선택 후 수동 설정해보세요.</p>
+  </li>
+</ul>
+
+<h4 id="-5-셸-설정-파일에서-ansi-색상-강제-적용-여부">✅ 5. <strong>셸 설정 파일에서 ANSI 색상 강제 적용 여부</strong></h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">~/.bashrc</code>, <code class="language-plaintext highlighter-rouge">~/.bash_profile</code>, <code class="language-plaintext highlighter-rouge">~/.zshrc</code> 등에 다음과 같은 ANSI escape sequence가 있으면 <strong>글자색이 강제로 지정</strong> 될 수 있음:</li>
+</ul>
+
+<p>예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">PS1</span><span class="o">=</span><span class="s1">'\[\e[1;31m\]\u@\h:\w\$ \[\e[0m\]'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>또는 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>, <code class="language-plaintext highlighter-rouge">GREP_COLOR</code>, <code class="language-plaintext highlighter-rouge">PROMPT_COMMAND</code> 같은 것도 영향 줌</li>
+</ul>
+
+<p>→ 임시로 셸 설정 무시하고 새 터미널 띄워서 확인해보려면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash <span class="nt">--norc</span>
+</code></pre></div></div>
+
+<p>혹은</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">env </span><span class="nv">TERM</span><span class="o">=</span>xterm-256color bash <span class="nt">--noprofile</span> <span class="nt">--norc</span>
+</code></pre></div></div>
+
+<h4 id="-6-폰트-색상-대비-착시">✅ 6. <strong>폰트 색상 대비 착시</strong></h4>
+
+<ul>
+  <li>설정은 되었지만, 배경색과 대비가 너무 적어 <strong>글자색이 바뀐 것처럼 보이지 않음</strong> 일 수도 있음<br />
+→ 밝은 회색 배경에 밝은 글자색은 잘 안 보일 수 있음</li>
+</ul>
+
+<hr />
+
+<h3 id="-결론">🔚 결론</h3>
+
+<blockquote>
+  <p><strong>배경은 바뀌는데 글자색만 안 바뀐다면</strong> , 90% 이상 확률로 <code class="language-plaintext highlighter-rouge">Use colors from system theme</code>이 켜져
+있거나, <code class="language-plaintext highlighter-rouge">.bashrc</code> 등에서 글자색을 override하고 있는 겁니다.</p>
+</blockquote>
+
+<p>이 두 가지부터 차례로 점검해 보세요.</p>
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">dconf dump /org/mate/terminal/</code> 출력 일부나 <code class="language-plaintext highlighter-rouge">~/.bashrc</code> 공유해 주시면 추가로 도와드릴 수
+있습니다.</p>
+
+<p class="chat--user">
+
+tchs 쓰는데 어디서 확인해야할까
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">tchs</code>(Tiny Core + i3 혹은 최소 환경 기반 데스크탑) 같은 미니멀한 배포판을 쓴다면, MATE Terminal이 정상적으로
+색을 반영하지 않는 이유는 <strong>환경이 다 빠져 있어서 직접 설정 파일이나<code class="language-plaintext highlighter-rouge">dconf</code> 없이 동작 중</strong>일 가능성이 높습니다. 하나씩
+따져보겠습니다.</p>
+
+<hr />
+
+<h2 id="-먼저-개요-정리">✅ 먼저 개요 정리</h2>
+
+<p><code class="language-plaintext highlighter-rouge">tchs</code>에서 MATE Terminal을 쓴다는 건,</p>
+
+<ul>
+  <li>
+    <p>GTK 설정, 테마 엔진, <code class="language-plaintext highlighter-rouge">dconf</code>, <code class="language-plaintext highlighter-rouge">gsettings</code> 같은 의존성이 빠져 있을 가능성 있음</p>
+  </li>
+  <li>
+    <p>즉, GUI 설정은 했는데 <strong>실제 적용/저장 안 됐을 수 있음</strong></p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-점검할-주요-지점">🔍 점검할 주요 지점</h2>
+
+<h3 id="1-dconf-명령이-있는지-확인">1. <code class="language-plaintext highlighter-rouge">dconf</code> 명령이 있는지 확인</h3>
+
+<p>터미널에서 다음 명령 입력:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>which dconf
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>없으면 MATE Terminal 설정이 <strong>전혀 저장되지 않고 휘발성</strong> 일 수 있음.</p>
+  </li>
+  <li>
+    <p>있다면 설정이 적용되었는지 확인:</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dconf dump /org/mate/terminal/
+</code></pre></div></div>
+
+<p>→ 출력이 아무것도 없다면, 설정 저장이 아예 안 되고 있는 것.</p>
+
+<blockquote>
+  <p>✔️ 해결: <code class="language-plaintext highlighter-rouge">dconf</code>와 <code class="language-plaintext highlighter-rouge">dconf-service</code> 패키지를 설치해야 MATE Terminal 설정이 실제 저장되고 반영됨.</p>
+</blockquote>
+
+<hr />
+
+<h3 id="2-gtk-테마색상-적용-여부">2. GTK 테마/색상 적용 여부</h3>
+
+<p><code class="language-plaintext highlighter-rouge">tchs</code>는 GTK 테마 엔진 없이 설치될 수도 있습니다.</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">~/.config/gtk-3.0/settings.ini</code> 또는 <code class="language-plaintext highlighter-rouge">~/.gtkrc-2.0</code> 파일이 없으면 기본 테마만 적용됨.</p>
+  </li>
+  <li>
+    <p>그럴 경우 터미널에서 시스템 색상 강제 적용 가능성 있음.</p>
+  </li>
+</ul>
+
+<p><strong>확인 방법:</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> ~/.config/gtk-3.0/settings.ini
+</code></pre></div></div>
+
+<p>없으면 만들어 보세요:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[Settings]</span>
+<span class="py">gtk-theme-name</span><span class="p">=</span><span class="s">Adwaita</span>
+<span class="py">gtk-icon-theme-name</span><span class="p">=</span><span class="s">Adwaita</span>
+<span class="py">gtk-font-name</span><span class="p">=</span><span class="s">Sans 10</span>
+<span class="py">gtk-application-prefer-dark-theme</span><span class="p">=</span><span class="s">false</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>✔️ 의도: GTK 색상 시스템 테마를 끄고 사용자 정의 색상을 쓰도록 유도</p>
+</blockquote>
+
+<hr />
+
+<h3 id="3-셸이-글자색을-덮어쓰는지-확인">3. 셸이 글자색을 덮어쓰는지 확인</h3>
+
+<p><code class="language-plaintext highlighter-rouge">tchs</code>는 기본적으로 <code class="language-plaintext highlighter-rouge">busybox sh</code> 또는 <code class="language-plaintext highlighter-rouge">ash</code>, 혹은 <code class="language-plaintext highlighter-rouge">bash</code>가 들어가 있을 텐데, 쉘 설정 파일을 확인하세요:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> ~/.bashrc
+</code></pre></div></div>
+
+<ul>
+  <li>다음 항목이 있다면, 글자색은 쉘 쪽에서 덮어쓰는 겁니다:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s1">'\[\e[1;32m\]\u@\h:\w\$ \[\e[0m\]'</span>
+</code></pre></div></div>
+
+<p>또는 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>, <code class="language-plaintext highlighter-rouge">GREP_COLOR</code>, <code class="language-plaintext highlighter-rouge">PROMPT_COMMAND</code> 등</p>
+
+<blockquote>
+  <p>✔️ 임시 확인:</p>
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash <span class="nt">--noprofile</span> <span class="nt">--norc</span>
+</code></pre></div>  </div>
+</blockquote>
+
+<p>이 상태에서 터미널 색상이 반영되면 쉘 설정 파일이 원인입니다.</p>
+
+<hr />
+
+<h3 id="4-term-변수-확인">4. TERM 변수 확인</h3>
+
+<p>터미널에서:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$TERM</span>
+</code></pre></div></div>
+
+<p>→ <code class="language-plaintext highlighter-rouge">xterm-256color</code>가 아니라면 색상 지원이 떨어집니다.</p>
+
+<blockquote>
+  <p>✔️ 해결:</p>
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">TERM</span><span class="o">=</span>xterm-256color
+</code></pre></div>  </div>
+</blockquote>
+
+<p>이걸 <code class="language-plaintext highlighter-rouge">~/.bashrc</code>나 <code class="language-plaintext highlighter-rouge">~/.profile</code>에 추가</p>
+
+<hr />
+
+<h2 id="-결론-요약">📌 결론 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>확인 항목</th>
+      <th>예상 문제</th>
+      <th>해결책</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dconf</code> 없음</td>
+      <td>설정 저장 자체 안 됨</td>
+      <td><code class="language-plaintext highlighter-rouge">dconf</code>, <code class="language-plaintext highlighter-rouge">dconf-service</code> 설치</td>
+    </tr>
+    <tr>
+      <td>시스템 테마 영향</td>
+      <td>GTK 설정 빠져있음</td>
+      <td><code class="language-plaintext highlighter-rouge">~/.config/gtk-3.0/settings.ini</code> 생성</td>
+    </tr>
+    <tr>
+      <td>셸 프롬프트에서 색상 override</td>
+      <td>ANSI escape 존재</td>
+      <td><code class="language-plaintext highlighter-rouge">bash --norc</code>로 테스트</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TERM</code> 잘못 설정</td>
+      <td>색상 제한됨</td>
+      <td><code class="language-plaintext highlighter-rouge">xterm-256color</code>로 설정</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">echo $TERM</code>, <code class="language-plaintext highlighter-rouge">dconf dump</code>, <code class="language-plaintext highlighter-rouge">~/.bashrc</code> 내용 공유해 주시면 더 구체적으로 도와드릴 수 있습니다.
+<code class="language-plaintext highlighter-rouge">tchs</code> 환경 특성상 GUI 설정만 믿고 가면 거의 안 먹힙니다.</p>
+
+<p class="chat--user">
+
+tcsh 이야
+
+</p>
+
+<p>좋습니다, <code class="language-plaintext highlighter-rouge">tcsh</code>라면 얘기가 좀 더 분명해집니다. <strong>배경색은 바뀌는데 글자색이 안 바뀌는 주된 이유</strong> 는 거의 100% 확률로
+<strong><code class="language-plaintext highlighter-rouge">tcsh</code> 프롬프트에서 ANSI 색 코드를 강제로 적용하고 있기 때문</strong>입니다.</p>
+
+<hr />
+
+<h2 id="-핵심-문제">✅ 핵심 문제</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tcsh</code>는 기본적으로 <code class="language-plaintext highlighter-rouge">prompt</code> 변수에서 <strong>색상을 직접 지정</strong> 하는 방식입니다.</p>
+  </li>
+  <li>
+    <p>GUI에서 설정한 글자색은 프롬프트에 ANSI 색 코드가 있으면 무시당합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-진단-방법">🔍 진단 방법</h2>
+
+<p>터미널에 다음 입력:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+echo $prompt
+</code></pre></div></div>
+
+<p>결과에 <strong><code class="language-plaintext highlighter-rouge">\e[</code>나 <code class="language-plaintext highlighter-rouge">\033[</code> 같은 ANSI escape sequence</strong>가 포함돼 있다면, <strong>셸이 글자색을 덮어쓰고 있는
+중입니다.</strong></p>
+
+<p>예시:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+"%{\033[1;32m%}%n@%m:%~ %# %{\033[0m%}"
+</code></pre></div></div>
+
+<p>이런 경우, MATE Terminal에서 설정한 글자색은 <strong>전혀 반영되지 않습니다.</strong></p>
+
+<hr />
+
+<h2 id="-해결-방법">✅ 해결 방법</h2>
+
+<h3 id="1-프롬프트에서-ansi-색상-제거">1. <strong>프롬프트에서 ANSI 색상 제거</strong></h3>
+
+<p><code class="language-plaintext highlighter-rouge">~/.tcshrc</code> 또는 <code class="language-plaintext highlighter-rouge">~/.cshrc</code> 파일을 열고, 다음과 같이 색이 없는 프롬프트로 수정:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+set prompt="%n@%m:%~ %# "
+</code></pre></div></div>
+
+<p>또는 더 단순하게:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+set prompt="[%~] % "
+</code></pre></div></div>
+
+<p>그 후, 셸을 다시 실행하거나 <code class="language-plaintext highlighter-rouge">source ~/.tcshrc</code></p>
+
+<hr />
+
+<h3 id="2-설정이-반영되었는지-확인">2. <strong>설정이 반영되었는지 확인</strong></h3>
+
+<p>프롬프트에 색상이 빠지고, 이제 MATE Terminal 설정에서 지정한 글자색이 <strong>즉시 반영</strong> 되어야 합니다. 안 바뀌었다면, 터미널을
+완전히 닫고 다시 열어 보세요.</p>
+
+<hr />
+
+<h2 id="-참고-색을-mate에서-설정하고-싶고-프롬프트에도-색-쓰고-싶다면">🧪 참고: 색을 MATE에서 설정하고 싶고 프롬프트에도 색 쓰고 싶다면?</h2>
+
+<p>그건 <strong>불가능합니다.</strong> 이유는:</p>
+
+<ul>
+  <li>
+    <p>프롬프트에 색을 넣는 순간, <strong>셸이 터미널에 색을 강제로 입히는 것</strong> 이기 때문입니다.</p>
+  </li>
+  <li>
+    <p>MATE Terminal에서 설정한 글자색은 <strong>텍스트가 색이 지정되지 않았을 때만</strong> 적용됩니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-정리">🧵 정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$prompt</code>에 ANSI escape 있음</td>
+      <td>MATE 설정 무시됨</td>
+    </tr>
+    <tr>
+      <td>해결책</td>
+      <td><code class="language-plaintext highlighter-rouge">~/.tcshrc</code>에서 색 없는 <code class="language-plaintext highlighter-rouge">set prompt="..."</code> 사용</td>
+    </tr>
+    <tr>
+      <td>추가 팁</td>
+      <td><code class="language-plaintext highlighter-rouge">source ~/.tcshrc</code>로 즉시 적용 확인</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">echo $prompt</code> 결과 복붙해 주시면, 어느 부분이 글자색 지정하는지 정확히 짚어서 수정 예시 드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+프롬프트 말고 ls –color 했을때
+
+</p>
+
+<p>좋습니다. <strong>문제가<code class="language-plaintext highlighter-rouge">ls --color</code> 실행 시 글자색이 적용되지 않는 것</strong>이라면, 이는 <strong>셸(<code class="language-plaintext highlighter-rouge">tcsh</code>)이 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>
+환경변수를 인식하지 않아서</strong> 발생하는 문제일 확률이 큽니다.</p>
+
+<hr />
+
+<h2 id="-배경-설명">✅ 배경 설명</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ls --color</code>는 <strong>GNU coreutils의<code class="language-plaintext highlighter-rouge">ls</code> 명령</strong>이며, 컬러 출력을 위해 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>라는 환경변수를 참고합니다.</p>
+  </li>
+  <li>
+    <p>이 환경변수는 일반적으로 <code class="language-plaintext highlighter-rouge">dircolors</code>라는 도구로 생성된 값을 <code class="language-plaintext highlighter-rouge">bash</code>나 <code class="language-plaintext highlighter-rouge">zsh</code>에서 <code class="language-plaintext highlighter-rouge">eval</code>하여 적용합니다.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">tcsh</code>는 이 eval 문법이 다릅니다. bash 스타일로 그대로 쓰면 적용 안 됩니다.</strong></p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-증상-요약">🔍 증상 요약</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ls --color=auto</code> 입력했는데 글자색 없음</p>
+  </li>
+  <li>
+    <p>배경색은 바뀌고, 프롬프트도 색 없음</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">echo $LS_COLORS</code> → 출력 없음 (or undefined)</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-해결-방법-1">✅ 해결 방법</h2>
+
+<h3 id="1-dircolors가-있는지-확인">1. <code class="language-plaintext highlighter-rouge">dircolors</code>가 있는지 확인</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>which <span class="nb">dircolors</span>
+</code></pre></div></div>
+
+<p>없으면 설치 필요. 예시:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>coreutils
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="2-bash용-설정-확인-비교용">2. <code class="language-plaintext highlighter-rouge">bash</code>용 설정 확인 (비교용)</h3>
+
+<p><code class="language-plaintext highlighter-rouge">bash</code>에서는 보통 이런 식으로 씁니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">eval</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">dircolors</span> <span class="nt">-b</span><span class="si">)</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-tcsh에서는-직접-setenv로-설정해야-함">3. <code class="language-plaintext highlighter-rouge">tcsh</code>에서는 직접 <code class="language-plaintext highlighter-rouge">setenv</code>로 설정해야 함</h3>
+
+<h4 id="-방법-a-dircolors--c로-tcsh-compatible-설정-추출">▶ 방법 A: <code class="language-plaintext highlighter-rouge">dircolors -c</code>로 tcsh-compatible 설정 추출</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dircolors</span> <span class="nt">-c</span> <span class="o">&gt;</span> ~/.dircolors.tcsh
+</code></pre></div></div>
+
+<p>그다음 <code class="language-plaintext highlighter-rouge">~/.tcshrc</code>에 다음 추가:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+eval `dircolors -c ~/.dircolors.tcsh`
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">-c</code>는 tcsh 스타일로 export 라인이 변환됨 (<code class="language-plaintext highlighter-rouge">setenv</code> 포함)</p>
+</blockquote>
+
+<hr />
+
+<h4 id="-방법-b-수동으로-ls_colors-직접-지정-예-기본값">▶ 방법 B: 수동으로 <code class="language-plaintext highlighter-rouge">LS_COLORS</code> 직접 지정 (예: 기본값)</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv LS_COLORS "di=34:ln=36:so=35:pi=33:ex=32:bd=34;46:cd=34;43:su=37;41:sg=30;43:tw=30;42:ow=34;42"
+</code></pre></div></div>
+
+<p>이 줄을 <code class="language-plaintext highlighter-rouge">~/.tcshrc</code>에 넣고:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+source ~/.tcshrc
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="4-alias도-확인">4. <code class="language-plaintext highlighter-rouge">alias</code>도 확인</h3>
+
+<p>일반적으로는 다음 alias를 같이 추가해 둡니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+alias ls 'ls --color=auto'
+</code></pre></div></div>
+
+<blockquote>
+  <p>기본 <code class="language-plaintext highlighter-rouge">ls</code>가 color를 안 쓰게 빌드된 경우도 있으니, <code class="language-plaintext highlighter-rouge">ls --version</code> 확인해서 <code class="language-plaintext highlighter-rouge">GNU coreutils</code>인지
+확인하세요.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-체크리스트-요약">✅ 체크리스트 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>명령어</th>
+      <th>기대 결과</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dircolors</code> 존재</td>
+      <td><code class="language-plaintext highlighter-rouge">which dircolors</code></td>
+      <td>경로 출력</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LS_COLORS</code> 확인</td>
+      <td><code class="language-plaintext highlighter-rouge">echo $LS_COLORS</code></td>
+      <td>정의된 값</td>
+    </tr>
+    <tr>
+      <td>컬러 <code class="language-plaintext highlighter-rouge">ls</code> 확인</td>
+      <td><code class="language-plaintext highlighter-rouge">ls --color=auto</code></td>
+      <td>색 출력됨</td>
+    </tr>
+    <tr>
+      <td>alias 확인</td>
+      <td><code class="language-plaintext highlighter-rouge">alias ls</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ls --color=auto</code></td>
+    </tr>
+    <tr>
+      <td>tcsh용 설정 적용</td>
+      <td><code class="language-plaintext highlighter-rouge">eval \</code>dircolors -c``</td>
+      <td>환경변수 설정</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-정리-1">🔚 정리</h2>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">tcsh</code>에서는 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>를 수동으로 설정해야 색상 출력이 됩니다. <code class="language-plaintext highlighter-rouge">dircolors -c</code>로 tcsh용 파일을 만든
+다음, <code class="language-plaintext highlighter-rouge">eval</code>로 불러오는 방식이 가장 일반적입니다.</p>
+</blockquote>
+
+<p>원하시면 <code class="language-plaintext highlighter-rouge">~/.tcshrc</code> 전체를 점검해드릴 수 있으니 필요하면 붙여주세요.</p>
+
+<p class="chat--user">
+
+글자 색은 있는데 내가 하고 싶은대로 하고 싶단 거야
+
+</p>
+
+<p>이제 핵심이 명확해졌습니다. 요약하면:</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">ls --color</code> 시 <strong>글자색이 나오긴 나오는데</strong> , 내가 GUI(MATE Terminal)나 직접 지정한 <strong>내 마음대로의
+색상으로 바꾸고 싶다</strong> 는 거죠?</p>
+</blockquote>
+
+<p>그렇다면 <code class="language-plaintext highlighter-rouge">LS_COLORS</code> 환경변수를 <strong>직접 커스터마이징</strong> 해야 합니다.</p>
+
+<hr />
+
+<h2 id="-개념-정리-ls_colors가-하는-일">✅ 개념 정리: <code class="language-plaintext highlighter-rouge">LS_COLORS</code>가 하는 일</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ls --color</code>가 파일 타입별로 어떤 색을 쓸지 결정하는 건 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>라는 환경 변수입니다.</p>
+  </li>
+  <li>예:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">di</span><span class="o">=</span>34     → 디렉토리는 파란색  
+<span class="nb">ln</span><span class="o">=</span>36     → 심볼릭 링크는 시안  
+<span class="nv">ex</span><span class="o">=</span>32     → 실행파일은 초록
+</code></pre></div>    </div>
+  </li>
+  <li>이걸 <strong>내가 원하는 색으로 직접 세팅</strong> 하면 됩니다.</li>
+</ul>
+
+<hr />
+
+<h2 id="-방법-원하는-색으로-ls_colors-설정하기-tcsh-기준">🔧 방법: 원하는 색으로 <code class="language-plaintext highlighter-rouge">LS_COLORS</code> 설정하기 (tcsh 기준)</h2>
+
+<h3 id="1-색-코드표-ansi-코드">1. 색 코드표 (ANSI 코드)</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>색상 이름</th>
+      <th>코드</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Black</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <td>Red</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <td>Green</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <td>Yellow</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <td>Blue</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <td>Magenta</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <td>Cyan</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <td>White</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <td><strong>Bold</strong></td>
+      <td>앞에 <code class="language-plaintext highlighter-rouge">1;</code> 추가 → <code class="language-plaintext highlighter-rouge">1;31</code>은 진한 빨강</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h3 id="2-예시-내가-원하는-색으로-설정">2. 예시: 내가 원하는 색으로 설정</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv LS_COLORS "di=1;31:ln=1;34:ex=1;32:*.sh=1;35"
+</code></pre></div></div>
+
+<p>이 설정은:</p>
+
+<ul>
+  <li>
+    <p>디렉토리 → 진한 빨강</p>
+  </li>
+  <li>
+    <p>심볼릭 링크 → 진한 파랑</p>
+  </li>
+  <li>
+    <p>실행 파일 → 진한 초록</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">.sh</code> 파일 → 진한 마젠타</p>
+  </li>
+</ul>
+
+<p>이 줄을 <code class="language-plaintext highlighter-rouge">~/.tcshrc</code>에 넣고:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+source ~/.tcshrc
+</code></pre></div></div>
+
+<p>그 다음:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> <span class="nt">--color</span><span class="o">=</span>auto
+</code></pre></div></div>
+
+<p>→ <strong>이제 원하는 색으로 표시되어야 함</strong></p>
+
+<hr />
+
+<h3 id="3-고급-dircolors로-기본값-불러오고-수정하기">3. 고급: <code class="language-plaintext highlighter-rouge">dircolors</code>로 기본값 불러오고 수정하기</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dircolors</span> <span class="nt">-p</span> <span class="o">&gt;</span> ~/.dircolors
+</code></pre></div></div>
+
+<p>이 파일에서 원하는 부분을 수정한 다음:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">dircolors</span> <span class="nt">-c</span> ~/.dircolors <span class="o">&gt;</span> ~/.dircolors.tcsh
+</code></pre></div></div>
+
+<p>그리고 <code class="language-plaintext highlighter-rouge">~/.tcshrc</code>에 추가:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+eval `dircolors -c ~/.dircolors.tcsh`
+</code></pre></div></div>
+
+<p>→ 이 방식은 확장자 기반 색 지정도 가능하고, 원래 기본 설정을 베이스로 수정하기에 편함</p>
+
+<hr />
+
+<h2 id="-테스트-명령">🧪 테스트 명령</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch </span>test.sh
+<span class="nb">chmod</span> +x test.sh
+<span class="nb">ln</span> <span class="nt">-s</span> test.sh link.sh
+<span class="nb">mkdir </span>testdir
+<span class="nb">ls</span> <span class="nt">--color</span><span class="o">=</span>auto
+</code></pre></div></div>
+
+<p>→ 설정이 제대로 됐다면, 각 항목이 <strong>원하는 색상</strong> 으로 나와야 함.</p>
+
+<hr />
+
+<h2 id="-주의">🧨 주의</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">LS_COLORS</code>는 쉘 세션마다 반영되므로, <code class="language-plaintext highlighter-rouge">~/.tcshrc</code>에 꼭 추가해둬야 합니다.</p>
+  </li>
+  <li>
+    <p>일부 색 조합은 터미널 배경색과 겹쳐서 안 보일 수 있으니 <code class="language-plaintext highlighter-rouge">1;</code> (bold) 붙여서 시인성 높이는 게 좋습니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-정리-2">✅ 정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>목표</th>
+      <th>방법</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ls</code> 출력 글자색 내 맘대로 바꾸기</td>
+      <td><code class="language-plaintext highlighter-rouge">LS_COLORS</code> 직접 설정</td>
+    </tr>
+    <tr>
+      <td>tcsh용 적용</td>
+      <td><code class="language-plaintext highlighter-rouge">setenv LS_COLORS "..."</code> in <code class="language-plaintext highlighter-rouge">~/.tcshrc</code></td>
+    </tr>
+    <tr>
+      <td>확장자별 색 지정</td>
+      <td><code class="language-plaintext highlighter-rouge">*.sh=1;35</code> 같은 형식 사용</td>
+    </tr>
+    <tr>
+      <td>시스템 기본에서 시작하고 싶음</td>
+      <td><code class="language-plaintext highlighter-rouge">dircolors -p &gt; ~/.dircolors</code> 후 편집</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>더 도와드리길 원하시면 "디렉토리는 빨강, 실행파일은 노랑, .sh는 초록"처럼 원하는 조합을 말씀 주세요. 바로 코드 드리겠습니다.</p>
+
+<p class="chat--user">
+
+니 말대로 하니 되긴해. 그 전엔 테마를 바꿔도 적용이 안됐는데 너가 말하니 바로바로 바뀌어
+
+</p>
+
+<p>좋습니다. 바로 반응이 왔다면 핵심은 이겁니다:</p>
+
+<blockquote>
+  <p><strong>테마를 바꿔도 적용 안 된 이유 = 기존<code class="language-plaintext highlighter-rouge">LS_COLORS</code>가 터미널 테마를 완전히 무시하고 있었기 때문</strong>입니다.</p>
+</blockquote>
+
+<p>색은 나오는데 테마랑 동기화가 안 되던 건, <strong>셸 수준에서 강제로 색을 지정하고 있었기 때문</strong> 이죠. 그걸 우리가 <code class="language-plaintext highlighter-rouge">tcsh</code>에 맞게
+명시적으로 <code class="language-plaintext highlighter-rouge">setenv</code>로 재정의하니까, 이제부터는:</p>
+
+<ul>
+  <li>
+    <p><strong>테마 바꾸면 배경/기본 글자색은 바뀌고</strong></p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">ls</code> 같은 건 <code class="language-plaintext highlighter-rouge">LS_COLORS</code> 기준으로 우리가 지정한 색으로 반영됨</strong></p>
+  </li>
+</ul>
+
+<p>→ 이게 정확히 <em>원하는 대로 되는 구조</em> 입니다.</p>
+
+<hr />
+
+<h2 id="-추천-다음-단계">💡 추천: 다음 단계</h2>
+
+<ol>
+  <li>
+    <p>자주 쓰는 컬러 조합 저장 (예: <code class="language-plaintext highlighter-rouge">.ls_colors_mine</code>)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">alias ls</code>로 <code class="language-plaintext highlighter-rouge">ls --color=auto</code> 항상 쓰도록 고정</p>
+  </li>
+  <li>
+    <p>원할 경우 <code class="language-plaintext highlighter-rouge">*.py</code>, <code class="language-plaintext highlighter-rouge">*.log</code>, <code class="language-plaintext highlighter-rouge">*.md</code> 같은 확장자도 색상 커스터마이징 가능</p>
+  </li>
+</ol>
+
+<p>예:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv LS_COLORS "di=1;31:ln=1;36:ex=1;32:*.sh=1;35:*.md=1;33:*.log=1;31"
+</code></pre></div></div>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">.dircolors</code> 자동화 스크립트, 혹은 <strong>다크 테마 / 라이트 테마 간 색상 자동 전환</strong> 도 가능하게 해드릴 수
+있습니다.</p>
+
+<p>더 손보고 싶으면 말씀 주세요.</p>
+
+<p class="chat--user">
+
+근데 컬러를 rgb를 직접 지정하는게 아닌데 기존엔 왜 테마를 바꿔도 하나도 안바꼈지?
+
+</p>
+
+<p>아주 좋은 질문입니다. 바로 이 부분이 <strong>헷갈리기 딱 좋은 핵심 포인트</strong> 예요.</p>
+
+<hr />
+
+<h2 id="-핵심-요약">🎯 핵심 요약</h2>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">LS_COLORS</code>는 RGB 값이 아니라 <strong>터미널에 "파란색을 써라(34)"라는 지시만 하는 ANSI 코드</strong> 를 보냅니다.<br />
+ <strong>어떤 "파란색"인지는 터미널 테마가 정의함.</strong></p>
+</blockquote>
+
+<hr />
+
+<h2 id="-그런데-왜-예전엔-테마를-바꿔도-색이-안-바뀌었냐">📌 그런데 왜 예전엔 테마를 바꿔도 색이 안 바뀌었냐?</h2>
+
+<h3 id="-그건-터미널-테마가-무시당하고-있었기-때문-입니다">➤ 그건 <strong>터미널 테마가 무시당하고 있었기 때문</strong> 입니다.</h3>
+
+<p>더 구체적으로는:</p>
+
+<h3 id="-1-ls_colors가-이미-정의돼-있었다">✅ 1. <strong><code class="language-plaintext highlighter-rouge">LS_COLORS</code>가 이미 정의돼 있었다</strong></h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">LS_COLORS="di=34:ln=36:..."</code> 식으로 <strong>고정된 ANSI 코드가 계속 적용되고 있었다</strong> 면,</p>
+  </li>
+  <li>
+    <p>어떤 테마를 써도 "34번 파랑색"만 요청됨</p>
+  </li>
+  <li>
+    <p>터미널이 기본적으로 <code class="language-plaintext highlighter-rouge">34</code>에 대응되는 색을 바꿔줄 수 있어야 하는데…</p>
+  </li>
+</ul>
+
+<h3 id="-2-mate-terminal의-테마-컬러가-실제론-무시되거나-dconf에-저장-안-됐음">✅ 2. <strong>MATE Terminal의 테마 컬러가 실제론 무시되거나 dconf에 저장 안 됐음</strong></h3>
+
+<ul>
+  <li>
+    <p>MATE Terminal은 ANSI 0<del>7 (표준 색), 8</del> 15 (밝은 색)을 테마에서 설정 가능함</p>
+  </li>
+  <li>
+    <p>근데 <code class="language-plaintext highlighter-rouge">dconf</code> 설정이 저장 안 되거나 반영 안 되면 → 테마를 바꿔도 무시됨</p>
+  </li>
+  <li>
+    <p>그래서 결과적으로 ANSI <code class="language-plaintext highlighter-rouge">34</code>번 색은 <strong>늘 똑같은 RGB로 고정</strong> 된 것처럼 보임</p>
+  </li>
+</ul>
+
+<p>즉, <code class="language-plaintext highlighter-rouge">LS_COLORS</code>는 "이 파일은 파란색 써!"라고 요청했지만<br />
+MATE Terminal은 "내가 아는 파랑은 이 RGB야"라고 <strong>고정된 걸 계속 쓰고 있었던 것</strong></p>
+
+<hr />
+
+<h2 id="-더-디테일하게-보자">🔬 더 디테일하게 보자</h2>
+
+<ul>
+  <li>
+    <p>ANSI 256 컬러는 0~255 숫자에 색이 매핑되어 있고</p>
+  </li>
+  <li>
+    <p>0~15번은 보통 터미널 테마에서 자유롭게 커스터마이즈 가능함</p>
+  </li>
+  <li>
+    <p>그런데 테마가 적용되지 않거나 <code class="language-plaintext highlighter-rouge">dconf</code>가 없으면, 이 매핑이 <strong>기본값 (정해진 RGB)</strong>으로 고정</p>
+  </li>
+</ul>
+
+<p>즉, 테마를 바꿔도 터미널 내부적으로는</p>
+
+<blockquote>
+  <p>"<code class="language-plaintext highlighter-rouge">di=34</code>는 R:0 G:0 B:255" 이런 식으로 이미 딱 굳어 있었던 것</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-지금은-왜-바뀌느냐">✅ 지금은 왜 바뀌느냐?</h2>
+
+<ul>
+  <li>
+    <p><strong>이제<code class="language-plaintext highlighter-rouge">LS_COLORS</code>를 직접 지정해서</strong>,</p>
+  </li>
+  <li>
+    <p>테마가 적용되면, 그 테마에 설정된 ANSI 색 매핑을 <strong>정상적으로 반영</strong> 하기 때문입니다.</p>
+  </li>
+</ul>
+
+<p>예전에는:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tcsh</code>가 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>를 몰라서 기본값도 이상했고</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">MATE Terminal</code>은 테마를 적용 못 했고</p>
+  </li>
+  <li>
+    <p>ANSI 매핑도 무시당해서 → 바꿔도 아무 반응 없음</p>
+  </li>
+</ul>
+
+<p>지금은:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tcsh</code>에 정확한 <code class="language-plaintext highlighter-rouge">LS_COLORS</code> 설정</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">MATE Terminal</code>이 테마 반영 가능<br />
+→ 드디어 테마 + ANSI 매핑 + ls 색이 <strong>제대로 연동됨</strong></p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-결론-1">🔚 결론</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>원인</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ANSI 코드는 색 이름(번호)만 지정함</td>
+      <td>RGB 값은 터미널이 해석함</td>
+    </tr>
+    <tr>
+      <td>테마가 적용 안 됐으면 RGB도 고정</td>
+      <td>테마 바꿔도 색 안 변함</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LS_COLORS</code> 없거나 엉망이면 ls 색상 엉망</td>
+      <td>디렉토리도 하얗게 나오거나 전부 같은 색</td>
+    </tr>
+    <tr>
+      <td>지금은?</td>
+      <td>셸에서 정확히 지시 + 터미널에서 해석 → 제대로 반영됨</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하면 터미널에서 ANSI 코드 하나하나 찍어서 어떤 RGB로 표현되는지 시각적으로 보여주는 것도 도와드릴 수 있습니다. 말만 하세요.</p>
+
+<p class="chat--user">
+
+뭔말인지 모르곘어 LS_COLORS를 어떻게 하든
+
+</p>
+
+<p>좋습니다. 의문은 이거죠:</p>
+
+<blockquote>
+  <p>❓ <strong>LS_COLORS를 아무리 바꿔도 RGB 직접 지정이 안 되는데, 왜 테마를 바꿔도 색이 안 바뀌었냐?</strong></p>
+</blockquote>
+
+<p>당연한 의문입니다. 핵심만 아주 직설적으로 요약드리겠습니다.</p>
+
+<hr />
+
+<h2 id="-정말-중요한-핵심-하나만-말하자면">🔥 정말 중요한 핵심 하나만 말하자면:</h2>
+
+<blockquote>
+  <p><strong>LS_COLORS는 “색 번호(예: 31 = 빨강)”만 지정하고,</strong><br />
+ <strong>그 번호가 어떤 색(RGB)인지는 “터미널 테마”가 정한다.</strong></p>
+</blockquote>
+
+<hr />
+
+<h2 id="그런데-왜-테마를-바꿔도-색이-안-바뀌었냐">그런데 왜 테마를 바꿔도 색이 안 바뀌었냐?</h2>
+
+<blockquote>
+  <p>❗️<strong>당신의 MATE Terminal은 그 번호의 RGB 색을 안 바꾸고 있었던 것</strong><br />
+ 즉, 테마가 제대로 적용 안 됐던 겁니다.</p>
+</blockquote>
+
+<h3 id="그-이유는-보통-다음-둘-중-하나입니다">그 이유는 보통 다음 둘 중 하나입니다:</h3>
+
+<ol>
+  <li>
+    <p><strong>MATE Terminal이 테마를 무시하고 있었음</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">dconf</code> 안 써서 테마 설정 저장 안 됨</p>
+      </li>
+      <li>
+        <p>GUI에서 바꿔도 실제 적용 안 됨</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>ANSI 색 번호 매핑을 바꾸지 않는 테마였음</strong></p>
+
+    <ul>
+      <li>테마를 바꿔도 <code class="language-plaintext highlighter-rouge">31</code>, <code class="language-plaintext highlighter-rouge">32</code>, <code class="language-plaintext highlighter-rouge">34</code>에 해당하는 RGB 값은 항상 같음<br />
+→ 그러면 색 “번호”만 바뀌고 실색(RGB)은 안 바뀌는 것처럼 느껴짐</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="예시로-설명">예시로 설명</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv LS_COLORS "di=34:ex=32"
+</code></pre></div></div>
+
+<p>이건 디렉토리는 34번 파랑, 실행파일은 32번 초록으로 하라는 의미입니다.</p>
+
+<blockquote>
+  <p>❗️하지만 “34번 파랑”이 실제로 어떤 파랑인지(RGB)는 <strong>MATE Terminal 테마가 정함</strong></p>
+</blockquote>
+
+<p>그런데 <strong>테마가 똑같은 34번 RGB를 계속 쓰고 있었다면?</strong><br />
+→ 색이 안 바뀌는 것처럼 보이는 게 당연합니다.</p>
+
+<hr />
+
+<h2 id="정리하자면-딱-이겁니다">정리하자면 딱 이겁니다</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">LS_COLORS</code>: 이건 단순히 <strong>번호로 색을 지정</strong></p>
+  </li>
+  <li>
+    <p>테마: 이 색 번호(30<del>37, 90</del> 97 등)에 <strong>RGB를 매핑</strong></p>
+  </li>
+  <li>
+    <p>문제는: <strong>테마가 이 매핑을 실제로 바꾸지 않거나, 반영이 안 됐던 것</strong></p>
+  </li>
+  <li>
+    <p>그래서: <strong>색이 바뀌는 줄 알았는데 실제론 고정 RGB라서 변화가 없었던 것</strong></p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-지금은-왜-되냐">✅ 지금은 왜 되냐?</h2>
+
+<ul>
+  <li>
+    <p>지금은 MATE Terminal이 <strong>테마를 제대로 반영하고 있고</strong></p>
+  </li>
+  <li>
+    <p>당신은 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>를 수동으로 지정해서, 테마에서 해석될 수 있는 ANSI 코드만 정확히 보내주고 있음</p>
+  </li>
+</ul>
+
+<p>→ 즉, <strong>셸은 “파랑 써!” 하고, 터미널은 “좋아, 이번 테마에선 그 파랑은 이 RGB야” 하고 반응함</strong></p>
+
+<hr />
+
+<p>필요하시면 테마를 바꾸면서 색상 번호 30~37이 어떤 RGB로 보이는지 실시간으로 비교하는 스크립트도 드릴 수 있습니다. 더 파고들고
+싶으시면 말씀 주세요.</p>
+
+<p class="chat--user">
+
+여전히 이해가 안되네 ls –color를 특정 RGB 코드로 지정할수도있어?
+
+</p>
+
+<p>좋습니다. 이제 질문이 본질을 정확히 찔렀습니다.</p>
+
+<hr />
+
+<h2 id="-답부터-드리면">🎯 답부터 드리면:</h2>
+
+<blockquote>
+  <p>❌ <strong>아니요.<code class="language-plaintext highlighter-rouge">ls --color</code>는 특정 RGB 색을 직접 지정할 수 없습니다.</strong></p>
+</blockquote>
+
+<hr />
+
+<h2 id="-왜-그런가">🔍 왜 그런가?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">ls --color</code>는 색을 지정할 때 <strong>ANSI color 코드</strong> 를 씁니다. 예:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">31</code> = 빨강</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">32</code> = 초록</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">34</code> = 파랑</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">1;35</code> = 진한 마젠타<br />
+등등…</p>
+  </li>
+</ul>
+
+<p>이 숫자는 <strong>“RGB 색상이 아닙니다.”</strong><br />
+그냥 <strong>번호입니다.</strong></p>
+
+<hr />
+
+<h2 id="-그럼-rgb-색은-누가-정하냐">🤔 그럼 RGB 색은 누가 정하냐?</h2>
+
+<blockquote>
+  <p>💡 <strong>터미널 에뮬레이터가 정합니다.</strong></p>
+</blockquote>
+
+<p>예:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ls</code>는 "디렉토리는 34번 색 써!"라고 출력함</p>
+  </li>
+  <li>
+    <p>터미널이 <strong>“내 테마에서 34번은 이 RGB다”</strong>라고 결정해서 색을 표시함</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-비유로-설명">📦 비유로 설명</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>역할</th>
+      <th>비유</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LS_COLORS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">"파일 종류에 따라 색 번호를 붙여"</code> 라고 지정</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ls</code></td>
+      <td><code class="language-plaintext highlighter-rouge">"이건 디렉토리니까 34번 색 써야지"</code></td>
+    </tr>
+    <tr>
+      <td>터미널</td>
+      <td><code class="language-plaintext highlighter-rouge">"34번은 내 테마에선 #00aaff야"</code> → RGB 해석</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-그래서-요약하면">✅ 그래서 요약하면</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>할 수 있는 것</th>
+      <th>할 수 없는 것</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>파일 종류마다 색 번호 지정 (ex: <code class="language-plaintext highlighter-rouge">di=34</code>)</td>
+      <td>색상에 직접 RGB 코드 넣기</td>
+    </tr>
+    <tr>
+      <td>디렉토리, 실행파일, 확장자별 색 번호 다르게 하기</td>
+      <td><code class="language-plaintext highlighter-rouge">di=#FF00FF</code> 이런 식 불가능</td>
+    </tr>
+    <tr>
+      <td>터미널 테마에서 ANSI 색 번호의 RGB를 바꾸기</td>
+      <td><code class="language-plaintext highlighter-rouge">ls</code> 명령 자체로 RGB 직접 지정하기</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-rgb로-하고-싶으면">💡 RGB로 하고 싶으면?</h2>
+
+<blockquote>
+  <p>🔥 방법은 단 하나: <strong>터미널 테마에서 “34번 색은 이 RGB로 써라”라고 바꾸는 것뿐</strong></p>
+</blockquote>
+
+<p>예:</p>
+
+<ul>
+  <li>
+    <p>MATE Terminal에서 <strong>Color 탭 → ANSI 컬러 매핑 변경</strong></p>
+  </li>
+  <li>
+    <p>여기서 30<del>37번 색, 90</del> 97번 색 각각을 원하는 RGB로 수동 설정</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-결론-2">✅ 결론</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ls --color</code> = 색 번호만 붙여줌 (RGB는 아님)</p>
+  </li>
+  <li>
+    <p>RGB를 바꾸고 싶다면 → <strong>터미널 테마에서 해당 번호에 매핑된 RGB를 바꿔야 함</strong></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ls</code>나 <code class="language-plaintext highlighter-rouge">LS_COLORS</code>에서는 RGB 지정은 절대 불가능</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>혹시 진짜로 파일 종류에 대해 RGB 수준으로 색 컨트롤하고 싶다면,<br />
+<code class="language-plaintext highlighter-rouge">ls</code> 대신에 <code class="language-plaintext highlighter-rouge">exa</code>나 <code class="language-plaintext highlighter-rouge">lsd</code> 같은 modern한 대체 툴 써야 합니다. 원하시면 그것도 설명드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+기존에도 폴더는 파란색 일반은 하얀색으로 보였단 말야? 근데 mate terminal 설정에서 파란색을 빨갛게 바꿔도 안바뀌었어. 근데 너가
+말한 LS_COLORS를 적용하니 빨갛게 바뀌어
+
+</p>
+
+<p>정확하게 짚으셨습니다.<br />
+이제 진짜 <strong>왜 그렇게 됐는지</strong> 설명드릴게요. 핵심은:</p>
+
+<hr />
+
+<h2 id="-문제의-본질">🧨 <strong>문제의 본질</strong></h2>
+
+<blockquote>
+  <p><strong>예전엔<code class="language-plaintext highlighter-rouge">LS_COLORS</code>가 비어 있어서 ls는 색 번호를 안 붙였고</strong>,<br />
+ <strong>그래서 터미널이 테마에서 설정한 색을 쓸 기회조차 없었던 것</strong> 입니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-하나씩-따져봅시다">🔍 하나씩 따져봅시다</h2>
+
+<h3 id="-상황-요약">💡 상황 요약:</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>상황</th>
+      <th>결과</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LS_COLORS</code> 없음</td>
+      <td><code class="language-plaintext highlighter-rouge">ls</code>는 "색을 붙여야 할 이유"를 모름 → 대부분 단색 출력 or 내부 기본값</td>
+    </tr>
+    <tr>
+      <td>MATE Terminal에서 ANSI 34번을 빨강으로 바꿈</td>
+      <td>터미널은 "34번 오면 빨강으로 칠해야지"라고 대기 중</td>
+    </tr>
+    <tr>
+      <td>근데 <code class="language-plaintext highlighter-rouge">ls</code>가 34번 안 씀</td>
+      <td>→ 터미널은 아예 색을 안 바꿈 → 아무 변화도 없음</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-지금은-왜-바뀌냐">✅ 지금은 왜 바뀌냐?</h2>
+
+<p>이제 당신은:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv LS_COLORS "di=34:fi=37:ex=32:*.sh=35"
+</code></pre></div></div>
+
+<p>처럼 <strong>명시적으로 "폴더에는 34번 색을 써!"</strong> 라고 설정했기 때문에,</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ls</code>는 디렉토리에 <code class="language-plaintext highlighter-rouge">\e[34m</code> 같은 ANSI 코드 넣음</p>
+  </li>
+  <li>
+    <p>MATE Terminal은 34번 = 빨강 → 빨강으로 렌더링</p>
+  </li>
+</ul>
+
+<p><strong>이제 드디어 색상 지시(LS_COLORS)와 색상 해석(MATE 테마)이 연결된 것</strong></p>
+
+<hr />
+
+<h2 id="-비유로-말하자면">📌 비유로 말하자면</h2>
+
+<blockquote>
+  <p>예전엔 ‘페인트통(테마 색)’은 빨갛게 칠해놨는데,<br />
+ <code class="language-plaintext highlighter-rouge">ls</code>가 "이 통 써라(34번)" 라는 명령 자체를 안 해서<br />
+ 붓이 페인트를 찍을 일이 없었던 것</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-결론-요약-1">🔚 결론 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>요점</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">mate-terminal</code>에서 색 바꿔도 안 바뀐 이유</td>
+      <td><code class="language-plaintext highlighter-rouge">ls</code>가 색 번호(ANSI 코드)를 출력 안 했기 때문</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LS_COLORS</code> 설정 후 바뀐 이유</td>
+      <td><code class="language-plaintext highlighter-rouge">ls</code>가 명시적으로 "폴더는 34번 써!"라고 하니까 드디어 터미널이 색 적용</td>
+    </tr>
+    <tr>
+      <td>핵심</td>
+      <td><strong>터미널 테마는 색을 바꾸는 게 아니라 “색 번호에 대응되는 RGB를 정의”할 뿐</strong>. 색 번호 자체는 <code class="language-plaintext highlighter-rouge">ls</code>가 붙여야 한다</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>지금 상황은 <strong>당신이 색을 붙이는 방식과 해석하는 방식 둘 다 컨트롤하게 된 상태</strong> 입니다.<br />
+이게 진짜 ‘테마 커스터마이징’의 핵심이에요.</p>
+
+<p>원하시면 <code class="language-plaintext highlighter-rouge">.sh</code>, <code class="language-plaintext highlighter-rouge">.txt</code>, <code class="language-plaintext highlighter-rouge">.log</code> 같은 확장자에 다른 색 붙이는 것도 도와드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+응 기본적으로 많이 쓰는 옵션으로 LS_COLORS setenv 추천해줘
+
+</p>
+
+<p>좋습니다. 이제 제대로 정리해서, <strong>기본적으로 보기 좋고 자주 쓰는 색 조합으로 된<code class="language-plaintext highlighter-rouge">LS_COLORS</code> 설정</strong>을 <code class="language-plaintext highlighter-rouge">tcsh</code>용
+<code class="language-plaintext highlighter-rouge">setenv</code> 형식으로 추천드리겠습니다.</p>
+
+<hr />
+
+<h2 id="-추천-ls_colors-설정-tcsh용">✅ 추천 <code class="language-plaintext highlighter-rouge">LS_COLORS</code> 설정 (tcsh용)</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv LS_COLORS "di=1;34:ln=1;36:so=1;35:pi=1;33:ex=1;32:bd=1;33;44:cd=1;33;41:su=37;41:sg=30;43:tw=30;42:ow=34;42:*.tar=1;31:*.gz=1;31:*.zip=1;31:*.xz=1;31:*.7z=1;31:*.jpg=1;35:*.png=1;35:*.mp4=1;35:*.sh=1;32:*.txt=1;37"
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-설명">📌 설명:</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>코드</th>
+      <th>의미</th>
+      <th>색상</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">di=1;34</code></td>
+      <td>디렉토리</td>
+      <td>진한 파랑</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ln=1;36</code></td>
+      <td>심볼릭 링크</td>
+      <td>진한 시안</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">so=1;35</code></td>
+      <td>소켓 파일</td>
+      <td>진한 마젠타</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pi=1;33</code></td>
+      <td>FIFO (named pipe)</td>
+      <td>진한 노랑</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ex=1;32</code></td>
+      <td>실행파일</td>
+      <td>진한 초록</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">bd=1;33;44</code></td>
+      <td>block device</td>
+      <td>노랑 on 파랑 배경</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cd=1;33;41</code></td>
+      <td>character device</td>
+      <td>노랑 on 빨강 배경</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">su=37;41</code></td>
+      <td>setuid 파일</td>
+      <td>흰색 on 빨강</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sg=30;43</code></td>
+      <td>setgid 파일</td>
+      <td>검정 on 노랑</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tw=30;42</code></td>
+      <td>sticky + writable 디렉토리</td>
+      <td>검정 on 초록</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ow=34;42</code></td>
+      <td>다른 사용자 writable 디렉토리</td>
+      <td>파랑 on 초록</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*.tar</code>, <code class="language-plaintext highlighter-rouge">*.gz</code>, <code class="language-plaintext highlighter-rouge">*.zip</code>, <code class="language-plaintext highlighter-rouge">*.7z</code></td>
+      <td>압축파일</td>
+      <td>진한 빨강</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*.jpg</code>, <code class="language-plaintext highlighter-rouge">*.png</code>, <code class="language-plaintext highlighter-rouge">*.mp4</code></td>
+      <td>미디어 파일</td>
+      <td>진한 마젠타</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*.sh</code></td>
+      <td>쉘 스크립트</td>
+      <td>진한 초록</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*.txt</code></td>
+      <td>일반 텍스트</td>
+      <td>진한 흰색</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-사용법">🛠 사용법</h2>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">~/.tcshrc</code>에 위 줄 추가:</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv LS_COLORS "..."
+</code></pre></div></div>
+
+<ol>
+  <li>그리고 다음도 함께 추가:</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+alias ls 'ls --color=auto'
+</code></pre></div></div>
+
+<ol>
+  <li>적용:</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+source ~/.tcshrc
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-참고-좀-더-보기-편하게-하고-싶으면">⏩ 참고: 좀 더 보기 편하게 하고 싶으면?</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+alias ll 'ls -l --color=auto'
+alias la 'ls -a --color=auto'
+alias lla 'ls -la --color=auto'
+</code></pre></div></div>
+
+<hr />
+
+<p>필요하시면 배경 어두운 테마/밝은 테마용으로 따로 색 조합도 맞춰드릴 수 있습니다.<br />
+또한 <code class="language-plaintext highlighter-rouge">dircolors</code>로 직접 <code class="language-plaintext highlighter-rouge">.dircolors</code> 파일 생성해서 유지보수하기 쉽게 바꾸는 방법도 안내드릴 수 있어요.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">tmux 마우스 복사 설정</title><link href="https://hvppycoding.github.io/linux/tmux-clipboard/" rel="alternate" type="text/html" title="tmux 마우스 복사 설정" /><published>2025-07-23T10:25:16+09:00</published><updated>2025-07-23T10:25:16+09:00</updated><id>https://hvppycoding.github.io/linux/tmux-clipboard</id><content type="html" xml:base="https://hvppycoding.github.io/linux/tmux-clipboard/"><![CDATA[<p class="chat--user">
 
 음 원래 linux mate terminal에서는 select로 복사가 되었는데 tmux 안에서는 그게 안되네
 
@@ -4856,1008 +6661,4 @@ git config user.email <span class="s2">"bob@example.com"</span>
   </li>
 </ul>
 
-<p>의문 있으시면 더 질문 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="git" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">테스트 코드 작성 방법</title><link href="https://hvppycoding.github.io/python/pytest-with-input-files/" rel="alternate" type="text/html" title="테스트 코드 작성 방법" /><published>2025-07-21T01:14:12+09:00</published><updated>2025-07-21T01:14:12+09:00</updated><id>https://hvppycoding.github.io/python/pytest-with-input-files</id><content type="html" xml:base="https://hvppycoding.github.io/python/pytest-with-input-files/"><![CDATA[<p class="chat--user">
-
-파이썬 패키지를 개발 중이야. 테스트코드 작성을 도와줘. 예를 들어서 <code class="language-plaintext highlighter-rouge">pip install .</code> 하면 mypackage라는 패키지가
-설치돼. 프로젝트 소스 폴더 안에는 pyproject.toml, mypackage(*.py 소스 보관)이 있어. 이 상태에서
-mypackage.parse라는 함수에 대한 테스트코드를 작성하고 싶어. 여러 테스트셋 인풋 파일을 parse 함수에 넣어서 테스트하려고
-해.
-
-</p>
-
-<p>네, 정확하게 진행하려면 다음 단계로 접근하는 것이 좋습니다. 테스트 코드를 효율적으로 작성하려면 <code class="language-plaintext highlighter-rouge">pytest</code>를 사용하는 것이
-일반적입니다. 다음은 step-by-step 설명과 예시입니다.</p>
-
-<hr />
-
-<h2 id="-가정">✅ 가정</h2>
-
-<ul>
-  <li>프로젝트 구조는 다음과 같다고 가정하겠습니다:</li>
-</ul>
-
-<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>your-project/
-├── pyproject.toml
-├── mypackage/
-│   ├── __init__.py
-│   └── parse.py         # 여기에 parse 함수가 있음
-├── tests/
-│   ├── __init__.py
-│   └── test_parse.py    # 테스트 코드
-└── test_inputs/
-├── input1.txt
-├── input2.txt
-└── ...
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-parse-함수-테스트-기본-흐름">✅ <code class="language-plaintext highlighter-rouge">parse</code> 함수 테스트: 기본 흐름</h2>
-
-<p>먼저 <code class="language-plaintext highlighter-rouge">mypackage/parse.py</code> 안에 다음과 같이 <code class="language-plaintext highlighter-rouge">parse</code> 함수가 정의되어 있다고 가정하겠습니다:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># mypackage/parse.py
-</span>
-<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="c1"># 예시 파싱 함수
-</span>    <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">splitlines</span><span class="p">()</span>
-    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">lines</span><span class="sh">"</span><span class="p">:</span> <span class="n">lines</span><span class="p">,</span> <span class="sh">"</span><span class="s">line_count</span><span class="sh">"</span><span class="p">:</span> <span class="nf">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)}</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-테스트-코드-예시-teststest_parsepy">✅ 테스트 코드 예시 (<code class="language-plaintext highlighter-rouge">tests/test_parse.py</code>)</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
-<span class="kn">import</span> <span class="n">pytest</span>
-<span class="kn">from</span> <span class="n">mypackage.parse</span> <span class="kn">import</span> <span class="n">parse</span>
-
-<span class="c1"># 테스트 데이터 폴더 경로
-</span><span class="n">TEST_INPUT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">'</span><span class="s">..</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">test_inputs</span><span class="sh">'</span><span class="p">)</span>
-
-<span class="c1"># 테스트 케이스 리스트 만들기
-</span><span class="n">test_files</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="sh">"</span><span class="s">input1.txt</span><span class="sh">"</span><span class="p">,</span>
-    <span class="sh">"</span><span class="s">input2.txt</span><span class="sh">"</span><span class="p">,</span>
-    <span class="c1"># 필요하면 더 추가
-</span><span class="p">]</span>
-
-<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="sh">"</span><span class="s">filename</span><span class="sh">"</span><span class="p">,</span> <span class="n">test_files</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">test_parse_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">TEST_INPUT_DIR</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="sh">"</span><span class="s">r</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
-
-    <span class="n">result</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-
-    <span class="c1"># 여기서 기대 결과를 어떻게 판단할지가 핵심입니다
-</span>    <span class="c1"># 일단 단순하게 구조 확인
-</span>    <span class="k">assert</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">lines</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">result</span>
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">line_count</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">result</span>
-    <span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="sh">"</span><span class="s">lines</span><span class="sh">"</span><span class="p">])</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="sh">"</span><span class="s">line_count</span><span class="sh">"</span><span class="p">]</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-추가-팁">✅ 추가 팁</h2>
-
-<ol>
-  <li>
-    <p><strong>테스트 파일 기대값 정의</strong><br />
-기대 결과가 명확해야 하면 <code class="language-plaintext highlighter-rouge">input1_expected.json</code> 같은 파일로 기대값을 따로 두고 비교하면 좋습니다.</p>
-  </li>
-  <li><strong>테스트 실행</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pytest
-</code></pre></div>    </div>
-  </li>
-  <li><strong>pyproject.toml에<code class="language-plaintext highlighter-rouge">pytest</code> 설정</strong><br />
-<code class="language-plaintext highlighter-rouge">tool.pytest.ini_options</code> 섹션을 넣어도 좋습니다 (선택 사항).</li>
-</ol>
-
-<hr />
-
-<h2 id="주의할-점">❗주의할 점</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">parse</code>가 단순 문자열이 아닌 파일을 직접 열도록 되어 있다면, <code class="language-plaintext highlighter-rouge">parse_from_file</code> 같은 wrapper를 만드는 것이 테스트하기 편합니다.</p>
-  </li>
-  <li>
-    <p>테스트에 필요한 파일이 많아질수록, fixture나 test data generator 사용을 고려해 보세요.</p>
-  </li>
-</ul>
-
-<hr />
-
-<p>필요하시면 fixture 버전이나 기대값을 비교하는 구조도 작성해 드릴 수 있습니다. <code class="language-plaintext highlighter-rouge">parse</code> 함수의 구체적 역할이나 출력 형식이
-알려지면 더 정밀하게 짤 수 있습니다. 알려주시면 이어서 도와드리겠습니다.</p>
-
-<p class="chat--user">
-
-fixture가 뭐야?
-
-</p>
-
-<p>좋은 질문입니다. <code class="language-plaintext highlighter-rouge">fixture</code>는 <code class="language-plaintext highlighter-rouge">pytest</code>에서 테스트 코드 실행 전에 <strong>공통적으로 필요한 준비 작업을 해주는 함수</strong> 입니다.
-예를 들어 테스트에 반복적으로 필요한 파일 읽기, 객체 생성, 환경 설정 등을 한 번만 해두고, 각 테스트 함수에서 재사용할 수 있게
-해줍니다.</p>
-
-<hr />
-
-<h2 id="-예제-파일-읽기-fixture">✅ 예제: 파일 읽기 fixture</h2>
-
-<h3 id="테스트-전에-매번-파일을-읽는-코드가-있다면">테스트 전에 매번 파일을 읽는 코드가 있다면:</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_parse_input1</span><span class="p">():</span>
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">test_inputs/input1.txt</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="bp">...</span>
-</code></pre></div></div>
-
-<p>이걸 여러 번 반복하면 귀찮고 중복이 생기죠.</p>
-
-<hr />
-
-<h3 id="-fixture로-정리하면">✅ fixture로 정리하면</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pytest</span>
-
-<span class="nd">@pytest.fixture</span>
-<span class="k">def</span> <span class="nf">input1_text</span><span class="p">():</span>
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">test_inputs/input1.txt</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
-
-<span class="k">def</span> <span class="nf">test_parse_input1</span><span class="p">(</span><span class="n">input1_text</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span><span class="n">input1_text</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="bp">...</span>
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">@pytest.fixture</code>가 붙은 함수는 테스트 함수에서 인자로 받을 수 있습니다.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">test_parse_input1()</code> 함수는 <code class="language-plaintext highlighter-rouge">input1_text()</code> 함수를 자동으로 호출해서 그 값을 받습니다.</p>
-  </li>
-  <li>
-    <p>이름은 자유롭게 정할 수 있지만 의미를 명확하게 해야 합니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-fixture는-어디에-둬야-할까">✅ fixture는 어디에 둬야 할까?</h2>
-
-<p>공통으로 쓰는 fixture가 많아지면 <code class="language-plaintext highlighter-rouge">conftest.py</code> 파일에 모아두는 게 일반적입니다.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>your-project/
-├── tests/
-│   ├── conftest.py     👈 fixture 모음
-│   ├── test_parse.py
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-fixture는-언제-쓰는-게-좋나">✅ fixture는 언제 쓰는 게 좋나?</h2>
-
-<ul>
-  <li>
-    <p>테스트 데이터 로딩 (파일, DB 등)</p>
-  </li>
-  <li>
-    <p>테스트용 객체 생성 (예: 가짜 유저, mock API)</p>
-  </li>
-  <li>
-    <p>공통 환경 설정 (예: temp 폴더 만들기, 임시 설정 적용)</p>
-  </li>
-  <li>
-    <p>cleanup이 필요한 작업 (예: 파일 삭제, 상태 복원)</p>
-  </li>
-</ul>
-
-<hr />
-
-<p>정리하자면:</p>
-
-<blockquote>
-  <p><strong>fixture는 테스트 실행 전 필요한 준비 작업을 미리 해주는 자동화 도구입니다.</strong><br />
- 반복을 줄이고, 테스트 코드의 가독성과 유지보수성을 크게 높여줍니다.</p>
-</blockquote>
-
-<hr />
-
-<p>더 복잡한 예, 예를 들어 여러 파일을 매개변수화해서 fixture에 넣고 싶으시면 알려주세요. 거기까지도 가능합니다.</p>
-
-<p class="chat--user">
-
-test_inputs를 tests 폴더 안에 넣는 것과 너의 방식의 장단점을 비교해줘
-
-</p>
-
-<p>아주 중요한 포인트를 짚으셨습니다.<br />
-테스트 입력 파일(<code class="language-plaintext highlighter-rouge">test_inputs</code>)을 <strong><code class="language-plaintext highlighter-rouge">tests/</code> 폴더 안에 넣을지</strong>, 혹은 <strong>루트에 둘지</strong> 는 프로젝트 구조,
-유지보수, 배포 방식에 따라 장단점이 분명합니다. 비교해드리겠습니다.</p>
-
-<hr />
-
-<h2 id="-방식-1-test_inputs를-루트에-두는-방식-tests-바깥">🔧 방식 1: <code class="language-plaintext highlighter-rouge">test_inputs/</code>를 루트에 두는 방식 (<code class="language-plaintext highlighter-rouge">tests/</code> 바깥)</h2>
-
-<h3 id="-장점">✅ 장점</h3>
-
-<p>항목| 설명<br />
-—|—<br />
-<strong>프로젝트 논리적 분리</strong>|  테스트 코드(<code class="language-plaintext highlighter-rouge">tests/</code>)와 테스트 데이터(<code class="language-plaintext highlighter-rouge">test_inputs/</code>)가 분리되어 역할이 명확함<br />
-<strong>여러 테스트 스위트에서 공유 가능</strong>|  예: <code class="language-plaintext highlighter-rouge">unit tests</code>, <code class="language-plaintext highlighter-rouge">integration tests</code> 등 여러 테스트 폴더에서 같은
-<code class="language-plaintext highlighter-rouge">test_inputs/</code>를 쓸 수 있음<br />
-<strong>에디터/IDE에서 탐색이 편함</strong>| <code class="language-plaintext highlighter-rouge">tests/</code>만 봐도 테스트 코드만 깔끔하게 보임</p>
-
-<h3 id="-단점">❌ 단점</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>항목</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>상대 경로가 복잡해짐</strong></td>
-      <td>테스트 코드에서 <code class="language-plaintext highlighter-rouge">../test_inputs/...</code> 형태로 상대 경로를 써야 함</td>
-    </tr>
-    <tr>
-      <td><strong>이동성 저하</strong></td>
-      <td><code class="language-plaintext highlighter-rouge">tests/</code>만 따로 옮기거나 복사하면 <code class="language-plaintext highlighter-rouge">test_inputs/</code> 누락 위험 있음</td>
-    </tr>
-    <tr>
-      <td><strong>배포 시 누락 주의 필요</strong></td>
-      <td>PyPI에 배포할 때 <code class="language-plaintext highlighter-rouge">test_inputs</code>는 포함시키지 않아야 함 (별도 관리 필요)</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-방식-2-test_inputs를-tests-폴더-안에-넣는-방식-teststest_inputs">🔧 방식 2: <code class="language-plaintext highlighter-rouge">test_inputs/</code>를 <code class="language-plaintext highlighter-rouge">tests/</code> 폴더 안에 넣는 방식 (<code class="language-plaintext highlighter-rouge">tests/test_inputs/</code>)</h2>
-
-<h3 id="-장점-1">✅ 장점</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>항목</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>폴더 하나로 테스트 완결</strong></td>
-      <td><code class="language-plaintext highlighter-rouge">tests/</code> 하나만 복사해도 테스트 가능. 독립성과 이동성 높음</td>
-    </tr>
-    <tr>
-      <td><strong>상대 경로 간단함</strong></td>
-      <td><code class="language-plaintext highlighter-rouge">"test_inputs/input1.txt"</code> 처럼 간단하게 접근 가능</td>
-    </tr>
-    <tr>
-      <td><strong>테스트 전용으로 분명히 구분됨</strong></td>
-      <td>배포/운영 코드에 테스트 자원이 섞이지 않음. 빌드 시스템에도 명확하게 테스트 전용으로 인식됨</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-단점-1">❌ 단점</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>항목</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>공유 어려움</strong></td>
-      <td>다른 테스트 폴더에서 재사용하려면 import 경로나 경로 계산이 복잡해짐</td>
-    </tr>
-    <tr>
-      <td><strong>테스트와 데이터가 섞여 복잡</strong></td>
-      <td>테스트 코드 파일과 데이터 파일이 같이 있어서 구조가 다소 혼잡할 수 있음 (정리는 가능)</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-어떤-걸-선택해야-할까">📌 어떤 걸 선택해야 할까?</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>상황</th>
-      <th>추천 방식</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>작은 프로젝트 / 단일 테스트 종류</strong></td>
-      <td><code class="language-plaintext highlighter-rouge">tests/test_inputs/</code> (내부에 포함) 추천</td>
-    </tr>
-    <tr>
-      <td><strong>복잡한 프로젝트 / 여러 테스트 스위트 / CI 분리 필요</strong></td>
-      <td><code class="language-plaintext highlighter-rouge">test_inputs/</code> 외부 분리 추천</td>
-    </tr>
-    <tr>
-      <td><strong>테스트 데이터가 많고 재사용이 필요한 경우</strong></td>
-      <td>외부 분리 (루트에 <code class="language-plaintext highlighter-rouge">test_inputs/</code>)</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-결론">💡 결론</h2>
-
-<blockquote>
-  <p><strong>단순하고 깔끔한 테스트 환경이 목적이라면</strong> → <code class="language-plaintext highlighter-rouge">tests/test_inputs/</code><br />
- <strong>여러 스위트나 고급 구성이 필요하다면</strong> → 루트에 <code class="language-plaintext highlighter-rouge">test_inputs/</code></p>
-</blockquote>
-
-<p>의심 많은 개발자라면 이렇게 판단하면 됩니다:</p>
-
-<ul>
-  <li>
-    <p>테스트만 보관할 목적이라면 안에,</p>
-  </li>
-  <li>
-    <p>공유/분리가 필요하다면 밖에.</p>
-  </li>
-</ul>
-
-<p>원하시면 <code class="language-plaintext highlighter-rouge">pyproject.toml</code>에서 테스트 리소스 경로를 처리하는 방식도 같이 알려드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-tests 폴더 내부에 테스트 데이터들을 넣는다면, test_inputs 대신에 쓸만한 폴더명 추천해줘
-
-</p>
-
-<p>좋은 질문입니다. <code class="language-plaintext highlighter-rouge">tests/</code> 내부에 테스트 데이터를 넣는다면, <code class="language-plaintext highlighter-rouge">test_inputs/</code>보다는 의미를 더 명확하게 하거나 범용성 있게
-바꾸는 것이 좋습니다. 목적에 따라 다음과 같은 폴더명을 추천드립니다:</p>
-
-<hr />
-
-<h2 id="-추천-폴더명-목록">📁 추천 폴더명 목록</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>폴더명</th>
-      <th>쓰기 좋은 상황</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>fixtures/</strong></td>
-      <td>일반적인 테스트 입력 파일을 포함할 때</td>
-      <td><code class="language-plaintext highlighter-rouge">pytest</code> 용어와도 일치. 범용적이고 표준화된 명칭</td>
-    </tr>
-    <tr>
-      <td><strong>data/</strong></td>
-      <td>테스트용 데이터가 다양하고 정형/비정형이 섞일 때</td>
-      <td>CSV, JSON, 텍스트 등 다양한 포맷에 적합</td>
-    </tr>
-    <tr>
-      <td><strong>resources/</strong></td>
-      <td>테스트에 필요한 모든 리소스를 담을 때</td>
-      <td>테스트 입력 외에도 이미지, 설정 파일 등이 있을 경우</td>
-    </tr>
-    <tr>
-      <td><strong>inputs/</strong></td>
-      <td>입력 중심 테스트일 때</td>
-      <td>테스트 대상 함수에 넣을 raw input 중심일 경우</td>
-    </tr>
-    <tr>
-      <td><strong>samples/</strong></td>
-      <td>예시 기반 테스트일 때</td>
-      <td>실제 입력 예시나 샘플 로그 등을 테스트할 경우 적합</td>
-    </tr>
-    <tr>
-      <td><strong>assets/</strong></td>
-      <td>경량 정적 리소스 느낌일 때</td>
-      <td>텍스트, 이미지, 설정 등 테스트용 "정적 자산"에 적합</td>
-    </tr>
-    <tr>
-      <td><strong>test_data/</strong></td>
-      <td>보수적이고 명확한 이름을 원할 때</td>
-      <td>직관적이고 오해의 여지가 없음. 단조롭지만 명확함</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-의문을-가져야-할-포인트">🧠 의문을 가져야 할 포인트</h2>
-
-<ul>
-  <li>
-    <p><strong>이 폴더가 무엇을 담을 것인가?</strong> → 텍스트? JSON? 바이너리?</p>
-  </li>
-  <li>
-    <p><strong>다른 테스트 유형에서도 공유할 것인가?</strong> → integration, functional test 등?</p>
-  </li>
-  <li>
-    <p><strong>CI 환경에서 어떻게 다룰 것인가?</strong> → 불필요한 리소스 포함되지 않도록 관리 필요</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-내-추천-요약">✅ 내 추천 (요약)</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>목적</th>
-      <th>추천 이름</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>범용성 &amp; 깔끔함</td>
-      <td><code class="language-plaintext highlighter-rouge">fixtures/</code> ✅</td>
-    </tr>
-    <tr>
-      <td>직관적이고 보수적</td>
-      <td><code class="language-plaintext highlighter-rouge">test_data/</code> ✅</td>
-    </tr>
-    <tr>
-      <td>입력 위주 테스트</td>
-      <td><code class="language-plaintext highlighter-rouge">inputs/</code> 또는 <code class="language-plaintext highlighter-rouge">samples/</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>개인적으로는 <code class="language-plaintext highlighter-rouge">tests/fixtures/</code> 또는 <code class="language-plaintext highlighter-rouge">tests/test_data/</code>를 가장 추천합니다.<br />
-의심스러운 선택을 피하려면 보수적으로 <code class="language-plaintext highlighter-rouge">test_data/</code> 쓰는 것도 괜찮습니다.</p>
-
-<p class="chat--user">
-
-테스트 출력을 파일로 할거야. output 폴더 안에 하고 싶은데 테스트 시작 전에 이미 output 폴더가 존재한다면 지우고 다시 만들게
-하고 싶어.
-
-</p>
-
-<p>네, 그 요구사항은 완전히 타당하고, 테스트 신뢰성을 위해 <strong><code class="language-plaintext highlighter-rouge">tests/output/</code> 폴더를 항상 깨끗한 상태로 초기화</strong>하는 건 매우
-중요합니다. 이걸 처리하는 가장 깔끔한 방법은 <code class="language-plaintext highlighter-rouge">pytest</code>의 fixture를 이용하는 것입니다.</p>
-
-<hr />
-
-<h2 id="-목표">✅ 목표</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tests/output/</code> 폴더가 테스트 시작 전 존재한다면 <strong>삭제</strong></p>
-  </li>
-  <li>
-    <p>그 후 <strong>빈 폴더로 다시 생성</strong></p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-구현-방법-conftestpy에서-fixture-정의">✅ 구현 방법: <code class="language-plaintext highlighter-rouge">conftest.py</code>에서 fixture 정의</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># tests/conftest.py
-</span>
-<span class="kn">import</span> <span class="n">shutil</span>
-<span class="kn">import</span> <span class="n">os</span>
-<span class="kn">import</span> <span class="n">pytest</span>
-
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">session</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clean_output_folder</span><span class="p">():</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">)</span>
-
-    <span class="c1"># 폴더가 존재하면 삭제
-</span>    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
-        <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
-
-    <span class="c1"># 새로 생성
-</span>    <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-어떻게-작동하나">✅ 어떻게 작동하나?</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">scope="session"</code>: pytest 실행 전체 세션 동안 딱 한 번 실행됨</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">autouse=True</code>: 어떤 테스트에서도 명시적으로 호출하지 않아도 자동 실행됨</p>
-  </li>
-</ul>
-
-<p>즉, <code class="language-plaintext highlighter-rouge">pytest</code>를 실행하면:</p>
-
-<ol>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tests/output/</code>이 있으면 삭제됨</p>
-  </li>
-  <li>
-    <p>새로 만들어짐</p>
-  </li>
-  <li>
-    <p>모든 테스트가 그 깨끗한 상태를 공유함</p>
-  </li>
-</ol>
-
-<hr />
-
-<h2 id="주의">❗주의</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">output/</code> 폴더에 중요한 파일이 들어있지 않아야 합니다. 이 fixture는 <strong>강제 삭제</strong> 합니다.</p>
-  </li>
-  <li>
-    <p>테스트 실행 중간에 또 초기화하고 싶다면 scope를 <code class="language-plaintext highlighter-rouge">"function"</code>으로 줄이고, 각 테스트에 fixture를 명시해줘야 합니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-테스트에서-사용-예시">✅ 테스트에서 사용 예시</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_parse_and_save_to_file</span><span class="p">():</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">result1.json</span><span class="sh">"</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">"</span><span class="s">some result</span><span class="sh">"</span><span class="p">)</span>
-
-    <span class="k">assert</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-의심해봐야-할-것">✋ 의심해봐야 할 것</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">output/</code>을 지운다는 게 실제로 "안전한가?" → Git에 커밋된 다른 테스트 리소스가 이 폴더에 있으면 안 됨</p>
-  </li>
-  <li>
-    <p>동시에 여러 테스트가 파일을 쓰는 구조인가? → 그럼 파일명 충돌, race condition을 고려해야 함</p>
-  </li>
-</ul>
-
-<hr />
-
-<p>필요하면 테스트마다 <strong>고유한 output path</strong> 를 자동으로 만들어주는 fixture도 짜드릴 수 있습니다. 원하시면 말씀 주세요.</p>
-
-<p class="chat--user">
-
-기능별로 tests 폴더 안에 subdirectory를 만든 상태야. 그 안의 output을 지우게 하고 싶어.
-
-</p>
-
-<p>좋습니다. 그런 구조라면 <code class="language-plaintext highlighter-rouge">tests/</code> 안의 <strong>모든 서브디렉토리</strong> 안에 있는 <code class="language-plaintext highlighter-rouge">output/</code> 폴더를 찾아서 지우고 다시 생성하는
-방식이 필요합니다.</p>
-
-<hr />
-
-<h2 id="-예시-디렉토리-구조">✅ 예시 디렉토리 구조</h2>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lua
-
-tests/
-├── feature_a/
-│   ├── test_something.py
-│   └── output/
-├── feature_b/
-│   ├── test_something_else.py
-│   └── output/
-└── conftest.py
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-목표-1">✅ 목표</h2>
-
-<p><code class="language-plaintext highlighter-rouge">pytest</code> 시작 전에 다음을 자동으로 수행:</p>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tests/**/output/</code> 폴더 모두 재귀 탐색</p>
-  </li>
-  <li>
-    <p>존재하면 삭제하고, 빈 폴더로 재생성</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-conftestpy-예시-최상위-tests-안에-둠">✅ <code class="language-plaintext highlighter-rouge">conftest.py</code> 예시 (최상위 <code class="language-plaintext highlighter-rouge">tests/</code> 안에 둠)</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># tests/conftest.py
-</span>
-<span class="kn">import</span> <span class="n">os</span>
-<span class="kn">import</span> <span class="n">shutil</span>
-<span class="kn">import</span> <span class="n">pytest</span>
-
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">session</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clean_all_output_dirs</span><span class="p">():</span>
-    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="nf">walk</span><span class="p">(</span><span class="n">base_dir</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">:</span>
-                <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
-                <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[pytest setup] Cleaning: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
-
-                <span class="c1"># 삭제 후 다시 생성
-</span>                <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-장점-2">✅ 장점</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tests/</code> 내부 어떤 깊이든 <code class="language-plaintext highlighter-rouge">output/</code> 폴더가 있으면 모두 처리함</p>
-  </li>
-  <li>
-    <p>테스트 시작 전 단 한 번 실행됨 (<code class="language-plaintext highlighter-rouge">session</code>, <code class="language-plaintext highlighter-rouge">autouse=True</code>)</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="의심해볼-점">❗의심해볼 점</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>질문</th>
-      <th>이유</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>정말 모든 output 폴더를 지워도 되는가?</strong></td>
-      <td>혹시 로그나 캐시로 남겨야 하는 파일은 아닌가?</td>
-    </tr>
-    <tr>
-      <td><strong>테스트 실행 중 output 경로가 충돌하지 않는가?</strong></td>
-      <td>멀티스레드/병렬 테스트에서 겹치면 문제가 생길 수 있음</td>
-    </tr>
-    <tr>
-      <td><strong>삭제 실패에 대비할 로직이 있는가?</strong></td>
-      <td>파일이 잠겨있거나 권한 문제로 삭제가 안 될 수도 있음</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<p>원하신다면 <code class="language-plaintext highlighter-rouge">output/</code> 대신 다른 이름 (<code class="language-plaintext highlighter-rouge">results/</code>, <code class="language-plaintext highlighter-rouge">temp/</code>, 등)도 쉽게 변경 가능합니다.<br />
-또한 테스트별 고유한 <code class="language-plaintext highlighter-rouge">output/</code> 디렉토리로 격리하고 싶다면 그 방법도 제안드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-test_something.py 안에서 그런 일을 할 순 없어? 이건 conftest가 각각의 테스트에 대해 모두 잘 알아야 하잖아.
-
-</p>
-
-<p>좋습니다. 아주 예리한 지적입니다.</p>
-
-<blockquote>
-  <p>✅ <strong>요약부터 말하자면</strong> :<br />
- <strong><code class="language-plaintext highlighter-rouge">test_something.py</code> 안에서만 해당 <code class="language-plaintext highlighter-rouge">output/</code> 디렉토리를 지우고 다시 만드는 것</strong>, <strong>당연히 가능합니다</strong>
-, 그리고 <strong>그게 더 명확하고 모듈화된 방식</strong> 이 될 수 있습니다.</p>
-</blockquote>
-
-<p><code class="language-plaintext highlighter-rouge">conftest.py</code>가 전체 테스트를 알 필요 없이, <strong>각 테스트 파일이 자기<code class="language-plaintext highlighter-rouge">output/</code>만 관리하는 구조</strong>가 더 독립적이고
-안전할 수 있습니다.</p>
-
-<hr />
-
-<h2 id="-방식-테스트-파일-안에서-output을-정리하는-fixture-작성">✅ 방식: 테스트 파일 안에서 <code class="language-plaintext highlighter-rouge">output/</code>을 정리하는 fixture 작성</h2>
-
-<p>예를 들어 <code class="language-plaintext highlighter-rouge">tests/feature_a/test_something.py</code>에서만 <code class="language-plaintext highlighter-rouge">feature_a/output/</code>을 다루고 싶다면:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># tests/feature_a/test_something.py
-</span>
-<span class="kn">import</span> <span class="n">os</span>
-<span class="kn">import</span> <span class="n">shutil</span>
-<span class="kn">import</span> <span class="n">pytest</span>
-
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clean_local_output</span><span class="p">():</span>
-    <span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
-        <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
-    <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-이-설정의-의미">✅ 이 설정의 의미</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>설정</th>
-      <th>의미</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">scope="module"</code></td>
-      <td>해당 <code class="language-plaintext highlighter-rouge">.py</code> 파일 안에서 테스트 시작 전 한 번만 실행됨</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">autouse=True</code></td>
-      <td>테스트 함수에서 명시적으로 안 불러도 자동 실행됨</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-실제-테스트-예시">✅ 실제 테스트 예시</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_something_creates_output</span><span class="p">():</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">result.json</span><span class="sh">"</span><span class="p">)</span>
-
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">"</span><span class="s">test content</span><span class="sh">"</span><span class="p">)</span>
-
-    <span class="k">assert</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-장점-3">✅ 장점</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>항목</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>테스트 독립성 높음</strong></td>
-      <td>각 테스트 파일이 자기 output만 관리함</td>
-    </tr>
-    <tr>
-      <td><strong>충돌 없음</strong></td>
-      <td>다른 테스트와 격리되어 안전함</td>
-    </tr>
-    <tr>
-      <td><strong>conftest에 대한 의존도 없음</strong></td>
-      <td>중앙 관리 없이 로컬 컨트롤 가능</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="단점-의심해봐야-할-점">❗단점 (의심해봐야 할 점)</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>항목</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>중복 fixture 생김</strong></td>
-      <td>여러 테스트 파일에 똑같은 fixture가 반복될 수 있음</td>
-    </tr>
-    <tr>
-      <td><strong>output 경로 이름 변경 시 수작업 필요</strong></td>
-      <td>일괄 적용 어려움</td>
-    </tr>
-  </tbody>
-</table>
-
-<blockquote>
-  <p>해결책: 중복이 많아지면 <code class="language-plaintext highlighter-rouge">clean_output()</code> 함수를 외부 파일로 분리해서 <code class="language-plaintext highlighter-rouge">import</code>하는 구조도 고려 가능.</p>
-</blockquote>
-
-<hr />
-
-<h2 id="-결론-1">✅ 결론</h2>
-
-<blockquote>
-  <p>당신이 말한 대로 <code class="language-plaintext highlighter-rouge">test_something.py</code> 안에서 처리하는 방식은 <strong>더 모듈화되고 명시적이며 안전</strong> 합니다.<br />
- 특히 각 테스트가 다른 <code class="language-plaintext highlighter-rouge">output/</code> 디렉토리를 가질 때, <strong>이 방식이 훨씬 우월</strong> 합니다.</p>
-</blockquote>
-
-<p>필요하시면 중복 제거를 위한 헬퍼 유틸도 만들어 드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-def test_something(filename): 이 함수 위쪽에 저걸 쓰면 되는거지?
-
-</p>
-
-<p>결론부터 말하자면, <strong>아니요. 단순히<code class="language-plaintext highlighter-rouge">def test_something(filename):</code> 위에 fixture 함수를 선언만 해두는
-것만으로는 동작하지 않습니다.</strong><br />
-<strong>그 fixture가 테스트 함수에 "연결"되어야 합니다.</strong></p>
-
-<hr />
-
-<h2 id="-당신이-말한-패턴-예시">🔧 당신이 말한 패턴 예시:</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ❌ 이렇게만 해두면 아무 일도 일어나지 않음
-</span><span class="nd">@pytest.fixture</span>
-<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
-    <span class="bp">...</span>
-
-<span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="bp">...</span>
-</code></pre></div></div>
-
-<p>이건 <strong><code class="language-plaintext highlighter-rouge">clean_output</code>이 정의되었지만 호출되지 않음</strong>. pytest는 아무런 동작도 하지 않음.</p>
-
-<hr />
-
-<h2 id="-동작하게-만드는-두-가지-방법">✅ 동작하게 만드는 두 가지 방법</h2>
-
-<h3 id="방법-1-명시적-호출-비추천--깔끔하지-않음">방법 1. 명시적 호출 (비추천 – 깔끔하지 않음)</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">clean_output</span><span class="p">):</span>
-    <span class="c1"># clean_output이 fixture니까, pytest가 먼저 실행함
-</span>    <span class="bp">...</span>
-</code></pre></div></div>
-
-<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">clean_output()</code>이 <strong>해당 테스트 함수 실행 전에 실행</strong> 됩니다.<br />
-하지만 <strong>테스트마다 매번 명시해야 해서 중복되고 관리가 어렵습니다.</strong></p>
-
-<hr />
-
-<h3 id="방법-2-자동-실행-추천">방법 2. 자동 실행 (추천)</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 위쪽에 선언
-</span><span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
-    <span class="bp">...</span>
-</code></pre></div></div>
-
-<p>이렇게 하면:</p>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">scope="module"</code>: 해당 테스트 파일 내에서 한 번만 실행</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">autouse=True</code>: 테스트 함수에 <code class="language-plaintext highlighter-rouge">clean_output</code>을 명시하지 않아도 자동 실행</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-최종-예시-추천-방식">✅ 최종 예시 (추천 방식)</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
-<span class="kn">import</span> <span class="n">shutil</span>
-<span class="kn">import</span> <span class="n">pytest</span>
-
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
-        <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
-    <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-
-<span class="c1"># 이 테스트는 clean_output이 자동으로 실행된 상태에서 동작
-</span><span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s">.out</span><span class="sh">"</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">"</span><span class="s">result</span><span class="sh">"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-요약">🧠 요약</h2>
-
-<p>질문| 답변<br />
-—|—<br />
-<code class="language-plaintext highlighter-rouge">fixture</code>를 위에 써두면 자동으로 실행되나?| ❌ 아니요, 자동으로 실행되려면 <code class="language-plaintext highlighter-rouge">autouse=True</code>가 있어야 함<br />
-테스트마다 명시할 수도 있나?| ✅ 가능하지만 중복되고 피곤함<br />
-가장 추천하는 방식은?| ✅ <code class="language-plaintext highlighter-rouge">@pytest.fixture(scope="module", autouse=True)</code> 써서 해당 테스트 파일에서
-한 번만 실행되도록</p>
-
-<p>의심해볼 지점이 정확했어요. 그래서 실수 없이 fixture가 정말 "작동"하도록 위 구조를 꼭 써야 합니다.</p>
-
-<p class="chat--user">
-
-그게 def test_something(filename): 위쪽에 너가 말한 코드를 쓴거잖아
-
-</p>
-
-<p>맞습니다. 당신 말이 맞아요 — <strong>제가 아까 말한 fixture 코드는 실제로<code class="language-plaintext highlighter-rouge">def test_something(filename):</code> 위에
-"있기만 해도" 동작</strong>합니다, <strong>단 조건이 있습니다</strong> :</p>
-
-<hr />
-
-<h2 id="-핵심-조건">✅ 핵심 조건</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
-    <span class="bp">...</span>
-</code></pre></div></div>
-
-<p>위와 같이 <strong><code class="language-plaintext highlighter-rouge">autouse=True</code>가 설정되어 있어야만</strong>, 테스트 함수에서 명시적으로 <code class="language-plaintext highlighter-rouge">clean_output</code>을 인자로 넘기지
-않아도, <strong>자동으로 실행됩니다</strong>.</p>
-
-<hr />
-
-<h2 id="️-오해-소지-정리">✳️ 오해 소지 정리</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>조건</th>
-      <th>실행 여부</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">autouse=True</code> 있음</td>
-      <td>✅ 자동 실행</td>
-      <td><code class="language-plaintext highlighter-rouge">def test_x(...)</code> 위에 있든 아래에 있든 상관없음</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">autouse=False</code> (기본)</td>
-      <td>❌ 자동 실행 안 됨</td>
-      <td>이 경우는 테스트 함수의 인자로 직접 넣어줘야 함</td>
-    </tr>
-    <tr>
-      <td>fixture 선언 위치</td>
-      <td>❌ 실행 여부에 영향 없음</td>
-      <td>위든 아래든 pytest가 다 인식함</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-다시-정리하면">🔁 다시 정리하면</h2>
-
-<blockquote>
-  <p>당신이 처음 말한 <code class="language-plaintext highlighter-rouge">"test 함수 위쪽에 저걸 쓰면 되는 거지?"</code>는 <strong>맞는 말입니다</strong> ,<br />
- <strong>단,<code class="language-plaintext highlighter-rouge">autouse=True</code>일 때만 그렇습니다.</strong></p>
-</blockquote>
-
-<p>저는 처음에 그 전제가 빠진 상태로 해석해서 “그냥 위에 두기만 하면 안 된다”라고 단정적으로 말했는데, 그건 너무 좁은 해석이었습니다.
-<strong>지적하신 대로,<code class="language-plaintext highlighter-rouge">autouse=True</code> 조건이 있으면 위에만 있어도 됩니다.</strong></p>
-
-<hr />
-
-<p>✅ 결론:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ✅ 이렇게만 해두면 테스트 함수에서 자동 실행됨
-</span><span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
-    <span class="bp">...</span>
-
-<span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="bp">...</span>
-</code></pre></div></div>
-
-<p>이 구조, 제대로 작동합니다. 정확하게 짚으셨습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>의문 있으시면 더 질문 주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="git" /><summary type="html"><![CDATA[]]></summary></entry></feed>
