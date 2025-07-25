@@ -94,4 +94,10 @@ var store = [{
         "tags": [],
         "url": "/linux/ls-colors/",
         "teaser": null
+      },{
+        "title": "Global gitignore 설정 방법",
+        "excerpt":"  global gitigrore (.DS_store)     .DS_Store는 macOS가 디렉토리 정보를 저장하기 위해 자동으로 생성하는 숨김 파일입니다. Git에서 이 파일을 무시하려면 .gitignore 파일 또는 글로벌 Git 설정에 추가해야 합니다. 글로벌 설정으로 처리하면 모든 Git 저장소에서 .DS_Store를 무시하게 됩니다.   글로벌 .gitignore에 .DS_Store 추가하는 방법:      글로벌.gitignore 파일 생성 또는 위치 확인:     git config --global core.excludesfile ~/.gitignore_global           해당 파일에.DS_Store 추가:     echo .DS_Store &gt;&gt; ~/.gitignore_global                이미 Git에 추적된.DS_Store 파일이 있다면 제거:  해당 파일이 이미 버전 관리 중이라면 무시 설정만으로는 제거되지 않음. 제거해야 함.       git rm --cached .DS_Store           변경 사항 커밋 :     git commit -m \"Remove .DS_Store and add to global ignore\"           한 번 설정하면, 앞으로 새로 만드는 Git 저장소에서도 .DS_Store는 자동으로 무시됩니다.   필요하면 .gitignore_global 파일 내 다른 macOS 관련 무시 규칙들도 알려드릴 수 있습니다.  ","categories": ["git"],
+        "tags": [],
+        "url": "/git/global-gitignore/",
+        "teaser": null
       }]

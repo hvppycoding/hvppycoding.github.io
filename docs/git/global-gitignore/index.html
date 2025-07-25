@@ -10,28 +10,32 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>ARCHIVE</title>
-<meta name="description" content="An amazing archive.">
+<!-- begin _includes/seo.html --><title>Global gitignore 설정 방법 - ARCHIVE</title>
+<meta name="description" content="">
 
 
   <meta name="author" content="hvppycoding">
   
+  <meta property="article:author" content="hvppycoding">
+  
 
 
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="ARCHIVE">
-<meta property="og:title" content="ARCHIVE">
-<meta property="og:url" content="https://hvppycoding.github.io/">
+<meta property="og:title" content="Global gitignore 설정 방법">
+<meta property="og:url" content="https://hvppycoding.github.io/git/global-gitignore/">
 
 
-  <meta property="og:description" content="An amazing archive.">
-
-
-
+  <meta property="og:description" content="">
 
 
 
+
+
+
+
+  <meta property="article:published_time" content="2025-07-25T12:37:19+09:00">
 
 
 
@@ -42,22 +46,10 @@
   
 
 
-<link rel="canonical" href="https://hvppycoding.github.io/">
+<link rel="canonical" href="https://hvppycoding.github.io/git/global-gitignore/">
 
 
 
-  <link rel="next" href="https://hvppycoding.github.io/page2/">
-
-
-
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-    "name": "hvppycoding",
-    "url": "https://hvppycoding.github.io/"
-}
-</script>
 
 
 
@@ -102,7 +94,7 @@
 
   </head>
 
-  <body class="layout--home" dir="ltr">
+  <body class="layout--single" dir="ltr">
     <nav class="skip-links">
   <ul>
     <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
@@ -151,144 +143,26 @@
 
 
 
+
+
 <div id="main" role="main">
   
-  <div class="sidebar sticky">
-  
 
 
-<div itemscope itemtype="https://schema.org/Person" class="h-card">
-
-  
-    <div class="author__avatar">
-      <a href="https://hvppycoding.github.io/">
-        <img src="/assets/images/avartar.png" alt="hvppycoding" itemprop="image" class="u-photo">
-      </a>
-    </div>
-  
-
-  <div class="author__content">
-    <h3 class="author__name p-name" itemprop="name">
-      <a class="u-url" rel="me" href="https://hvppycoding.github.io/" itemprop="url">hvppycoding</a>
-    </h3>
-    
-  </div>
-
-  <div class="author__urls-wrapper">
-    <button class="btn btn--inverse">Follow</button>
-    <ul class="author__urls social-icons">
-      
-
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      
-
-      <!--
-  <li>
-    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
-      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
-    </a>
-  </li>
--->
-    </ul>
-  </div>
-</div>
-
-  
-  </div>
-
-
-
-  <div class="archive">
-    
-      <h1 id="page-title" class="page__title"></h1>
-    
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Global gitignore 설정 방법">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-25T12:37:19+09:00">
     
 
-<h3 class="archive__subtitle">Recent posts</h3>
-
-
-
-
-<div class="entries-list">
-  
-
-
-
-
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
+    <div class="page__inner-wrap">
       
-        <a href="/git/global-gitignore/" rel="permalink">Global gitignore 설정 방법
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/git/global-gitignore/" itemprop="url">Global gitignore 설정 방법
 </a>
-      
-    </h2>
-    
+          </h1>
+          
 
   <p class="page__meta">
     
@@ -308,16 +182,110 @@
   </p>
 
 
-    <p class="archive__item-excerpt" itemprop="description">
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+global gitigrore (.DS_store)
 
 </p>
+
+<p><code class="language-plaintext highlighter-rouge">.DS_Store</code>는 macOS가 디렉토리 정보를 저장하기 위해 자동으로 생성하는 숨김 파일입니다. Git에서 이 파일을 무시하려면
+<code class="language-plaintext highlighter-rouge">.gitignore</code> 파일 또는 글로벌 Git 설정에 추가해야 합니다. 글로벌 설정으로 처리하면 모든 Git 저장소에서
+<code class="language-plaintext highlighter-rouge">.DS_Store</code>를 무시하게 됩니다.</p>
+
+<h3 id="글로벌-gitignore에-ds_store-추가하는-방법">글로벌 <code class="language-plaintext highlighter-rouge">.gitignore</code>에 <code class="language-plaintext highlighter-rouge">.DS_Store</code> 추가하는 방법:</h3>
+
+<ol>
+  <li><strong>글로벌<code class="language-plaintext highlighter-rouge">.gitignore</code> 파일 생성 또는 위치 확인</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> core.excludesfile ~/.gitignore_global
+</code></pre></div>    </div>
+  </li>
+  <li><strong>해당 파일에<code class="language-plaintext highlighter-rouge">.DS_Store</code> 추가</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> .DS_Store <span class="o">&gt;&gt;</span> ~/.gitignore_global
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>이미 Git에 추적된<code class="language-plaintext highlighter-rouge">.DS_Store</code> 파일이 있다면 제거</strong>:<br />
+해당 파일이 이미 버전 관리 중이라면 무시 설정만으로는 제거되지 않음. 제거해야 함.</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git <span class="nb">rm</span> <span class="nt">--cached</span> .DS_Store
+</code></pre></div>    </div>
+  </li>
+  <li><strong>변경 사항 커밋</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit <span class="nt">-m</span> <span class="s2">"Remove .DS_Store and add to global ignore"</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>한 번 설정하면, 앞으로 새로 만드는 Git 저장소에서도 <code class="language-plaintext highlighter-rouge">.DS_Store</code>는 자동으로 무시됩니다.</p>
+
+<p>필요하면 <code class="language-plaintext highlighter-rouge">.gitignore_global</code> 파일 내 다른 macOS 관련 무시 규칙들도 알려드릴 수 있습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#git" class="page__taxonomy-item p-category" rel="tag">git</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-25T12:37:19+09:00">2025-07-25</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux/ls-colors/" class="pagination--pager" title="MATE Terminal 색상 반영 문제">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
   </article>
-</div>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
 
 
 
-
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
@@ -352,10 +320,13 @@
   </article>
 </div>
 
+    
+      
+      
 
 
 
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
@@ -390,10 +361,13 @@
   </article>
 </div>
 
+    
+      
+      
 
 
 
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
@@ -428,10 +402,13 @@
   </article>
 </div>
 
+    
+      
+      
 
 
 
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
@@ -466,244 +443,12 @@
   </article>
 </div>
 
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/python/python-dotenv/" rel="permalink">Python dotenv 설명
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-07-22T22:58:21+09:00">2025-07-22</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/linux/tmux-basic/" rel="permalink">tmux 기본 조작법
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-07-22T22:19:37+09:00">2025-07-22</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/vim/vim-open-file-under-cursor/" rel="permalink">GVim 파일 탭 열기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-07-22T13:53:35+09:00">2025-07-22</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/python/python-logging/" rel="permalink">파이썬 로그 시스템
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-07-21T23:06:43+09:00">2025-07-21</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
-
-
-
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/python/python-exception-debug/" rel="permalink">예외 처리 디버깅 방법
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-07-21T15:12:37+09:00">2025-07-21</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
-</div>
-
-
-  
-    
-<nav class="pagination">
-  
-  
-  <ul>
-    
-    
-    <li><a href="#" class="disabled"><span aria-hidden="true">Previous</span></a></li>
-    
-
-    
-    
-      <li><a href="#" class="disabled current">1</a></li>
-    
-
-    
-    
-
-    
-    
-    
-
-    
-
-    
-    
-
-    
-      <li><a href="/page2/">2</a></li>
-    
-
-    
-    
-      <li><a href="/page2/">Next</a></li>
-    
-  </ul>
-</nav>
-
-
-  
-
-
-
   </div>
+</div>
+
+  
+  
 </div>
 
       
