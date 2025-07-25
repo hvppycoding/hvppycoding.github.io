@@ -1,4 +1,428 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T12:37:23+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Global gitignore 설정 방법</title><link href="https://hvppycoding.github.io/git/global-gitignore/" rel="alternate" type="text/html" title="Global gitignore 설정 방법" /><published>2025-07-25T12:37:19+09:00</published><updated>2025-07-25T12:37:19+09:00</updated><id>https://hvppycoding.github.io/git/global-gitignore</id><content type="html" xml:base="https://hvppycoding.github.io/git/global-gitignore/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T15:33:17+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Loguru 패키지 설명</title><link href="https://hvppycoding.github.io/python/python-loguru/" rel="alternate" type="text/html" title="Loguru 패키지 설명" /><published>2025-07-25T15:33:14+09:00</published><updated>2025-07-25T15:33:14+09:00</updated><id>https://hvppycoding.github.io/python/python-loguru</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-loguru/"><![CDATA[<p class="chat--user">
+
+python에서 loguru를 쓰던데 이건 뭐하는 패키지야?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">loguru</code>는 Python에서 <strong>로깅(logging)</strong> 을 훨씬 더 간편하고 강력하게 해주는 서드파티 라이브러리입니다. 기본
+<code class="language-plaintext highlighter-rouge">logging</code> 모듈보다 사용하기 쉬우면서도, 실전에서 쓸 수 있는 여러 기능을 기본으로 제공합니다.</p>
+
+<p>아래에 핵심적으로 어떤 역할을 하는지 정리해드리겠습니다.</p>
+
+<hr />
+
+<h3 id="-왜-loguru를-쓰는가">✅ 왜 <code class="language-plaintext highlighter-rouge">loguru</code>를 쓰는가?</h3>
+
+<ol>
+  <li>
+    <p><strong>기본 설정 없이 바로 사용 가능</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">from loguru import logger</code> 한 줄이면 바로 로그를 출력할 수 있습니다.</p>
+      </li>
+      <li>
+        <p>기본 <code class="language-plaintext highlighter-rouge">logging</code> 모듈처럼 설정이나 핸들러 붙이는 번거로운 작업이 필요 없습니다.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>더 읽기 쉬운 로그 출력</strong></p>
+
+    <ul>
+      <li>로그 메시지에 시간, 파일명, 줄 번호, 레벨 등이 자동 포함되고, 컬러로 구분됩니다.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>파일 로깅, 회전(Rotation), 압축(Compression) 기능 기본 내장</strong></p>
+
+    <ul>
+      <li>예: 로그 파일이 일정 크기를 넘으면 자동으로 새 파일로 분리하거나, 오래된 로그를 압축/삭제할 수 있습니다.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>구체적인 예외 추적 제공</strong></p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">logger.exception()</code>은 traceback을 매우 보기 쉽게 출력해 줍니다.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>함수 데코레이터로 자동 로깅</strong></p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">@logger.catch</code> 데코레이터를 쓰면, 예외가 발생했을 때 자동으로 로그가 남습니다.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="-간단한-예시">📌 간단한 예시</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">Debug message</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Info message</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="sh">"</span><span class="s">Warning message</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">Error message</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="sh">"</span><span class="s">Critical message</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># 예외 자동 로깅
+</span><span class="nd">@logger.catch</span>
+<span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+
+<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-로그-파일-저장도-간단하게">🔧 로그 파일 저장도 간단하게</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">my_log.log</span><span class="sh">"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="sh">"</span><span class="s">500 MB</span><span class="sh">"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="sh">"</span><span class="s">zip</span><span class="sh">"</span><span class="p">,</span> <span class="n">retention</span><span class="o">=</span><span class="sh">"</span><span class="s">10 days</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>위 코드는 로그를 <code class="language-plaintext highlighter-rouge">my_log.log</code> 파일에 저장하면서,</p>
+
+<ul>
+  <li>
+    <p>파일이 500MB를 넘으면 새 파일로 분리,</p>
+  </li>
+  <li>
+    <p>오래된 로그는 zip으로 압축,</p>
+  </li>
+  <li>
+    <p>10일 지난 로그는 삭제합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="결론">결론</h3>
+
+<p>기존 <code class="language-plaintext highlighter-rouge">logging</code> 모듈보다 훨씬 덜 귀찮고, 바로 실전에서 쓸 수 있게 설계된 로그 도구입니다. 특히 CLI 도구나 백엔드 서비스 개발
+시 아주 유용합니다. 다만, 너무 많은 기능을 자동으로 처리하기 때문에 내부 동작을 잘 이해하지 않고 쓰면 디버깅이 어려워질 수 있습니다.
+쓰기 쉽지만, 무조건 좋은 건 아닙니다 — 설정의 명시성이 부족해서 프로젝트 규모가 커지면 팀 단위로는 오히려 관리가 복잡해질 수도
+있습니다.</p>
+
+<p>필요하다면 <code class="language-plaintext highlighter-rouge">loguru</code>와 <code class="language-plaintext highlighter-rouge">logging</code>의 내부 차이점도 비교해드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+@logger.catch가 뭐하는건지 저것만 봐서는 잘 모르겠어. 파일 로깅은 자동으로 해주는거야?
+
+</p>
+
+<p>좋은 질문입니다. 겉으로는 간단해 보이지만, <code class="language-plaintext highlighter-rouge">@logger.catch</code>나 파일 로깅에 대한 오해가 생기기 쉬운 부분입니다. 아래에 정확하게
+짚어드리겠습니다.</p>
+
+<hr />
+
+<h2 id="-loggercatch-정확히-뭐하는가">🔍 <code class="language-plaintext highlighter-rouge">@logger.catch</code> 정확히 뭐하는가?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">@logger.catch</code>는 <strong>함수나 코드 블록에서 발생하는 예외를 자동으로 잡아서 로그로 남기는 데코레이터</strong> 입니다.</p>
+
+<p>즉, try-except 없이도 <strong>예외가 터지면 자동으로 traceback과 함께 예쁘게 출력</strong> 해 줍니다.</p>
+
+<h3 id="-예시">📌 예시:</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="nd">@logger.catch</span>
+<span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+
+<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># 예외 발생
+</span></code></pre></div></div>
+
+<h4 id="결과-터미널-출력">결과 (터미널 출력):</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vbnet
+
+2025-07-25 12:34:56.789 | ERROR    | __main__:divide:5 - An error has occurred
+Traceback (most recent call last):
+  File "script.py", line 7, in &lt;module&gt;
+    divide(1, 0)
+  File "script.py", line 5, in divide
+    return x / y
+ZeroDivisionError: division by zero
+</code></pre></div></div>
+
+<p>✔️ 이건 <code class="language-plaintext highlighter-rouge">try: ... except:</code> 없이도 예외를 자동으로 잡아주는 것<br />
+✔️ 로그에 함수명, 줄 번호, 전체 traceback까지 아주 정리된 형태로 찍히는 것</p>
+
+<hr />
+
+<h2 id="-단점-및-주의사항">⛔ 단점 및 주의사항</h2>
+
+<ul>
+  <li>
+    <p><strong>예외를 무조건 삼켜버립니다</strong>. 즉, <code class="language-plaintext highlighter-rouge">@logger.catch</code>는 예외를 처리한 후 <strong>재발생시키지 않기 때문에</strong> , 프로그램이 조용히 계속 진행될 수 있습니다.</p>
+
+    <ul>
+      <li>원래는 죽었어야 할 프로그램이 안 죽고 뭔가 이상하게 흘러갈 수 있다는 뜻입니다.</li>
+    </ul>
+  </li>
+  <li>
+    <p>예외를 다시 올리게 하려면 <code class="language-plaintext highlighter-rouge">reraise=True</code>를 명시해야 합니다:</p>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@logger.catch</span><span class="p">(</span><span class="n">reraise</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">buggy</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">bad!</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="nf">buggy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-그럼-파일-로깅은-자동으로-되냐">📁 그럼 파일 로깅은 자동으로 되냐?</h2>
+
+<p><strong>절대 자동으로 안 됩니다.</strong> <code class="language-plaintext highlighter-rouge">logger.add()</code>로 명시적으로 파일을 지정해줘야 합니다.</p>
+
+<h3 id="예시">예시:</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">debug.log</span><span class="sh">"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="sh">"</span><span class="s">1 MB</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="nd">@logger.catch</span>
+<span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+
+<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>✔️ 이래야 <code class="language-plaintext highlighter-rouge">debug.log</code> 파일에 로그가 저장됩니다.<br />
+❌ 아무것도 안 하면 콘솔 출력만 나가고, 파일은 생성되지 않습니다.</p>
+
+<hr />
+
+<h2 id="요약-정리">요약 정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>기능</th>
+      <th>자동 여부</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">@logger.catch</code></td>
+      <td>✅</td>
+      <td>예외를 자동으로 잡고 로그로 남김 (단, 예외는 기본적으로 무시됨)</td>
+    </tr>
+    <tr>
+      <td>파일 로깅</td>
+      <td>❌</td>
+      <td><code class="language-plaintext highlighter-rouge">logger.add()</code>로 직접 설정해야 저장됨</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">logger.add()</code>의 다른 기능 (필터링, 포맷, 로그 레벨 별 분리 저장 등)도 알려드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+cli entry에서 logger에 add 해주면 전체 패키지에서 다 공유되는거야?
+
+</p>
+
+<p>네, <strong>기본적으로는 그렇습니다.</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">loguru</code>의 <code class="language-plaintext highlighter-rouge">logger</code>는 <strong>싱글톤 객체</strong> 입니다. 즉, <code class="language-plaintext highlighter-rouge">logger.add()</code>로 설정한 로그 핸들러는 <strong>해당 프로세스
+내에서 전역(global)으로 공유</strong> 되며, 다른 모듈이나 서브패키지에서 임포트해서 써도 동일하게 적용됩니다.</p>
+
+<p>하지만, 여기엔 몇 가지 조건과 오해하기 쉬운 함정이 있습니다.</p>
+
+<hr />
+
+<h2 id="-기본-동작-cli-entry에서-loggeradd-하면-전체에서-공유됨">✅ 기본 동작: CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()</code> 하면 전체에서 공유됨</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">app.log</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Starting the app</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># utils.py
+</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="k">def</span> <span class="nf">helper</span><span class="p">():</span>
+    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Inside helper</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># main.py 실행</span>
+python main.py
+</code></pre></div></div>
+
+<p>→ <code class="language-plaintext highlighter-rouge">app.log</code>에는 <code class="language-plaintext highlighter-rouge">main()</code>과 <code class="language-plaintext highlighter-rouge">helper()</code> 양쪽 로그가 다 들어갑니다.<br />
+→ 이건 <code class="language-plaintext highlighter-rouge">logger</code> 객체가 <strong>싱글톤이기 때문</strong> 입니다. <code class="language-plaintext highlighter-rouge">from loguru import logger</code>는 항상 같은 인스턴스를
+가져옵니다.</p>
+
+<hr />
+
+<h2 id="️-조심해야-할-점">⚠️ 조심해야 할 점</h2>
+
+<h3 id="1-loggeradd-호출-타이밍-중요">1. <code class="language-plaintext highlighter-rouge">logger.add()</code> 호출 타이밍 중요</h3>
+
+<p>만약 <code class="language-plaintext highlighter-rouge">logger.add()</code>가 실행되기 전에 다른 모듈이 먼저 로그를 찍으면?</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># utils.py
+</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello from utils</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># add() 호출 전이므로 안 찍힐 수도 있음
+</span>
+<span class="c1"># main.py
+</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="n">utils</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>→ <code class="language-plaintext highlighter-rouge">utils</code>가 먼저 로딩되면서 로그를 찍고, <code class="language-plaintext highlighter-rouge">add()</code>는 그 후에 호출되므로 <strong>처음 로그는 안 남을 수 있음</strong>.</p>
+
+<p><strong>💡 해결책:</strong> 가능한 한 <strong>초기화 로직은 entry point에서 가장 먼저 실행</strong> 해야 함.</p>
+
+<hr />
+
+<h3 id="2-로그-핸들러가-중복되면-로그도-중복됨">2. 로그 핸들러가 중복되면 로그도 중복됨</h3>
+
+<p>다른 곳에서 또 <code class="language-plaintext highlighter-rouge">logger.add()</code>를 하면 핸들러가 추가로 붙기 때문에, <strong>같은 로그가 여러 번 출력될 수 있음</strong>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log1.txt</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log2.txt</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>→ 하나의 로그 메시지가 두 파일에 동시에 저장됨.<br />
+→ 불필요하게 많이 찍히는 상황도 생길 수 있음.</p>
+
+<hr />
+
+<h3 id="3-loggerremove-안-하면-핸들러-계속-남음">3. <code class="language-plaintext highlighter-rouge">logger.remove()</code> 안 하면 핸들러 계속 남음</h3>
+
+<p><code class="language-plaintext highlighter-rouge">logger.add()</code>는 핸들러 ID를 반환합니다. 이를 저장해뒀다가 필요할 때 <code class="language-plaintext highlighter-rouge">logger.remove(handler_id)</code>로
+제거해줘야 합니다. 안 그러면 계속 누적됩니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log_id</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-결론-정리">✅ 결론 정리</h2>
+
+<p>질문| 답변<br />
+—|—<br />
+CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()</code> 하면 다른 모듈에서도 로그 저장되나?| ✅ 예, <code class="language-plaintext highlighter-rouge">loguru.logger</code>는 싱글톤이므로
+전체 패키지에서 공유됩니다.<br />
+설정 타이밍 중요하지 않나?| ⚠️ 중요합니다. 너무 늦게 <code class="language-plaintext highlighter-rouge">add()</code> 하면 초기 로그가 안 찍힐 수 있습니다.<br />
+중복 <code class="language-plaintext highlighter-rouge">add()</code> 문제 없나?| ⚠️ 중복 출력될 수 있으니 주의해야 합니다.<br />
+핸들러 제거하려면?| <code class="language-plaintext highlighter-rouge">logger.remove(handler_id)</code>로 수동 제거 필요합니다.</p>
+
+<hr />
+
+<p>필요하시다면, <code class="language-plaintext highlighter-rouge">logger.configure()</code>를 써서 모듈 단위 설정 분리하는 방법도 안내해드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+표준 출력은 자동으로 돼?
+
+</p>
+
+<p>기본적으로 <strong>네,<code class="language-plaintext highlighter-rouge">loguru</code>는 표준 출력(stdout)으로 로그를 자동 출력합니다.</strong><br />
+다만, <em>언제 어떻게 출력되는지는</em> 내부에 미리 등록된 <strong>기본 핸들러(default sink)</strong> 덕분이고, 그 동작 방식에 대해 정확히
+이해해야 합니다.</p>
+
+<hr />
+
+<h2 id="-기본-상태-자동으로-stdout-출력됨">✅ 기본 상태: 자동으로 stdout 출력됨</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello world</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>위 코드는 아무런 설정도 없지만 <code class="language-plaintext highlighter-rouge">stdout</code>으로 다음과 같이 컬러풀한 로그를 출력합니다:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2025</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">25</span> <span class="mi">14</span><span class="o">:</span><span class="mi">12</span><span class="o">:</span><span class="mf">30.123</span> <span class="o">|</span> <span class="n">INFO</span>     <span class="o">|</span> <span class="n">__main__</span><span class="o">:&lt;</span><span class="k">module</span><span class="o">&gt;:</span><span class="mi">3</span> <span class="o">-</span> <span class="n">hello</span> <span class="n">world</span>
+</code></pre></div></div>
+
+<p>이건 <code class="language-plaintext highlighter-rouge">loguru</code>가 <strong>프로그램 시작 시 내부적으로 다음과 같은 핸들러를 자동 등록</strong> 해두기 때문입니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="p">...,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">DEBUG</span><span class="sh">"</span><span class="p">,</span> <span class="n">colorize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>✔️ 즉, <strong>자동으로 stderr (터미널 출력)으로 로그를 내보냅니다.</strong><br />
+✔️ <code class="language-plaintext highlighter-rouge">stderr</code>이긴 하지만, 일반적으로 터미널 화면에 보이므로 사실상 <code class="language-plaintext highlighter-rouge">stdout</code>처럼 동작한다고 봐도 무방합니다.</p>
+
+<hr />
+
+<h2 id="-명시적으로-파일-로깅을-추가하면-어떻게-되나">❗ 명시적으로 파일 로깅을 추가하면 어떻게 되나?</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">mylog.log</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">only in file?</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>➡ <strong>아닙니다.</strong> 기본 stdout 출력도 여전히 유지됩니다.<br />
+즉, 로그는 <strong>콘솔에도 찍히고</strong> , <code class="language-plaintext highlighter-rouge">mylog.log</code> 파일에도 저장됩니다.<br />
+기존 핸들러는 유지되며 새로운 핸들러가 추가되는 구조이기 때문입니다.</p>
+
+<hr />
+
+<h2 id="-표준-출력을-끄고-싶다면">⛔ 표준 출력을 끄고 싶다면?</h2>
+
+<p>기존의 기본 핸들러를 <strong>명시적으로 제거</strong> 해야 합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>  <span class="c1"># 기존 stdout 핸들러 제거
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이러면 stdout에는 아무 것도 출력되지 않고, 파일에만 저장됩니다.</p>
+
+<hr />
+
+<h2 id="-요약">💡 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>질문</th>
+      <th>답변</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>아무 설정 없이 logger를 쓰면 어디로 로그가 나가나?</td>
+      <td>기본적으로 <code class="language-plaintext highlighter-rouge">stderr</code> (즉, 콘솔)로 나갑니다.</td>
+    </tr>
+    <tr>
+      <td>따로 add 안 해도 표준 출력이 된다?</td>
+      <td>✅ 네, 내부 기본 핸들러가 등록되어 있습니다.</td>
+    </tr>
+    <tr>
+      <td>파일로 로깅을 추가하면 표준 출력은 사라지나?</td>
+      <td>❌ 아니요, 둘 다 동작합니다.</td>
+    </tr>
+    <tr>
+      <td>stdout 출력을 끄려면?</td>
+      <td><code class="language-plaintext highlighter-rouge">logger.remove()</code>로 기존 핸들러를 제거해야 합니다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">stdout</code>, <code class="language-plaintext highlighter-rouge">stderr</code>, 파일 등 <strong>출력 경로별로 레벨이나 포맷을 다르게 설정</strong> 하는 방법도 설명해드릴 수
+있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Global gitignore 설정 방법</title><link href="https://hvppycoding.github.io/git/global-gitignore/" rel="alternate" type="text/html" title="Global gitignore 설정 방법" /><published>2025-07-25T12:37:19+09:00</published><updated>2025-07-25T12:37:19+09:00</updated><id>https://hvppycoding.github.io/git/global-gitignore</id><content type="html" xml:base="https://hvppycoding.github.io/git/global-gitignore/"><![CDATA[<p class="chat--user">
 
 global gitigrore (.DS_store)
 
@@ -8419,74 +8843,4 @@ click.echo랑 print의 차이는?
  CLI를 만들고 있다면, 사용자에게 보여줄 메시지는 <code class="language-plaintext highlighter-rouge">click.echo()</code>가 정석입니다.</p>
 </blockquote>
 
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">echo_info()</code>, <code class="language-plaintext highlighter-rouge">echo_error()</code> 같은 헬퍼 함수도 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">예외 처리 디버깅 방법</title><link href="https://hvppycoding.github.io/python/python-exception-debug/" rel="alternate" type="text/html" title="예외 처리 디버깅 방법" /><published>2025-07-21T15:12:37+09:00</published><updated>2025-07-21T15:12:37+09:00</updated><id>https://hvppycoding.github.io/python/python-exception-debug</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-exception-debug/"><![CDATA[<p class="chat--user">
-
-python에서 예외 처리를 <code class="language-plaintext highlighter-rouge">catch Exception as e: print(e)</code>로 했더니 자세한 내용이 없어서 디버깅이 어려워.
-어떻게 바꾸는게 좋을까?
-
-</p>
-
-<p>예외를 <code class="language-plaintext highlighter-rouge">catch Exception as e: print(e)</code>처럼 단순히 출력하면, 에러 메시지만 나오고 <strong>스택 트레이스</strong> 같은
-디버깅에 유용한 정보는 나오지 않기 때문에 디버깅이 어려워집니다.<br />
-아래처럼 <code class="language-plaintext highlighter-rouge">traceback</code> 모듈을 사용하면 <strong>예외 발생 위치와 호출 스택</strong> 까지 출력할 수 있어 훨씬 유용합니다:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">traceback</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="c1"># 오류가 발생할 수 있는 코드
-</span>    <span class="nf">risky_function</span><span class="p">()</span>
-<span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">An error occurred:</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">traceback</span><span class="p">.</span><span class="nf">print_exc</span><span class="p">()</span>  <span class="c1"># 전체 traceback 출력
-</span></code></pre></div></div>
-
-<h3 id="설명">설명:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">traceback.print_exc()</code>는 <strong>현재 예외에 대한 전체 traceback 정보</strong> 를 stderr로 출력합니다.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">print(e)</code>는 단순히 예외 메시지(e.g., <code class="language-plaintext highlighter-rouge">'division by zero'</code>)만 출력하므로 정보가 부족합니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="추가-팁">추가 팁:</h3>
-
-<h4 id="1-로그-파일에-남기고-싶다면">1. 로그 파일에 남기고 싶다면:</h4>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">traceback</span>
-<span class="kn">import</span> <span class="n">logging</span>
-
-<span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sh">'</span><span class="s">error.log</span><span class="sh">'</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">ERROR</span><span class="p">)</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="nf">risky_function</span><span class="p">()</span>
-<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
-    <span class="n">logging</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">Unhandled exception occurred</span><span class="sh">"</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div></div>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">exc_info=True</code>로 설정하면 <code class="language-plaintext highlighter-rouge">traceback</code> 정보까지 로그에 남습니다.</li>
-</ul>
-
-<h4 id="2-직접-문자열로-저장하고-싶다면">2. 직접 문자열로 저장하고 싶다면:</h4>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
-    <span class="nf">risky_function</span><span class="p">()</span>
-<span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">error_message</span> <span class="o">=</span> <span class="n">traceback</span><span class="p">.</span><span class="nf">format_exc</span><span class="p">()</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
-</code></pre></div></div>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">traceback.format_exc()</code>는 <code class="language-plaintext highlighter-rouge">print_exc()</code> 대신 <strong>문자열로 traceback을 반환</strong> 하므로 파일 저장, 메시지 전송 등에 적합합니다.</li>
-</ul>
-
-<hr />
-
-<p>요약하면, 예외 메시지만 보는 건 거의 무의미합니다. <code class="language-plaintext highlighter-rouge">traceback.print_exc()</code> 또는 <code class="language-plaintext highlighter-rouge">logging</code>을 써야 실질적인
-디버깅이 가능합니다.<br />
-예외 처리할 땐 "보여주지 않으면 모른다"는 태도로, 무조건 스택 트레이스를 확인하십시오.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">echo_info()</code>, <code class="language-plaintext highlighter-rouge">echo_error()</code> 같은 헬퍼 함수도 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
