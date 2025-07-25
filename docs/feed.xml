@@ -1,4 +1,544 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T16:39:04+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Pydantic 설명 장단점</title><link href="https://hvppycoding.github.io/python/python-pydantic/" rel="alternate" type="text/html" title="Pydantic 설명 장단점" /><published>2025-07-25T16:39:01+09:00</published><updated>2025-07-25T16:39:01+09:00</updated><id>https://hvppycoding.github.io/python/python-pydantic</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-pydantic/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T18:59:34+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">증권사 API 용어 설명</title><link href="https://hvppycoding.github.io/investing/system-trading-terms/" rel="alternate" type="text/html" title="증권사 API 용어 설명" /><published>2025-07-25T18:59:30+09:00</published><updated>2025-07-25T18:59:30+09:00</updated><id>https://hvppycoding.github.io/investing/system-trading-terms</id><content type="html" xml:base="https://hvppycoding.github.io/investing/system-trading-terms/"><![CDATA[<p class="chat--user">
+
+증권사 API를 이용한 자동매매 프로그램을 만들려고 해. API에 등장하는 모든 용어에 대해 한국어, 영어와 내용을 설명해줘.
+
+</p>
+
+<p>o3 pro 요청</p>
+
+<p>3m 18s 동안 이성 처리 완료</p>
+
+<p>아래 내용은 “증권사 API”에서 거의 반드시 마주치게 되는 핵심 용어를 <strong>인증 → 계좌 → 시장데이터 → 주문 → 파생상품 → 위험관리
+→ 통신∙형식 → 기타</strong> 의 8단계로 분류하여 정리한 것입니다.<br />
+“모든” 용어라 주장하기엔 API마다 미묘한 차이가 있으므로, 실제 구현 전에는 반드시 해당 증권사의 공식 문서를 교차 검증하시길 권합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>분류</th>
+      <th>한국어 용어¹</th>
+      <th>영어 원어</th>
+      <th>설명 (회의적 시각 포함)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1. 인증·보안 (Auth &amp; Security)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>API 키</td>
+      <td>API Key</td>
+      <td>서버가 <strong>누구</strong> 인지 대충 판단할 때 쓰는 문자열. 사람이 노출하면 끝장입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>비밀 키</td>
+      <td>Secret Key</td>
+      <td>서명(HMAC 등)을 만들 때 함께 쓰이는 짝꿍 키. 평문 저장? 말도 안 됩니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>액세스 토큰</td>
+      <td>Access Token</td>
+      <td>OAuth 기반 API가 “로그인 상태”를 증명할 때 쓰는 짧은 수명 문자열. 만료 시간을 꼭</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>확인해야 합니다.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>리프레시 토큰</td>
+      <td>Refresh Token</td>
+      <td>액세스 토큰 갱신용. 길게 살아남지만 탈취 시 피해도 길어집니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>논스</td>
+      <td>Nonce</td>
+      <td>“한 번만 쓰는 숫자”. 재전송 공격을 막겠다고 붙여 두지만, 서버가 제대로 검증 안 하면 허사입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>타임스탬프</td>
+      <td>Timestamp</td>
+      <td>요청 시각을 밀리초 단위로 넣으라는데, 서버-클라이언트 시계 오차가 크면 어떻게 할 건가요? NTP 동기</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>필수.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>서명</td>
+      <td>Signature</td>
+      <td>Secret Key 로 해시 만든 값. 문서마다 정렬 규칙이 달라 삽질 포인트 1순위.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>레이트 리밋</td>
+      <td>Rate Limit</td>
+      <td>“분당 60회” 같은 호출 제한. 초과하면 HTTP 429. 우회? 결국 차단당합니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>2. 계좌·포트폴리오</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>계좌 ID</td>
+      <td>Account ID</td>
+      <td>브로커가 부여한 숫자 또는 문자열. 실계좌·모의계좌가 따로일 수도 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>계좌 유형</td>
+      <td>Account Type</td>
+      <td>현금(Cash), 마진(Margin) 등. 마진이면 이자·위험 관리가 갑절로 복잡해집니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>잔고</td>
+      <td>Balance</td>
+      <td>통화별 가용 금액. “체결 대금 미정산분”은 포함? 브로커마다 다릅니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>순자산</td>
+      <td>Equity</td>
+      <td>Balance + 미실현 P/L. 가격 지연 데이터로 계산하면 눈속임 숫자입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>매수 가능 금액</td>
+      <td>Buying Power</td>
+      <td>레버리지 포함 여력. 실제 주문 가능 수량과 100 % 일치 안 하는 경우 많습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>레버리지</td>
+      <td>Leverage</td>
+      <td>2×, 5× 같은 배율. 적절히 쓰면 효율, 과하면 청산.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>3. 시장 데이터 (Market Data)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>종목/심벌</td>
+      <td>Symbol (Ticker)</td>
+      <td>“AAPL”, “005930”. 거래소마다 표기가 달라 중복 위험 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>거래소</td>
+      <td>Exchange</td>
+      <td>“NYSE”, “KRX”, “NASDAQ”. 일부 API는 코드 체계가 사내 전용이라 혼동 주범.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>호가</td>
+      <td>Quote</td>
+      <td>Bid/Ask/Last. 밀리초마다 변하는데 API는 초 단위로 틱 줄 때도 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>매도호가</td>
+      <td>Ask</td>
+      <td>“팔고 싶은 최소가”. Level 2 데이터 없으면 1단계(bbo)만 가져옵니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>매수호가</td>
+      <td>Bid</td>
+      <td>“사고 싶은 최대가”.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>스프레드</td>
+      <td>Spread</td>
+      <td>Ask – Bid. 유동성 부족하면 폭이 벌어져 자동매매 체결률 악화.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>체결가</td>
+      <td>Last Price</td>
+      <td>가장 최근 거래가격. “0” 또는 null 이면 장이 닫힌 겁니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>틱</td>
+      <td>Tick</td>
+      <td>최소 호가 단위 혹은 1건 체결. 브로커마다 표현이 달라 전처리 필요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>캔들</td>
+      <td>Candle/Bar (OHLCV)</td>
+      <td>Open-High-Low-Close-Volume 묶음. 분봉, 시봉, 일봉 등. 서버 TZ 혼선에</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주의.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>레벨2</td>
+      <td>Level 2</td>
+      <td>호가 스택(Depth). 지원 안 하는 API도 많습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>VWAP</td>
+      <td>Volume-Weighted Average Price</td>
+      <td>체결량 가중 평균. 실시간 계산 여부 확인 필요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>4. 주문 (Order)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 ID</td>
+      <td>Order ID</td>
+      <td>증권사 내부 고유값. 일부는 UUID, 일부는 숫자.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>클라이언트 주문 ID</td>
+      <td>Client Order ID</td>
+      <td>사용자가 붙여 보내는 식별자. 중복 시 오류 발생 여부 확인 필수.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 방향</td>
+      <td>Side</td>
+      <td>Buy(매수)/Sell(매도). 공매도는 별도 Flag? 문서 확인하세요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>수량</td>
+      <td>Quantity</td>
+      <td>주식은 주(share), 선물은 계약(contract). 소수 허용 여부? ETF 1/1,000단위?</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>가격</td>
+      <td>Price</td>
+      <td>지정가 주문가. 시장가면 null 또는 0.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 유형</td>
+      <td>Order Type</td>
+      <td>Market, Limit, Stop, Stop Limit, Trailing Stop, OCO,</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Bracket 등. API마다 지원 범위가 다릅니다.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>시간 조건</td>
+      <td>Time-in-Force</td>
+      <td>GTC, IOC, FOK 등. 한·미 증시는 해석이 조금씩 달라 애매합니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 상태</td>
+      <td>Status</td>
+      <td>New, Partially Filled, Filled, Canceled, Rejected, Expired. 약간씩</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>명칭이 달라 매핑 필요.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>체결</td>
+      <td>Fill / Execution</td>
+      <td>주문이 약정된 건. 부분 체결된 뒤 취소하면 수량 불일치 주의.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>슬리피지</td>
+      <td>Slippage</td>
+      <td>목표가−실체결가 차이. 자동매매 성과를 좀먹는 주범.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>5. 파생상품·선물</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>계약</td>
+      <td>Contract</td>
+      <td>선물·옵션 한 단위. 계약 규모 확인(예: BTC 1 건 = 100 USD)?</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>만기</td>
+      <td>Expiry</td>
+      <td>“2025-09-W4” 등. 포맷이 증권사마다 제멋대로입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>행사가</td>
+      <td>Strike</td>
+      <td>옵션의 권리행사 가격.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>콜/풋</td>
+      <td>Call / Put</td>
+      <td>옵션 종류. 약어 “C/P”만 쓰기도 하니 파싱 시 주의.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>펀딩 율</td>
+      <td>Funding Rate</td>
+      <td>무기한 선물 교환 이자. 실시간 변동, API 지연 시 리스크.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>기준 가격</td>
+      <td>Mark Price</td>
+      <td>강제 청산 계산 기준. 거래소 시장가격과 다를 수 있어 함정.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>6. 위험관리 (Risk Management)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>손절가</td>
+      <td>Stop-Loss</td>
+      <td>가격 트리거. 서버-클라이언트 어디서 실행? Broker side가 안전.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>익절가</td>
+      <td>Take-Profit</td>
+      <td>목표가 트리거. 마찬가지로 서버 실행 여부 확인.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>최대 손실 한도</td>
+      <td>Max Drawdown</td>
+      <td>전략 중단 기준. API가 제공? 대부분은 로컬 로직 필요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>유지 증거금</td>
+      <td>Maintenance Margin</td>
+      <td>밑으로 떨어지면 강제 청산. 계산식이 계약별로 다릅니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>청산</td>
+      <td>Liquidation</td>
+      <td>강제 포지션 종료. API가 미리 경고 주는지? 없다면 자체 모니터링.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>VaR</td>
+      <td>Value-at-Risk</td>
+      <td>위험 예측 지표. 브로커 API에서 직접 주는 경우는 드뭅니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>7. 통신·형식 (Protocol &amp; Format)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>엔드포인트</td>
+      <td>Endpoint</td>
+      <td>“/v2/orders” 같은 URL. 버전이 바뀌면 호환성 깨집니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>요청</td>
+      <td>Request</td>
+      <td>HTTP Message = Method + Header + Body. REST만 있는 게 아니라 WebSocket도</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>있습니다.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>응답</td>
+      <td>Response</td>
+      <td>상태 코드와 JSON/CSV 본문. 예상 스키마와 다르면 바로 예외 처리.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>헤더</td>
+      <td>Header</td>
+      <td>인증 값, 콘텐츠 형식 등. 대소문자 구분? RFC 2616 참고.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>본문</td>
+      <td>Body</td>
+      <td>보통 JSON. 키 이름이 snake_case 인지 camelCase 인지 혼재하기도 합니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>HTTP 메서드</td>
+      <td>GET, POST, PUT, DELETE</td>
+      <td>일부 API는 “취소”를 POST로 보내고 DELETE 미지원—문서 꼼꼼히.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>상태 코드</td>
+      <td>Status Code</td>
+      <td>200, 400, 401, 403, 404, 429, 500. 같은 400이라도 Error Code 상세</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>분기 필수.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>오류 코드</td>
+      <td>Error Code</td>
+      <td>브로커 사전 정의 숫자/문자열. 문서 외의 ‘숨겨진’ 코드가 튀어 나올 때가 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>페이징</td>
+      <td>Pagination</td>
+      <td>limit/offset or cursor. 대량 데이터 수집 시 속도 병목.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>커서</td>
+      <td>Cursor</td>
+      <td>다음 페이지 토큰. 만료 시간? 명시 안 된 경우 많습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>웹소켓</td>
+      <td>WebSocket</td>
+      <td>실시간 스트림. 핑/퐁 주기 미확인 시 연결 끊김.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>하트비트</td>
+      <td>Heartbeat</td>
+      <td>서버가 “살아 있다” 확인용. 누락되면 재연결 트리거.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>8. 기타</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>샌드박스</td>
+      <td>Sandbox Environment</td>
+      <td>실거래 이전 테스트 서버. 약식 데이터라 현실 체결 환경과 차이 남.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>프로덕션</td>
+      <td>Production Environment</td>
+      <td>실제 돈이 오가는 서버. 릴리즈 전 더블체크.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SDK</td>
+      <td>SDK</td>
+      <td>공식·서드파티 라이브러리. 버전 관리 느슨하면 직접 REST 호출이 낫습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>웹훅</td>
+      <td>Webhook</td>
+      <td>서버→클라이언트 알람. 방화벽/인증 처리 안 하면 먹통.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>콜백 URL</td>
+      <td>Callback URL</td>
+      <td>OAuth Redirect URI. HTTPS 안 쓰면 토큰 탈취 위험.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>아이덤포턴시 키</td>
+      <td>Idempotency Key</td>
+      <td>동일 요청 중복 실행 방지. 지원 안 하면 재시도 로직 주의.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>지연 시간</td>
+      <td>Latency</td>
+      <td>API round-trip 시간. 알고리즘 성과에 직격탄.</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>¹대부분 애초에 영어를 그대로 쓰지만, 국내 문서에서 관용적으로 쓰이는 한글 표현을 병기했습니다.</p>
+
+<hr />
+
+<h3 id="어떻게-활용하실-건가요-단계별-의문-제기">어떻게 활용하실 건가요? (단계별 의문 제기)</h3>
+
+<ol>
+  <li>
+    <p><strong>용어 분석</strong> – 위 표로 팀 내부 용어 정의를 통일하십시오. 설명이 같아도 명칭만 다르면 버그의 씨앗입니다.</p>
+  </li>
+  <li>
+    <p><strong>브로커별 매핑</strong> – 실제 API Field 명을 표준 용어에 매핑해 “어댑터” 레이어를 두는 것이 안전합니다. 각 증권사가 <code class="language-plaintext highlighter-rouge">qty</code>, <code class="language-plaintext highlighter-rouge">quantity</code>, <code class="language-plaintext highlighter-rouge">orderQty</code> 식으로 제멋대로 쓰거든요.</p>
+  </li>
+  <li>
+    <p><strong>예외/오류 설계</strong> – 문서에 없는 오류 코드가 튀어나올 것을 전제로, 실패 처리 체계를 먼저 만드십시오. “해보니 된다”는 태도는 자동매매에서 폭탄입니다.</p>
+  </li>
+  <li>
+    <p><strong>보안 점검</strong> – API Key 노출, 시계 동기화(NTP), Secret Key 평문 저장 금지 같은 기본부터 확인하시겠습니까?</p>
+  </li>
+  <li>
+    <p><strong>실전 테스트</strong> – Sandbox → 소액 실계좌 → 규모 확장 순으로 진행하십시오. 미체결·부분 체결 시 corner case 가 터지지 않는지 눈으로 확인해야 합니다.</p>
+  </li>
+</ol>
+
+<p>자동매매는 “코드 몇 줄”보다 <strong>문서와 위험 관리</strong> 가 성공을 결정합니다. 항상 “이 정의가 브로커마다 동일한가?”를 의심하시고, 의심이
+풀릴 때까지 실제 호가·체결 데이터로 검증하시기 바랍니다.</p>
+
+<p>궁금한 점이 더 있으시면 언제든 추가로 말씀해 주십시오.</p>]]></content><author><name>hvppycoding</name></author><category term="investing" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Pydantic 설명 장단점</title><link href="https://hvppycoding.github.io/python/python-pydantic/" rel="alternate" type="text/html" title="Pydantic 설명 장단점" /><published>2025-07-25T16:39:01+09:00</published><updated>2025-07-25T16:39:01+09:00</updated><id>https://hvppycoding.github.io/python/python-pydantic</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-pydantic/"><![CDATA[<p class="chat--user">
 
 pydantic이 뭔지, 왜 쓰는건지 장단점 등을 설명해줘
 
@@ -6726,494 +7266,4 @@ with the following:
  라는 인식은 <strong>매우 정확하고 실무적으로도 옳습니다.</strong></p>
 </blockquote>
 
-<p>원하시면 실제 구조 예시나, <code class="language-plaintext highlighter-rouge">.env</code>를 사용한 애플리케이션 구조 샘플도 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">tmux 기본 조작법</title><link href="https://hvppycoding.github.io/linux/tmux-basic/" rel="alternate" type="text/html" title="tmux 기본 조작법" /><published>2025-07-22T22:19:37+09:00</published><updated>2025-07-22T22:19:37+09:00</updated><id>https://hvppycoding.github.io/linux/tmux-basic</id><content type="html" xml:base="https://hvppycoding.github.io/linux/tmux-basic/"><![CDATA[<p class="chat--user">
-
-tmux 기본 조작법 알려줘
-
-</p>
-
-<p>tmux는 터미널 멀티플렉서로, 하나의 터미널 창에서 여러 세션, 창, 패널을 관리할 수 있게 해줍니다. 아래는 <strong>기본 조작법</strong> 을
-정리한 것입니다.</p>
-
-<hr />
-
-<h3 id="-1-tmux-시작--종료">✅ 1. tmux 시작 / 종료</h3>
-
-<ul>
-  <li><strong>세션 시작</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux
-</code></pre></div>    </div>
-  </li>
-</ul>
-
-<p>또는 세션 이름 지정</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```bash
-tmux new -s mysession
-```
-</code></pre></div></div>
-
-<ul>
-  <li><strong>세션 종료</strong><br />
-패널 내에서 <code class="language-plaintext highlighter-rouge">exit</code> 입력하거나 <code class="language-plaintext highlighter-rouge">Ctrl-b</code> 누른 뒤 <code class="language-plaintext highlighter-rouge">:</code> 입력하고 <code class="language-plaintext highlighter-rouge">kill-session</code> 실행</li>
-</ul>
-
-<hr />
-
-<h3 id="-2-기본-prefix-키">✅ 2. 기본 prefix 키</h3>
-
-<ul>
-  <li><strong>기본 prefix (명령 대기 상태 진입)</strong> : <code class="language-plaintext highlighter-rouge">Ctrl-b</code><br />
-이걸 누르고 나서 단축키를 입력해야 합니다. 예: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">c</code></li>
-</ul>
-
-<hr />
-
-<h3 id="-3-세션--창--패널-관련-주요-단축키">✅ 3. 세션 / 창 / 패널 관련 주요 단축키</h3>
-
-<h4 id="-세션session">🎯 세션(Session)</h4>
-
-<ul>
-  <li>세션 목록 보기:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux <span class="nb">ls</span>
-</code></pre></div>    </div>
-  </li>
-  <li>세션에 attach:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux attach <span class="nt">-t</span> 세션이름
-</code></pre></div>    </div>
-  </li>
-  <li>세션 종료:<br />
-패널에서 <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code> → <code class="language-plaintext highlighter-rouge">kill-session</code></li>
-</ul>
-
-<h4 id="-창window">🪟 창(Window)</h4>
-
-<ul>
-  <li>
-    <p>새 창 생성: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">c</code></p>
-  </li>
-  <li>
-    <p>창 간 이동: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">n</code> (next), <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">p</code> (previous)</p>
-  </li>
-  <li>
-    <p>창 목록: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">w</code></p>
-  </li>
-  <li>
-    <p>창 이름 변경: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">,</code></p>
-  </li>
-  <li>
-    <p>창 닫기: <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-d</code></p>
-  </li>
-</ul>
-
-<h4 id="-패널pane">🔲 패널(Pane)</h4>
-
-<ul>
-  <li>
-    <p>패널 수직 분할: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">"</code></p>
-  </li>
-  <li>
-    <p>패널 수평 분할: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">%</code></p>
-  </li>
-  <li>
-    <p>패널 간 이동: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → 방향키 (<code class="language-plaintext highlighter-rouge">←</code>, <code class="language-plaintext highlighter-rouge">→</code>, <code class="language-plaintext highlighter-rouge">↑</code>, <code class="language-plaintext highlighter-rouge">↓</code>)</p>
-  </li>
-  <li>
-    <p>패널 종료: <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-d</code></p>
-  </li>
-  <li>
-    <p>패널 크기 조절: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code> → <code class="language-plaintext highlighter-rouge">resize-pane -D</code> (아래로 줄이기), <code class="language-plaintext highlighter-rouge">-U</code>, <code class="language-plaintext highlighter-rouge">-L</code>, <code class="language-plaintext highlighter-rouge">-R</code></p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="-4-기타-유용한-명령">✅ 4. 기타 유용한 명령</h3>
-
-<ul>
-  <li>
-    <p>명령 모드 진입: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code><br />
-예: <code class="language-plaintext highlighter-rouge">rename-session</code>, <code class="language-plaintext highlighter-rouge">kill-pane</code>, <code class="language-plaintext highlighter-rouge">list-keys</code> 등 입력 가능</p>
-  </li>
-  <li>
-    <p>복사 모드 진입 (스크롤, 복사 등): <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">[</code><br />
-→ 화살표 키로 이동, 스페이스로 복사 시작, Enter로 복사 완료</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="-5-세션-유지하고-나가기">✅ 5. 세션 유지하고 나가기</h3>
-
-<ul>
-  <li><strong>detach</strong> : <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">d</code><br />
-세션은 백그라운드에 남고 나중에 다시 attach 가능</li>
-</ul>
-
-<hr />
-
-<p>필요하면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code> 설정이나 키 리매핑에 대해서도 도와드릴 수 있습니다. 더 고급 기능이 필요하신가요?</p>
-
-<p class="chat--user">
-
-Ctrl+d 누르니 Use "logout" to logout 이라고 떠
-
-</p>
-
-<p>네, 그 메시지는 현재 사용 중인 쉘에서 <code class="language-plaintext highlighter-rouge">exit</code>이나 <code class="language-plaintext highlighter-rouge">logout</code> 명령어로 세션을 종료하라는 의미입니다. 자세히 설명드리면 다음과
-같습니다.</p>
-
-<hr />
-
-<h2 id="-문제-원인">🔍 문제 원인</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">Ctrl-d</code>는 일반적으로 <strong>EOF (End Of File)</strong> 신호를 보내서 셸을 종료시키는 역할을 합니다.</p>
-  </li>
-  <li>
-    <p>그런데 지금 그 명령이 작동하지 않고 <code class="language-plaintext highlighter-rouge">Use "logout" to logout</code>이라고 나오는 이유는:</p>
-
-    <ul>
-      <li>
-        <p>사용 중인 셸이 <strong><code class="language-plaintext highlighter-rouge">login shell</code></strong>이기 때문입니다.</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">login shell</code>에서는 보통 <code class="language-plaintext highlighter-rouge">exit</code>이나 <code class="language-plaintext highlighter-rouge">logout</code> 명시적 명령어를 요구합니다.</p>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<p>👉 즉, 단순히 <code class="language-plaintext highlighter-rouge">tmux</code>의 문제가 아니라 <strong>쉘 자체 설정</strong> 문제입니다.</p>
-
-<hr />
-
-<h2 id="-해결-방법">🛠 해결 방법</h2>
-
-<ol>
-  <li>
-    <p><strong>그냥<code class="language-plaintext highlighter-rouge">logout</code> 명령 입력</strong><br />
-해당 패널에서 다음 명령을 입력하세요:</p>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">logout</span>
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<p>또는</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ```bash
- exit
- ```
-</code></pre></div></div>
-
-<p>둘 중 하나는 작동할 겁니다.</p>
-
-<ol>
-  <li><strong>login shell 아닌 셸에서 tmux 실행하도록 설정 변경 (선택사항)</strong><br />
-<code class="language-plaintext highlighter-rouge">.bash_profile</code>이나 <code class="language-plaintext highlighter-rouge">.zprofile</code> 같은 데서 강제로 login shell로 만드는 설정이 있을 수도 있습니다. 그것을
-수정할 수도 있지만, 보통은 굳이 그럴 필요 없습니다.</li>
-</ol>
-
-<hr />
-
-<h2 id="-확인용">🧪 확인용</h2>
-
-<p>해당 패널이 login shell인지 확인해보려면:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">shopt</span> <span class="nt">-q</span> login_shell <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"login shell"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"not login shell"</span>
-</code></pre></div></div>
-
-<hr />
-
-<p>요약: <code class="language-plaintext highlighter-rouge">Ctrl-d</code>가 안 먹히는 건 <code class="language-plaintext highlighter-rouge">login shell</code>이라서 그렇고, <code class="language-plaintext highlighter-rouge">logout</code> 또는 <code class="language-plaintext highlighter-rouge">exit</code> 명령을 직접 입력하시면
-됩니다. 이게 귀찮으시면 <code class="language-plaintext highlighter-rouge">.bashrc</code>나 <code class="language-plaintext highlighter-rouge">.zshrc</code>를 조금 손보는 방법도 있습니다. 그게 필요하시면 말씀해 주세요.</p>
-
-<p class="chat--user">
-
-tmux 창닫기가 하고 싶어
-
-</p>
-
-<p>tmux에서 "창 닫기"는 정확히 말하면 <strong>현재 활성화된 창(Window)을 종료</strong> 하는 것을 말합니다. 방법은 아래와 같습니다.</p>
-
-<hr />
-
-<h2 id="-tmux-창-닫는-방법-현재-창-종료">✅ tmux 창 닫는 방법 (현재 창 종료)</h2>
-
-<h3 id="1-창-안에서exit-입력">1. <strong>창 안에서<code class="language-plaintext highlighter-rouge">exit</code> 입력</strong></h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">exit</span>
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p>가장 확실한 방법입니다.</p>
-  </li>
-  <li>
-    <p>해당 창 안의 모든 패널이 종료되면 창 자체가 닫힙니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="2-단축키로-창-닫기">2. <strong>단축키로 창 닫기</strong></h3>
-
-<p><strong>단축키 직접 존재하진 않지만</strong> , 이렇게 할 수 있습니다:</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">&amp;</code></li>
-</ul>
-
-<blockquote>
-  <p><code class="language-plaintext highlighter-rouge">Kill window</code> 물어보면 <code class="language-plaintext highlighter-rouge">y</code> 입력</p>
-</blockquote>
-
-<p>이게 창 전체를 강제로 닫는 tmux 기본 키입니다.</p>
-
-<hr />
-
-<h3 id="3-명령-모드에서-닫기">3. <strong>명령 모드에서 닫기</strong></h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ctrl-b :
-kill-window
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="️주의할-점">❗️주의할 점</h2>
-
-<ul>
-  <li>
-    <p>창(Window)은 여러 패널(Pane)을 포함할 수 있습니다.</p>
-  </li>
-  <li>
-    <p>창을 닫으면 그 안의 모든 패널도 함께 사라집니다.</p>
-  </li>
-  <li>
-    <p>만약 여러 창을 돌리는 중이고 하나만 닫고 싶을 때, 꼭 확인하세요.</p>
-  </li>
-</ul>
-
-<hr />
-
-<p>필요하시면 특정 번호의 창을 닫거나, 여러 창을 자동으로 정리하는 것도 도와드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-tmux history가 바로바로 없어지는거 같아.
-
-</p>
-
-<p>좋은 지적입니다. <code class="language-plaintext highlighter-rouge">tmux</code>에서 <strong>스크롤 히스토리(history)가 바로 없어지는 문제</strong> 는 꽤 자주 발생하며, 다음과 같은 이유와
-해결책이 있습니다.</p>
-
-<hr />
-
-<h2 id="-문제-원인-요약">🧨 문제 원인 요약</h2>
-
-<ol>
-  <li>
-    <p><strong>tmux 기본 설정에서는 history buffer(스크롤백 버퍼)가 작음</strong></p>
-
-    <ul>
-      <li>
-        <p>기본값은 <code class="language-plaintext highlighter-rouge">2000</code>줄 정도로 제한되어 있음.</p>
-      </li>
-      <li>
-        <p>그래서 출력이 많으면 오래된 히스토리가 밀려 사라짐.</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>쉘 레벨 history와는 별개임</strong></p>
-
-    <ul>
-      <li>tmux 히스토리는 tmux 내부의 스크롤백이고, bash/zsh의 <code class="language-plaintext highlighter-rouge">history</code> 명령과는 다름.</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>터미널에서 마우스 스크롤이 안 되는 경우도 있음</strong></p>
-
-    <ul>
-      <li>tmux가 마우스를 "가로채기" 하도록 설정되었을 수 있음.</li>
-    </ul>
-  </li>
-</ol>
-
-<hr />
-
-<h2 id="-해결-방법-1">✅ 해결 방법</h2>
-
-<h3 id="1-tmuxconf에서-history-size-늘리기">1. <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에서 history size 늘리기</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set-option <span class="nt">-g</span> history-limit 100000
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p>최대 <code class="language-plaintext highlighter-rouge">100000</code>줄까지 저장 가능 (더 늘려도 되지만 성능 저하 가능성 있음)</p>
-  </li>
-  <li>
-    <p>변경 후에는 <strong>tmux를 완전히 재시작</strong> 해야 반영됩니다.</p>
-  </li>
-</ul>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux kill-server
-tmux
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="2-복사-모드에서-스크롤-확인">2. 복사 모드에서 스크롤 확인</h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">[</code><br />
-→ 방향키로 과거 출력 탐색 가능<br />
-→ <code class="language-plaintext highlighter-rouge">q</code> 눌러 종료</li>
-</ul>
-
-<hr />
-
-<h3 id="3-마우스-스크롤-안-되는-경우-선택사항">3. 마우스 스크롤 안 되는 경우 (선택사항)</h3>
-
-<p>터미널에서 마우스 스크롤이 안 되는 경우 <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에서 다음 줄 제거하거나 수정:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 마우스 사용을 비활성화 (원래 설정돼 있다면)</span>
-<span class="nb">set</span> <span class="nt">-g</span> mouse off
-</code></pre></div></div>
-
-<p>또는 반대로 사용하려면:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">set</span> <span class="nt">-g</span> mouse on
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="4-현재-설정-확인">4. 현재 설정 확인</h3>
-
-<p>tmux 안에서 다음 명령으로 현재 history limit 확인 가능:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux show-options <span class="nt">-g</span> history-limit
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-정리">🧪 정리</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tmux</code>는 기본적으로 <strong>출력 히스토리를 많이 안 보관</strong> 합니다.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">.tmux.conf</code>에서 <code class="language-plaintext highlighter-rouge">history-limit</code>을 충분히 크게 설정해야 하고,</p>
-  </li>
-  <li>
-    <p>복사 모드(<code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">[</code>)를 활용해서 탐색해야 합니다.</p>
-  </li>
-  <li>
-    <p>위 설정 적용 후에도 안 된다면 <code class="language-plaintext highlighter-rouge">.bashrc</code>, <code class="language-plaintext highlighter-rouge">.zshrc</code> 또는 터미널 프로그램 설정까지 봐야 할 수도 있습니다.</p>
-  </li>
-</ul>
-
-<p><code class="language-plaintext highlighter-rouge">.tmux.conf</code> 설정 예시가 필요하시면 말씀 주세요.</p>
-
-<p class="chat--user">
-
-마우스말고 Ctrl-b [ 하면 되는데 마우스 스크롤 하면 안보여
-
-</p>
-
-<p>좋습니다. 지금 상황은 다음과 같이 정리됩니다:</p>
-
-<hr />
-
-<h2 id="-현재-증상-정리">📌 현재 증상 정리</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">Ctrl-b [</code> (복사 모드) → 정상적으로 히스토리 스크롤 됨 ✅</p>
-  </li>
-  <li>
-    <p><strong>마우스 휠로는 스크롤이 안 됨</strong> ❌</p>
-  </li>
-</ul>
-
-<p>즉, <strong>터미널에서 마우스 스크롤이 tmux 내부로 전달되지 않고 있다</strong> 는 뜻입니다.</p>
-
-<hr />
-
-<h2 id="-원인">🧨 원인</h2>
-
-<p>기본적으로 <code class="language-plaintext highlighter-rouge">tmux</code>는 마우스 이벤트(스크롤 포함)를 무시합니다.<br />
-그래서 휠을 써도 터미널이 아니라 tmux의 히스토리 버퍼로 안 넘어갑니다.</p>
-
-<hr />
-
-<h2 id="-해결-방법-tmuxconf에-마우스-활성화-추가">✅ 해결 방법: <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에 마우스 활성화 추가</h2>
-
-<p><code class="language-plaintext highlighter-rouge">~/.tmux.conf</code> 파일에 다음을 추가하세요:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">set</span> <span class="nt">-g</span> mouse on
-</code></pre></div></div>
-
-<p>그리고 설정 적용을 위해 새로고침 또는 재시작합니다:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 현재 실행 중인 tmux에 적용 (선택적)</span>
-tmux source-file ~/.tmux.conf
-
-<span class="c"># 또는 완전히 재시작</span>
-tmux kill-server
-tmux
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="주의-사항">❗주의 사항</h2>
-
-<ul>
-  <li>
-    <p>마우스를 켜면:</p>
-
-    <ul>
-      <li>
-        <p>휠 스크롤 → 복사 모드로 자동 진입하여 스크롤 가능</p>
-      </li>
-      <li>
-        <p>클릭으로 패널 선택, 텍스트 복사 등 가능해짐</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p>일부 터미널 (예: <code class="language-plaintext highlighter-rouge">alacritty</code>, <code class="language-plaintext highlighter-rouge">kitty</code>, <code class="language-plaintext highlighter-rouge">iterm2</code>, <code class="language-plaintext highlighter-rouge">gnome-terminal</code>)은 자체적으로 마우스 입력을 tmux와 충돌시킬 수 있음. 그럴 경우 해당 터미널 설정도 살펴봐야 함.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-확인">🧪 확인</h2>
-
-<p>설정 반영 후:</p>
-
-<ul>
-  <li>
-    <p>마우스 휠로 스크롤 하면 복사 모드처럼 위/아래 출력이 보여야 함</p>
-  </li>
-  <li>
-    <p>만약 여전히 안 된다면:</p>
-
-    <ul>
-      <li>
-        <p>사용 중인 <strong>터미널 종류</strong> 말씀해 주세요 (<code class="language-plaintext highlighter-rouge">gnome-terminal</code>, <code class="language-plaintext highlighter-rouge">iterm2</code>, <code class="language-plaintext highlighter-rouge">tmux + ssh</code>, 등)</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">.tmux.conf</code> 전체 내용 보여주시면 분석해 드릴 수 있습니다</p>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<hr />
-
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code>를 전체적으로 구성해 드릴 수도 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>원하시면 실제 구조 예시나, <code class="language-plaintext highlighter-rouge">.env</code>를 사용한 애플리케이션 구조 샘플도 드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
