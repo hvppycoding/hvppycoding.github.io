@@ -1,0 +1,842 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Mac 백그라운드 서버 실행 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Mac 백그라운드 서버 실행">
+<meta property="og:url" content="https://hvppycoding.github.io/dev/mac-background-server/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-25T22:13:52+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/dev/mac-background-server/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Mac 백그라운드 서버 실행">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-25T22:13:52+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/dev/mac-background-server/" itemprop="url">Mac 백그라운드 서버 실행
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:13:52+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+맥미니에서 Flask 기반 간단한 웹서버 운영중이야. 이거 좀 백그라운드에서 자동으로 띄우는 법 알려줘. 지금은 VS Code 내부의
+터미널에서 돌리고 있는데 실수로 끌 것 같아.
+
+</p>
+
+<p>맥미니에서 Flask 웹서버를 백그라운드에서 자동 실행되도록 하려면 다음과 같은 방법들이 있습니다. 귀찮더라도 정확하게 처리해야 실수 없이
+운영할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="1-macoslaunchd-사용-권장">1. <strong>macOS<code class="language-plaintext highlighter-rouge">launchd</code> 사용 (권장)</strong></h2>
+
+<p>macOS에서 서비스나 데몬을 관리하는 기본 방식입니다.</p>
+
+<h3 id="11-plist-파일-생성">1.1. <code class="language-plaintext highlighter-rouge">plist</code> 파일 생성</h3>
+
+<p>예시: <code class="language-plaintext highlighter-rouge">~/Library/LaunchAgents/com.user.flaskserver.plist</code></p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="cp">&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;</span>
+<span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">"1.0"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;dict&gt;</span>
+  <span class="nt">&lt;key&gt;</span>Label<span class="nt">&lt;/key&gt;</span>
+  <span class="nt">&lt;string&gt;</span>com.user.flaskserver<span class="nt">&lt;/string&gt;</span>
+
+  <span class="nt">&lt;key&gt;</span>ProgramArguments<span class="nt">&lt;/key&gt;</span>
+  <span class="nt">&lt;array&gt;</span>
+    <span class="nt">&lt;string&gt;</span>/usr/local/bin/python3<span class="nt">&lt;/string&gt;</span>
+    <span class="nt">&lt;string&gt;</span>/Users/yourusername/path/to/your/flask_app.py<span class="nt">&lt;/string&gt;</span>
+  <span class="nt">&lt;/array&gt;</span>
+
+  <span class="nt">&lt;key&gt;</span>WorkingDirectory<span class="nt">&lt;/key&gt;</span>
+  <span class="nt">&lt;string&gt;</span>/Users/yourusername/path/to/your/<span class="nt">&lt;/string&gt;</span>
+
+  <span class="nt">&lt;key&gt;</span>RunAtLoad<span class="nt">&lt;/key&gt;</span>
+  <span class="nt">&lt;true/&gt;</span>
+
+  <span class="nt">&lt;key&gt;</span>KeepAlive<span class="nt">&lt;/key&gt;</span>
+  <span class="nt">&lt;true/&gt;</span>
+
+  <span class="nt">&lt;key&gt;</span>StandardOutPath<span class="nt">&lt;/key&gt;</span>
+  <span class="nt">&lt;string&gt;</span>/tmp/flaskserver.out<span class="nt">&lt;/string&gt;</span>
+
+  <span class="nt">&lt;key&gt;</span>StandardErrorPath<span class="nt">&lt;/key&gt;</span>
+  <span class="nt">&lt;string&gt;</span>/tmp/flaskserver.err<span class="nt">&lt;/string&gt;</span>
+<span class="nt">&lt;/dict&gt;</span>
+<span class="nt">&lt;/plist&gt;</span>
+</code></pre></div></div>
+
+<p>⚠️ <code class="language-plaintext highlighter-rouge">yourusername</code>, 경로 등은 반드시 본인의 환경에 맞게 수정해야 합니다.</p>
+
+<h3 id="12-등록-및-실행">1.2. 등록 및 실행</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl load ~/Library/LaunchAgents/com.user.flaskserver.plist
+launchctl start com.user.flaskserver
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="2-nohup----cron-사용-비권장-임시">2. <strong><code class="language-plaintext highlighter-rouge">nohup</code> + <code class="language-plaintext highlighter-rouge">&amp;</code> + <code class="language-plaintext highlighter-rouge">cron</code> 사용 (비권장, 임시)</strong></h2>
+
+<p>터미널에서 그냥 끄지 않고 돌리려는 단순한 방법이지만, macOS에서는 재부팅 이후 유지가 안 됨.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">nohup </span>python3 /Users/yourusername/path/to/your/flask_app.py <span class="o">&gt;</span> flask.log 2&gt;&amp;1 &amp;
+</code></pre></div></div>
+
+<p>백그라운드로 실행되고, <code class="language-plaintext highlighter-rouge">flask.log</code>에 출력이 저장됩니다.</p>
+
+<p>하지만 이건 터미널을 닫으면 살아있을 수는 있어도, 맥을 재부팅하면 사라집니다. <code class="language-plaintext highlighter-rouge">launchd</code>가 더 낫습니다.</p>
+
+<hr />
+
+<h2 id="3-python에서-직접flask-실행하는-방식-점검">3. <strong>Python에서 직접<code class="language-plaintext highlighter-rouge">Flask</code> 실행하는 방식 점검</strong></h2>
+
+<p>혹시 VS Code에서 다음처럼 실행 중이라면:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span><span class="p">.</span><span class="nf">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>를 <code class="language-plaintext highlighter-rouge">host='0.0.0.0', port=5000</code>으로 명시해주는 것도 추천드립니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="sh">'</span><span class="s">0.0.0.0</span><span class="sh">'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="결론">결론</h2>
+
+<ul>
+  <li>
+    <p>실수로 터미널을 꺼서 Flask가 내려가는 걸 막고 싶다면, <code class="language-plaintext highlighter-rouge">launchd</code>가 가장 macOS 친화적이고 안정적인 방식입니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">nohup</code>은 일시적으로만 적합하고 운영에 쓰기엔 취약합니다.</p>
+  </li>
+  <li>
+    <p>Python 앱을 서비스처럼 운영하고 싶다면 나중에는 <code class="language-plaintext highlighter-rouge">gunicorn</code> 같은 WSGI 서버 + <code class="language-plaintext highlighter-rouge">nginx</code> 조합도 고려해야 합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하면 <code class="language-plaintext highlighter-rouge">plist</code> 파일 작성이나 자동화 스크립트도 도와드릴 수 있습니다. 어느 쪽이 더 편하신가요?</p>
+
+<p class="chat--user">
+
+plist 방식으로 하면 잘 도는지 확인은 어떻게 해?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">launchd</code>로 Flask 서버를 plist로 띄웠다면, 동작 상태 확인과 디버깅은 <strong>명시적이고 단계적으로</strong> 해봐야 합니다.
+절차적으로 설명드리겠습니다.</p>
+
+<hr />
+
+<h2 id="-1-실행-상태-확인">✅ 1. <strong>실행 상태 확인</strong></h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl list | <span class="nb">grep </span>com.user.flaskserver
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>아무것도 안 나오면: 아직 로드 안 된 상태.</p>
+  </li>
+  <li>
+    <p>나오는데 PID가 없고 <code class="language-plaintext highlighter-rouge">Exit status</code>가 1이나 다른 값이면: 실행 실패.</p>
+  </li>
+  <li>
+    <p>정상일 경우 PID가 있고 <code class="language-plaintext highlighter-rouge">0</code>이면 실행 중.</p>
+  </li>
+</ul>
+
+<p>예시:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>diff
+
+-	0	com.user.flaskserver
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-</code>가 PID 자리면 백그라운드에서 실행 안 됨. 뭔가 실패한 거임.</p>
+
+<hr />
+
+<h2 id="-2-로그-확인-stdout--stderr">✅ 2. <strong>로그 확인 (stdout / stderr)</strong></h2>
+
+<p>plist에서 지정한 로그 경로를 확인:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> /tmp/flaskserver.out
+<span class="nb">cat</span> /tmp/flaskserver.err
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">out</code>은 정상 실행 시 출력</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">err</code>는 에러 발생 시 출력</p>
+  </li>
+</ul>
+
+<p><strong>여기에서 대부분의 원인 파악 가능</strong> 합니다.</p>
+
+<p>예:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vbnet
+
+ModuleNotFoundError: No module named 'flask'
+</code></pre></div></div>
+
+<p>→ LaunchAgent에서는 가상환경을 못 인식함. (해결은 아래 참고)</p>
+
+<hr />
+
+<h2 id="-3-서비스-재시작--재로드">✅ 3. <strong>서비스 재시작 / 재로드</strong></h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl unload ~/Library/LaunchAgents/com.user.flaskserver.plist
+launchctl load ~/Library/LaunchAgents/com.user.flaskserver.plist
+</code></pre></div></div>
+
+<p><strong>재로드 없이 수정하면 반영 안 됨.</strong> 매번 이렇게 해야 함.</p>
+
+<hr />
+
+<h2 id="-4-plist에-절대경로-썼는지-확인">✅ 4. <strong>plist에 절대경로 썼는지 확인</strong></h2>
+
+<p>예를 들어 <code class="language-plaintext highlighter-rouge">python</code>이라고만 쓰면 <code class="language-plaintext highlighter-rouge">launchd</code> 환경에서는 PATH 설정이 안 되어 있어서 못 찾습니다. <strong>절대경로로 넣어야
+함.</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>which python3
+<span class="c"># 예: /opt/homebrew/bin/python3</span>
+</code></pre></div></div>
+
+<p>그걸 plist에 넣어야 합니다.</p>
+
+<hr />
+
+<h2 id="-5-flask-앱-직접-확인">✅ 5. <strong>Flask 앱 직접 확인</strong></h2>
+
+<p>서버가 잘 떴는지 Flask 포트로 접속 시도:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:5000
+</code></pre></div></div>
+
+<p>브라우저로도 접근 가능해야 합니다.</p>
+
+<hr />
+
+<h2 id="-가상환경-쓴다면">🚨 가상환경 쓴다면?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">venv</code> 쓰는 경우엔 <code class="language-plaintext highlighter-rouge">plist</code>의 <code class="language-plaintext highlighter-rouge">ProgramArguments</code>를 다음처럼 바꿔야 합니다:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;array&gt;</span>
+  <span class="nt">&lt;string&gt;</span>/Users/yourusername/venv/bin/python<span class="nt">&lt;/string&gt;</span>
+  <span class="nt">&lt;string&gt;</span>/Users/yourusername/path/to/app.py<span class="nt">&lt;/string&gt;</span>
+<span class="nt">&lt;/array&gt;</span>
+</code></pre></div></div>
+
+<p>그렇지 않으면 <code class="language-plaintext highlighter-rouge">flask</code>, <code class="language-plaintext highlighter-rouge">requests</code> 등 모듈 인식 못 해서 실패합니다.</p>
+
+<hr />
+
+<h2 id="정리">정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>체크 항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">launchctl list</code></td>
+      <td>프로세스 로드/실행 상태 확인</td>
+    </tr>
+    <tr>
+      <td>로그 파일</td>
+      <td><code class="language-plaintext highlighter-rouge">stdout</code>, <code class="language-plaintext highlighter-rouge">stderr</code> 내용 꼭 확인</td>
+    </tr>
+    <tr>
+      <td>절대경로</td>
+      <td><code class="language-plaintext highlighter-rouge">python</code>이나 앱 경로 모두 절대경로로 지정</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">curl</code> 테스트</td>
+      <td>Flask 서버가 실제로 실행 중인지 확인</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">plist</code> 수정 후 재로드</td>
+      <td>수정하면 꼭 <code class="language-plaintext highlighter-rouge">unload</code> → <code class="language-plaintext highlighter-rouge">load</code> 해야 적용됨</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">plist</code> 작성 샘플에 사용자 계정이나 가상환경 포함해서 구성해드릴 수 있습니다. 지금 사용 중인 Flask 앱 경로랑
+Python 실행 위치 알려주시면 됩니다.</p>
+
+<p class="chat--user">
+
+수정하거나 없애려면 어떻게 해?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">launchd</code>로 등록한 Flask 서비스(<code class="language-plaintext highlighter-rouge">plist</code>)를 <strong>수정하거나 완전히 없애는 법</strong> 을 단계적으로 설명드리겠습니다. 실수로
+잘못 남겨두면 자동 실행돼서 나중에 트러블 생깁니다. 꼼꼼히 처리하셔야 합니다.</p>
+
+<hr />
+
+<h2 id="-1-수정하려면">🔧 1. <strong>수정하려면</strong></h2>
+
+<h3 id="11-먼저-언로드중지">1.1. 먼저 언로드(중지)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl unload ~/Library/LaunchAgents/com.user.flaskserver.plist
+</code></pre></div></div>
+
+<p>→ 수정 없이 바로 파일 고치면 반영 안 됩니다. <strong>항상 unload 먼저.</strong></p>
+
+<h3 id="12-plist-파일-수정">1.2. <code class="language-plaintext highlighter-rouge">plist</code> 파일 수정</h3>
+
+<p>예시:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano ~/Library/LaunchAgents/com.user.flaskserver.plist
+</code></pre></div></div>
+
+<p>수정 후 저장하고 나와서:</p>
+
+<h3 id="13-다시-로드">1.3. 다시 로드</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl load ~/Library/LaunchAgents/com.user.flaskserver.plist
+</code></pre></div></div>
+
+<p>정상 작동 여부는:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl list | <span class="nb">grep </span>com.user.flaskserver
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-2-완전히-없애려면-삭제">❌ 2. <strong>완전히 없애려면 (삭제)</strong></h2>
+
+<h3 id="21-먼저-언로드">2.1. 먼저 언로드</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl unload ~/Library/LaunchAgents/com.user.flaskserver.plist
+</code></pre></div></div>
+
+<h3 id="22-plist-파일-삭제">2.2. <code class="language-plaintext highlighter-rouge">plist</code> 파일 삭제</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> ~/Library/LaunchAgents/com.user.flaskserver.plist
+</code></pre></div></div>
+
+<h3 id="23-백그라운드에서-아직-남아있는지-확인">2.3. 백그라운드에서 아직 남아있는지 확인</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl list | <span class="nb">grep </span>com.user.flaskserver
+</code></pre></div></div>
+
+<p>안 나오면 제대로 삭제된 겁니다.</p>
+
+<hr />
+
+<h2 id="-참고-시스템-전체-서비스로-등록한-경우">🔁 참고: 시스템 전체 서비스로 등록한 경우</h2>
+
+<p>만약 <code class="language-plaintext highlighter-rouge">~/Library/LaunchAgents</code>가 아니라 <code class="language-plaintext highlighter-rouge">/Library/LaunchDaemons/</code>에 등록했다면, <strong>sudo 권한
+필요</strong> 하며 삭제 절차도 약간 다릅니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>launchctl unload /Library/LaunchDaemons/com.user.flaskserver.plist
+<span class="nb">sudo rm</span> /Library/LaunchDaemons/com.user.flaskserver.plist
+</code></pre></div></div>
+
+<p>→ 그런데 지금 사용하시는 건 유저 단위인 <code class="language-plaintext highlighter-rouge">LaunchAgents</code>로 보이므로 위 절차면 충분합니다.</p>
+
+<hr />
+
+<h2 id="-남은-흔적-정리-팁">🚨 남은 흔적 정리 팁</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">launchctl list</code>로 남아 있는 것 전부 점검</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/tmp/flaskserver.out</code>, <code class="language-plaintext highlighter-rouge">.err</code> 로그 파일도 지워도 됩니다:</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> /tmp/flaskserver.<span class="k">*</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>필요하시면 삭제 전 <code class="language-plaintext highlighter-rouge">.plist</code> 확인해서 위험한 설정이 남아 있는지 같이 검토해드릴 수 있습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#dev" class="page__taxonomy-item p-category" rel="tag">dev</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-25T22:13:52+09:00">2025-07-25</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/investing/system-trading-terms/" class="pagination--pager" title="증권사 API 용어 설명">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/system-trading-terms/" rel="permalink">증권사 API 용어 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-pydantic/" rel="permalink">Pydantic 설명 장단점
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T16:39:01+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-httpx/" rel="permalink">httpx 패키지 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T16:02:40+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-loguru/" rel="permalink">Loguru 패키지 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T15:33:14+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
