@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T22:25:24+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Mac 백그라운드 서버 실행</title><link href="https://hvppycoding.github.io/dev/mac-background-server/" rel="alternate" type="text/html" title="Mac 백그라운드 서버 실행" /><published>2025-07-25T22:25:21+09:00</published><updated>2025-07-25T22:25:21+09:00</updated><id>https://hvppycoding.github.io/dev/mac-background-server</id><content type="html" xml:base="https://hvppycoding.github.io/dev/mac-background-server/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T22:29:22+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Mac 백그라운드 서버 실행</title><link href="https://hvppycoding.github.io/dev/mac-background-server/" rel="alternate" type="text/html" title="Mac 백그라운드 서버 실행" /><published>2025-07-25T22:29:17+09:00</published><updated>2025-07-25T22:29:17+09:00</updated><id>https://hvppycoding.github.io/dev/mac-background-server</id><content type="html" xml:base="https://hvppycoding.github.io/dev/mac-background-server/"><![CDATA[<p class="chat--user">
 
 맥미니에서 Flask 기반 간단한 웹서버 운영중이야. 이거 좀 백그라운드에서 자동으로 띄우는 법 알려줘. 지금은 VS Code 내부의
 터미널에서 돌리고 있는데 실수로 끌 것 같아.
@@ -796,7 +796,231 @@ macOS의 <code class="language-plaintext highlighter-rouge">launchd</code>가 �
 <hr />
 
 <p>🧩 요약: 제 표현이 헷갈리게 만든 건 맞습니다. 날카로운 피드백 감사합니다.<br />
-이런 지적은 오히려 정확한 설명을 만드는 데 꼭 필요합니다.</p>]]></content><author><name>hvppycoding</name></author><category term="dev" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">증권사 API 용어 설명</title><link href="https://hvppycoding.github.io/investing/system-trading-terms/" rel="alternate" type="text/html" title="증권사 API 용어 설명" /><published>2025-07-25T18:59:30+09:00</published><updated>2025-07-25T18:59:30+09:00</updated><id>https://hvppycoding.github.io/investing/system-trading-terms</id><content type="html" xml:base="https://hvppycoding.github.io/investing/system-trading-terms/"><![CDATA[<p class="chat--user">
+이런 지적은 오히려 정확한 설명을 만드는 데 꼭 필요합니다.</p>
+
+<p class="chat--user">
+
+근데 파인더에서 홈에서 Library 폴더가 안보여. 새로 만드려고하니 이미 있대
+
+</p>
+
+<p>맞습니다. macOS는 기본적으로 <code class="language-plaintext highlighter-rouge">~/Library</code> 폴더를 <strong>숨김 처리</strong> 해놓습니다. 그래서 Finder에서는 안 보이지만 실제로는
+존재하고 있고, 시스템이나 앱 설정 파일들이 여기에 많이 들어 있습니다.</p>
+
+<hr />
+
+<h2 id="-이미-존재한다는-메시지의-의미">✅ 이미 존재한다는 메시지의 의미</h2>
+
+<blockquote>
+  <p>"이미 있음"이라는 건 실제로 <code class="language-plaintext highlighter-rouge">~/Library</code> 디렉터리가 <strong>숨겨진 상태로 존재 중</strong> 이라는 뜻입니다.<br />
+ 따라서 그냥 Finder에서 못 보이는 것뿐이지, <strong>정상입니다.</strong></p>
+</blockquote>
+
+<hr />
+
+<h2 id="-finder에서-library-열기-3가지-방법">🔓 Finder에서 <code class="language-plaintext highlighter-rouge">~/Library</code> 열기 (3가지 방법)</h2>
+
+<h3 id="-방법-1-finder에서-직접-열기-단축키">🔹 방법 1: Finder에서 직접 열기 (단축키)</h3>
+
+<ol>
+  <li>
+    <p>Finder를 연 상태에서</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Shift + Command + G</code> (<code class="language-plaintext highlighter-rouge">이동 &gt; 폴더로 이동</code>) 클릭</p>
+  </li>
+  <li>아래 입력:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/Library
+</code></pre></div>    </div>
+  </li>
+  <li>Enter</li>
+</ol>
+
+<p>→ 그러면 숨김 상태여도 바로 열립니다.</p>
+
+<hr />
+
+<h3 id="-방법-2-터미널에서-열기">🔹 방법 2: 터미널에서 열기</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>open ~/Library
+</code></pre></div></div>
+
+<p>→ Finder에서 바로 열립니다.</p>
+
+<hr />
+
+<h3 id="-방법-3-영구적으로-보이게-하기">🔹 방법 3: 영구적으로 보이게 하기</h3>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">~/</code> (홈 디렉터리) 열기</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Command + Shift + .</code> 누르기<br />
+(숨김 파일/폴더 표시 토글 단축키)</p>
+  </li>
+</ol>
+
+<p>→ 그러면 <code class="language-plaintext highlighter-rouge">.gitignore</code>, <code class="language-plaintext highlighter-rouge">.zshrc</code>, <code class="language-plaintext highlighter-rouge">Library</code> 등 숨겨진 항목이 보입니다.</p>
+
+<p>다시 누르면 숨깁니다.</p>
+
+<hr />
+
+<h2 id="-launchagents-폴더도-없을-수-있음">📁 LaunchAgents 폴더도 없을 수 있음</h2>
+
+<p><code class="language-plaintext highlighter-rouge">~/Library/LaunchAgents/</code>가 없는 경우도 있습니다. 이때는 직접 생성하셔야 합니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ~/Library/LaunchAgents
+</code></pre></div></div>
+
+<p>→ 경로가 정확히 맞아야 launchctl이 인식합니다.</p>
+
+<hr />
+
+<h2 id="-요약-1">✅ 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>작업</th>
+      <th>방법</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">~/Library</code> 열기</td>
+      <td><code class="language-plaintext highlighter-rouge">Shift + Command + G</code> → <code class="language-plaintext highlighter-rouge">~/Library</code></td>
+    </tr>
+    <tr>
+      <td>숨김 폴더 보기 토글</td>
+      <td><code class="language-plaintext highlighter-rouge">Command + Shift + .</code></td>
+    </tr>
+    <tr>
+      <td>직접 열기</td>
+      <td><code class="language-plaintext highlighter-rouge">open ~/Library</code> in 터미널</td>
+    </tr>
+    <tr>
+      <td>LaunchAgents 없을 때</td>
+      <td><code class="language-plaintext highlighter-rouge">mkdir -p ~/Library/LaunchAgents</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">LaunchAgents</code>에 올릴 plist 파일 위치도 같이 확인해드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+너가 준 예제에서 flaskserver 부분은 임의로 바꿔도 되는거지?
+
+</p>
+
+<p>네, 맞습니다. <code class="language-plaintext highlighter-rouge">flaskserver</code>라는 문자열은 <strong>사용자가 임의로 정해도 되는 이름</strong> 입니다. 다만 <strong>바꿀 수는 있지만 함부로
+바꾸면 추적이 어려워질 수 있으니 주의점이 몇 가지 있습니다.</strong></p>
+
+<hr />
+
+<h2 id="-바꿀-수-있는-부분">🔍 바꿀 수 있는 부분</h2>
+
+<p>예를 들어 아래 예제에서:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;key&gt;</span>Label<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;string&gt;</span>com.user.flaskserver<span class="nt">&lt;/string&gt;</span>
+
+...
+
+<span class="nt">&lt;key&gt;</span>StandardOutPath<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;string&gt;</span>/tmp/flaskserver.out<span class="nt">&lt;/string&gt;</span>
+
+<span class="nt">&lt;key&gt;</span>StandardErrorPath<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;string&gt;</span>/tmp/flaskserver.err<span class="nt">&lt;/string&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">com.user.flaskserver</code> → 당신이 정한 서비스 이름</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">flaskserver.out</code>, <code class="language-plaintext highlighter-rouge">flaskserver.err</code> → 로그 파일 이름</p>
+  </li>
+</ul>
+
+<h3 id="-전부-다-원하는-이름-으로-바꿀-수-있습니다">✅ 전부 다 <strong>원하는 이름</strong> 으로 바꿀 수 있습니다.</h3>
+
+<hr />
+
+<h2 id="-주의해야-할-점">💡 주의해야 할 점</h2>
+
+<p>항목| 설명<br />
+—|—<br />
+<code class="language-plaintext highlighter-rouge">Label</code>| launchctl에서 서비스를 식별하는 <strong>고유한 이름</strong> 입니다. 이걸로 <code class="language-plaintext highlighter-rouge">start</code>, <code class="language-plaintext highlighter-rouge">stop</code>, <code class="language-plaintext highlighter-rouge">list</code>
+명령에서 찾습니다.<br />
+<code class="language-plaintext highlighter-rouge">.plist</code> 파일 이름| 반드시 <code class="language-plaintext highlighter-rouge">.plist</code> 확장자 유지해야 하지만, 파일명 자체는 자유롭게 정할 수 있습니다. 예:
+<code class="language-plaintext highlighter-rouge">com.myapp.webapi.plist</code><br />
+로그 파일 경로| <code class="language-plaintext highlighter-rouge">/tmp/flaskserver.out</code>도 원하는 경로와 이름으로 변경 가능. 단, <strong>쓰기 권한이 있는 경로</strong> 여야
+함.</p>
+
+<hr />
+
+<h2 id="-예시-이름을-바꾼-경우">💬 예시: 이름을 바꾼 경우</h2>
+
+<h3 id="파일명">파일명:</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/Library/LaunchAgents/com.myproject.webapi.plist
+</code></pre></div></div>
+
+<h3 id="내용-일부">내용 일부:</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;key&gt;</span>Label<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;string&gt;</span>com.myproject.webapi<span class="nt">&lt;/string&gt;</span>
+
+<span class="nt">&lt;key&gt;</span>StandardOutPath<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;string&gt;</span>/tmp/webapi.out<span class="nt">&lt;/string&gt;</span>
+
+<span class="nt">&lt;key&gt;</span>StandardErrorPath<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;string&gt;</span>/tmp/webapi.err<span class="nt">&lt;/string&gt;</span>
+</code></pre></div></div>
+
+<h3 id="실행확인-명령">실행/확인 명령:</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>launchctl load ~/Library/LaunchAgents/com.myproject.webapi.plist
+launchctl start com.myproject.webapi
+launchctl list | <span class="nb">grep </span>com.myproject.webapi
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-권장-네이밍-규칙">🧠 권장 네이밍 규칙</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">com.username.appname</code> 또는 <code class="language-plaintext highlighter-rouge">org.company.projectname</code> 같이 <strong>도메인 스타일</strong> 이 일반적입니다.</p>
+  </li>
+  <li>
+    <p>그래야 충돌 가능성이 적고 명확합니다.</p>
+  </li>
+</ul>
+
+<p>예:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">com.junho.flaskapi</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">com.localserver.devserver</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">org.me.webhook_listener</code></p>
+  </li>
+</ul>
+
+<hr />
+
+<p>결론적으로, <code class="language-plaintext highlighter-rouge">flaskserver</code>는 그냥 예제일 뿐이고 <strong>전부 자유롭게 바꿀 수 있지만</strong> ,<br />
+<strong><code class="language-plaintext highlighter-rouge">Label</code> 값과 파일명은 일관되게 맞춰줘야 관리가 편합니다.</strong></p>]]></content><author><name>hvppycoding</name></author><category term="dev" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">증권사 API 용어 설명</title><link href="https://hvppycoding.github.io/investing/system-trading-terms/" rel="alternate" type="text/html" title="증권사 API 용어 설명" /><published>2025-07-25T18:59:30+09:00</published><updated>2025-07-25T18:59:30+09:00</updated><id>https://hvppycoding.github.io/investing/system-trading-terms</id><content type="html" xml:base="https://hvppycoding.github.io/investing/system-trading-terms/"><![CDATA[<p class="chat--user">
 
 증권사 API를 이용한 자동매매 프로그램을 만들려고 해. API에 등장하는 모든 용어에 대해 한국어, 영어와 내용을 설명해줘.
 
