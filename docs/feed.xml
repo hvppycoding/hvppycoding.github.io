@@ -1,4 +1,216 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T16:02:46+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">httpx 패키지 설명</title><link href="https://hvppycoding.github.io/python/python-httpx/" rel="alternate" type="text/html" title="httpx 패키지 설명" /><published>2025-07-25T16:02:40+09:00</published><updated>2025-07-25T16:02:40+09:00</updated><id>https://hvppycoding.github.io/python/python-httpx</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-httpx/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T16:39:04+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Pydantic 설명 장단점</title><link href="https://hvppycoding.github.io/python/python-pydantic/" rel="alternate" type="text/html" title="Pydantic 설명 장단점" /><published>2025-07-25T16:39:01+09:00</published><updated>2025-07-25T16:39:01+09:00</updated><id>https://hvppycoding.github.io/python/python-pydantic</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-pydantic/"><![CDATA[<p class="chat--user">
+
+pydantic이 뭔지, 왜 쓰는건지 장단점 등을 설명해줘
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">Pydantic</code>은 Python의 데이터 유효성 검사(validation)와 설정 관리(settings management)를 위한
+라이브러리입니다. 주로 FastAPI나 다른 Python 웹 프레임워크에서 많이 사용됩니다.</p>
+
+<hr />
+
+<h2 id="-무엇인가">📌 무엇인가?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Pydantic</code>은 Python의 <code class="language-plaintext highlighter-rouge">dataclass</code>와 비슷한 구조를 가지고 있지만, <strong>입력 데이터의 타입을 강제하고 유효성을 검사</strong>
+합니다. 핵심은 "type hints를 이용해서 런타임에서 실제로 검사한다"는 점입니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">123</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># id는 str이지만 int로 자동 변환됨
+</span><span class="nf">print</span><span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>  <span class="c1"># 123
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="-왜-쓰는가">🔍 왜 쓰는가?</h2>
+
+<h3 id="-목적">✅ 목적</h3>
+
+<ol>
+  <li>
+    <p><strong>입력 검증</strong> : 외부에서 들어오는 데이터(json 등)를 타입 검증하고 잘못된 값을 막기 위함</p>
+  </li>
+  <li>
+    <p><strong>자동 변환</strong> : 가능한 경우 타입을 자동으로 변환</p>
+  </li>
+  <li>
+    <p><strong>명확한 구조 정의</strong> : 코드 상에서 데이터 구조를 명확히 표현 가능</p>
+  </li>
+  <li>
+    <p><strong>정적 분석 가능</strong> : IDE나 타입 체커가 인식할 수 있음</p>
+  </li>
+  <li>
+    <p><strong>FastAPI 연동</strong> : FastAPI에서 request body를 검증할 때 거의 필수</p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-장점">👍 장점</h2>
+
+<h3 id="1-타입-기반-검증">1. 타입 기반 검증</h3>
+
+<p>타입 힌트를 활용해 런타임에서 오류를 조기에 잡아냄.</p>
+
+<h3 id="2-자동-형변환">2. 자동 형변환</h3>
+
+<p>가능하면 타입을 자동으로 맞춰줌. 예: <code class="language-plaintext highlighter-rouge">'1'</code> → <code class="language-plaintext highlighter-rouge">1</code> (int)</p>
+
+<h3 id="3-구조화된-에러-메시지">3. 구조화된 에러 메시지</h3>
+
+<p>에러가 나면 어디서 어떤 타입이 잘못됐는지 명확하게 알려줌.</p>
+
+<h3 id="4-nesting-및-재사용성">4. Nesting 및 재사용성</h3>
+
+<p>다른 <code class="language-plaintext highlighter-rouge">BaseModel</code>을 중첩해서 사용할 수 있어서 복잡한 구조도 표현 가능.</p>
+
+<h3 id="5-빠름">5. 빠름</h3>
+
+<p>내부적으로 <code class="language-plaintext highlighter-rouge">Cython</code>을 사용하여 빠르게 동작함 (v2 기준)</p>
+
+<hr />
+
+<h2 id="-단점">👎 단점</h2>
+
+<h3 id="1-러닝커브">1. 러닝커브</h3>
+
+<p>단순한 프로젝트에 쓰기에는 문법이나 개념이 복잡할 수 있음</p>
+
+<h3 id="2-동적-스키마-어려움">2. 동적 스키마 어려움</h3>
+
+<p>스키마가 런타임에서 바뀌는 경우에는 유연하지 않음</p>
+
+<h3 id="3-성능-이슈-일부-경우">3. 성능 이슈 (일부 경우)</h3>
+
+<p>대규모 데이터 처리 시 자동 형변환이 오히려 성능 병목이 될 수 있음</p>
+
+<h3 id="4-에러-추적-어려움-복잡한-모델일-경우">4. 에러 추적 어려움 (복잡한 모델일 경우)</h3>
+
+<p>중첩 모델이 깊어지면 어느 필드에서 에러 났는지 파악하기 어려울 수 있음</p>
+
+<hr />
+
+<h2 id="-언제-쓰는-게-적절한가">🧠 언제 쓰는 게 적절한가?</h2>
+
+<ul>
+  <li>
+    <p>외부 입력(json, form, query)을 다루는 API 서버 (FastAPI, Flask 등)</p>
+  </li>
+  <li>
+    <p>데이터 파이프라인에서 중간 결과를 검증할 때</p>
+  </li>
+  <li>
+    <p>설정 파일을 로드하고 검증할 때</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="총평">❗총평</h2>
+
+<p><code class="language-plaintext highlighter-rouge">pydantic</code>은 잘 쓰면 생산성과 안정성을 크게 올릴 수 있지만, 단순한 스크립트나 내부 전용 툴에는 과도한 도구일 수도 있습니다.
+데이터 유효성 검사가 필요 없다면 굳이 쓸 이유는 없습니다.</p>
+
+<p>궁금한 점 더 있으시면 말씀해주세요.</p>
+
+<p class="chat--user">
+
+데이터가 안맞으면 어떻게 돼?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">pydantic</code>에서는 데이터가 타입에 맞지 않으면 예외(<code class="language-plaintext highlighter-rouge">ValidationError</code>)가 발생합니다. 이건 <strong>런타임에서 바로 발생</strong>
+하고, 명확하게 어떤 필드에 어떤 문제가 있었는지를 알려줍니다.</p>
+
+<hr />
+
+<h2 id="-예시-타입이-안-맞을-때">❌ 예시: 타입이 안 맞을 때</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">abc</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이렇게 실행하면 아래와 같은 <code class="language-plaintext highlighter-rouge">ValidationError</code>가 발생합니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
+
+pydantic.error_wrappers.ValidationError: 2 validation errors for User
+id
+  value is not a valid integer (type=type_error.integer)
+name
+  str type expected (type=type_error.str)
+</code></pre></div></div>
+
+<p>즉, <code class="language-plaintext highlighter-rouge">id='abc'</code>는 int로 변환 불가능하고, <code class="language-plaintext highlighter-rouge">name=123</code>도 str이 아니기 때문에 에러를 던집니다.</p>
+
+<hr />
+
+<h2 id="-예시-자동-변환이-가능한-경우">✅ 예시: 자동 변환이 가능한 경우</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">42</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>    <span class="c1"># 42 (str → int 자동 변환)
+</span><span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># 'Alice'
+</span></code></pre></div></div>
+
+<p>자동 형변환이 가능한 경우에는 문제없이 처리됩니다. 하지만 <strong>불가능한 경우는 예외 발생</strong>.</p>
+
+<hr />
+
+<h2 id="예외-처리-방법">예외 처리 방법</h2>
+
+<p>물론 try-except로 예외를 잡을 수도 있습니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">xyz</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Bob</span><span class="sh">'</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="nf">json</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>출력 예시:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"loc"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value is not a valid integer"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"type_error.integer"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>구조화된 JSON 형태로 어떤 필드에 무슨 문제가 있었는지 파악할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="결론">결론</h2>
+
+<ul>
+  <li>
+    <p><strong>타입이 안 맞으면 무조건 예외 발생</strong></p>
+  </li>
+  <li>
+    <p><strong>가능하면 자동 변환</strong></p>
+  </li>
+  <li>
+    <p><strong>ValidationError는 매우 상세하고 디버깅에 유리</strong></p>
+  </li>
+  <li>
+    <p>FastAPI와 연동할 경우, 이 에러는 HTTP 422 응답으로 자동 변환됨</p>
+  </li>
+</ul>
+
+<p>pydantic을 도입하는 주 이유 중 하나가 이 <strong>강력하고 친절한 검증 메커니즘</strong> 입니다.<br />
+더 알고 싶은 부분 있으시면 말씀해주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">httpx 패키지 설명</title><link href="https://hvppycoding.github.io/python/python-httpx/" rel="alternate" type="text/html" title="httpx 패키지 설명" /><published>2025-07-25T16:02:40+09:00</published><updated>2025-07-25T16:02:40+09:00</updated><id>https://hvppycoding.github.io/python/python-httpx</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-httpx/"><![CDATA[<p class="chat--user">
 
 python httpx는 뭐하는 패키지야?
 
@@ -7004,195 +7216,4 @@ tmux
 
 <hr />
 
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code>를 전체적으로 구성해 드릴 수도 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-22T13:53:35+09:00</published><updated>2025-07-22T13:53:35+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-under-cursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/"><![CDATA[<p class="chat--user">
-
-gvim 설정에서 cursor 밑에 있는 파일을 새 탭으로 여는 함수 작성해줘. 이 때 파일 경로가 상대경로일 경우 현재 열려있는 파일로부터
-상대 경로로 찾아야 해. 그리고 만약 파일이 없으면 input() 으로 새로 해당 파일을 만들지 질문하고 y로 답할 경우 만들고 열어줘.
-
-</p>
-
-<p>아래는 <code class="language-plaintext highlighter-rouge">gvim</code>에서 사용할 수 있는 Vimscript 함수입니다. 커서 아래 있는 단어(파일 경로로 간주)를 새 탭으로 열되, 상대경로일
-경우 현재 열려 있는 파일 기준으로 처리하고, 해당 파일이 존재하지 않으면 생성 여부를 묻는 기능을 포함하고 있습니다.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  " 커서 아래 단어 가져오기
-  let l:filename = expand('&lt;cfile&gt;')
-
-  " 현재 버퍼의 디렉토리 기준으로 상대경로 처리
-  let l:current_dir = expand('%:p:h')
-  let l:fullpath = fnamemodify(l:filename, ':p')
-  if !isdirectory(fnamemodify(l:filename, ':h'))
-    let l:fullpath = resolve(l:current_dir . '/' . l:filename)
-  endif
-
-  " 파일 존재 여부 확인
-  if filereadable(l:fullpath)
-    " 새 탭으로 열기
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    " 파일 생성 여부 확인
-    let l:answer = input("File does not exist. Create it? (y/N): ")
-    if l:answer ==? 'y'
-      " 디렉토리 없으면 생성
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      " 새 탭으로 열기 (파일 생성 포함)
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-
-" 매핑 예시 (원하는 키로 변경 가능)
-nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
-</code></pre></div></div>
-
-<h3 id="요점-정리">요점 정리:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">expand('&lt;cfile&gt;')</code>을 사용하여 커서 아래 파일명 추출.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">expand('%:p:h')</code>로 현재 파일 기준 경로 가져와서 상대경로 처리.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">filereadable()</code>로 존재 여부 확인 후 <code class="language-plaintext highlighter-rouge">tabedit</code>로 새 탭에서 열기.</p>
-  </li>
-  <li>
-    <p>없을 경우 <code class="language-plaintext highlighter-rouge">input()</code>으로 사용자에게 파일 생성 여부 묻기.</p>
-  </li>
-</ul>
-
-<h3 id="참고-사항">참고 사항:</h3>
-
-<ul>
-  <li>
-    <p>상대경로 처리에서 Vim이 <code class="language-plaintext highlighter-rouge">:p</code>로 풀지 못하는 경우가 있어 <code class="language-plaintext highlighter-rouge">resolve()</code>와 디렉토리 접합을 함께 사용함.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">mkdir(..., 'p')</code>는 상위 디렉토리까지 포함해 생성함.</p>
-  </li>
-</ul>
-
-<p>테스트 후 의도대로 작동하지 않는 부분이 있으면 알려주세요. 삽질 없이 바로 고칠 수 있도록 도와드리겠습니다.</p>
-
-<p class="chat--user">
-
-만들지 물을 때 절대 경로를 보여주고 물어주면 좋겠어.
-
-</p>
-
-<p>아래는 요청하신 대로 <strong>파일이 없을 때 절대 경로를 보여주고</strong> 생성 여부를 묻도록 수정한 버전입니다:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  " 커서 아래 단어 가져오기
-  let l:filename = expand('&lt;cfile&gt;')
-
-  " 현재 파일 기준 디렉토리에서 상대경로 처리
-  let l:current_dir = expand('%:p:h')
-  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
-
-  " 파일 존재 확인
-  if filereadable(l:fullpath)
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    " 경고 및 절대 경로 출력
-    let l:answer = input("File does not exist: " . l:fullpath . "\nCreate it? (y/N): ")
-    if l:answer ==? 'y'
-      " 디렉토리 없으면 생성
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-
-" 예시 키 매핑
-nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
-</code></pre></div></div>
-
-<h3 id="변경-사항-요약">변경 사항 요약:</h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">input()</code> 메시지에 <code class="language-plaintext highlighter-rouge">l:fullpath</code> (절대 경로)를 출력함으로써 사용자가 어떤 경로에 파일을 만들게 되는지 명확하게 보여줌.</li>
-</ul>
-
-<p>이제 실수로 엉뚱한 위치에 파일을 만드는 일은 줄어들 겁니다. 더 개선하고 싶은 점 있으시면 말씀해 주세요.</p>
-
-<p class="chat--user">
-
-질문에 색깔을 넣을 수도 있어?
-
-</p>
-
-<p>네, <strong>GVim이나 터미널 Vim에서 색깔을 넣는 건 제한적</strong> 입니다.<br />
-하지만 <strong>GVim</strong> , 특히 GUI 환경에서는 <code class="language-plaintext highlighter-rouge">:echohl</code>을 활용하면 <strong>색상 강조</strong> 를 넣을 수 있습니다. 단,
-<code class="language-plaintext highlighter-rouge">input()</code> 자체는 하이라이팅을 직접 지원하지 않아서 <strong>질문 전체를 색상 있게 출력하고, 입력은 따로 받는 방식</strong> 으로 우회해야
-합니다.</p>
-
-<p>예시 코드는 다음과 같습니다:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  let l:filename = expand('&lt;cfile&gt;')
-  let l:current_dir = expand('%:p:h')
-  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
-
-  if filereadable(l:fullpath)
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    " 강조된 질문 메시지 출력
-    echohl Question
-    echon "File does not exist: "
-    echohl Directory
-    echon l:fullpath
-    echohl Question
-    echon "\nCreate it? (y/N): "
-    echohl None
-
-    " 입력은 따로 처리
-    let l:answer = nr2char(getchar())
-
-    if l:answer ==? 'y'
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-</code></pre></div></div>
-
-<h3 id="설명">설명:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">echohl</code>은 특정 하이라이트 그룹으로 색상을 바꿉니다.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">Question</code>, <code class="language-plaintext highlighter-rouge">Directory</code> 같은 기본 하이라이트 그룹을 사용했지만, <code class="language-plaintext highlighter-rouge">:highlight</code>로 사용자 지정도 가능함.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">echon</code>은 개행 없이 출력합니다. <code class="language-plaintext highlighter-rouge">getchar()</code>로 입력을 따로 받아야 <code class="language-plaintext highlighter-rouge">input()</code> 없이 색상 출력이 가능합니다.</p>
-  </li>
-</ul>
-
-<h3 id="참고">참고:</h3>
-
-<ul>
-  <li>
-    <p>터미널 Vim에서는 색이 보이지 않거나 제한될 수 있습니다. GVim이나 색상 지원 터미널에서 확인하세요.</p>
-  </li>
-  <li>
-    <p>원하는 색감이 아니면 <code class="language-plaintext highlighter-rouge">:highlight Question</code> 등의 명령어로 색상 조정 가능합니다.</p>
-  </li>
-</ul>
-
-<p>필요하시면 사용자 정의 색상까지 설정하는 방법도 알려드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="vim" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code>를 전체적으로 구성해 드릴 수도 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry></feed>
