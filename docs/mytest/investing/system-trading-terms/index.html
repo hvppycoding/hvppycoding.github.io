@@ -1,0 +1,1029 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>증권사 API 용어 설명 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="증권사 API 용어 설명">
+<meta property="og:url" content="https://hvppycoding.github.io/investing/system-trading-terms/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-25T18:59:30+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/investing/system-trading-terms/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="증권사 API 용어 설명">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-25T18:59:30+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/investing/system-trading-terms/" itemprop="url">증권사 API 용어 설명
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+증권사 API를 이용한 자동매매 프로그램을 만들려고 해. API에 등장하는 모든 용어에 대해 한국어, 영어와 내용을 설명해줘.
+
+</p>
+
+<p>o3 pro 요청</p>
+
+<p>3m 18s 동안 이성 처리 완료</p>
+
+<p>아래 내용은 “증권사 API”에서 거의 반드시 마주치게 되는 핵심 용어를 <strong>인증 → 계좌 → 시장데이터 → 주문 → 파생상품 → 위험관리
+→ 통신∙형식 → 기타</strong> 의 8단계로 분류하여 정리한 것입니다.<br />
+“모든” 용어라 주장하기엔 API마다 미묘한 차이가 있으므로, 실제 구현 전에는 반드시 해당 증권사의 공식 문서를 교차 검증하시길 권합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>분류</th>
+      <th>한국어 용어¹</th>
+      <th>영어 원어</th>
+      <th>설명 (회의적 시각 포함)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1. 인증·보안 (Auth &amp; Security)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>API 키</td>
+      <td>API Key</td>
+      <td>서버가 <strong>누구</strong> 인지 대충 판단할 때 쓰는 문자열. 사람이 노출하면 끝장입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>비밀 키</td>
+      <td>Secret Key</td>
+      <td>서명(HMAC 등)을 만들 때 함께 쓰이는 짝꿍 키. 평문 저장? 말도 안 됩니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>액세스 토큰</td>
+      <td>Access Token</td>
+      <td>OAuth 기반 API가 “로그인 상태”를 증명할 때 쓰는 짧은 수명 문자열. 만료 시간을 꼭</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>확인해야 합니다.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>리프레시 토큰</td>
+      <td>Refresh Token</td>
+      <td>액세스 토큰 갱신용. 길게 살아남지만 탈취 시 피해도 길어집니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>논스</td>
+      <td>Nonce</td>
+      <td>“한 번만 쓰는 숫자”. 재전송 공격을 막겠다고 붙여 두지만, 서버가 제대로 검증 안 하면 허사입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>타임스탬프</td>
+      <td>Timestamp</td>
+      <td>요청 시각을 밀리초 단위로 넣으라는데, 서버-클라이언트 시계 오차가 크면 어떻게 할 건가요? NTP 동기</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>필수.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>서명</td>
+      <td>Signature</td>
+      <td>Secret Key 로 해시 만든 값. 문서마다 정렬 규칙이 달라 삽질 포인트 1순위.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>레이트 리밋</td>
+      <td>Rate Limit</td>
+      <td>“분당 60회” 같은 호출 제한. 초과하면 HTTP 429. 우회? 결국 차단당합니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>2. 계좌·포트폴리오</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>계좌 ID</td>
+      <td>Account ID</td>
+      <td>브로커가 부여한 숫자 또는 문자열. 실계좌·모의계좌가 따로일 수도 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>계좌 유형</td>
+      <td>Account Type</td>
+      <td>현금(Cash), 마진(Margin) 등. 마진이면 이자·위험 관리가 갑절로 복잡해집니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>잔고</td>
+      <td>Balance</td>
+      <td>통화별 가용 금액. “체결 대금 미정산분”은 포함? 브로커마다 다릅니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>순자산</td>
+      <td>Equity</td>
+      <td>Balance + 미실현 P/L. 가격 지연 데이터로 계산하면 눈속임 숫자입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>매수 가능 금액</td>
+      <td>Buying Power</td>
+      <td>레버리지 포함 여력. 실제 주문 가능 수량과 100 % 일치 안 하는 경우 많습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>레버리지</td>
+      <td>Leverage</td>
+      <td>2×, 5× 같은 배율. 적절히 쓰면 효율, 과하면 청산.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>3. 시장 데이터 (Market Data)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>종목/심벌</td>
+      <td>Symbol (Ticker)</td>
+      <td>“AAPL”, “005930”. 거래소마다 표기가 달라 중복 위험 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>거래소</td>
+      <td>Exchange</td>
+      <td>“NYSE”, “KRX”, “NASDAQ”. 일부 API는 코드 체계가 사내 전용이라 혼동 주범.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>호가</td>
+      <td>Quote</td>
+      <td>Bid/Ask/Last. 밀리초마다 변하는데 API는 초 단위로 틱 줄 때도 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>매도호가</td>
+      <td>Ask</td>
+      <td>“팔고 싶은 최소가”. Level 2 데이터 없으면 1단계(bbo)만 가져옵니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>매수호가</td>
+      <td>Bid</td>
+      <td>“사고 싶은 최대가”.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>스프레드</td>
+      <td>Spread</td>
+      <td>Ask – Bid. 유동성 부족하면 폭이 벌어져 자동매매 체결률 악화.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>체결가</td>
+      <td>Last Price</td>
+      <td>가장 최근 거래가격. “0” 또는 null 이면 장이 닫힌 겁니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>틱</td>
+      <td>Tick</td>
+      <td>최소 호가 단위 혹은 1건 체결. 브로커마다 표현이 달라 전처리 필요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>캔들</td>
+      <td>Candle/Bar (OHLCV)</td>
+      <td>Open-High-Low-Close-Volume 묶음. 분봉, 시봉, 일봉 등. 서버 TZ 혼선에</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주의.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>레벨2</td>
+      <td>Level 2</td>
+      <td>호가 스택(Depth). 지원 안 하는 API도 많습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>VWAP</td>
+      <td>Volume-Weighted Average Price</td>
+      <td>체결량 가중 평균. 실시간 계산 여부 확인 필요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>4. 주문 (Order)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 ID</td>
+      <td>Order ID</td>
+      <td>증권사 내부 고유값. 일부는 UUID, 일부는 숫자.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>클라이언트 주문 ID</td>
+      <td>Client Order ID</td>
+      <td>사용자가 붙여 보내는 식별자. 중복 시 오류 발생 여부 확인 필수.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 방향</td>
+      <td>Side</td>
+      <td>Buy(매수)/Sell(매도). 공매도는 별도 Flag? 문서 확인하세요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>수량</td>
+      <td>Quantity</td>
+      <td>주식은 주(share), 선물은 계약(contract). 소수 허용 여부? ETF 1/1,000단위?</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>가격</td>
+      <td>Price</td>
+      <td>지정가 주문가. 시장가면 null 또는 0.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 유형</td>
+      <td>Order Type</td>
+      <td>Market, Limit, Stop, Stop Limit, Trailing Stop, OCO,</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Bracket 등. API마다 지원 범위가 다릅니다.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>시간 조건</td>
+      <td>Time-in-Force</td>
+      <td>GTC, IOC, FOK 등. 한·미 증시는 해석이 조금씩 달라 애매합니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>주문 상태</td>
+      <td>Status</td>
+      <td>New, Partially Filled, Filled, Canceled, Rejected, Expired. 약간씩</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>명칭이 달라 매핑 필요.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>체결</td>
+      <td>Fill / Execution</td>
+      <td>주문이 약정된 건. 부분 체결된 뒤 취소하면 수량 불일치 주의.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>슬리피지</td>
+      <td>Slippage</td>
+      <td>목표가−실체결가 차이. 자동매매 성과를 좀먹는 주범.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>5. 파생상품·선물</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>계약</td>
+      <td>Contract</td>
+      <td>선물·옵션 한 단위. 계약 규모 확인(예: BTC 1 건 = 100 USD)?</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>만기</td>
+      <td>Expiry</td>
+      <td>“2025-09-W4” 등. 포맷이 증권사마다 제멋대로입니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>행사가</td>
+      <td>Strike</td>
+      <td>옵션의 권리행사 가격.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>콜/풋</td>
+      <td>Call / Put</td>
+      <td>옵션 종류. 약어 “C/P”만 쓰기도 하니 파싱 시 주의.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>펀딩 율</td>
+      <td>Funding Rate</td>
+      <td>무기한 선물 교환 이자. 실시간 변동, API 지연 시 리스크.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>기준 가격</td>
+      <td>Mark Price</td>
+      <td>강제 청산 계산 기준. 거래소 시장가격과 다를 수 있어 함정.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>6. 위험관리 (Risk Management)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>손절가</td>
+      <td>Stop-Loss</td>
+      <td>가격 트리거. 서버-클라이언트 어디서 실행? Broker side가 안전.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>익절가</td>
+      <td>Take-Profit</td>
+      <td>목표가 트리거. 마찬가지로 서버 실행 여부 확인.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>최대 손실 한도</td>
+      <td>Max Drawdown</td>
+      <td>전략 중단 기준. API가 제공? 대부분은 로컬 로직 필요.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>유지 증거금</td>
+      <td>Maintenance Margin</td>
+      <td>밑으로 떨어지면 강제 청산. 계산식이 계약별로 다릅니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>청산</td>
+      <td>Liquidation</td>
+      <td>강제 포지션 종료. API가 미리 경고 주는지? 없다면 자체 모니터링.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>VaR</td>
+      <td>Value-at-Risk</td>
+      <td>위험 예측 지표. 브로커 API에서 직접 주는 경우는 드뭅니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>7. 통신·형식 (Protocol &amp; Format)</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>엔드포인트</td>
+      <td>Endpoint</td>
+      <td>“/v2/orders” 같은 URL. 버전이 바뀌면 호환성 깨집니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>요청</td>
+      <td>Request</td>
+      <td>HTTP Message = Method + Header + Body. REST만 있는 게 아니라 WebSocket도</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>있습니다.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>응답</td>
+      <td>Response</td>
+      <td>상태 코드와 JSON/CSV 본문. 예상 스키마와 다르면 바로 예외 처리.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>헤더</td>
+      <td>Header</td>
+      <td>인증 값, 콘텐츠 형식 등. 대소문자 구분? RFC 2616 참고.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>본문</td>
+      <td>Body</td>
+      <td>보통 JSON. 키 이름이 snake_case 인지 camelCase 인지 혼재하기도 합니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>HTTP 메서드</td>
+      <td>GET, POST, PUT, DELETE</td>
+      <td>일부 API는 “취소”를 POST로 보내고 DELETE 미지원—문서 꼼꼼히.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>상태 코드</td>
+      <td>Status Code</td>
+      <td>200, 400, 401, 403, 404, 429, 500. 같은 400이라도 Error Code 상세</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>분기 필수.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>오류 코드</td>
+      <td>Error Code</td>
+      <td>브로커 사전 정의 숫자/문자열. 문서 외의 ‘숨겨진’ 코드가 튀어 나올 때가 있습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>페이징</td>
+      <td>Pagination</td>
+      <td>limit/offset or cursor. 대량 데이터 수집 시 속도 병목.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>커서</td>
+      <td>Cursor</td>
+      <td>다음 페이지 토큰. 만료 시간? 명시 안 된 경우 많습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>웹소켓</td>
+      <td>WebSocket</td>
+      <td>실시간 스트림. 핑/퐁 주기 미확인 시 연결 끊김.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>하트비트</td>
+      <td>Heartbeat</td>
+      <td>서버가 “살아 있다” 확인용. 누락되면 재연결 트리거.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>8. 기타</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>샌드박스</td>
+      <td>Sandbox Environment</td>
+      <td>실거래 이전 테스트 서버. 약식 데이터라 현실 체결 환경과 차이 남.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>프로덕션</td>
+      <td>Production Environment</td>
+      <td>실제 돈이 오가는 서버. 릴리즈 전 더블체크.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SDK</td>
+      <td>SDK</td>
+      <td>공식·서드파티 라이브러리. 버전 관리 느슨하면 직접 REST 호출이 낫습니다.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>웹훅</td>
+      <td>Webhook</td>
+      <td>서버→클라이언트 알람. 방화벽/인증 처리 안 하면 먹통.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>콜백 URL</td>
+      <td>Callback URL</td>
+      <td>OAuth Redirect URI. HTTPS 안 쓰면 토큰 탈취 위험.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>아이덤포턴시 키</td>
+      <td>Idempotency Key</td>
+      <td>동일 요청 중복 실행 방지. 지원 안 하면 재시도 로직 주의.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>지연 시간</td>
+      <td>Latency</td>
+      <td>API round-trip 시간. 알고리즘 성과에 직격탄.</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>¹대부분 애초에 영어를 그대로 쓰지만, 국내 문서에서 관용적으로 쓰이는 한글 표현을 병기했습니다.</p>
+
+<hr />
+
+<h3 id="어떻게-활용하실-건가요-단계별-의문-제기">어떻게 활용하실 건가요? (단계별 의문 제기)</h3>
+
+<ol>
+  <li>
+    <p><strong>용어 분석</strong> – 위 표로 팀 내부 용어 정의를 통일하십시오. 설명이 같아도 명칭만 다르면 버그의 씨앗입니다.</p>
+  </li>
+  <li>
+    <p><strong>브로커별 매핑</strong> – 실제 API Field 명을 표준 용어에 매핑해 “어댑터” 레이어를 두는 것이 안전합니다. 각 증권사가 <code class="language-plaintext highlighter-rouge">qty</code>, <code class="language-plaintext highlighter-rouge">quantity</code>, <code class="language-plaintext highlighter-rouge">orderQty</code> 식으로 제멋대로 쓰거든요.</p>
+  </li>
+  <li>
+    <p><strong>예외/오류 설계</strong> – 문서에 없는 오류 코드가 튀어나올 것을 전제로, 실패 처리 체계를 먼저 만드십시오. “해보니 된다”는 태도는 자동매매에서 폭탄입니다.</p>
+  </li>
+  <li>
+    <p><strong>보안 점검</strong> – API Key 노출, 시계 동기화(NTP), Secret Key 평문 저장 금지 같은 기본부터 확인하시겠습니까?</p>
+  </li>
+  <li>
+    <p><strong>실전 테스트</strong> – Sandbox → 소액 실계좌 → 규모 확장 순으로 진행하십시오. 미체결·부분 체결 시 corner case 가 터지지 않는지 눈으로 확인해야 합니다.</p>
+  </li>
+</ol>
+
+<p>자동매매는 “코드 몇 줄”보다 <strong>문서와 위험 관리</strong> 가 성공을 결정합니다. 항상 “이 정의가 브로커마다 동일한가?”를 의심하시고, 의심이
+풀릴 때까지 실제 호가·체결 데이터로 검증하시기 바랍니다.</p>
+
+<p>궁금한 점이 더 있으시면 언제든 추가로 말씀해 주십시오.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#investing" class="page__taxonomy-item p-category" rel="tag">investing</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-25T18:59:30+09:00">2025-07-25</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/python/python-pydantic/" class="pagination--pager" title="Pydantic 설명 장단점">Previous</a>
+    
+    
+      <a href="/dev/mac-background-server/" class="pagination--pager" title="Mac 백그라운드 서버 실행">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/vllm-curl/" rel="permalink">Curl로 vLLM 쿼리 보내기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:53+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:51+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/mac-background-server/" rel="permalink">Mac 백그라운드 서버 실행
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:29:17+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-pydantic/" rel="permalink">Pydantic 설명 장단점
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T16:39:01+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

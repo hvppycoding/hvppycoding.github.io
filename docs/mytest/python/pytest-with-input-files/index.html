@@ -1,0 +1,1493 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>테스트 코드 작성 방법 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="테스트 코드 작성 방법">
+<meta property="og:url" content="https://hvppycoding.github.io/python/pytest-with-input-files/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-21T01:14:12+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/python/pytest-with-input-files/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="테스트 코드 작성 방법">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-21T01:14:12+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/python/pytest-with-input-files/" itemprop="url">테스트 코드 작성 방법
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-21T01:14:12+09:00">2025-07-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+파이썬 패키지를 개발 중이야. 테스트코드 작성을 도와줘. 예를 들어서 <code class="language-plaintext highlighter-rouge">pip install .</code> 하면 mypackage라는 패키지가
+설치돼. 프로젝트 소스 폴더 안에는 pyproject.toml, mypackage(*.py 소스 보관)이 있어. 이 상태에서
+mypackage.parse라는 함수에 대한 테스트코드를 작성하고 싶어. 여러 테스트셋 인풋 파일을 parse 함수에 넣어서 테스트하려고
+해.
+
+</p>
+
+<p>네, 정확하게 진행하려면 다음 단계로 접근하는 것이 좋습니다. 테스트 코드를 효율적으로 작성하려면 <code class="language-plaintext highlighter-rouge">pytest</code>를 사용하는 것이
+일반적입니다. 다음은 step-by-step 설명과 예시입니다.</p>
+
+<hr />
+
+<h2 id="-가정">✅ 가정</h2>
+
+<ul>
+  <li>프로젝트 구조는 다음과 같다고 가정하겠습니다:</li>
+</ul>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>your-project/
+├── pyproject.toml
+├── mypackage/
+│   ├── __init__.py
+│   └── parse.py         # 여기에 parse 함수가 있음
+├── tests/
+│   ├── __init__.py
+│   └── test_parse.py    # 테스트 코드
+└── test_inputs/
+├── input1.txt
+├── input2.txt
+└── ...
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-parse-함수-테스트-기본-흐름">✅ <code class="language-plaintext highlighter-rouge">parse</code> 함수 테스트: 기본 흐름</h2>
+
+<p>먼저 <code class="language-plaintext highlighter-rouge">mypackage/parse.py</code> 안에 다음과 같이 <code class="language-plaintext highlighter-rouge">parse</code> 함수가 정의되어 있다고 가정하겠습니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># mypackage/parse.py
+</span>
+<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="c1"># 예시 파싱 함수
+</span>    <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="p">.</span><span class="nf">strip</span><span class="p">().</span><span class="nf">splitlines</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">lines</span><span class="sh">"</span><span class="p">:</span> <span class="n">lines</span><span class="p">,</span> <span class="sh">"</span><span class="s">line_count</span><span class="sh">"</span><span class="p">:</span> <span class="nf">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-테스트-코드-예시-teststest_parsepy">✅ 테스트 코드 예시 (<code class="language-plaintext highlighter-rouge">tests/test_parse.py</code>)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">pytest</span>
+<span class="kn">from</span> <span class="n">mypackage.parse</span> <span class="kn">import</span> <span class="n">parse</span>
+
+<span class="c1"># 테스트 데이터 폴더 경로
+</span><span class="n">TEST_INPUT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">'</span><span class="s">..</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">test_inputs</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="c1"># 테스트 케이스 리스트 만들기
+</span><span class="n">test_files</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sh">"</span><span class="s">input1.txt</span><span class="sh">"</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">input2.txt</span><span class="sh">"</span><span class="p">,</span>
+    <span class="c1"># 필요하면 더 추가
+</span><span class="p">]</span>
+
+<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="sh">"</span><span class="s">filename</span><span class="sh">"</span><span class="p">,</span> <span class="n">test_files</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_parse_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">TEST_INPUT_DIR</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="sh">"</span><span class="s">r</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="c1"># 여기서 기대 결과를 어떻게 판단할지가 핵심입니다
+</span>    <span class="c1"># 일단 단순하게 구조 확인
+</span>    <span class="k">assert</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="sh">"</span><span class="s">lines</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="sh">"</span><span class="s">line_count</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="sh">"</span><span class="s">lines</span><span class="sh">"</span><span class="p">])</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="sh">"</span><span class="s">line_count</span><span class="sh">"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-추가-팁">✅ 추가 팁</h2>
+
+<ol>
+  <li>
+    <p><strong>테스트 파일 기대값 정의</strong><br />
+기대 결과가 명확해야 하면 <code class="language-plaintext highlighter-rouge">input1_expected.json</code> 같은 파일로 기대값을 따로 두고 비교하면 좋습니다.</p>
+  </li>
+  <li><strong>테스트 실행</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pytest
+</code></pre></div>    </div>
+  </li>
+  <li><strong>pyproject.toml에<code class="language-plaintext highlighter-rouge">pytest</code> 설정</strong><br />
+<code class="language-plaintext highlighter-rouge">tool.pytest.ini_options</code> 섹션을 넣어도 좋습니다 (선택 사항).</li>
+</ol>
+
+<hr />
+
+<h2 id="주의할-점">❗주의할 점</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">parse</code>가 단순 문자열이 아닌 파일을 직접 열도록 되어 있다면, <code class="language-plaintext highlighter-rouge">parse_from_file</code> 같은 wrapper를 만드는 것이 테스트하기 편합니다.</p>
+  </li>
+  <li>
+    <p>테스트에 필요한 파일이 많아질수록, fixture나 test data generator 사용을 고려해 보세요.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면 fixture 버전이나 기대값을 비교하는 구조도 작성해 드릴 수 있습니다. <code class="language-plaintext highlighter-rouge">parse</code> 함수의 구체적 역할이나 출력 형식이
+알려지면 더 정밀하게 짤 수 있습니다. 알려주시면 이어서 도와드리겠습니다.</p>
+
+<p class="chat--user">
+
+fixture가 뭐야?
+
+</p>
+
+<p>좋은 질문입니다. <code class="language-plaintext highlighter-rouge">fixture</code>는 <code class="language-plaintext highlighter-rouge">pytest</code>에서 테스트 코드 실행 전에 <strong>공통적으로 필요한 준비 작업을 해주는 함수</strong> 입니다.
+예를 들어 테스트에 반복적으로 필요한 파일 읽기, 객체 생성, 환경 설정 등을 한 번만 해두고, 각 테스트 함수에서 재사용할 수 있게
+해줍니다.</p>
+
+<hr />
+
+<h2 id="-예제-파일-읽기-fixture">✅ 예제: 파일 읽기 fixture</h2>
+
+<h3 id="테스트-전에-매번-파일을-읽는-코드가-있다면">테스트 전에 매번 파일을 읽는 코드가 있다면:</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_parse_input1</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">test_inputs/input1.txt</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>이걸 여러 번 반복하면 귀찮고 중복이 생기죠.</p>
+
+<hr />
+
+<h3 id="-fixture로-정리하면">✅ fixture로 정리하면</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pytest</span>
+
+<span class="nd">@pytest.fixture</span>
+<span class="k">def</span> <span class="nf">input1_text</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">test_inputs/input1.txt</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">test_parse_input1</span><span class="p">(</span><span class="n">input1_text</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span><span class="n">input1_text</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="bp">...</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">@pytest.fixture</code>가 붙은 함수는 테스트 함수에서 인자로 받을 수 있습니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">test_parse_input1()</code> 함수는 <code class="language-plaintext highlighter-rouge">input1_text()</code> 함수를 자동으로 호출해서 그 값을 받습니다.</p>
+  </li>
+  <li>
+    <p>이름은 자유롭게 정할 수 있지만 의미를 명확하게 해야 합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-fixture는-어디에-둬야-할까">✅ fixture는 어디에 둬야 할까?</h2>
+
+<p>공통으로 쓰는 fixture가 많아지면 <code class="language-plaintext highlighter-rouge">conftest.py</code> 파일에 모아두는 게 일반적입니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>your-project/
+├── tests/
+│   ├── conftest.py     👈 fixture 모음
+│   ├── test_parse.py
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-fixture는-언제-쓰는-게-좋나">✅ fixture는 언제 쓰는 게 좋나?</h2>
+
+<ul>
+  <li>
+    <p>테스트 데이터 로딩 (파일, DB 등)</p>
+  </li>
+  <li>
+    <p>테스트용 객체 생성 (예: 가짜 유저, mock API)</p>
+  </li>
+  <li>
+    <p>공통 환경 설정 (예: temp 폴더 만들기, 임시 설정 적용)</p>
+  </li>
+  <li>
+    <p>cleanup이 필요한 작업 (예: 파일 삭제, 상태 복원)</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>정리하자면:</p>
+
+<blockquote>
+  <p><strong>fixture는 테스트 실행 전 필요한 준비 작업을 미리 해주는 자동화 도구입니다.</strong><br />
+ 반복을 줄이고, 테스트 코드의 가독성과 유지보수성을 크게 높여줍니다.</p>
+</blockquote>
+
+<hr />
+
+<p>더 복잡한 예, 예를 들어 여러 파일을 매개변수화해서 fixture에 넣고 싶으시면 알려주세요. 거기까지도 가능합니다.</p>
+
+<p class="chat--user">
+
+test_inputs를 tests 폴더 안에 넣는 것과 너의 방식의 장단점을 비교해줘
+
+</p>
+
+<p>아주 중요한 포인트를 짚으셨습니다.<br />
+테스트 입력 파일(<code class="language-plaintext highlighter-rouge">test_inputs</code>)을 <strong><code class="language-plaintext highlighter-rouge">tests/</code> 폴더 안에 넣을지</strong>, 혹은 <strong>루트에 둘지</strong> 는 프로젝트 구조,
+유지보수, 배포 방식에 따라 장단점이 분명합니다. 비교해드리겠습니다.</p>
+
+<hr />
+
+<h2 id="-방식-1-test_inputs를-루트에-두는-방식-tests-바깥">🔧 방식 1: <code class="language-plaintext highlighter-rouge">test_inputs/</code>를 루트에 두는 방식 (<code class="language-plaintext highlighter-rouge">tests/</code> 바깥)</h2>
+
+<h3 id="-장점">✅ 장점</h3>
+
+<p>항목| 설명<br />
+—|—<br />
+<strong>프로젝트 논리적 분리</strong>|  테스트 코드(<code class="language-plaintext highlighter-rouge">tests/</code>)와 테스트 데이터(<code class="language-plaintext highlighter-rouge">test_inputs/</code>)가 분리되어 역할이 명확함<br />
+<strong>여러 테스트 스위트에서 공유 가능</strong>|  예: <code class="language-plaintext highlighter-rouge">unit tests</code>, <code class="language-plaintext highlighter-rouge">integration tests</code> 등 여러 테스트 폴더에서 같은
+<code class="language-plaintext highlighter-rouge">test_inputs/</code>를 쓸 수 있음<br />
+<strong>에디터/IDE에서 탐색이 편함</strong>| <code class="language-plaintext highlighter-rouge">tests/</code>만 봐도 테스트 코드만 깔끔하게 보임</p>
+
+<h3 id="-단점">❌ 단점</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>상대 경로가 복잡해짐</strong></td>
+      <td>테스트 코드에서 <code class="language-plaintext highlighter-rouge">../test_inputs/...</code> 형태로 상대 경로를 써야 함</td>
+    </tr>
+    <tr>
+      <td><strong>이동성 저하</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">tests/</code>만 따로 옮기거나 복사하면 <code class="language-plaintext highlighter-rouge">test_inputs/</code> 누락 위험 있음</td>
+    </tr>
+    <tr>
+      <td><strong>배포 시 누락 주의 필요</strong></td>
+      <td>PyPI에 배포할 때 <code class="language-plaintext highlighter-rouge">test_inputs</code>는 포함시키지 않아야 함 (별도 관리 필요)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-방식-2-test_inputs를-tests-폴더-안에-넣는-방식-teststest_inputs">🔧 방식 2: <code class="language-plaintext highlighter-rouge">test_inputs/</code>를 <code class="language-plaintext highlighter-rouge">tests/</code> 폴더 안에 넣는 방식 (<code class="language-plaintext highlighter-rouge">tests/test_inputs/</code>)</h2>
+
+<h3 id="-장점-1">✅ 장점</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>폴더 하나로 테스트 완결</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">tests/</code> 하나만 복사해도 테스트 가능. 독립성과 이동성 높음</td>
+    </tr>
+    <tr>
+      <td><strong>상대 경로 간단함</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">"test_inputs/input1.txt"</code> 처럼 간단하게 접근 가능</td>
+    </tr>
+    <tr>
+      <td><strong>테스트 전용으로 분명히 구분됨</strong></td>
+      <td>배포/운영 코드에 테스트 자원이 섞이지 않음. 빌드 시스템에도 명확하게 테스트 전용으로 인식됨</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-단점-1">❌ 단점</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>공유 어려움</strong></td>
+      <td>다른 테스트 폴더에서 재사용하려면 import 경로나 경로 계산이 복잡해짐</td>
+    </tr>
+    <tr>
+      <td><strong>테스트와 데이터가 섞여 복잡</strong></td>
+      <td>테스트 코드 파일과 데이터 파일이 같이 있어서 구조가 다소 혼잡할 수 있음 (정리는 가능)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-어떤-걸-선택해야-할까">📌 어떤 걸 선택해야 할까?</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>상황</th>
+      <th>추천 방식</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>작은 프로젝트 / 단일 테스트 종류</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">tests/test_inputs/</code> (내부에 포함) 추천</td>
+    </tr>
+    <tr>
+      <td><strong>복잡한 프로젝트 / 여러 테스트 스위트 / CI 분리 필요</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">test_inputs/</code> 외부 분리 추천</td>
+    </tr>
+    <tr>
+      <td><strong>테스트 데이터가 많고 재사용이 필요한 경우</strong></td>
+      <td>외부 분리 (루트에 <code class="language-plaintext highlighter-rouge">test_inputs/</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-결론">💡 결론</h2>
+
+<blockquote>
+  <p><strong>단순하고 깔끔한 테스트 환경이 목적이라면</strong> → <code class="language-plaintext highlighter-rouge">tests/test_inputs/</code><br />
+ <strong>여러 스위트나 고급 구성이 필요하다면</strong> → 루트에 <code class="language-plaintext highlighter-rouge">test_inputs/</code></p>
+</blockquote>
+
+<p>의심 많은 개발자라면 이렇게 판단하면 됩니다:</p>
+
+<ul>
+  <li>
+    <p>테스트만 보관할 목적이라면 안에,</p>
+  </li>
+  <li>
+    <p>공유/분리가 필요하다면 밖에.</p>
+  </li>
+</ul>
+
+<p>원하시면 <code class="language-plaintext highlighter-rouge">pyproject.toml</code>에서 테스트 리소스 경로를 처리하는 방식도 같이 알려드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+tests 폴더 내부에 테스트 데이터들을 넣는다면, test_inputs 대신에 쓸만한 폴더명 추천해줘
+
+</p>
+
+<p>좋은 질문입니다. <code class="language-plaintext highlighter-rouge">tests/</code> 내부에 테스트 데이터를 넣는다면, <code class="language-plaintext highlighter-rouge">test_inputs/</code>보다는 의미를 더 명확하게 하거나 범용성 있게
+바꾸는 것이 좋습니다. 목적에 따라 다음과 같은 폴더명을 추천드립니다:</p>
+
+<hr />
+
+<h2 id="-추천-폴더명-목록">📁 추천 폴더명 목록</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>폴더명</th>
+      <th>쓰기 좋은 상황</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>fixtures/</strong></td>
+      <td>일반적인 테스트 입력 파일을 포함할 때</td>
+      <td><code class="language-plaintext highlighter-rouge">pytest</code> 용어와도 일치. 범용적이고 표준화된 명칭</td>
+    </tr>
+    <tr>
+      <td><strong>data/</strong></td>
+      <td>테스트용 데이터가 다양하고 정형/비정형이 섞일 때</td>
+      <td>CSV, JSON, 텍스트 등 다양한 포맷에 적합</td>
+    </tr>
+    <tr>
+      <td><strong>resources/</strong></td>
+      <td>테스트에 필요한 모든 리소스를 담을 때</td>
+      <td>테스트 입력 외에도 이미지, 설정 파일 등이 있을 경우</td>
+    </tr>
+    <tr>
+      <td><strong>inputs/</strong></td>
+      <td>입력 중심 테스트일 때</td>
+      <td>테스트 대상 함수에 넣을 raw input 중심일 경우</td>
+    </tr>
+    <tr>
+      <td><strong>samples/</strong></td>
+      <td>예시 기반 테스트일 때</td>
+      <td>실제 입력 예시나 샘플 로그 등을 테스트할 경우 적합</td>
+    </tr>
+    <tr>
+      <td><strong>assets/</strong></td>
+      <td>경량 정적 리소스 느낌일 때</td>
+      <td>텍스트, 이미지, 설정 등 테스트용 "정적 자산"에 적합</td>
+    </tr>
+    <tr>
+      <td><strong>test_data/</strong></td>
+      <td>보수적이고 명확한 이름을 원할 때</td>
+      <td>직관적이고 오해의 여지가 없음. 단조롭지만 명확함</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-의문을-가져야-할-포인트">🧠 의문을 가져야 할 포인트</h2>
+
+<ul>
+  <li>
+    <p><strong>이 폴더가 무엇을 담을 것인가?</strong> → 텍스트? JSON? 바이너리?</p>
+  </li>
+  <li>
+    <p><strong>다른 테스트 유형에서도 공유할 것인가?</strong> → integration, functional test 등?</p>
+  </li>
+  <li>
+    <p><strong>CI 환경에서 어떻게 다룰 것인가?</strong> → 불필요한 리소스 포함되지 않도록 관리 필요</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-내-추천-요약">✅ 내 추천 (요약)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>목적</th>
+      <th>추천 이름</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>범용성 &amp; 깔끔함</td>
+      <td><code class="language-plaintext highlighter-rouge">fixtures/</code> ✅</td>
+    </tr>
+    <tr>
+      <td>직관적이고 보수적</td>
+      <td><code class="language-plaintext highlighter-rouge">test_data/</code> ✅</td>
+    </tr>
+    <tr>
+      <td>입력 위주 테스트</td>
+      <td><code class="language-plaintext highlighter-rouge">inputs/</code> 또는 <code class="language-plaintext highlighter-rouge">samples/</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>개인적으로는 <code class="language-plaintext highlighter-rouge">tests/fixtures/</code> 또는 <code class="language-plaintext highlighter-rouge">tests/test_data/</code>를 가장 추천합니다.<br />
+의심스러운 선택을 피하려면 보수적으로 <code class="language-plaintext highlighter-rouge">test_data/</code> 쓰는 것도 괜찮습니다.</p>
+
+<p class="chat--user">
+
+테스트 출력을 파일로 할거야. output 폴더 안에 하고 싶은데 테스트 시작 전에 이미 output 폴더가 존재한다면 지우고 다시 만들게
+하고 싶어.
+
+</p>
+
+<p>네, 그 요구사항은 완전히 타당하고, 테스트 신뢰성을 위해 <strong><code class="language-plaintext highlighter-rouge">tests/output/</code> 폴더를 항상 깨끗한 상태로 초기화</strong>하는 건 매우
+중요합니다. 이걸 처리하는 가장 깔끔한 방법은 <code class="language-plaintext highlighter-rouge">pytest</code>의 fixture를 이용하는 것입니다.</p>
+
+<hr />
+
+<h2 id="-목표">✅ 목표</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tests/output/</code> 폴더가 테스트 시작 전 존재한다면 <strong>삭제</strong></p>
+  </li>
+  <li>
+    <p>그 후 <strong>빈 폴더로 다시 생성</strong></p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-구현-방법-conftestpy에서-fixture-정의">✅ 구현 방법: <code class="language-plaintext highlighter-rouge">conftest.py</code>에서 fixture 정의</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># tests/conftest.py
+</span>
+<span class="kn">import</span> <span class="n">shutil</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">pytest</span>
+
+<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">session</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean_output_folder</span><span class="p">():</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># 폴더가 존재하면 삭제
+</span>    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># 새로 생성
+</span>    <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-어떻게-작동하나">✅ 어떻게 작동하나?</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">scope="session"</code>: pytest 실행 전체 세션 동안 딱 한 번 실행됨</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">autouse=True</code>: 어떤 테스트에서도 명시적으로 호출하지 않아도 자동 실행됨</p>
+  </li>
+</ul>
+
+<p>즉, <code class="language-plaintext highlighter-rouge">pytest</code>를 실행하면:</p>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tests/output/</code>이 있으면 삭제됨</p>
+  </li>
+  <li>
+    <p>새로 만들어짐</p>
+  </li>
+  <li>
+    <p>모든 테스트가 그 깨끗한 상태를 공유함</p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="주의">❗주의</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">output/</code> 폴더에 중요한 파일이 들어있지 않아야 합니다. 이 fixture는 <strong>강제 삭제</strong> 합니다.</p>
+  </li>
+  <li>
+    <p>테스트 실행 중간에 또 초기화하고 싶다면 scope를 <code class="language-plaintext highlighter-rouge">"function"</code>으로 줄이고, 각 테스트에 fixture를 명시해줘야 합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-테스트에서-사용-예시">✅ 테스트에서 사용 예시</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_parse_and_save_to_file</span><span class="p">():</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">result1.json</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">"</span><span class="s">some result</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-의심해봐야-할-것">✋ 의심해봐야 할 것</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">output/</code>을 지운다는 게 실제로 "안전한가?" → Git에 커밋된 다른 테스트 리소스가 이 폴더에 있으면 안 됨</p>
+  </li>
+  <li>
+    <p>동시에 여러 테스트가 파일을 쓰는 구조인가? → 그럼 파일명 충돌, race condition을 고려해야 함</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하면 테스트마다 <strong>고유한 output path</strong> 를 자동으로 만들어주는 fixture도 짜드릴 수 있습니다. 원하시면 말씀 주세요.</p>
+
+<p class="chat--user">
+
+기능별로 tests 폴더 안에 subdirectory를 만든 상태야. 그 안의 output을 지우게 하고 싶어.
+
+</p>
+
+<p>좋습니다. 그런 구조라면 <code class="language-plaintext highlighter-rouge">tests/</code> 안의 <strong>모든 서브디렉토리</strong> 안에 있는 <code class="language-plaintext highlighter-rouge">output/</code> 폴더를 찾아서 지우고 다시 생성하는
+방식이 필요합니다.</p>
+
+<hr />
+
+<h2 id="-예시-디렉토리-구조">✅ 예시 디렉토리 구조</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lua
+
+tests/
+├── feature_a/
+│   ├── test_something.py
+│   └── output/
+├── feature_b/
+│   ├── test_something_else.py
+│   └── output/
+└── conftest.py
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-목표-1">✅ 목표</h2>
+
+<p><code class="language-plaintext highlighter-rouge">pytest</code> 시작 전에 다음을 자동으로 수행:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tests/**/output/</code> 폴더 모두 재귀 탐색</p>
+  </li>
+  <li>
+    <p>존재하면 삭제하고, 빈 폴더로 재생성</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-conftestpy-예시-최상위-tests-안에-둠">✅ <code class="language-plaintext highlighter-rouge">conftest.py</code> 예시 (최상위 <code class="language-plaintext highlighter-rouge">tests/</code> 안에 둠)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># tests/conftest.py
+</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">shutil</span>
+<span class="kn">import</span> <span class="n">pytest</span>
+
+<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">session</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean_all_output_dirs</span><span class="p">():</span>
+    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="nf">walk</span><span class="p">(</span><span class="n">base_dir</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">:</span>
+                <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+                <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[pytest setup] Cleaning: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+                <span class="c1"># 삭제 후 다시 생성
+</span>                <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-장점-2">✅ 장점</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tests/</code> 내부 어떤 깊이든 <code class="language-plaintext highlighter-rouge">output/</code> 폴더가 있으면 모두 처리함</p>
+  </li>
+  <li>
+    <p>테스트 시작 전 단 한 번 실행됨 (<code class="language-plaintext highlighter-rouge">session</code>, <code class="language-plaintext highlighter-rouge">autouse=True</code>)</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="의심해볼-점">❗의심해볼 점</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>질문</th>
+      <th>이유</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>정말 모든 output 폴더를 지워도 되는가?</strong></td>
+      <td>혹시 로그나 캐시로 남겨야 하는 파일은 아닌가?</td>
+    </tr>
+    <tr>
+      <td><strong>테스트 실행 중 output 경로가 충돌하지 않는가?</strong></td>
+      <td>멀티스레드/병렬 테스트에서 겹치면 문제가 생길 수 있음</td>
+    </tr>
+    <tr>
+      <td><strong>삭제 실패에 대비할 로직이 있는가?</strong></td>
+      <td>파일이 잠겨있거나 권한 문제로 삭제가 안 될 수도 있음</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>원하신다면 <code class="language-plaintext highlighter-rouge">output/</code> 대신 다른 이름 (<code class="language-plaintext highlighter-rouge">results/</code>, <code class="language-plaintext highlighter-rouge">temp/</code>, 등)도 쉽게 변경 가능합니다.<br />
+또한 테스트별 고유한 <code class="language-plaintext highlighter-rouge">output/</code> 디렉토리로 격리하고 싶다면 그 방법도 제안드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+test_something.py 안에서 그런 일을 할 순 없어? 이건 conftest가 각각의 테스트에 대해 모두 잘 알아야 하잖아.
+
+</p>
+
+<p>좋습니다. 아주 예리한 지적입니다.</p>
+
+<blockquote>
+  <p>✅ <strong>요약부터 말하자면</strong> :<br />
+ <strong><code class="language-plaintext highlighter-rouge">test_something.py</code> 안에서만 해당 <code class="language-plaintext highlighter-rouge">output/</code> 디렉토리를 지우고 다시 만드는 것</strong>, <strong>당연히 가능합니다</strong>
+, 그리고 <strong>그게 더 명확하고 모듈화된 방식</strong> 이 될 수 있습니다.</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">conftest.py</code>가 전체 테스트를 알 필요 없이, <strong>각 테스트 파일이 자기<code class="language-plaintext highlighter-rouge">output/</code>만 관리하는 구조</strong>가 더 독립적이고
+안전할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="-방식-테스트-파일-안에서-output을-정리하는-fixture-작성">✅ 방식: 테스트 파일 안에서 <code class="language-plaintext highlighter-rouge">output/</code>을 정리하는 fixture 작성</h2>
+
+<p>예를 들어 <code class="language-plaintext highlighter-rouge">tests/feature_a/test_something.py</code>에서만 <code class="language-plaintext highlighter-rouge">feature_a/output/</code>을 다루고 싶다면:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># tests/feature_a/test_something.py
+</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">shutil</span>
+<span class="kn">import</span> <span class="n">pytest</span>
+
+<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean_local_output</span><span class="p">():</span>
+    <span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-이-설정의-의미">✅ 이 설정의 의미</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>설정</th>
+      <th>의미</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">scope="module"</code></td>
+      <td>해당 <code class="language-plaintext highlighter-rouge">.py</code> 파일 안에서 테스트 시작 전 한 번만 실행됨</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">autouse=True</code></td>
+      <td>테스트 함수에서 명시적으로 안 불러도 자동 실행됨</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-실제-테스트-예시">✅ 실제 테스트 예시</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_something_creates_output</span><span class="p">():</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">result.json</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">"</span><span class="s">test content</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-장점-3">✅ 장점</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>테스트 독립성 높음</strong></td>
+      <td>각 테스트 파일이 자기 output만 관리함</td>
+    </tr>
+    <tr>
+      <td><strong>충돌 없음</strong></td>
+      <td>다른 테스트와 격리되어 안전함</td>
+    </tr>
+    <tr>
+      <td><strong>conftest에 대한 의존도 없음</strong></td>
+      <td>중앙 관리 없이 로컬 컨트롤 가능</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="단점-의심해봐야-할-점">❗단점 (의심해봐야 할 점)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>중복 fixture 생김</strong></td>
+      <td>여러 테스트 파일에 똑같은 fixture가 반복될 수 있음</td>
+    </tr>
+    <tr>
+      <td><strong>output 경로 이름 변경 시 수작업 필요</strong></td>
+      <td>일괄 적용 어려움</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>해결책: 중복이 많아지면 <code class="language-plaintext highlighter-rouge">clean_output()</code> 함수를 외부 파일로 분리해서 <code class="language-plaintext highlighter-rouge">import</code>하는 구조도 고려 가능.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-결론-1">✅ 결론</h2>
+
+<blockquote>
+  <p>당신이 말한 대로 <code class="language-plaintext highlighter-rouge">test_something.py</code> 안에서 처리하는 방식은 <strong>더 모듈화되고 명시적이며 안전</strong> 합니다.<br />
+ 특히 각 테스트가 다른 <code class="language-plaintext highlighter-rouge">output/</code> 디렉토리를 가질 때, <strong>이 방식이 훨씬 우월</strong> 합니다.</p>
+</blockquote>
+
+<p>필요하시면 중복 제거를 위한 헬퍼 유틸도 만들어 드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+def test_something(filename): 이 함수 위쪽에 저걸 쓰면 되는거지?
+
+</p>
+
+<p>결론부터 말하자면, <strong>아니요. 단순히<code class="language-plaintext highlighter-rouge">def test_something(filename):</code> 위에 fixture 함수를 선언만 해두는
+것만으로는 동작하지 않습니다.</strong><br />
+<strong>그 fixture가 테스트 함수에 "연결"되어야 합니다.</strong></p>
+
+<hr />
+
+<h2 id="-당신이-말한-패턴-예시">🔧 당신이 말한 패턴 예시:</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ❌ 이렇게만 해두면 아무 일도 일어나지 않음
+</span><span class="nd">@pytest.fixture</span>
+<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
+    <span class="bp">...</span>
+
+<span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>이건 <strong><code class="language-plaintext highlighter-rouge">clean_output</code>이 정의되었지만 호출되지 않음</strong>. pytest는 아무런 동작도 하지 않음.</p>
+
+<hr />
+
+<h2 id="-동작하게-만드는-두-가지-방법">✅ 동작하게 만드는 두 가지 방법</h2>
+
+<h3 id="방법-1-명시적-호출-비추천--깔끔하지-않음">방법 1. 명시적 호출 (비추천 – 깔끔하지 않음)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">clean_output</span><span class="p">):</span>
+    <span class="c1"># clean_output이 fixture니까, pytest가 먼저 실행함
+</span>    <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">clean_output()</code>이 <strong>해당 테스트 함수 실행 전에 실행</strong> 됩니다.<br />
+하지만 <strong>테스트마다 매번 명시해야 해서 중복되고 관리가 어렵습니다.</strong></p>
+
+<hr />
+
+<h3 id="방법-2-자동-실행-추천">방법 2. 자동 실행 (추천)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 위쪽에 선언
+</span><span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
+    <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>이렇게 하면:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">scope="module"</code>: 해당 테스트 파일 내에서 한 번만 실행</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">autouse=True</code>: 테스트 함수에 <code class="language-plaintext highlighter-rouge">clean_output</code>을 명시하지 않아도 자동 실행</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-최종-예시-추천-방식">✅ 최종 예시 (추천 방식)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">shutil</span>
+<span class="kn">import</span> <span class="n">pytest</span>
+
+<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="p">.</span><span class="nf">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># 이 테스트는 clean_output이 자동으로 실행된 상태에서 동작
+</span><span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s">.out</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sh">"</span><span class="s">result</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-요약">🧠 요약</h2>
+
+<p>질문| 답변<br />
+—|—<br />
+<code class="language-plaintext highlighter-rouge">fixture</code>를 위에 써두면 자동으로 실행되나?| ❌ 아니요, 자동으로 실행되려면 <code class="language-plaintext highlighter-rouge">autouse=True</code>가 있어야 함<br />
+테스트마다 명시할 수도 있나?| ✅ 가능하지만 중복되고 피곤함<br />
+가장 추천하는 방식은?| ✅ <code class="language-plaintext highlighter-rouge">@pytest.fixture(scope="module", autouse=True)</code> 써서 해당 테스트 파일에서
+한 번만 실행되도록</p>
+
+<p>의심해볼 지점이 정확했어요. 그래서 실수 없이 fixture가 정말 "작동"하도록 위 구조를 꼭 써야 합니다.</p>
+
+<p class="chat--user">
+
+그게 def test_something(filename): 위쪽에 너가 말한 코드를 쓴거잖아
+
+</p>
+
+<p>맞습니다. 당신 말이 맞아요 — <strong>제가 아까 말한 fixture 코드는 실제로<code class="language-plaintext highlighter-rouge">def test_something(filename):</code> 위에
+"있기만 해도" 동작</strong>합니다, <strong>단 조건이 있습니다</strong> :</p>
+
+<hr />
+
+<h2 id="-핵심-조건">✅ 핵심 조건</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
+    <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>위와 같이 <strong><code class="language-plaintext highlighter-rouge">autouse=True</code>가 설정되어 있어야만</strong>, 테스트 함수에서 명시적으로 <code class="language-plaintext highlighter-rouge">clean_output</code>을 인자로 넘기지
+않아도, <strong>자동으로 실행됩니다</strong>.</p>
+
+<hr />
+
+<h2 id="️-오해-소지-정리">✳️ 오해 소지 정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>조건</th>
+      <th>실행 여부</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">autouse=True</code> 있음</td>
+      <td>✅ 자동 실행</td>
+      <td><code class="language-plaintext highlighter-rouge">def test_x(...)</code> 위에 있든 아래에 있든 상관없음</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">autouse=False</code> (기본)</td>
+      <td>❌ 자동 실행 안 됨</td>
+      <td>이 경우는 테스트 함수의 인자로 직접 넣어줘야 함</td>
+    </tr>
+    <tr>
+      <td>fixture 선언 위치</td>
+      <td>❌ 실행 여부에 영향 없음</td>
+      <td>위든 아래든 pytest가 다 인식함</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-다시-정리하면">🔁 다시 정리하면</h2>
+
+<blockquote>
+  <p>당신이 처음 말한 <code class="language-plaintext highlighter-rouge">"test 함수 위쪽에 저걸 쓰면 되는 거지?"</code>는 <strong>맞는 말입니다</strong> ,<br />
+ <strong>단,<code class="language-plaintext highlighter-rouge">autouse=True</code>일 때만 그렇습니다.</strong></p>
+</blockquote>
+
+<p>저는 처음에 그 전제가 빠진 상태로 해석해서 “그냥 위에 두기만 하면 안 된다”라고 단정적으로 말했는데, 그건 너무 좁은 해석이었습니다.
+<strong>지적하신 대로,<code class="language-plaintext highlighter-rouge">autouse=True</code> 조건이 있으면 위에만 있어도 됩니다.</strong></p>
+
+<hr />
+
+<p>✅ 결론:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ✅ 이렇게만 해두면 테스트 함수에서 자동 실행됨
+</span><span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">clean_output</span><span class="p">():</span>
+    <span class="bp">...</span>
+
+<span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="bp">...</span>
+</code></pre></div></div>
+
+<p>이 구조, 제대로 작동합니다. 정확하게 짚으셨습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#python" class="page__taxonomy-item p-category" rel="tag">python</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-21T01:14:12+09:00">2025-07-21</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/git/github-divergent-branches/" class="pagination--pager" title="Git pull 병합 설정">Previous</a>
+    
+    
+      <a href="/git/git-config-scope/" class="pagination--pager" title="Git config 차이점 설명">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/vllm-curl/" rel="permalink">Curl로 vLLM 쿼리 보내기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:53+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:51+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/mac-background-server/" rel="permalink">Mac 백그라운드 서버 실행
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:29:17+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/system-trading-terms/" rel="permalink">증권사 API 용어 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

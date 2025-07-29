@@ -1,0 +1,1430 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>tmux 마우스 복사 설정 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="tmux 마우스 복사 설정">
+<meta property="og:url" content="https://hvppycoding.github.io/linux/tmux-clipboard/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-23T10:25:16+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/linux/tmux-clipboard/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="tmux 마우스 복사 설정">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-23T10:25:16+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/linux/tmux-clipboard/" itemprop="url">tmux 마우스 복사 설정
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-23T10:25:16+09:00">2025-07-23</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+음 원래 linux mate terminal에서는 select로 복사가 되었는데 tmux 안에서는 그게 안되네
+
+</p>
+
+<p>맞습니다. 기본적으로 MATE Terminal에서는 마우스로 텍스트를 선택(select)하면 자동으로 클립보드(정확히는 <em>primary
+selection</em>)에 복사됩니다. 하지만 <code class="language-plaintext highlighter-rouge">tmux</code> 안에서는 이 기능이 제대로 작동하지 않는 경우가 많습니다. 이유와 해결책을 차례대로
+설명드리겠습니다.</p>
+
+<hr />
+
+<h3 id="-원인">✅ 원인</h3>
+
+<p><code class="language-plaintext highlighter-rouge">tmux</code>는 자체적으로 터미널 입출력을 가로채고 리렌더링하기 때문에, 마우스로 텍스트를 선택할 때 예상한 대로 복사되지 않는 경우가
+있습니다. 특히 마우스 모드가 활성화되어 있으면 텍스트 선택이 tmux의 내부 명령으로 처리되어 기본 터미널 동작과 충돌합니다.</p>
+
+<hr />
+
+<h3 id="-해결-방법">🔧 해결 방법</h3>
+
+<h4 id="1-tmux에서-마우스-모드를-끄기">1. <strong>tmux에서 마우스 모드를 끄기</strong></h4>
+
+<p><code class="language-plaintext highlighter-rouge">~/.tmux.conf</code>에 다음을 <strong>비활성화</strong> 하십시오:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># set -g mouse on</span>
+</code></pre></div></div>
+
+<p>또는 실행 중인 세션에서 일시적으로 비활성화하려면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux <span class="nb">set</span> <span class="nt">-g</span> mouse off
+</code></pre></div></div>
+
+<p>이렇게 하면 터미널이 tmux 내부에서도 마우스를 직접 처리할 수 있어서 텍스트 선택 및 복사가 정상 작동합니다.</p>
+
+<blockquote>
+  <p>단점: tmux에서 마우스로 패널 리사이징이나 스크롤 등은 사용할 수 없게 됩니다.</p>
+</blockquote>
+
+<hr />
+
+<h4 id="2-터미널의-마우스-복사-기능을-tmux에-연동">2. <strong>터미널의 마우스 복사 기능을 tmux에 연동</strong></h4>
+
+<p><code class="language-plaintext highlighter-rouge">tmux</code>의 copy-mode를 활용하여 복사하려면 다음 단계를 따르십시오:</p>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmux</code> 안에서 <code class="language-plaintext highlighter-rouge">Ctrl + b</code> 누르고 <code class="language-plaintext highlighter-rouge">[</code></p>
+  </li>
+  <li>
+    <p>방향키나 마우스로 텍스트 선택</p>
+  </li>
+  <li>
+    <p>선택 후 <code class="language-plaintext highlighter-rouge">Enter</code> 누르면 복사됨</p>
+  </li>
+  <li>
+    <p>붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl + b</code> 누르고 <code class="language-plaintext highlighter-rouge">]</code></p>
+  </li>
+</ol>
+
+<blockquote>
+  <p>이 방식은 <code class="language-plaintext highlighter-rouge">tmux</code> 자체의 버퍼에 복사되며 시스템 클립보드와는 별개입니다.</p>
+</blockquote>
+
+<hr />
+
+<h4 id="3-tmux와-시스템-클립보드-연동-선택-사항">3. <strong>tmux와 시스템 클립보드 연동 (선택 사항)</strong></h4>
+
+<p>만약 <code class="language-plaintext highlighter-rouge">xclip</code>이나 <code class="language-plaintext highlighter-rouge">xsel</code> 같은 도구를 설치해 두셨다면 <code class="language-plaintext highlighter-rouge">tmux</code> 복사를 시스템 클립보드에 직접 보내도록 설정할 수도 있습니다.</p>
+
+<p>예시:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.tmux.conf</span>
+bind-key <span class="nt">-T</span> copy-mode-vi y send-keys <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-결론">🔍 결론</h3>
+
+<ul>
+  <li>
+    <p>단순히 마우스로 복사하려면 <strong><code class="language-plaintext highlighter-rouge">tmux mouse off</code>가 필요</strong>합니다.</p>
+  </li>
+  <li>
+    <p>마우스 모드가 꼭 필요하면 <strong>tmux copy-mode + 클립보드 연동</strong> 을 설정하십시오.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmux</code>는 기본 터미널과 입력 체계가 다르기 때문에, 복사/붙여넣기 방식도 달라지는 것이 자연스럽습니다.</p>
+  </li>
+</ul>
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code> 설정 파일 예시도 드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+off 를 하니 마우스 휠로 이전을 볼 수가 없네
+
+</p>
+
+<p>맞습니다. <code class="language-plaintext highlighter-rouge">tmux set -g mouse off</code>를 하면 마우스 휠이 기본 터미널에 전달되어 버려서, <code class="language-plaintext highlighter-rouge">tmux</code>의 스크롤 기능
+(copy-mode 기반 스크롤)이 작동하지 않게 됩니다.</p>
+
+<p>즉:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mouse on</code> → <code class="language-plaintext highlighter-rouge">tmux</code> 안에서 마우스 휠 스크롤 가능 (하지만 마우스 복사 안 됨)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mouse off</code> → 마우스로 복사 가능 (하지만 <code class="language-plaintext highlighter-rouge">tmux</code> 스크롤 안 됨)</p>
+  </li>
+</ul>
+
+<p>이건 근본적으로 <code class="language-plaintext highlighter-rouge">tmux</code>가 마우스 입력을 <strong>탈취</strong> 하느냐 안 하느냐의 문제입니다. 둘 다 완벽하게 만족시키려면 우회가 필요합니다.</p>
+
+<hr />
+
+<h3 id="-가능한-해결-방법-마우스는-on-유지하면서-복사도-되게-하기">🛠 가능한 해결 방법: 마우스는 <code class="language-plaintext highlighter-rouge">on</code> 유지하면서 복사도 되게 하기</h3>
+
+<h4 id="1-mate-terminal의-마우스-드래그-복사를-포기하고tmux-copy-mode--클립보드-연동-사용">1. <strong>MATE Terminal의 “마우스 드래그 복사”를 포기하고<code class="language-plaintext highlighter-rouge">tmux</code> copy-mode + 클립보드 연동 사용</strong></h4>
+
+<p>가장 깔끔한 방식입니다. 아래처럼 설정하면 <code class="language-plaintext highlighter-rouge">tmux</code> 안에서 <code class="language-plaintext highlighter-rouge">vi</code> copy-mode로 복사한 내용이 <strong>시스템 클립보드로 바로 복사</strong>
+됩니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.tmux.conf</span>
+<span class="nb">set</span> <span class="nt">-g</span> mouse on
+bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
+</code></pre></div></div>
+
+<p>사용 방법:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Ctrl + b</code> 누르고 <code class="language-plaintext highlighter-rouge">[</code></p>
+  </li>
+  <li>
+    <p>방향키나 마우스로 텍스트 선택</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">y</code> 누르면 시스템 클립보드에 복사됨</p>
+  </li>
+</ul>
+
+<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">mouse on</code> 유지하면서도 복사가 가능합니다.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">xclip</code>이 없다면 <code class="language-plaintext highlighter-rouge">xsel</code>로 바꾸면 됩니다: <code class="language-plaintext highlighter-rouge">"xsel --clipboard --input"</code></p>
+</blockquote>
+
+<hr />
+
+<h4 id="2-마우스로-텍스트-선택할-때는tmux-빠져나와서-복사">2. <strong>마우스로 텍스트 선택할 때는<code class="language-plaintext highlighter-rouge">tmux</code> 빠져나와서 복사</strong></h4>
+
+<p>즉, 복사할 때만 <code class="language-plaintext highlighter-rouge">tmux</code>를 빠져나와서 복사하고, 다시 돌아옵니다. 불편하지만 그냥 <code class="language-plaintext highlighter-rouge">tmux</code> 쓰면서 가끔 복사하는 정도면 감수할 수
+있는 방법입니다.</p>
+
+<hr />
+
+<h4 id="3-터미널에서-override-mouse-handling-기능-지원하는-경우-매우-일부-터미널만">3. <strong>터미널에서 “override mouse handling” 기능 지원하는 경우 (매우 일부 터미널만)</strong></h4>
+
+<p>일부 고급 터미널(MobaXterm, iTerm2, etc)은 <code class="language-plaintext highlighter-rouge">tmux</code>가 마우스를 장악하고 있어도 강제로 텍스트 선택하게 해주는 기능이
+있습니다. MATE Terminal에는 없습니다.</p>
+
+<hr />
+
+<h3 id="-결론-1">🔚 결론</h3>
+
+<ul>
+  <li>
+    <p>마우스 스크롤과 복사를 <strong>동시에</strong> 편하게 하고 싶다면:</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">mouse on</code> 유지하고, <code class="language-plaintext highlighter-rouge">tmux copy-mode</code> + <code class="language-plaintext highlighter-rouge">xclip</code> 설정하는 것이 가장 합리적입니다.</li>
+    </ul>
+  </li>
+  <li>
+    <p>단순히 마우스로 드래그해서 복사하려면 <code class="language-plaintext highlighter-rouge">mouse off</code>밖에 답이 없지만, 이 경우 스크롤은 안 됩니다.</p>
+  </li>
+</ul>
+
+<p>선택지가 불편한 건 사실입니다. <code class="language-plaintext highlighter-rouge">tmux</code> 구조상 어쩔 수 없는 트레이드오프입니다.<br />
+필요하시면 <code class="language-plaintext highlighter-rouge">~/.tmux.conf</code> 전체 예제도 드리겠습니다.</p>
+
+<p class="chat--user">
+
+Ctrl + b [ 모드 끄는 법
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">Ctrl + b [</code>는 <code class="language-plaintext highlighter-rouge">tmux</code>의 <strong>copy-mode</strong> 진입 명령입니다. 이 모드는 기본적으로 스크롤 및 텍스트 선택을 위한
+모드이며, 수동으로 빠져나와야 합니다.</p>
+
+<hr />
+
+<h3 id="-copy-mode에서-나오는-방법">✅ <strong>copy-mode에서 나오는 방법</strong></h3>
+
+<p>아래 중 하나를 누르시면 됩니다:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>키</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">q</code></td>
+      <td>그냥 나가기 (선택 취소)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Esc</code></td>
+      <td>동일하게 copy-mode 종료</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Enter</code></td>
+      <td>선택 완료 + 복사 (단, <code class="language-plaintext highlighter-rouge">copy-pipe</code>가 설정되지 않으면 tmux buffer에만 저장됨)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>즉, 상황별로 정리하면:</p>
+
+<ul>
+  <li>
+    <p><strong>그냥 나오고 싶다</strong> → <code class="language-plaintext highlighter-rouge">q</code> 또는 <code class="language-plaintext highlighter-rouge">Esc</code></p>
+  </li>
+  <li>
+    <p><strong>선택 완료하고 복사도 하고 싶다</strong> → <code class="language-plaintext highlighter-rouge">Enter</code><br />
+(단, 시스템 클립보드에 붙이려면 <code class="language-plaintext highlighter-rouge">xclip</code> 연동 필요)</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-참고-copy-mode-안에-있다는-표시">🧠 참고: <code class="language-plaintext highlighter-rouge">copy-mode</code> 안에 있다는 표시</h3>
+
+<p>copy-mode에 들어가면 커서가 생기고 방향키로 움직일 수 있습니다. 이 상태는 일반 명령 입력 상태가 아니기 때문에, <code class="language-plaintext highlighter-rouge">Ctrl +
+b</code> 단축키도 일시적으로 동작하지 않습니다. 먼저 <code class="language-plaintext highlighter-rouge">copy-mode</code>에서 빠져나와야 정상 작동합니다.</p>
+
+<hr />
+
+<p>필요하시면 copy-mode를 vim처럼 커스터마이징하거나, 자동으로 특정 키 누르면 copy-mode 진입/복사/종료까지 한 번에 처리하는
+스크립트도 도와드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+복사를 한 걸 붙여넣고 싶으면?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">tmux</code> 안에서 복사한 내용을 붙여넣는 방식은 <strong>어떻게 복사했느냐</strong> 에 따라 달라집니다. 세 가지 상황으로 나눠서 설명드리겠습니다.</p>
+
+<hr />
+
+<h3 id="-1-copy-mode로-복사만-한-경우-ctrl--b--선택-enter">✅ 1. <strong><code class="language-plaintext highlighter-rouge">copy-mode</code>로 복사만 한 경우 (<code class="language-plaintext highlighter-rouge">Ctrl + b [</code>, 선택, <code class="language-plaintext highlighter-rouge">Enter</code>)</strong></h3>
+
+<p>이 경우 복사된 내용은 <strong>tmux 내부 buffer</strong> 에만 들어갑니다.</p>
+
+<h4 id="-붙여넣기-방법">🔹 붙여넣기 방법:</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ctrl + b <span class="o">]</span>
+</code></pre></div></div>
+
+<p>즉, <code class="language-plaintext highlighter-rouge">]</code>는 <code class="language-plaintext highlighter-rouge">tmux</code> 내부 buffer에서 붙여넣기입니다.<br />
+하지만 이건 시스템 클립보드와는 <strong>전혀 관련이 없습니다.</strong></p>
+
+<hr />
+
+<h3 id="-2-copy-pipe를-통해-시스템-클립보드에-복사한-경우">✅ 2. <strong><code class="language-plaintext highlighter-rouge">copy-pipe</code>를 통해 시스템 클립보드에 복사한 경우</strong></h3>
+
+<p>예: <code class="language-plaintext highlighter-rouge">tmux.conf</code>에 이런 설정이 있는 경우:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
+</code></pre></div></div>
+
+<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">y</code>를 눌러 복사한 내용이 <strong>시스템 클립보드</strong> 로 들어갑니다.</p>
+
+<h4 id="-붙여넣기-방법-1">🔹 붙여넣기 방법:</h4>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code> (MATE Terminal에서 시스템 클립보드 붙여넣기)</p>
+  </li>
+  <li>
+    <p>또는 <code class="language-plaintext highlighter-rouge">마우스 오른쪽 클릭 → Paste</code></p>
+  </li>
+</ul>
+
+<p>이건 <code class="language-plaintext highlighter-rouge">tmux</code>가 아니라 터미널이 처리합니다.</p>
+
+<hr />
+
+<h3 id="-3-마우스로-드래그해서-복사한-경우">✅ 3. <strong>마우스로 드래그해서 복사한 경우</strong></h3>
+
+<p>이건 <code class="language-plaintext highlighter-rouge">tmux</code>와 상관없이 터미널이 클립보드에 복사한 것이므로,</p>
+
+<h4 id="-붙여넣기-방법-2">🔹 붙여넣기 방법:</h4>
+
+<ul>
+  <li>
+    <p>동일하게 <code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></p>
+  </li>
+  <li>
+    <p>마우스 우클릭 → Paste</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-요약">🔒 요약</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>복사 방법</th>
+      <th>붙여넣기 방법</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tmux</code> copy-mode + <code class="language-plaintext highlighter-rouge">Enter</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Ctrl + b ]</code></td>
+      <td><code class="language-plaintext highlighter-rouge">tmux</code> 내부 버퍼에서 붙여넣음</td>
+    </tr>
+    <tr>
+      <td>copy-pipe로 시스템 클립보드에 복사</td>
+      <td><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></td>
+      <td>터미널 붙여넣기</td>
+    </tr>
+    <tr>
+      <td>마우스로 복사</td>
+      <td><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></td>
+      <td>일반 복사/붙여넣기</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정 전체 예시도 드릴 수 있습니다. <code class="language-plaintext highlighter-rouge">xclip</code>, <code class="language-plaintext highlighter-rouge">xsel</code>, <code class="language-plaintext highlighter-rouge">wl-copy</code> 등 어떤 환경인지
+알려주시면 더 구체적으로 도와드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+tmux mouse mode on/off 하면서 쓰는건 어때
+
+</p>
+
+<p>좋은 질문입니다.<br />
+결론부터 말하면 <strong>"mouse mode on/off를 상황에 따라 수동으로 토글하며 사용하는 건 가능하지만 불편하고 비효율적입니다."</strong><br />
+왜 그런지 단계적으로 설명드리겠습니다.</p>
+
+<hr />
+
+<h2 id="-장점-명확함">✅ 장점: 명확함</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mouse on</code>: 스크롤, 패널 리사이즈, 클릭으로 창 전환 등 <code class="language-plaintext highlighter-rouge">tmux</code> 기능에 최적화</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mouse off</code>: 마우스 드래그 복사 가능, 텍스트 편하게 선택</p>
+  </li>
+</ul>
+
+<p>필요할 때만 <code class="language-plaintext highlighter-rouge">mouse</code> 모드를 껐다 켜는 건 <strong>명시적인 컨트롤</strong> 이라는 면에서 장점이 있습니다.<br />
+즉, 당신이 정확히 무엇을 원하는지 알고 있고, 그 순간에 따라 <code class="language-plaintext highlighter-rouge">tmux</code> 동작을 바꿀 수 있다는 뜻입니다.</p>
+
+<hr />
+
+<h2 id="-단점-번거롭고-흐름-끊김">❌ 단점: 번거롭고 흐름 끊김</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmux set -g mouse on</code> / <code class="language-plaintext highlighter-rouge">off</code>를 매번 치는 건 너무 번거로움</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmux.conf</code> 수정 → 재적용하려면 <code class="language-plaintext highlighter-rouge">tmux source-file ~/.tmux.conf</code>까지 필요</p>
+  </li>
+  <li>
+    <p>복사하려고 모드 끄고, 끝나면 다시 켜고… 이 흐름이 반복되면 집중력 깨짐</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-대안-토글-단축키-만들기">🛠 대안: 토글 단축키 만들기</h2>
+
+<p>그래도 이 방식을 쓰고 싶다면 <strong>단축키로 mouse 모드 토글</strong> 하는 방법이 있습니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.tmux.conf에 추가</span>
+<span class="nb">bind </span>m run-shell <span class="s1">'tmux show -g mouse | grep -q on &amp;&amp; tmux set -g mouse off || tmux set -g mouse on'</span>
+</code></pre></div></div>
+
+<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">Ctrl + b m</code>을 누를 때마다 mouse 모드가 on/off 전환됩니다.<br />
+(원한다면 <code class="language-plaintext highlighter-rouge">m</code> 대신 다른 키로 바꿔도 됩니다)</p>
+
+<hr />
+
+<h2 id="-추천-전략">🧠 추천 전략</h2>
+
+<p>당신이 복사/스크롤을 <strong>자주 번갈아 사용</strong> 한다면, 다음 중 하나가 현실적인 선택입니다:</p>
+
+<h3 id="-옵션-1-mouse-on-유지--copy-mode--copy-pipe-연동">📌 옵션 1: <code class="language-plaintext highlighter-rouge">mouse on</code> 유지 + <code class="language-plaintext highlighter-rouge">copy-mode + copy-pipe</code> 연동</h3>
+
+<p>→ 복사도 되고 스크롤도 되는 <strong>현실적 절충안</strong><br />
+→ 마우스 드래그는 포기, 대신 <code class="language-plaintext highlighter-rouge">Ctrl + b [</code> + <code class="language-plaintext highlighter-rouge">y</code>로 복사</p>
+
+<h3 id="-옵션-2-마우스-드래그-복사가-중요하면">📌 옵션 2: 마우스 드래그 복사가 중요하면</h3>
+
+<p>→ <code class="language-plaintext highlighter-rouge">mouse off</code>로 상시 유지하고, <code class="language-plaintext highlighter-rouge">Ctrl + b</code> 기반 기능은 최소화<br />
+→ 하지만 이건 <code class="language-plaintext highlighter-rouge">tmux</code>의 장점을 많이 포기하는 것</p>
+
+<h3 id="-옵션-3-위에-설정한-ctrl--b-m-으로-토글">📌 옵션 3: 위에 설정한 <code class="language-plaintext highlighter-rouge">Ctrl + b m</code> 으로 토글</h3>
+
+<p>→ 선택적이고 통제 가능한 절충안, 귀찮지만 통제 가능</p>
+
+<hr />
+
+<h2 id="-결론-2">🔚 결론</h2>
+
+<p><strong>“tmux mouse 모드를 상황에 따라 껐다 켰다 하는 전략”은 기능적으로는 가능하지만, 불편함이 큽니다.</strong><br />
+이 전략을 쓸 거라면 <strong>단축키 토글 설정은 필수</strong> 입니다.<br />
+개인적으로는 <code class="language-plaintext highlighter-rouge">mouse on</code> + <code class="language-plaintext highlighter-rouge">copy-pipe</code> 전략을 추천드립니다. 이게 가장 일관되고 반복 없이 사용할 수 있는 방식입니다.</p>
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code> 예제 전체 드릴게요.</p>
+
+<p class="chat--user">
+
+근데 copy 모드에서 특정 부분만 copy 하는 법 뭐야?
+
+</p>
+
+<p>좋은 질문입니다. <code class="language-plaintext highlighter-rouge">tmux</code> copy-mode에서는 단순히 마우스로 드래그하는 방식이 아니라, <strong>키보드나 마우스로 시작과 끝을 정확히
+선택해서 복사</strong> 하는 식입니다.<br />
+아래는 <strong>특정 부분만 정확하게 복사하는 방법</strong> 에 대한 구체적인 설명입니다.</p>
+
+<hr />
+
+<h2 id="-기본-전제">✅ 기본 전제</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">tmux</code> 설정에서 <code class="language-plaintext highlighter-rouge">vi mode</code>가 켜져 있다고 가정합니다:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setw <span class="nt">-g</span> mode-keys vi
+</code></pre></div></div>
+
+<p>이걸 켜면 Vim 스타일로 텍스트 선택이 가능합니다. (기본적으로 많은 사용자 설정에 포함됨)</p>
+
+<hr />
+
+<h2 id="-특정-부분-복사-키보드-사용-vim-스타일">✅ 특정 부분 복사: 키보드 사용 (vim 스타일)</h2>
+
+<ol>
+  <li><strong>copy-mode 진입</strong>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx
+     
+Ctrl + b [
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>커서 이동</strong></p>
+
+    <ul>
+      <li>
+        <p>방향키, 또는 <code class="language-plaintext highlighter-rouge">h</code>, <code class="language-plaintext highlighter-rouge">j</code>, <code class="language-plaintext highlighter-rouge">k</code>, <code class="language-plaintext highlighter-rouge">l</code>로 이동</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">w</code>, <code class="language-plaintext highlighter-rouge">b</code> 등 Vim처럼 단어 단위 이동 가능</p>
+      </li>
+    </ul>
+  </li>
+  <li><strong>선택 시작</strong>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mathematica
+     
+Space
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>→ 이걸 누르면 선택 시작 위치가 설정됨 (시각적 표시 없음)</p>
+
+<ol>
+  <li>
+    <p><strong>선택 범위 이동</strong></p>
+
+    <ul>
+      <li>원하는 끝 지점까지 커서를 이동시킴</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>복사 실행</strong></p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mathematica
+     
+Enter
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>→ 복사 완료됨 (내부 tmux buffer 또는 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정된 클립보드로)</p>
+
+<hr />
+
+<h2 id="-마우스로-특정-부분만-복사-mouse-on인-경우">✅ 마우스로 특정 부분만 복사 (mouse on인 경우)</h2>
+
+<p><code class="language-plaintext highlighter-rouge">mouse on</code>이면 마우스로도 selection이 가능하지만 <strong>선택 방식은 직사각형(blockwise)</strong>입니다.<br />
+즉, 마우스로 선택하면 Vim에서 <code class="language-plaintext highlighter-rouge">Ctrl-v</code>로 blockwise 선택한 것처럼 됩니다.</p>
+
+<p>이건 코드나 로그처럼 <strong>열 정렬된 텍스트</strong> 에선 유용하지만, 자유로운 줄/문장 선택에는 불편합니다.</p>
+
+<hr />
+
+<h2 id="-줄-전체-말고-특정-단어-또는-문장만-복사하려면">✅ 줄 전체 말고 "특정 단어 또는 문장만" 복사하려면?</h2>
+
+<p>Vim 스타일로 <strong>텍스트 범위를 미세 조정</strong> 해야 합니다:</p>
+
+<p>예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 이동해서 커서를 단어 앞에 두고</span>
+Space      <span class="c"># 선택 시작</span>
+w w w...   <span class="c"># 단어 단위로 커서 이동</span>
+Enter      <span class="c"># 복사</span>
+</code></pre></div></div>
+
+<p>필요하면 <code class="language-plaintext highlighter-rouge">v</code>로 시각 모드 진입하는 방법도 <code class="language-plaintext highlighter-rouge">tmux</code>에서 구현할 수 있지만, 기본은 위 방식입니다.</p>
+
+<hr />
+
+<h2 id="-참고-선택한-걸-시스템-클립보드로-보내려면">✅ 참고: 선택한 걸 시스템 클립보드로 보내려면?</h2>
+
+<p>복사 이후 <code class="language-plaintext highlighter-rouge">tmux.conf</code>에 아래처럼 설정된 경우에만 <code class="language-plaintext highlighter-rouge">xclip</code>을 통해 시스템 클립보드로 복사됩니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
+</code></pre></div></div>
+
+<p>→ 이 경우 마지막 복사 키는 <code class="language-plaintext highlighter-rouge">Enter</code>가 아니라 <strong><code class="language-plaintext highlighter-rouge">y</code></strong>입니다.</p>
+
+<hr />
+
+<h2 id="-정리">🔚 정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>동작</th>
+      <th>키</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>copy-mode 진입</td>
+      <td><code class="language-plaintext highlighter-rouge">Ctrl + b [</code></td>
+    </tr>
+    <tr>
+      <td>커서 이동</td>
+      <td>화살표, 또는 <code class="language-plaintext highlighter-rouge">h/j/k/l</code></td>
+    </tr>
+    <tr>
+      <td>선택 시작</td>
+      <td><code class="language-plaintext highlighter-rouge">Space</code></td>
+    </tr>
+    <tr>
+      <td>선택 종료 + 복사</td>
+      <td><code class="language-plaintext highlighter-rouge">Enter</code> 또는 <code class="language-plaintext highlighter-rouge">y</code> (copy-pipe 있을 때)</td>
+    </tr>
+    <tr>
+      <td>copy-mode 종료</td>
+      <td><code class="language-plaintext highlighter-rouge">q</code>, <code class="language-plaintext highlighter-rouge">Esc</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 "단어 단위로만 선택", "blockwise 비활성화", "시각적 표시 추가" 같은 고급 커스터마이징도 알려드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+아 마우스 모드 켜고 드래그해서 highlighting된 상태로 enter를 치니 tmux clip buffer에 복사되는 듯
+
+</p>
+
+<p>맞습니다. 정확히 보셨습니다.<br />
+요약하자면 <strong>tmux에서 mouse mode가<code class="language-plaintext highlighter-rouge">on</code> 상태일 때, 마우스로 드래그해서 텍스트 하이라이트한 후 <code class="language-plaintext highlighter-rouge">Enter</code>를 누르면, 그
+선택 영역이 <code class="language-plaintext highlighter-rouge">tmux</code>의 copy-mode buffer로 복사됩니다.</strong></p>
+
+<hr />
+
+<h2 id="-왜-그런가">🔍 왜 그런가?</h2>
+
+<p>mouse mode가 <code class="language-plaintext highlighter-rouge">on</code>이면 마우스 드래그 자체가 터미널 수준이 아니라 <strong>tmux의 copy-mode</strong> 동작으로 처리됩니다.<br />
+즉, <code class="language-plaintext highlighter-rouge">tmux</code>가 하이라이팅된 영역을 내부적으로 감지하고 복사 가능한 상태로 만든 것입니다.</p>
+
+<ul>
+  <li>
+    <p>마우스로 드래그 → 내부적으로 copy-mode 진입 + blockwise selection 발생</p>
+  </li>
+  <li>
+    <p>하이라이팅 상태에서 <code class="language-plaintext highlighter-rouge">Enter</code> 누르면 → 복사 완료됨 (<code class="language-plaintext highlighter-rouge">tmux</code> buffer에 저장)</p>
+  </li>
+  <li>
+    <p>이후 <code class="language-plaintext highlighter-rouge">Ctrl + b ]</code>로 붙여넣기 가능</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-참고-이것도-blockwise임">🧠 참고: 이것도 blockwise임</h2>
+
+<p>단, 이 방식은 <strong>linewise가 아닌 blockwise (직사각형 형태)</strong> 복사입니다.<br />
+예시:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] Something happened
+[WARN] Something else
+</code></pre></div></div>
+
+<p>위 두 줄에서 중간 단어만 마우스로 선택하면:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
+
+INFO]
+WARN]
+</code></pre></div></div>
+
+<p>이렇게 잘릴 수 있습니다. <strong>일반적인 줄 선택이 아님</strong> 에 주의하십시오.</p>
+
+<hr />
+
+<h2 id="-팁-copy-pipe-연동-시에도-동작함">✅ 팁: copy-pipe 연동 시에도 동작함</h2>
+
+<p>만약 <code class="language-plaintext highlighter-rouge">tmux.conf</code>에 아래처럼 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정이 되어 있다면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
+</code></pre></div></div>
+
+<p>이 경우 마우스로 드래그 후 <code class="language-plaintext highlighter-rouge">y</code>를 누르면, <strong>선택 영역이 시스템 클립보드로 복사됩니다.</strong></p>
+
+<hr />
+
+<h2 id="-결론-3">🔚 결론</h2>
+
+<ul>
+  <li>
+    <p>mouse mode <code class="language-plaintext highlighter-rouge">on</code>일 때 마우스 드래그 + <code class="language-plaintext highlighter-rouge">Enter</code> = <code class="language-plaintext highlighter-rouge">tmux</code> internal copy</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Ctrl + b ]</code>로 붙여넣기 가능</p>
+  </li>
+  <li>
+    <p>blockwise 선택이라 예쁘게 잘리진 않을 수 있음</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">copy-pipe</code> 연동하면 <code class="language-plaintext highlighter-rouge">y</code>로 시스템 클립보드 복사도 가능</p>
+  </li>
+</ul>
+
+<p>궁금한 점 더 있으시면 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정 예시나 mouse selection 모양 바꾸는 것도 도와드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+마우스 휠 클릭했을 때 tmux에 붙여넣기가 되게 할 순 없어?
+
+</p>
+
+<p>핵심부터 말하자면:</p>
+
+<blockquote>
+  <p><strong>마우스 휠 클릭 (middle click)으로<code class="language-plaintext highlighter-rouge">tmux</code> 안에 붙여넣기 하려면, 복사한 내용이 “X11의 primary
+selection”에 들어 있어야 하고, <code class="language-plaintext highlighter-rouge">tmux</code> mouse mode가 꺼져 있어야 정상 동작합니다.</strong></p>
+</blockquote>
+
+<p>근데 상황에 따라 다르게 작동할 수 있어서, <strong>그 조건과 제한 사항</strong> 을 정리해드리겠습니다.</p>
+
+<hr />
+
+<h2 id="-전제-마우스-중간-버튼은-primary-selection-붙여넣기">✅ 전제: 마우스 중간 버튼은 "primary selection" 붙여넣기</h2>
+
+<p>Linux에서는 마우스 중간 클릭은 일반적으로 <strong>X11의 primary selection</strong> 을 붙여넣는 동작입니다.<br />
+이건 <code class="language-plaintext highlighter-rouge">Ctrl+C</code>로 복사한 게 아니라, <strong>마우스로 드래그만 한</strong> 텍스트가 들어가는 버퍼입니다.</p>
+
+<p>→ <code class="language-plaintext highlighter-rouge">xclip -selection primary -o</code>로 확인 가능</p>
+
+<hr />
+
+<h2 id="-tmux가-이걸-받으려면-필요한-조건">✅ tmux가 이걸 받으려면 필요한 조건</h2>
+
+<h3 id="1-tmux-mouse-mode-꺼짐">1. <strong>tmux mouse mode 꺼짐</strong></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux <span class="nb">set</span> <span class="nt">-g</span> mouse off
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>그래야 터미널이 직접 마우스 클릭 이벤트를 처리하고, 중간 클릭도 <strong>원래대로 작동</strong> 함</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mouse on</code>이면 <code class="language-plaintext highlighter-rouge">tmux</code>가 클릭 이벤트를 가로채서 붙여넣기가 안 됨</p>
+  </li>
+</ul>
+
+<h3 id="2-터미널이-붙여넣기를-지원해야-함">2. <strong>터미널이 붙여넣기를 지원해야 함</strong></h3>
+
+<ul>
+  <li>
+    <p>MATE Terminal 같은 대부분의 리눅스 터미널에서는 중간 클릭 붙여넣기를 지원함</p>
+  </li>
+  <li>
+    <p>Wayland 환경에서는 clipboard와 primary selection 동작이 미묘하게 다를 수 있음</p>
+  </li>
+</ul>
+
+<h3 id="3-붙여넣을-위치가-쉘-prompt여야-함">3. <strong>붙여넣을 위치가 쉘 prompt여야 함</strong></h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">vim</code>, <code class="language-plaintext highlighter-rouge">less</code> 같은 풀스크린 애플리케이션 안에서는 중간 클릭으로 붙여넣기 안 됨</p>
+  </li>
+  <li>
+    <p>셸에서 입력 대기 상태일 때만 가능</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-mouse-on-상태에서는-왜-안-되나">❌ <code class="language-plaintext highlighter-rouge">mouse on</code> 상태에서는 왜 안 되나?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">tmux set -g mouse on</code> 상태에선 모든 마우스 이벤트(클릭, 휠, 드래그 등)를 <code class="language-plaintext highlighter-rouge">tmux</code>가 직접 처리합니다.<br />
+따라서 <strong>중간 버튼 클릭 이벤트가 원래 의도대로 터미널로 전달되지 않음</strong>.</p>
+
+<p>즉, <code class="language-plaintext highlighter-rouge">middle click</code>은 그냥 무시되거나 이상하게 작동합니다.</p>
+
+<hr />
+
+<h2 id="-대안-마우스-모드-켜진-상태에서도-붙여넣기-하고-싶다면">🛠 대안: 마우스 모드 켜진 상태에서도 붙여넣기 하고 싶다면?</h2>
+
+<p>중간 클릭 말고:</p>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></strong> (터미널에서 클립보드 붙여넣기)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmux</code> 자체 붙여넣기 (<code class="language-plaintext highlighter-rouge">Ctrl + b ]</code>)</p>
+  </li>
+  <li>
+    <p>또는 <code class="language-plaintext highlighter-rouge">xclip -o</code>를 tmux에서 실행해서 수동 붙여넣기</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-결론-4">🔚 결론</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>조건</th>
+      <th>중간 클릭 붙여넣기 가능 여부</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">mouse off</code>, 쉘 prompt</td>
+      <td>✅ 됨</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">mouse on</code> 상태</td>
+      <td>❌ 안 됨</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vim</code>, <code class="language-plaintext highlighter-rouge">less</code> 등 풀스크린 앱</td>
+      <td>❌ 안 됨</td>
+    </tr>
+    <tr>
+      <td>Wayland + 일부 터미널 조합</td>
+      <td>❌ 불안정 가능</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>그래서 현실적인 전략은:</p>
+
+<ul>
+  <li>
+    <p><strong>마우스 복사/붙여넣기 위주라면<code class="language-plaintext highlighter-rouge">mouse off</code> 유지</strong></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmux</code> 기능 위주면 <code class="language-plaintext highlighter-rouge">mouse on</code> + <code class="language-plaintext highlighter-rouge">copy-pipe</code> 기반 키보드 복사/붙여넣기</p>
+  </li>
+</ul>
+
+<p>궁금하신 환경이 X11인지 Wayland인지, 또는 MATE Terminal 외의 것인지 알려주시면 좀 더 구체적인 대안도 드릴 수
+있습니다.</p>
+
+<p class="chat--user">
+
+그러면 clipboard의 것을 tmux에 붙여넣을 방법은 없어?
+
+</p>
+
+<p>좋은 질문입니다.<br />
+<strong>결론부터 말하면:<em>"시스템 클립보드의 내용을 tmux 안으로 붙여넣는 방법은 있다."</em></strong><br />
+하지만 <strong>직접적으로<code class="language-plaintext highlighter-rouge">tmux</code>가 클립보드를 읽어오는 기능은 없다</strong>는 걸 전제로 해야 합니다.</p>
+
+<hr />
+
+<h2 id="-방법-1-터미널-붙여넣기-가장-직관적">✅ 방법 1: 터미널 붙여넣기 (가장 직관적)</h2>
+
+<h3 id="-ctrl--shift--v-mate-terminal-기준">▶ <code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code> (MATE Terminal 기준)</h3>
+
+<ul>
+  <li>
+    <p>클립보드에 있는 내용이 <code class="language-plaintext highlighter-rouge">tmux</code> 세션 안으로 바로 입력됩니다</p>
+  </li>
+  <li>
+    <p>단, <code class="language-plaintext highlighter-rouge">tmux</code>가 mouse mode를 잡고 있어도 이건 됩니다</p>
+  </li>
+  <li>
+    <p><strong>단점</strong> : 풀스크린 앱 (ex. <code class="language-plaintext highlighter-rouge">vim</code>, <code class="language-plaintext highlighter-rouge">less</code>) 안에서는 안 됨</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-방법-2-마우스-중간-클릭-앞서-말한-primary-selection">✅ 방법 2: 마우스 중간 클릭 (앞서 말한 primary selection)</h2>
+
+<ul>
+  <li>
+    <p>마우스로 드래그한 텍스트는 <strong>primary selection</strong> 으로 들어감</p>
+  </li>
+  <li>
+    <p>이건 <code class="language-plaintext highlighter-rouge">mouse off</code> 상태에서만 <code class="language-plaintext highlighter-rouge">middle click</code>으로 붙여넣기 가능</p>
+  </li>
+  <li>
+    <p><strong>클립보드(Ctrl+C)</strong>와는 별개라 헷갈릴 수 있음</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-방법-3-명시적으로-xclip-or-xsel을-써서-붙여넣기">✅ 방법 3: 명시적으로 <code class="language-plaintext highlighter-rouge">xclip</code> or <code class="language-plaintext highlighter-rouge">xsel</code>을 써서 붙여넣기</h2>
+
+<h3 id="예시-bash-prompt에서">예시 (bash prompt에서):</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xclip <span class="nt">-sel</span> clip <span class="nt">-o</span> | tmux load-buffer -
+tmux paste-buffer
+</code></pre></div></div>
+
+<p>또는 한 줄로:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux set-buffer <span class="s2">"</span><span class="si">$(</span>xclip <span class="nt">-sel</span> clip <span class="nt">-o</span><span class="si">)</span><span class="s2">"</span> <span class="se">\;</span> paste-buffer
+</code></pre></div></div>
+
+<p>이렇게 하면 <strong>시스템 클립보드 → tmux buffer → 붙여넣기</strong> 로 연결됩니다.</p>
+
+<h3 id="-만약-wl-copy--wl-paste-wayland-환경이라면">▶ 만약 <code class="language-plaintext highlighter-rouge">wl-copy</code> / <code class="language-plaintext highlighter-rouge">wl-paste</code> (Wayland) 환경이라면:</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux set-buffer <span class="s2">"</span><span class="si">$(</span>wl-paste<span class="si">)</span><span class="s2">"</span> <span class="se">\;</span> paste-buffer
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-방법-4-tmuxconf에-붙여넣기-단축키-정의-선택-사항">✅ 방법 4: <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에 붙여넣기 단축키 정의 (선택 사항)</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux
+
+bind-key P run-shell "tmux set-buffer \"\$(xclip -sel clip -o)\" \; paste-buffer"
+</code></pre></div></div>
+
+<p>→ 이제 <code class="language-plaintext highlighter-rouge">Ctrl + b P</code> 누르면 시스템 클립보드가 붙여넣어짐</p>
+
+<hr />
+
+<h2 id="️-한계-및-주의점">⚠️ 한계 및 주의점</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">xclip</code>, <code class="language-plaintext highlighter-rouge">xsel</code>, <code class="language-plaintext highlighter-rouge">wl-paste</code> 같은 도구가 <strong>로컬에서 실행 가능한 환경</strong> 이어야 함</p>
+
+    <ul>
+      <li>SSH 환경에서는 서버에 클립보드 없음 → 안 됨</li>
+    </ul>
+  </li>
+  <li>
+    <p>터미널의 붙여넣기는 단순하게 shell에 입력하는 방식</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">vim</code> 등 프로그램 안에서는 동작이 다름</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-결론-5">🔚 결론</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>방법</th>
+      <th>설명</th>
+      <th>장점</th>
+      <th>단점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ctrl+Shift+V</td>
+      <td>터미널 자체 붙여넣기</td>
+      <td>간단함</td>
+      <td>풀스크린 앱에선 제한</td>
+    </tr>
+    <tr>
+      <td>middle click</td>
+      <td>primary selection 붙여넣기</td>
+      <td>빠름</td>
+      <td>mouse off 필요</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tmux set-buffer</code> + <code class="language-plaintext highlighter-rouge">paste-buffer</code></td>
+      <td>명령어로 붙여넣기</td>
+      <td>확실함</td>
+      <td>도구 필요</td>
+    </tr>
+    <tr>
+      <td>tmux 단축키 바인딩</td>
+      <td>자동화 가능</td>
+      <td>편리</td>
+      <td>설정 필요</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 SSH 원격 환경에서의 클립보드 붙여넣기 같은 특수 상황도 안내해 드릴 수 있습니다.<br />
+현재 사용 중인 환경 (X11 vs Wayland, 로컬 vs SSH 등) 알려주시면 더 구체적으로 도와드리겠습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#linux" class="page__taxonomy-item p-category" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-23T10:25:16+09:00">2025-07-23</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/vim/vim-open-file-under-cursor/" class="pagination--pager" title="GVim 파일 탭 열기">Previous</a>
+    
+    
+      <a href="/verilog/verilog-anonymizer/" class="pagination--pager" title="Verilog 난독화 코드 작성">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/vllm-curl/" rel="permalink">Curl로 vLLM 쿼리 보내기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:53+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:51+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/mac-background-server/" rel="permalink">Mac 백그라운드 서버 실행
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:29:17+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/system-trading-terms/" rel="permalink">증권사 API 용어 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

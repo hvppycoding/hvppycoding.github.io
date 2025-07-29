@@ -1,4 +1,1674 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-25T22:29:22+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Mac 백그라운드 서버 실행</title><link href="https://hvppycoding.github.io/dev/mac-background-server/" rel="alternate" type="text/html" title="Mac 백그라운드 서버 실행" /><published>2025-07-25T22:29:17+09:00</published><updated>2025-07-25T22:29:17+09:00</updated><id>https://hvppycoding.github.io/dev/mac-background-server</id><content type="html" xml:base="https://hvppycoding.github.io/dev/mac-background-server/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-07-30T01:03:45+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Curl로 vLLM 쿼리 보내기</title><link href="https://hvppycoding.github.io/llm/vllm-curl/" rel="alternate" type="text/html" title="Curl로 vLLM 쿼리 보내기" /><published>2025-07-30T01:03:41+09:00</published><updated>2025-07-30T01:03:41+09:00</updated><id>https://hvppycoding.github.io/llm/vllm-curl</id><content type="html" xml:base="https://hvppycoding.github.io/llm/vllm-curl/"><![CDATA[<p class="chat--user">
+
+curl로 vllm gpt 에 쿼리 보내기
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">vLLM</code> 기반 GPT 서버에 <code class="language-plaintext highlighter-rouge">curl</code> 명령어로 쿼리를 보내려면 다음과 같은 구조를 따릅니다. vLLM은 일반적으로 OpenAI 호환
+API 엔드포인트를 제공합니다. 다음은 <code class="language-plaintext highlighter-rouge">vLLM</code> 서버가 OpenAI API처럼 작동할 경우를 가정한 예시입니다.</p>
+
+<hr />
+
+<h3 id="-전제-조건">✅ 전제 조건</h3>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">vLLM</code> 서버가 실행 중이며 OpenAI 호환 REST API 엔드포인트를 제공</p>
+  </li>
+  <li>
+    <p>모델이 <code class="language-plaintext highlighter-rouge">chat</code> 유형으로 등록되어 있음 (<code class="language-plaintext highlighter-rouge">chat/completions</code> endpoint 사용)</p>
+  </li>
+  <li>
+    <p>토큰 인증이 설정되어 있다면 <code class="language-plaintext highlighter-rouge">Authorization: Bearer YOUR_API_KEY</code> 헤더 필요</p>
+  </li>
+</ol>
+
+<hr />
+
+<h3 id="-예시-curl-명령어">🧪 예시 <code class="language-plaintext highlighter-rouge">curl</code> 명령어</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:8000/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "서울 날씨 어때?"}
+    ],
+    "temperature": 0.7
+  }'</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-주요-요소-설명">🧩 주요 요소 설명</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">http://localhost:8000/v1/chat/completions</code>:</p>
+
+    <ul>
+      <li>vLLM 서버의 엔드포인트 주소입니다. 실제 주소로 바꾸세요.</li>
+    </ul>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">model</code>:</p>
+
+    <ul>
+      <li>vLLM에서 사용 중인 모델 이름. (예: <code class="language-plaintext highlighter-rouge">gpt-3.5-turbo</code>, <code class="language-plaintext highlighter-rouge">llama-3</code>, <code class="language-plaintext highlighter-rouge">mistral-7b</code>, 등)</li>
+    </ul>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">messages</code>:</p>
+
+    <ul>
+      <li>Chat 기반 입력 형식으로, 각 메시지의 <code class="language-plaintext highlighter-rouge">role</code>은 <code class="language-plaintext highlighter-rouge">system</code>, <code class="language-plaintext highlighter-rouge">user</code>, <code class="language-plaintext highlighter-rouge">assistant</code> 중 하나입니다.</li>
+    </ul>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">temperature</code>:</p>
+
+    <ul>
+      <li>응답의 무작위성 (창의성) 조절. 0은 결정적, 1에 가까울수록 창의적입니다.</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-인증이-필요한-경우-api-key">🔐 인증이 필요한 경우 (API Key)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:8000/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer YOUR_API_KEY"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{...}'</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-completion-api를-쓰는-경우-prompt-기반">📦 <code class="language-plaintext highlighter-rouge">completion</code> API를 쓰는 경우 (prompt 기반)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:8000/v1/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "gpt-3.5-turbo",
+    "prompt": "서울 날씨 어때?",
+    "max_tokens": 100,
+    "temperature": 0.7
+  }'</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>필요하다면 <code class="language-plaintext highlighter-rouge">stream</code> 옵션이나 <code class="language-plaintext highlighter-rouge">stop</code>, <code class="language-plaintext highlighter-rouge">top_p</code>, <code class="language-plaintext highlighter-rouge">n</code> 등의 고급 파라미터도 사용할 수 있습니다.</p>
+
+<p>원하시는 API 구조에 맞춰 <code class="language-plaintext highlighter-rouge">curl</code> 명령어를 조정해드릴 수도 있습니다. vLLM 서버 설정을 공유해주시면 더 정확하게 도와드릴 수
+있어요.</p>
+
+<p class="chat--user">
+
+모델 조회하는 법 있어?
+
+</p>
+
+<p>네, <code class="language-plaintext highlighter-rouge">vLLM</code> 서버에서 <strong>사용 가능한 모델 목록을 조회</strong> 하려면 일반적으로 OpenAI 호환 REST API의 <code class="language-plaintext highlighter-rouge">/v1/models</code>
+엔드포인트를 사용할 수 있습니다. 아래에 단계별로 정리해드릴게요.</p>
+
+<hr />
+
+<h2 id="-1-모델-목록-조회-curl-명령어">✅ 1. 모델 목록 조회 curl 명령어</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:8000/v1/models
+</code></pre></div></div>
+
+<blockquote>
+  <p>포트 번호 (<code class="language-plaintext highlighter-rouge">8000</code>)나 주소는 <code class="language-plaintext highlighter-rouge">vLLM</code> 서버 실행 환경에 따라 달라질 수 있으니 적절히 수정하세요.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-2-응답-예시-json">🔎 2. 응답 예시 (JSON)</h2>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"list"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-3"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"owned_by"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vllm"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mistral-7b"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"owned_by"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vllm"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>여기서 <code class="language-plaintext highlighter-rouge">"id"</code> 필드가 실제로 쿼리에 사용할 모델 이름입니다. 예를 들어:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-3"</span><span class="w">
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="-3-참고-vllm-서버가-openai-스타일-api를-따르지-않는-경우">🧩 3. 참고: <code class="language-plaintext highlighter-rouge">vLLM</code> 서버가 OpenAI 스타일 API를 따르지 않는 경우</h2>
+
+<p>일부 설정에서는 <code class="language-plaintext highlighter-rouge">/v1/models</code> 엔드포인트가 비활성화되어 있을 수 있습니다. 그런 경우에는:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">vllm.entrypoints.openai.api_server</code> 실행 시 콘솔 로그에서 <code class="language-plaintext highlighter-rouge">model_name</code> 확인</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">vllm.engine.args.model</code> 로 <code class="language-plaintext highlighter-rouge">vllm</code> 서버 시작 시 전달된 모델 경로나 HuggingFace 모델명 직접 확인</p>
+  </li>
+</ul>
+
+<p>예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> vllm.entrypoints.openai.api_server <span class="se">\</span>
+  <span class="nt">--model</span> mistralai/Mistral-7B-Instruct-v0.1 <span class="se">\</span>
+  <span class="nt">--host</span> 0.0.0.0 <span class="nt">--port</span> 8000
+</code></pre></div></div>
+
+<p>위의 경우 모델 이름은 <code class="language-plaintext highlighter-rouge">"mistralai/Mistral-7B-Instruct-v0.1"</code> 입니다.</p>
+
+<hr />
+
+<h2 id="-요약">✅ 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>목적</th>
+      <th>명령어 예시</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>모델 목록 조회</td>
+      <td><code class="language-plaintext highlighter-rouge">curl http://localhost:8000/v1/models</code></td>
+    </tr>
+    <tr>
+      <td>단일 모델 사용</td>
+      <td>API 실행할 때 <code class="language-plaintext highlighter-rouge">--model</code> 옵션 확인</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하면 <code class="language-plaintext highlighter-rouge">vLLM</code> 실행 로그를 기반으로 모델 이름 파싱하는 방법도 알려드릴 수 있어요. 서버 설정 알려주시면 구체적으로 도와드릴게요.</p>
+
+<p class="chat--user">
+
+openweb ui 환경의 api 주소
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">Open WebUI</code> (ex: Open Web UI 또는 oobabooga WebUI 같은 인터페이스)의 경우, 백엔드에 붙어 있는 LLM
+서버에 따라 <strong>API 주소</strong> 가 달라질 수 있습니다. 그러나 일반적으로 다음과 같은 구조로 동작합니다.</p>
+
+<hr />
+
+<h2 id="-1-기본-api-주소-구조">✅ 1. 기본 API 주소 구조</h2>
+
+<p>기본적으로 Open WebUI는 내부적으로 <code class="language-plaintext highlighter-rouge">vllm</code>, <code class="language-plaintext highlighter-rouge">text-generation-webui</code>, 또는 <code class="language-plaintext highlighter-rouge">llama.cpp</code> 서버에
+REST API 요청을 전달하는 <strong>프록시 역할</strong> 을 합니다.</p>
+
+<h3 id="기본-api-주소-예시">기본 API 주소 예시:</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/v1/chat/completions
+</code></pre></div></div>
+
+<p>또는</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:3000/api/v1/chat/completions
+</code></pre></div></div>
+
+<p>포트 번호는 Open WebUI를 실행한 구성에 따라 달라집니다.</p>
+
+<hr />
+
+<h2 id="-2-확인-방법">✅ 2. 확인 방법</h2>
+
+<h3 id="방법-1-open-webui-실행-시-로그-확인">방법 1: Open WebUI 실행 시 로그 확인</h3>
+
+<p>Open WebUI를 실행하면 터미널에 다음과 같은 로그가 출력됩니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx
+
+API listening at http://0.0.0.0:3000
+Forwarding to: http://localhost:8000/v1
+</code></pre></div></div>
+
+<p>여기서:</p>
+
+<ul>
+  <li>
+    <p><strong>사용자 요청</strong> 은 <code class="language-plaintext highlighter-rouge">http://localhost:3000/api/v1/...</code>로 보냅니다.</p>
+  </li>
+  <li>
+    <p><strong>실제 LLM 서버</strong> 는 <code class="language-plaintext highlighter-rouge">http://localhost:8000/v1/...</code>입니다. (예: vLLM)</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="방법-2-브라우저에서-f12--network-탭-확인">방법 2: 브라우저에서 <code class="language-plaintext highlighter-rouge">F12 &gt; Network</code> 탭 확인</h3>
+
+<p>Open WebUI 브라우저에서 채팅할 때 개발자도구를 열고 <code class="language-plaintext highlighter-rouge">Network</code> 탭에서 실제 API 요청이 보내지는 URL을 확인할 수
+있습니다. 보통 다음과 같습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http
+
+POST http://localhost:3000/api/v1/chat/completions
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-3-실제-curl-예시-open-webui-프록시-사용-시">✅ 3. 실제 curl 예시 (Open WebUI 프록시 사용 시)</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/api/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "mistral-7b",
+    "messages": [
+      {"role": "user", "content": "안녕 GPT!"}
+    ],
+    "temperature": 0.7
+  }'</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-요약-1">✅ 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>예시</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WebUI 포트</td>
+      <td><code class="language-plaintext highlighter-rouge">3000</code>, <code class="language-plaintext highlighter-rouge">8080</code>, 또는 Docker에 따라 다름</td>
+    </tr>
+    <tr>
+      <td>API 엔드포인트 예</td>
+      <td><code class="language-plaintext highlighter-rouge">http://localhost:3000/api/v1/chat/completions</code></td>
+    </tr>
+    <tr>
+      <td>백엔드 연결 대상</td>
+      <td>보통 <code class="language-plaintext highlighter-rouge">vLLM</code>, <code class="language-plaintext highlighter-rouge">Ollama</code>, <code class="language-plaintext highlighter-rouge">text-generation-webui</code> 등</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 Docker 환경 기준으로도 예시를 드릴 수 있습니다. 현재 사용 중인 WebUI 종류 (<code class="language-plaintext highlighter-rouge">OpenWebUI</code>,
+<code class="language-plaintext highlighter-rouge">Oobabooga</code>, <code class="language-plaintext highlighter-rouge">LM Studio</code>, 등)나 백엔드 모델 서버(<code class="language-plaintext highlighter-rouge">vllm</code>, <code class="language-plaintext highlighter-rouge">llama.cpp</code>, 등)를 알려주시면 더 정확히
+도와드릴 수 있어요.</p>
+
+<p class="chat--user">
+
+model 보는법
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">Open WebUI</code> 환경에서 <strong>사용 가능한 모델 목록을 확인하는 방법</strong> 은 사용 중인 백엔드(LM 서버: <code class="language-plaintext highlighter-rouge">vLLM</code>,
+<code class="language-plaintext highlighter-rouge">llama.cpp</code>, <code class="language-plaintext highlighter-rouge">Ollama</code>, 등)에 따라 다릅니다. 아래는 대표적인 경우를 나눠서 <strong>step-by-step</strong> 으로 정리한
+내용입니다.</p>
+
+<hr />
+
+<h2 id="-1-open-webui에서-모델-확인하는-방법-ui-기준">✅ 1. Open WebUI에서 모델 확인하는 방법 (UI 기준)</h2>
+
+<h3 id="-방법-a-web-ui-내부에서-확인">📍 방법 A: Web UI 내부에서 확인</h3>
+
+<ul>
+  <li>
+    <p>브라우저에서 Open WebUI에 접속</p>
+  </li>
+  <li>
+    <p>보통 <strong>좌측 사이드바</strong> 또는 <strong>설정(Settings)</strong> 메뉴에서</p>
+
+    <ul>
+      <li>
+        <p>현재 로드된 모델 이름</p>
+      </li>
+      <li>
+        <p>선택 가능한 모델 목록</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>표시 위치 예:</p>
+
+    <ul>
+      <li>메뉴: <code class="language-plaintext highlighter-rouge">Models</code>, <code class="language-plaintext highlighter-rouge">Select Model</code>, 또는 <code class="language-plaintext highlighter-rouge">Settings &gt; Model</code></li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-2-api를-통해-모델-목록-확인-curl-사용">✅ 2. API를 통해 모델 목록 확인 (curl 사용)</h2>
+
+<h3 id="-전제">📍 전제</h3>
+
+<p>Open WebUI가 OpenAI 호환 백엔드를 프록시하고 있어야 합니다. (예: vLLM, text-generation-webui 등)</p>
+
+<h3 id="-api-엔드포인트-openai-스타일">💡 API 엔드포인트 (OpenAI 스타일)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/api/v1/models
+</code></pre></div></div>
+
+<p>또는 백엔드 직접 호출:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:8000/v1/models
+</code></pre></div></div>
+
+<h3 id="-응답-예시">✅ 응답 예시:</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"list"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mistral-7b"</span><span class="p">,</span><span class="w"> </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model"</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-3-8b"</span><span class="p">,</span><span class="w"> </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model"</span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="-3-사용-중인-백엔드별-모델-확인법">✅ 3. 사용 중인 백엔드별 모델 확인법</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>백엔드</th>
+      <th>확인 방법</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>vLLM</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">curl http://localhost:8000/v1/models</code></td>
+    </tr>
+    <tr>
+      <td><strong>Ollama</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">ollama list</code> 또는 <code class="language-plaintext highlighter-rouge">curl http://localhost:11434/api/tags</code></td>
+    </tr>
+    <tr>
+      <td><strong>text-generation-webui</strong></td>
+      <td>WebUI에서 좌측 모델 목록 확인 or <code class="language-plaintext highlighter-rouge">/api/v1/model</code></td>
+    </tr>
+    <tr>
+      <td><strong>llama.cpp</strong></td>
+      <td>모델 수동 로딩이므로 CLI 로그에서 확인</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-예시-open-webui--vllm-연결-시">🧪 예시 (Open WebUI → vLLM 연결 시)</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/api/v1/models
+</code></pre></div></div>
+
+<h3 id="-모델명으로-응답이-오면-이후-요청에서-이렇게-사용">📌 모델명으로 응답이 오면, 이후 요청에서 이렇게 사용:</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/api/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "mistral-7b",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-요약-2">✅ 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>환경</th>
+      <th>모델 확인 방법</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Web UI</td>
+      <td>브라우저 UI 내 모델 선택 메뉴</td>
+    </tr>
+    <tr>
+      <td>curl API</td>
+      <td><code class="language-plaintext highlighter-rouge">/api/v1/models</code> or <code class="language-plaintext highlighter-rouge">/v1/models</code></td>
+    </tr>
+    <tr>
+      <td>백엔드에 따라 다름</td>
+      <td>vLLM: <code class="language-plaintext highlighter-rouge">/v1/models</code>, Ollama: <code class="language-plaintext highlighter-rouge">ollama list</code> 등</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>어떤 백엔드를 Open WebUI가 연결하고 있는지 알려주시면, 그에 맞는 정확한 명령어를 드릴 수 있어요. 필요하시면 Docker 기준도
+설명드릴게요.</p>
+
+<p class="chat--user">
+
+api key 같이 주는법
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">curl</code>로 LLM 서버(Open WebUI 포함)에 <strong>API Key를 포함해서 요청하는 방법</strong> 은 매우 간단합니다. 보통 OpenAI
+호환 API를 따르는 경우, <code class="language-plaintext highlighter-rouge">Authorization</code> 헤더에 키를 추가하면 됩니다.</p>
+
+<hr />
+
+<h2 id="-step-by-step-api-key-포함하는-방법">✅ Step-by-step: API Key 포함하는 방법</h2>
+
+<h3 id="-1-api-key가-필요한-구조-예">🔐 1. API Key가 필요한 구조 예</h3>
+
+<p>API 서버가 <code class="language-plaintext highlighter-rouge">Bearer</code> 인증을 요구한다면 다음 형식입니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/api/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer YOUR_API_KEY"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "mistral-7b",
+    "messages": [
+      {"role": "user", "content": "안녕 GPT!"}
+    ]
+  }'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"Authorization: Bearer ..."</code> → OpenAI-style 인증 방식</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"YOUR_API_KEY"</code>는 발급받은 키로 교체</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-2-환경별-api-key-발급-위치">📌 2. 환경별 API Key 발급 위치</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>환경</th>
+      <th>API Key 설정 위치</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Open WebUI</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">Settings &gt; API Authentication</code> (서버 관리자만 설정 가능)</td>
+    </tr>
+    <tr>
+      <td><strong>vLLM</strong></td>
+      <td>기본적으로 인증 없음, 프록시 또는 Gateway에서 인증 설정 필요</td>
+    </tr>
+    <tr>
+      <td><strong>Ollama</strong></td>
+      <td>인증 필요 없음 (로컬 전용)</td>
+    </tr>
+    <tr>
+      <td><strong>text-generation-webui</strong></td>
+      <td>인증 기능 없음 (커스텀 코드 필요)</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>즉, <strong>Open WebUI가 자체적으로 API Key 인증을 요구하는 경우</strong> , <code class="language-plaintext highlighter-rouge">Bearer</code> 방식으로 보내야 하며, 백엔드가 직접
+인증하지는 않는 경우가 많습니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-예시-api-key로-llm-호출-open-webui-프록시-사용">🧪 예시: API Key로 LLM 호출 (Open WebUI 프록시 사용)</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/api/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer sk-1234abcd5678efgh"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "llama-3",
+    "messages": [
+      {"role": "user", "content": "API 키가 잘 작동하고 있니?"}
+    ]
+  }'</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-참고-open-webui에서-api-key-요구-설정-예">🔄 참고: Open WebUI에서 API Key 요구 설정 예</h2>
+
+<p>만약 Open WebUI를 운영 중이고, API Key 인증을 요구하도록 설정하려면 <code class="language-plaintext highlighter-rouge">.env</code> 또는 설정 파일에 아래와 같은 옵션이 들어
+있을 수 있습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>env
+
+WEBUI_AUTH=true
+WEBUI_API_KEY=sk-1234abcd5678efgh
+</code></pre></div></div>
+
+<p>이 설정이 활성화된 경우에만 <code class="language-plaintext highlighter-rouge">curl</code>에서 API Key를 줘야 합니다.</p>
+
+<hr />
+
+<h2 id="-요약-3">✅ 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>헤더 키</td>
+      <td><code class="language-plaintext highlighter-rouge">"Authorization: Bearer YOUR_API_KEY"</code></td>
+    </tr>
+    <tr>
+      <td>위치</td>
+      <td><code class="language-plaintext highlighter-rouge">-H</code> 옵션으로 <code class="language-plaintext highlighter-rouge">curl</code>에 포함</td>
+    </tr>
+    <tr>
+      <td>적용 대상</td>
+      <td>Open WebUI + API 인증 활성화된 경우</td>
+    </tr>
+    <tr>
+      <td>백엔드 단</td>
+      <td>일반적으로 인증 없음 (vLLM, Ollama 등)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>🔧 원하시면 <code class="language-plaintext highlighter-rouge">Open WebUI</code>의 API Key 설정을 어떻게 켜고 관리하는지도 설명드릴 수 있어요. 운영 중인 환경이 있으면
+알려주세요!</p>
+
+<p class="chat--user">
+
+….net/api 가 base야
+
+</p>
+
+<p>좋습니다! 말씀하신 대로 API의 <strong>Base URL</strong> 이 <code class="language-plaintext highlighter-rouge">http://your-host.net/api</code> 형식이라면, 아래와 같이 쿼리
+요청을 보내고 API Key도 포함할 수 있습니다. 단계별로 설명드릴게요.</p>
+
+<hr />
+
+<h2 id="-1-base-url이-httpyour-hostnetapi인-경우-구조">✅ 1. Base URL이 <code class="language-plaintext highlighter-rouge">http://your-host.net/api</code>인 경우 구조</h2>
+
+<p>OpenAI 호환 API 구조를 따르고 있다고 가정하면, 전체 엔드포인트는 다음과 같이 구성됩니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BASE_URL <span class="o">=</span> http://your-host.net/api
+           └─────┬────┘ └── endpoint path: /v1/chat/completions, /v1/models 등
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-2-모델-목록-확인-curl">✅ 2. 모델 목록 확인 (curl)</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://your-host.net/api/v1/models <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer YOUR_API_KEY"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-3-chatcompletions-요청-예시">✅ 3. chat/completions 요청 예시</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://your-host.net/api/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Authorization: Bearer YOUR_API_KEY"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "llama-3",
+    "messages": [
+      {"role": "user", "content": "안녕, 오늘 기분 어때?"}
+    ],
+    "temperature": 0.7
+  }'</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-4-응답-예시-정상-작동-시">✅ 4. 응답 예시 (정상 작동 시)</h2>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chatcmpl-abc123"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chat.completion"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"created"</span><span class="p">:</span><span class="w"> </span><span class="mi">1723450000</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-3"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"choices"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"index"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"assistant"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"안녕하세요! 저는 잘 작동하고 있어요 😊"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"finish_reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stop"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="-요약-4">✅ 요약</h2>
+
+<p>목적| 예시 curl 명령<br />
+—|—<br />
+모델 목록 조회| <code class="language-plaintext highlighter-rouge">curl http://your-host.net/api/v1/models -H "Authorization: Bearer
+YOUR_API_KEY"</code><br />
+채팅 요청 보내기| <code class="language-plaintext highlighter-rouge">curl http://your-host.net/api/v1/chat/completions ...</code><br />
+인증 추가 방식| <code class="language-plaintext highlighter-rouge">-H "Authorization: Bearer YOUR_API_KEY"</code></p>
+
+<hr />
+
+<p>🛠️ 혹시 <code class="language-plaintext highlighter-rouge">"401 Unauthorized"</code> 또는 <code class="language-plaintext highlighter-rouge">"invalid API key"</code> 등의 오류가 나는 경우에는:</p>
+
+<ul>
+  <li>
+    <p>API 키가 정확한지</p>
+  </li>
+  <li>
+    <p>서버가 정말 OpenAI 호환인지</p>
+  </li>
+  <li>
+    <p>엔드포인트 경로에 오타가 없는지</p>
+  </li>
+</ul>
+
+<p>이 세 가지를 다시 확인해 보셔야 합니다.</p>
+
+<p>필요하면 오류 메시지 붙여서 말씀 주세요!</p>
+
+<p class="chat--user">
+
+models에서는 있는거 같은데 model not found 뜨는데 뭘까
+
+</p>
+
+<p>좋은 질문입니다. <code class="language-plaintext highlighter-rouge">GET /v1/models</code>에서는 모델이 보이는데, <code class="language-plaintext highlighter-rouge">POST /v1/chat/completions</code>에서 <code class="language-plaintext highlighter-rouge">model
+not found</code> 에러가 발생하는 경우는 꽤 자주 있는 문제이며, 주로 다음과 같은 원인 때문입니다.</p>
+
+<hr />
+
+<h2 id="-step-by-step-원인-분석-및-해결">🧭 Step-by-Step 원인 분석 및 해결</h2>
+
+<hr />
+
+<h3 id="-1-models에서-보이는-id-를-정확히-사용하고-있는가">✅ 1. <code class="language-plaintext highlighter-rouge">models</code>에서 보이는 <strong>id</strong> 를 정확히 사용하고 있는가?</h3>
+
+<p><code class="language-plaintext highlighter-rouge">GET /v1/models</code> 응답 예시:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mistral-7b-instruct"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"model"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>→ 여기에 나오는<code class="language-plaintext highlighter-rouge">id</code> 필드를 <code class="language-plaintext highlighter-rouge">chat/completions</code>의 <code class="language-plaintext highlighter-rouge">"model"</code>로 그대로 사용해야 합니다.</strong></p>
+
+<p>예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"model"</span>: <span class="s2">"mistral-7b-instruct"</span>   ✅ 정확
+<span class="s2">"model"</span>: <span class="s2">"mistral"</span>               ❌ 에러 발생 가능
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-2-모델이-chat-기반-모델-인지-확인하기">✅ 2. 모델이 <strong>chat 기반 모델</strong> 인지 확인하기</h3>
+
+<p>OpenAI 호환 API의 <code class="language-plaintext highlighter-rouge">/v1/chat/completions</code>는 <strong>chat 형식 메시지 (<code class="language-plaintext highlighter-rouge">role</code>:
+user/assistant/system)</strong>를 지원하는 모델만 사용 가능합니다.</p>
+
+<blockquote>
+  <p>일부 모델은 <strong>prompt-only 모델</strong> 이어서 <code class="language-plaintext highlighter-rouge">/v1/completions</code>만 지원합니다.</p>
+</blockquote>
+
+<p>🔍 확인 방법:</p>
+
+<ul>
+  <li>
+    <p>chat 모델이면 보통 <code class="language-plaintext highlighter-rouge">instruct</code>, <code class="language-plaintext highlighter-rouge">chat</code>, <code class="language-plaintext highlighter-rouge">alpaca</code>, <code class="language-plaintext highlighter-rouge">vicuna</code> 등의 이름을 포함합니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">messages</code> 대신 <code class="language-plaintext highlighter-rouge">prompt</code>를 쓰면 안 됩니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-3-서버-설정상-허용된-모델만-받도록-되어-있는-경우">✅ 3. 서버 설정상 허용된 모델만 받도록 되어 있는 경우</h3>
+
+<p>특히 <strong>Open WebUI</strong> 또는 프록시 서버 (<code class="language-plaintext highlighter-rouge">FastAPI</code>, <code class="language-plaintext highlighter-rouge">vLLM</code>, <code class="language-plaintext highlighter-rouge">LM Gateway</code> 등)는 보안상 일부 모델만
+허용하는 설정을 둘 수 있습니다.</p>
+
+<p>예:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>env
+
+# 환경변수나 config.json
+ALLOWED_MODELS=mistral-7b-instruct,llama-3
+</code></pre></div></div>
+
+<p>→ 이 경우 <code class="language-plaintext highlighter-rouge">models</code> 응답에는 보이지만, 실제 inference에는 제한될 수 있습니다.</p>
+
+<hr />
+
+<h3 id="-4-이름이-길거나-경로-포함된-경우">✅ 4. 이름이 길거나 경로 포함된 경우</h3>
+
+<p><code class="language-plaintext highlighter-rouge">/v1/models</code>에서 다음처럼 보일 수 있습니다:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TheBloke/Mistral-7B-Instruct-v0.1-GGUF"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>→ 이 경우 <strong>이 전체 문자열</strong> 을 <code class="language-plaintext highlighter-rouge">"model"</code>로 넣어야 합니다.</p>
+
+<p>예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"model"</span>: <span class="s2">"TheBloke/Mistral-7B-Instruct-v0.1-GGUF"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-5-올바른-백엔드인지-확인-ollama-vllm-lm-studio-등-혼동">✅ 5. 올바른 백엔드인지 확인 (Ollama, vLLM, LM Studio 등 혼동)</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Open WebUI</code>가 어떤 백엔드로 프록시되고 있는지 명확히 알아야 합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>백엔드</th>
+      <th>특징</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>vLLM</strong></td>
+      <td>모델 이름 설정 시 <code class="language-plaintext highlighter-rouge">--model</code> 파라미터로 고정됨</td>
+    </tr>
+    <tr>
+      <td><strong>Ollama</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">ollama list</code> 로 확인 가능, 이름 그대로 사용해야 함</td>
+    </tr>
+    <tr>
+      <td><strong>text-generation-webui</strong></td>
+      <td>UI에서 로드된 모델 외에는 작동 안 함</td>
+    </tr>
+    <tr>
+      <td><strong>LM Studio</strong></td>
+      <td>보통 <code class="language-plaintext highlighter-rouge">"lmstudio"</code> 같은 프록시 모델 ID 사용</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="️-해결-요약">🛠️ 해결 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>점검 항목</th>
+      <th>조치 방법</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">model</code> 이름 정확히 일치?</td>
+      <td><code class="language-plaintext highlighter-rouge">/v1/models</code> 응답에서 <code class="language-plaintext highlighter-rouge">id</code> 그대로 사용</td>
+    </tr>
+    <tr>
+      <td>chat 모델 맞나?</td>
+      <td>메시지 포맷이 <code class="language-plaintext highlighter-rouge">messages</code>, role 포함되어야 함</td>
+    </tr>
+    <tr>
+      <td>서버 설정에서 차단?</td>
+      <td><code class="language-plaintext highlighter-rouge">ALLOWED_MODELS</code>, 정책 확인</td>
+    </tr>
+    <tr>
+      <td>경로 포함된 이름?</td>
+      <td><code class="language-plaintext highlighter-rouge">model</code>: <code class="language-plaintext highlighter-rouge">"TheBloke/.../gguf"</code> 등 전체 경로 포함</td>
+    </tr>
+    <tr>
+      <td>프록시 백엔드 확인</td>
+      <td>어떤 백엔드가 API 처리 중인지 명확히 파악 필요</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-필요하시면">📌 필요하시면</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/v1/models</code> 응답 JSON을 붙여 주시면</p>
+  </li>
+  <li>
+    <p>어떤 모델 이름을 넣었는지 보여주시면</p>
+  </li>
+</ul>
+
+<p>제가 직접 비교해서 정확한 <code class="language-plaintext highlighter-rouge">"model"</code> 값으로 변환해 드릴 수 있어요. 원하시면 확인 도와드릴게요.</p>
+
+<p class="chat--user">
+
+리눅스 망에서 하는데 한 서버에서는 응답이 잘 나오는데 다른 서버에서는 curl: (60) SSL certificate problem 발생해
+
+</p>
+
+<p>좋습니다. <code class="language-plaintext highlighter-rouge">curl: (60) SSL certificate problem</code> 오류는 주로 <strong>서버의 SSL 인증서를 검증할 수 없을 때
+발생</strong> 합니다. 이 문제는 특히 내부망(LAN) 리눅스 환경에서 자주 생깁니다. 원인을 단계별로 진단하고 해결 방법을 안내드릴게요.</p>
+
+<hr />
+
+<h2 id="-1-오류-메시지-요약">✅ 1. 오류 메시지 요약</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vbnet
+
+curl: (60) SSL certificate problem: unable to get local issuer certificate
+</code></pre></div></div>
+
+<p>이 오류는 <code class="language-plaintext highlighter-rouge">curl</code>이 HTTPS 인증서 체인을 검증할 수 없다는 뜻입니다.</p>
+
+<hr />
+
+<h2 id="-step-by-step-해결-방법">🧭 Step-by-Step 해결 방법</h2>
+
+<hr />
+
+<h3 id="-1단계---insecure-옵션으로-우회-테스트용">✅ [1단계] <code class="language-plaintext highlighter-rouge">--insecure</code> 옵션으로 우회 (테스트용)</h3>
+
+<p>먼저 빠르게 테스트하려면 <code class="language-plaintext highlighter-rouge">--insecure</code> 플래그를 사용해 인증서 검증을 끄세요.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--insecure</span> https://your-host.net/api/v1/models
+</code></pre></div></div>
+
+<ul>
+  <li>👉 <strong>이 방법은 보안상 안전하지 않기 때문에, 프로덕션에선 쓰지 말고 원인 해결용으로만 사용하세요.</strong></li>
+</ul>
+
+<hr />
+
+<h3 id="-2단계-문제가-발생하지-않는-서버와-인증서-체인-비교">✅ [2단계] 문제가 발생하지 않는 서버와 인증서 체인 비교</h3>
+
+<p><code class="language-plaintext highlighter-rouge">curl -v</code>로 디버깅 로그를 비교해보세요:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-v</span> https://your-host.net/api/v1/models
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>잘 되는 서버에서는 <code class="language-plaintext highlighter-rouge">SSL certificate verify ok</code>가 뜰 것이고,</p>
+  </li>
+  <li>
+    <p>문제 있는 서버는 <code class="language-plaintext highlighter-rouge">certificate verify failed</code> 로그가 뜰 것입니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-3단계-ca-certificates-패키지-설치-확인">✅ [3단계] <code class="language-plaintext highlighter-rouge">ca-certificates</code> 패키지 설치 확인</h3>
+
+<p>문제 있는 서버에서 CA 인증서가 빠져있을 수 있습니다.</p>
+
+<p><strong>Debian/Ubuntu</strong> :</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>ca-certificates
+<span class="nb">sudo </span>update-ca-certificates
+</code></pre></div></div>
+
+<p><strong>RHEL/CentOS/Fedora</strong> :</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>yum <span class="nb">install </span>ca-certificates
+<span class="nb">sudo </span>update-ca-trust force-enable
+<span class="nb">sudo </span>update-ca-trust extract
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-4단계-인증서-수동-등록-자체서명-인증서-등">✅ [4단계] 인증서 수동 등록 (자체서명 인증서 등)</h3>
+
+<p>만약 사내망에서 <strong>자체 서명된 인증서</strong>(self-signed cert)를 쓴다면 수동으로 root CA를 등록해야 합니다.</p>
+
+<p>예: <code class="language-plaintext highlighter-rouge">/etc/ssl/certs/my-root-ca.crt</code>로 저장하고 아래 명령 실행</p>
+
+<p><strong>Debian/Ubuntu:</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cp </span>my-root-ca.crt /usr/local/share/ca-certificates/
+<span class="nb">sudo </span>update-ca-certificates
+</code></pre></div></div>
+
+<p><strong>RHEL/CentOS:</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cp </span>my-root-ca.crt /etc/pki/ca-trust/source/anchors/
+<span class="nb">sudo </span>update-ca-trust extract
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-5단계-curl에-ca-직접-지정">✅ [5단계] <code class="language-plaintext highlighter-rouge">curl</code>에 CA 직접 지정</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--cacert</span> /path/to/my-root-ca.crt https://your-host.net/api
+</code></pre></div></div>
+
+<blockquote>
+  <p>인증서 신뢰 체인을 명시적으로 지정할 수 있습니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-요약-5">✅ 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>문제 원인</th>
+      <th>해결 방법</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>인증서 검증 실패</td>
+      <td><code class="language-plaintext highlighter-rouge">--insecure</code> (테스트용)</td>
+    </tr>
+    <tr>
+      <td>루트 CA 없음</td>
+      <td><code class="language-plaintext highlighter-rouge">ca-certificates</code> 패키지 설치</td>
+    </tr>
+    <tr>
+      <td>사설 인증서</td>
+      <td>수동 등록 또는 <code class="language-plaintext highlighter-rouge">--cacert</code> 지정</td>
+    </tr>
+    <tr>
+      <td>도메인 이름 mismatch</td>
+      <td><code class="language-plaintext highlighter-rouge">curl --resolve</code> 또는 hosts 파일 수정으로 대응</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>💡 참고: 사내 인증서를 사용하는 경우 인증서 관리팀에 Root CA 인증서 제공 요청할 수도 있어요.</p>
+
+<p>필요하시면 문제 있는 서버의 <code class="language-plaintext highlighter-rouge">curl -v</code> 로그를 붙여 주시면 더 정확히 진단해드릴 수 있습니다!</p>
+
+<p class="chat--user">
+
+--insecure 하면 되네
+
+</p>
+
+<p>좋습니다! <code class="language-plaintext highlighter-rouge">--insecure</code> 옵션으로 동작이 된다는 것은, 해당 서버에서 <strong>SSL 인증서 검증 단계에서만 문제</strong> 가 있다는 것을
+확인한 셈입니다. 하지만 몇 가지 주의사항과 보완 방법을 덧붙이자면:</p>
+
+<hr />
+
+<h2 id="️---insecure의-의미와-주의사항">⚠️ <code class="language-plaintext highlighter-rouge">--insecure</code>의 의미와 주의사항</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--insecure</code>는 <code class="language-plaintext highlighter-rouge">curl</code>이 <strong>서버 인증서를 신뢰하지 않고도 요청을 허용</strong> 하게 만드는 옵션입니다.</p>
+  </li>
+  <li>
+    <p>이는 <strong>중간자 공격(MITM)</strong> 같은 보안 리스크에 노출될 수 있기 때문에 <strong>프로덕션/자동화 스크립트에서는 지양</strong> 하는 게 좋습니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="️-더-나은-해결-방안-권장">🛠️ 더 나은 해결 방안 (권장)</h2>
+
+<h3 id="-1-root-ca-인증서를-시스템에-추가">✅ 1. Root CA 인증서를 시스템에 추가</h3>
+
+<p>내부망이나 자체 인증서를 사용하는 경우 다음 단계를 권장합니다:</p>
+
+<h4 id="예시">예시:</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cp </span>your-ca.crt /usr/local/share/ca-certificates/
+<span class="nb">sudo </span>update-ca-certificates
+</code></pre></div></div>
+
+<p>그 후 <code class="language-plaintext highlighter-rouge">curl</code>은 <code class="language-plaintext highlighter-rouge">--insecure</code> 없이도 동작합니다.</p>
+
+<hr />
+
+<h3 id="-2-curl에-인증서-직접-지정-스크립트에서-안전하게-사용">✅ 2. <code class="language-plaintext highlighter-rouge">curl</code>에 인증서 직접 지정 (스크립트에서 안전하게 사용)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--cacert</span> /path/to/your-ca.crt https://your-host.net/api
+</code></pre></div></div>
+
+<p>스크립트에 <code class="language-plaintext highlighter-rouge">--insecure</code> 대신 <code class="language-plaintext highlighter-rouge">--cacert</code>를 사용하는 것이 더 안전합니다.</p>
+
+<hr />
+
+<h3 id="-3-서버-인증서가-lets-encrypt-등-공개-ca-기반이라면">✅ 3. 서버 인증서가 Let's Encrypt 등 공개 CA 기반이라면</h3>
+
+<p>문제가 되는 서버가 최신 루트 인증서 목록을 반영하지 못하고 있을 수 있으므로:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">--reinstall</span> ca-certificates
+</code></pre></div></div>
+
+<p>또는</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>update-ca-trust extract  <span class="c"># RHEL 계열</span>
+</code></pre></div></div>
+
+<p>을 통해 인증서 체인을 최신화할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="-요약-6">✅ 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>방법</th>
+      <th>설명</th>
+      <th>보안성</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--insecure</code></td>
+      <td>인증서 검증을 완전히 비활성화</td>
+      <td>❌ 위험 (테스트용)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--cacert</code></td>
+      <td>명시적으로 루트 인증서 지정</td>
+      <td>✅ 안전</td>
+    </tr>
+    <tr>
+      <td>시스템 CA 등록</td>
+      <td>Root CA를 시스템 신뢰 목록에 등록</td>
+      <td>✅ 안전</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">your-ca.crt</code> 만드는 방법이나, 기존 서버에서 인증서 추출해서 다른 서버에 복사하는 법도 알려드릴게요!</p>
+
+<p class="chat--user">
+
+vscode 내의 webengine에서도 이런거 때문에 에러가 발생하는거 같은데 이거 끌 수 없어?
+
+</p>
+
+<p>맞습니다. <code class="language-plaintext highlighter-rouge">VS Code</code> 내부의 <code class="language-plaintext highlighter-rouge">Webview</code>나 <code class="language-plaintext highlighter-rouge">WebEngine</code>이 사용하는 HTTP 요청에서도 <strong>SSL 인증서 검증 실패</strong>
+가 발생할 수 있으며, 이는 <code class="language-plaintext highlighter-rouge">curl</code>의 <code class="language-plaintext highlighter-rouge">(60) SSL certificate problem</code>과 유사한 이유로 발생합니다. 특히 사내망,
+자체 인증서, 프록시, MITM 방지 장비 등이 있을 경우 자주 발생하죠.</p>
+
+<hr />
+
+<h2 id="-해결-전략-요약">✅ 해결 전략 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>목적</th>
+      <th>방법</th>
+      <th>가능 여부</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Webview의 SSL 검증 끄기</td>
+      <td><strong>설정 불가</strong> (보안상 제한)</td>
+      <td>❌ 기본적으로 차단됨</td>
+    </tr>
+    <tr>
+      <td>전체 Electron/VS Code SSL 우회</td>
+      <td>환경변수 사용</td>
+      <td>✅ 제한적으로 가능</td>
+    </tr>
+    <tr>
+      <td>CA 인증서 강제로 등록</td>
+      <td>시스템 또는 VS Code 신뢰 목록에 추가</td>
+      <td>✅ 권장 방식</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-step-by-step-해결법">🧭 Step-by-Step 해결법</h2>
+
+<hr />
+
+<h3 id="-1-vs-code에-ssl-검증-무시-환경변수-추가-임시-우회">✅ 1. VS Code에 SSL 검증 무시 환경변수 추가 (임시 우회)</h3>
+
+<p><strong>Linux/macOS</strong> 에서 VS Code를 실행할 때:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">NODE_TLS_REJECT_UNAUTHORIZED</span><span class="o">=</span>0 code
+</code></pre></div></div>
+
+<p>또는 <code class="language-plaintext highlighter-rouge">~/.bashrc</code>, <code class="language-plaintext highlighter-rouge">~/.zshrc</code>에:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">NODE_TLS_REJECT_UNAUTHORIZED</span><span class="o">=</span>0
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>주의</strong> : 이는 Electron 기반 앱 전체에서 SSL 검증을 끄는 것이며, 보안상 위험하므로 임시 또는 로컬 테스트 용도로만
+쓰세요.</p>
+</blockquote>
+
+<hr />
+
+<h3 id="-2-webview-내-요청이-프록시인증서-문제일-경우--시스템에-root-ca-등록">✅ 2. Webview 내 요청이 프록시/인증서 문제일 경우 → 시스템에 Root CA 등록</h3>
+
+<p>위에서 <code class="language-plaintext highlighter-rouge">curl</code> 문제를 해결할 때처럼, VS Code에서 사용하는 시스템 SSL 인증서 스토어에 루트 인증서를 등록해야
+WebEngine도 정상 동작합니다.</p>
+
+<p>예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cp </span>my-root-ca.crt /usr/local/share/ca-certificates/
+<span class="nb">sudo </span>update-ca-certificates
+</code></pre></div></div>
+
+<p>VS Code 재시작 후 다시 시도.</p>
+
+<hr />
+
+<h3 id="-3-vs-code에-https-프록시ca-설정-기본-설정으로는-제한적">✅ 3. VS Code에 HTTPS 프록시/CA 설정 (기본 설정으로는 제한적)</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">settings.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"http.proxyStrictSSL"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>단, 이 설정은 <strong>VS Code 자체의 확장 설치, 업데이트</strong> 등에만 적용되고, <strong>Webview 안의 JS 코드</strong> 나
+<code class="language-plaintext highlighter-rouge">webengine</code> 내부 요청에는 <strong>영향 없음</strong> 일 수 있습니다.</p>
+</blockquote>
+
+<hr />
+
+<h3 id="-4-webview가-내부에서-fetch-또는-xmlhttprequest를-쓴다면">✅ 4. WebView가 내부에서 <code class="language-plaintext highlighter-rouge">fetch</code> 또는 <code class="language-plaintext highlighter-rouge">XMLHttpRequest</code>를 쓴다면?</h3>
+
+<p>그럴 경우 해당 JS 코드에서 <code class="language-plaintext highlighter-rouge">https.Agent({ rejectUnauthorized: false })</code> 같은 설정을 사용하지 않는 한
+SSL 오류는 회피 불가능합니다.</p>
+
+<p>→ <strong>결국 CA 인증서를 올바르게 등록하는 게 유일한 안전한 해결책</strong> 입니다.</p>
+
+<hr />
+
+<h2 id="-마무리-요약">✅ 마무리 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>해결법</th>
+      <th>권장 여부</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">NODE_TLS_REJECT_UNAUTHORIZED=0</code></td>
+      <td>⚠️ 비권장</td>
+      <td>전체 SSL 검증 우회 (임시 테스트용만)</td>
+    </tr>
+    <tr>
+      <td>시스템에 Root CA 등록</td>
+      <td>✅ 적극 권장</td>
+      <td>curl, VS Code, WebEngine 모두에 적용 가능</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">http.proxyStrictSSL</code></td>
+      <td>☑️ 제한적</td>
+      <td>일부 기능만 해당, Webview에는 영향 X</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>🔧 원하시면 <code class="language-plaintext highlighter-rouge">Webview</code>에서 호출하는 실제 URL이나 오류 메시지를 알려주시면, 그 기반으로 더 정확하게 조치 방법을 안내해 드릴 수
+있어요!</p>
+
+<p class="chat--user">
+
+오 잘 된다. 근데 continue extension보면 chat이랑 자동완성이랑 url이 다른거 같더라?
+
+</p>
+
+<p>맞습니다! <code class="language-plaintext highlighter-rouge">Continue</code> 확장(Extension)에서는 <strong>"Chat 기능"</strong>과 <strong>"코드 자동완성 (autocomplete)"</strong>
+기능이 각각 다른 <strong>API 엔드포인트(URL)</strong> 를 사용하는 것이 일반적입니다. 이건 내부적으로 역할이 다르고 처리 방식도 다르기
+때문입니다.</p>
+
+<hr />
+
+<h2 id="-핵심-차이-chat-vs-autocomplete-url">✅ 핵심 차이: Chat vs Autocomplete URL</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>기능</th>
+      <th>목적</th>
+      <th>보통 URL 예시</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Chat</strong></td>
+      <td>사용자가 질문 입력 후 전체 답변</td>
+      <td><code class="language-plaintext highlighter-rouge">/v1/chat/completions</code></td>
+    </tr>
+    <tr>
+      <td><strong>Autocomplete</strong></td>
+      <td>코드 중간에서 자동 완성 추천</td>
+      <td><code class="language-plaintext highlighter-rouge">/v1/completions</code> 또는 <code class="language-plaintext highlighter-rouge">/v1/complete</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-step-by-step-자세히-설명">🧭 Step-by-Step 자세히 설명</h2>
+
+<hr />
+
+<h3 id="-1-chat-기능--chatcompletions">✅ 1. <strong>Chat 기능</strong> : <code class="language-plaintext highlighter-rouge">chat/completions</code></h3>
+
+<ul>
+  <li>
+    <p>사용하는 모델: Chat 기반 모델 (<code class="language-plaintext highlighter-rouge">gpt-3.5-turbo</code>, <code class="language-plaintext highlighter-rouge">llama2-chat</code>, <code class="language-plaintext highlighter-rouge">mistral-instruct</code> 등)</p>
+  </li>
+  <li>메시지 포맷:
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-3.5-turbo"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"messages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user"</span><span class="p">,</span><span class="w"> </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"이 함수 설명해줘"</span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>URL:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://your-server.net/api/v1/chat/completions
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-2-autocomplete-기능--completions-또는-complete">✅ 2. <strong>Autocomplete 기능</strong> : <code class="language-plaintext highlighter-rouge">completions</code> 또는 <code class="language-plaintext highlighter-rouge">complete</code></h3>
+
+<ul>
+  <li>
+    <p>사용하는 모델: 일반 Language Model (prompt-only)</p>
+  </li>
+  <li>메시지 포맷:
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"code-llama"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"def fibonacci(n):"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"max_tokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">64</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>URL:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://your-server.net/api/v1/completions
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>또는</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```bash
+http://localhost:11434/api/generate  # (Ollama)
+```
+</code></pre></div></div>
+
+<ul>
+  <li>일부에서는 <code class="language-plaintext highlighter-rouge">streaming</code>에 특화된 <code class="language-plaintext highlighter-rouge">/v1/complete-stream</code>, <code class="language-plaintext highlighter-rouge">/v1/predict</code> 같은 것도 씁니다.</li>
+</ul>
+
+<hr />
+
+<h2 id="-왜-url이-다를까">🧠 왜 URL이 다를까?</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">chat/completions</code>는 <strong>역할 기반 메시지 처리</strong> (<code class="language-plaintext highlighter-rouge">role</code>: system/user/assistant)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">completions</code>는 <strong>단일 프롬프트 → 이어쓰기 결과만 반환</strong></p>
+  </li>
+</ul>
+
+<p>즉, 구조적으로 API 요구 사항이 다르기 때문에 Continue나 Copilot 같은 확장은 서로 다른 경로를 지정합니다.</p>
+
+<hr />
+
+<h2 id="-continue-설정-예시">✅ Continue 설정 예시</h2>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">continue.config.json</span><span class="w"> </span><span class="err">또는</span><span class="w"> </span><span class="err">Settings</span><span class="w"> </span><span class="err">UI</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"chat_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8000/v1/chat/completions"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"completion_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8000/v1/completions"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"api_key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sk-..."</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="-요약-정리">✅ 요약 정리</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>Chat</th>
+      <th>Autocomplete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Endpoint</td>
+      <td><code class="language-plaintext highlighter-rouge">/v1/chat/completions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/v1/completions</code></td>
+    </tr>
+    <tr>
+      <td>입력 형식</td>
+      <td><code class="language-plaintext highlighter-rouge">messages[]</code> + roles</td>
+      <td><code class="language-plaintext highlighter-rouge">prompt</code></td>
+    </tr>
+    <tr>
+      <td>모델</td>
+      <td><code class="language-plaintext highlighter-rouge">-chat</code>, <code class="language-plaintext highlighter-rouge">-instruct</code></td>
+      <td>일반 LM (<code class="language-plaintext highlighter-rouge">code-llama</code>, <code class="language-plaintext highlighter-rouge">mistral</code>, 등)</td>
+    </tr>
+    <tr>
+      <td>사용 목적</td>
+      <td>질문-답변</td>
+      <td>짧은 이어쓰기 예측 (코드 추천 등)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>필요하시면 Continue의 설정 파일을 붙여주시면 거기에 맞춰 경로 설정이나 커스터마이징도 도와드릴 수 있어요!</p>
+
+<p class="chat--user">
+
+이걸 curl로 지원하는지 안하는지 테스트하고 싶어
+
+</p>
+
+<p>좋습니다! 어떤 LLM 서버(예: OpenWebUI, vLLM, Ollama 등)가 <strong>chat API</strong> 와 <strong>completion
+API</strong> 를 curl로 지원하는지 테스트하는 방법을 단계별로 안내드릴게요.</p>
+
+<hr />
+
+<h2 id="-1-chat-api-v1chatcompletions-지원-여부-테스트">✅ 1. <strong>chat API (<code class="language-plaintext highlighter-rouge">/v1/chat/completions</code>) 지원 여부 테스트</strong></h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://your-server.net/api/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "gpt-3.5-turbo", 
+    "messages": [
+      { "role": "user", "content": "안녕!" }
+    ]
+  }'</span>
+</code></pre></div></div>
+
+<p><strong>응답 예시:</strong></p>
+
+<ul>
+  <li>
+    <p>정상: <code class="language-plaintext highlighter-rouge">choices[0].message.content</code> 포함된 JSON 반환</p>
+  </li>
+  <li>
+    <p>실패: <code class="language-plaintext highlighter-rouge">404</code>, <code class="language-plaintext highlighter-rouge">"model not found"</code>, <code class="language-plaintext highlighter-rouge">"unknown endpoint"</code> 등</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-2-completion-api-v1completions-지원-여부-테스트">✅ 2. <strong>completion API (<code class="language-plaintext highlighter-rouge">/v1/completions</code>) 지원 여부 테스트</strong></h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://your-server.net/api/v1/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "gpt-3.5-turbo",
+    "prompt": "def hello_world():\n",
+    "max_tokens": 50,
+    "temperature": 0.7
+  }'</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>사용 중인 모델이 일반 언어 모델 (prompt-only)을 지원해야 합니다. 일부 chat 전용 모델은 여기서 작동안할 수 있습니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="-3-자동완성-전용-테스트용-짧은-프롬프트-예">✅ 3. 자동완성 전용 테스트용 짧은 프롬프트 예</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"prompt"</span>: <span class="s2">"def sum(a, b):</span><span class="se">\n</span><span class="s2">    return"</span>
+</code></pre></div></div>
+
+<p>→ 기대 응답: <code class="language-plaintext highlighter-rouge">" a + b"</code> 또는 <code class="language-plaintext highlighter-rouge">" a - b"</code> 등</p>
+
+<hr />
+
+<h2 id="-4-curl-결과-해석-팁">✅ 4. curl 결과 해석 팁</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>결과</th>
+      <th>해석</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">200 OK</code> + <code class="language-plaintext highlighter-rouge">choices</code> 있음</td>
+      <td>✅ 해당 endpoint 지원됨</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">404 Not Found</code></td>
+      <td>❌ 지원 안됨 (엔드포인트 없음)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">model not found</code></td>
+      <td>모델 이름이 잘못됐거나 해당 endpoint에서 비호환</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">400 Bad Request</code></td>
+      <td>payload 구조가 틀렸거나 model 미지원</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-팁-자동화-테스트-스크립트">🔧 팁: 자동화 테스트 스크립트</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"Testing chat/completions..."</span>
+curl <span class="nt">-s</span> <span class="nt">-o</span> /dev/null <span class="nt">-w</span> <span class="s2">"%{http_code}</span><span class="se">\n</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST http://your-server.net/api/v1/chat/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "gpt-3.5-turbo", 
+    "messages": [{"role": "user", "content": "ping"}]
+  }'</span>
+
+<span class="nb">echo</span> <span class="s2">"Testing completions..."</span>
+curl <span class="nt">-s</span> <span class="nt">-o</span> /dev/null <span class="nt">-w</span> <span class="s2">"%{http_code}</span><span class="se">\n</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">-X</span> POST http://your-server.net/api/v1/completions <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "model": "gpt-3.5-turbo", 
+    "prompt": "def add(a, b):\n    return",
+    "max_tokens": 10
+  }'</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-결론-요약">✅ 결론 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>테스트</th>
+      <th>요청 URL</th>
+      <th>판단 기준</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Chat 지원 여부</td>
+      <td><code class="language-plaintext highlighter-rouge">/v1/chat/completions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">messages[]</code> 넣고 응답 확인</td>
+    </tr>
+    <tr>
+      <td>Completion 지원 여부</td>
+      <td><code class="language-plaintext highlighter-rouge">/v1/completions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">prompt</code> 넣고 응답 확인</td>
+    </tr>
+    <tr>
+      <td>모델 미지원 vs API 미지원 구분</td>
+      <td>응답 메시지로 판단 (<code class="language-plaintext highlighter-rouge">model not found</code>, <code class="language-plaintext highlighter-rouge">404</code>, 등)</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>📦 테스트 결과 붙여주시면 어떤 API가 활성화되어 있는지 바로 분석해드릴게요!</p>]]></content><author><name>hvppycoding</name></author><category term="llm" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">PEG 비율 설명</title><link href="https://hvppycoding.github.io/investing/peg/" rel="alternate" type="text/html" title="PEG 비율 설명" /><published>2025-07-30T01:03:38+09:00</published><updated>2025-07-30T01:03:38+09:00</updated><id>https://hvppycoding.github.io/investing/peg</id><content type="html" xml:base="https://hvppycoding.github.io/investing/peg/"><![CDATA[<p class="chat--user">
+
+주식에서 PEG가 뭐야?
+
+</p>
+
+<p>주식 투자에서 <strong>PEG</strong> 는 <code class="language-plaintext highlighter-rouge">Price/Earnings to Growth</code>의 약자로, <strong>주가수익성장비율</strong> 이라고도 합니다. 주가가
+기업의 <strong>수익 성장률을 반영하여 적정한지를 평가하기 위한 지표</strong> 입니다.</p>
+
+<hr />
+
+<h2 id="-peg-비율-공식">📌 PEG 비율 공식</h2>
+
+<p>PEG=PEREPS 성장률 (%)\text{PEG} = \frac{\text{PER}}{\text{EPS 성장률 (\%)}}PEG=EPS
+성장률 (%)PER​</p>
+
+<ul>
+  <li>
+    <p><strong>PER (Price to Earnings Ratio)</strong> : 주가를 주당순이익(EPS)으로 나눈 값. 즉, 주가가 이익의 몇 배인가.</p>
+  </li>
+  <li>
+    <p><strong>EPS 성장률</strong> : 향후 몇 년간 예상되는 연간 EPS 성장률 (보통은 3~5년 예측 사용).</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-peg의-해석">📈 PEG의 해석</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>PEG 비율</th>
+      <th>해석</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>&lt; 1</strong></td>
+      <td>성장률 대비 주가가 저평가됨 → <strong>매수 신호로 간주될 수 있음</strong></td>
+    </tr>
+    <tr>
+      <td><strong>≈ 1</strong></td>
+      <td>적정 가치에 근접</td>
+    </tr>
+    <tr>
+      <td><strong>&gt; 1</strong></td>
+      <td>주가가 성장률 대비 고평가됨 → 주의 필요</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>예시:</p>
+
+  <ul>
+    <li>어떤 기업의 PER이 20이고, 연평균 EPS 성장률이 25%라면,</li>
+  </ul>
+
+  <p>PEG=2025=0.8⇒저평가일수있음\text{PEG} = \frac{20}{25} = 0.8 \Rightarrow 저평가일 수
+있음PEG=2520​=0.8⇒저평가일수있음</p>
+
+</blockquote>
+
+<hr />
+
+<h2 id="-peg-사용-시-주의사항">📋 PEG 사용 시 주의사항</h2>
+
+<ol>
+  <li>
+    <p><strong>성장률 예측의 불확실성</strong> : 미래 성장률(EPS 추정)은 변동성이 커서 오차가 있을 수 있음.</p>
+  </li>
+  <li>
+    <p><strong>업종에 따라 PEG 해석이 다름</strong> : 안정적인 업종(예: 유틸리티)과 고성장 업종(예: 테크, 바이오)의 적정 PEG 기준은 다를 수 있음.</p>
+  </li>
+  <li>
+    <p><strong>음의 성장률</strong> : EPS 성장률이 음수이면 PEG 해석이 무의미함.</p>
+  </li>
+  <li>
+    <p><strong>PER이 마이너스인 경우</strong> : 이익이 적자인 기업은 PEG 계산이 성립하지 않음.</p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-요약">📚 요약</h2>
+
+<ul>
+  <li>
+    <p><strong>PEG는 PER을 성장률로 보정한 지표</strong> 로, 주가의 상대적 가치를 판단할 때 유용합니다.</p>
+  </li>
+  <li>
+    <p><strong>PEG &lt; 1</strong>이면 잠재적으로 저평가, <strong>&gt; 1</strong>이면 고평가 가능성을 시사합니다.</p>
+  </li>
+  <li>
+    <p>하지만 <strong>단독 지표로 투자 판단하면 안 되며</strong> , PER, PBR, ROE 등 다른 지표들과 함께 분석하는 것이 중요합니다.</p>
+  </li>
+</ul>
+
+<p>필요하시면 PEG를 적용한 기업 분석 예제도 보여드릴 수 있어요.</p>]]></content><author><name>hvppycoding</name></author><category term="investing" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Mac 백그라운드 서버 실행</title><link href="https://hvppycoding.github.io/dev/mac-background-server/" rel="alternate" type="text/html" title="Mac 백그라운드 서버 실행" /><published>2025-07-25T22:29:17+09:00</published><updated>2025-07-25T22:29:17+09:00</updated><id>https://hvppycoding.github.io/dev/mac-background-server</id><content type="html" xml:base="https://hvppycoding.github.io/dev/mac-background-server/"><![CDATA[<p class="chat--user">
 
 맥미니에서 Flask 기반 간단한 웹서버 운영중이야. 이거 좀 백그라운드에서 자동으로 띄우는 법 알려줘. 지금은 VS Code 내부의
 터미널에서 돌리고 있는데 실수로 끌 것 같아.
@@ -6509,1308 +8179,4 @@ Port object has no attribute first
 </ul>
 
 <p>필요하시면 말씀해 주세요.<br />
-지금 코드 기준으로 실무에 써도 무방합니다 (단, RTL 시뮬레이션 검증은 반드시 하셔야 합니다).</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">tmux 마우스 복사 설정</title><link href="https://hvppycoding.github.io/linux/tmux-clipboard/" rel="alternate" type="text/html" title="tmux 마우스 복사 설정" /><published>2025-07-23T10:25:16+09:00</published><updated>2025-07-23T10:25:16+09:00</updated><id>https://hvppycoding.github.io/linux/tmux-clipboard</id><content type="html" xml:base="https://hvppycoding.github.io/linux/tmux-clipboard/"><![CDATA[<p class="chat--user">
-
-음 원래 linux mate terminal에서는 select로 복사가 되었는데 tmux 안에서는 그게 안되네
-
-</p>
-
-<p>맞습니다. 기본적으로 MATE Terminal에서는 마우스로 텍스트를 선택(select)하면 자동으로 클립보드(정확히는 <em>primary
-selection</em>)에 복사됩니다. 하지만 <code class="language-plaintext highlighter-rouge">tmux</code> 안에서는 이 기능이 제대로 작동하지 않는 경우가 많습니다. 이유와 해결책을 차례대로
-설명드리겠습니다.</p>
-
-<hr />
-
-<h3 id="-원인">✅ 원인</h3>
-
-<p><code class="language-plaintext highlighter-rouge">tmux</code>는 자체적으로 터미널 입출력을 가로채고 리렌더링하기 때문에, 마우스로 텍스트를 선택할 때 예상한 대로 복사되지 않는 경우가
-있습니다. 특히 마우스 모드가 활성화되어 있으면 텍스트 선택이 tmux의 내부 명령으로 처리되어 기본 터미널 동작과 충돌합니다.</p>
-
-<hr />
-
-<h3 id="-해결-방법">🔧 해결 방법</h3>
-
-<h4 id="1-tmux에서-마우스-모드를-끄기">1. <strong>tmux에서 마우스 모드를 끄기</strong></h4>
-
-<p><code class="language-plaintext highlighter-rouge">~/.tmux.conf</code>에 다음을 <strong>비활성화</strong> 하십시오:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># set -g mouse on</span>
-</code></pre></div></div>
-
-<p>또는 실행 중인 세션에서 일시적으로 비활성화하려면:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux <span class="nb">set</span> <span class="nt">-g</span> mouse off
-</code></pre></div></div>
-
-<p>이렇게 하면 터미널이 tmux 내부에서도 마우스를 직접 처리할 수 있어서 텍스트 선택 및 복사가 정상 작동합니다.</p>
-
-<blockquote>
-  <p>단점: tmux에서 마우스로 패널 리사이징이나 스크롤 등은 사용할 수 없게 됩니다.</p>
-</blockquote>
-
-<hr />
-
-<h4 id="2-터미널의-마우스-복사-기능을-tmux에-연동">2. <strong>터미널의 마우스 복사 기능을 tmux에 연동</strong></h4>
-
-<p><code class="language-plaintext highlighter-rouge">tmux</code>의 copy-mode를 활용하여 복사하려면 다음 단계를 따르십시오:</p>
-
-<ol>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tmux</code> 안에서 <code class="language-plaintext highlighter-rouge">Ctrl + b</code> 누르고 <code class="language-plaintext highlighter-rouge">[</code></p>
-  </li>
-  <li>
-    <p>방향키나 마우스로 텍스트 선택</p>
-  </li>
-  <li>
-    <p>선택 후 <code class="language-plaintext highlighter-rouge">Enter</code> 누르면 복사됨</p>
-  </li>
-  <li>
-    <p>붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl + b</code> 누르고 <code class="language-plaintext highlighter-rouge">]</code></p>
-  </li>
-</ol>
-
-<blockquote>
-  <p>이 방식은 <code class="language-plaintext highlighter-rouge">tmux</code> 자체의 버퍼에 복사되며 시스템 클립보드와는 별개입니다.</p>
-</blockquote>
-
-<hr />
-
-<h4 id="3-tmux와-시스템-클립보드-연동-선택-사항">3. <strong>tmux와 시스템 클립보드 연동 (선택 사항)</strong></h4>
-
-<p>만약 <code class="language-plaintext highlighter-rouge">xclip</code>이나 <code class="language-plaintext highlighter-rouge">xsel</code> 같은 도구를 설치해 두셨다면 <code class="language-plaintext highlighter-rouge">tmux</code> 복사를 시스템 클립보드에 직접 보내도록 설정할 수도 있습니다.</p>
-
-<p>예시:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.tmux.conf</span>
-bind-key <span class="nt">-T</span> copy-mode-vi y send-keys <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-결론">🔍 결론</h3>
-
-<ul>
-  <li>
-    <p>단순히 마우스로 복사하려면 <strong><code class="language-plaintext highlighter-rouge">tmux mouse off</code>가 필요</strong>합니다.</p>
-  </li>
-  <li>
-    <p>마우스 모드가 꼭 필요하면 <strong>tmux copy-mode + 클립보드 연동</strong> 을 설정하십시오.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tmux</code>는 기본 터미널과 입력 체계가 다르기 때문에, 복사/붙여넣기 방식도 달라지는 것이 자연스럽습니다.</p>
-  </li>
-</ul>
-
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code> 설정 파일 예시도 드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-off 를 하니 마우스 휠로 이전을 볼 수가 없네
-
-</p>
-
-<p>맞습니다. <code class="language-plaintext highlighter-rouge">tmux set -g mouse off</code>를 하면 마우스 휠이 기본 터미널에 전달되어 버려서, <code class="language-plaintext highlighter-rouge">tmux</code>의 스크롤 기능
-(copy-mode 기반 스크롤)이 작동하지 않게 됩니다.</p>
-
-<p>즉:</p>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">mouse on</code> → <code class="language-plaintext highlighter-rouge">tmux</code> 안에서 마우스 휠 스크롤 가능 (하지만 마우스 복사 안 됨)</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">mouse off</code> → 마우스로 복사 가능 (하지만 <code class="language-plaintext highlighter-rouge">tmux</code> 스크롤 안 됨)</p>
-  </li>
-</ul>
-
-<p>이건 근본적으로 <code class="language-plaintext highlighter-rouge">tmux</code>가 마우스 입력을 <strong>탈취</strong> 하느냐 안 하느냐의 문제입니다. 둘 다 완벽하게 만족시키려면 우회가 필요합니다.</p>
-
-<hr />
-
-<h3 id="-가능한-해결-방법-마우스는-on-유지하면서-복사도-되게-하기">🛠 가능한 해결 방법: 마우스는 <code class="language-plaintext highlighter-rouge">on</code> 유지하면서 복사도 되게 하기</h3>
-
-<h4 id="1-mate-terminal의-마우스-드래그-복사를-포기하고tmux-copy-mode--클립보드-연동-사용">1. <strong>MATE Terminal의 “마우스 드래그 복사”를 포기하고<code class="language-plaintext highlighter-rouge">tmux</code> copy-mode + 클립보드 연동 사용</strong></h4>
-
-<p>가장 깔끔한 방식입니다. 아래처럼 설정하면 <code class="language-plaintext highlighter-rouge">tmux</code> 안에서 <code class="language-plaintext highlighter-rouge">vi</code> copy-mode로 복사한 내용이 <strong>시스템 클립보드로 바로 복사</strong>
-됩니다.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.tmux.conf</span>
-<span class="nb">set</span> <span class="nt">-g</span> mouse on
-bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
-</code></pre></div></div>
-
-<p>사용 방법:</p>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">Ctrl + b</code> 누르고 <code class="language-plaintext highlighter-rouge">[</code></p>
-  </li>
-  <li>
-    <p>방향키나 마우스로 텍스트 선택</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">y</code> 누르면 시스템 클립보드에 복사됨</p>
-  </li>
-</ul>
-
-<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">mouse on</code> 유지하면서도 복사가 가능합니다.</p>
-
-<blockquote>
-  <p><code class="language-plaintext highlighter-rouge">xclip</code>이 없다면 <code class="language-plaintext highlighter-rouge">xsel</code>로 바꾸면 됩니다: <code class="language-plaintext highlighter-rouge">"xsel --clipboard --input"</code></p>
-</blockquote>
-
-<hr />
-
-<h4 id="2-마우스로-텍스트-선택할-때는tmux-빠져나와서-복사">2. <strong>마우스로 텍스트 선택할 때는<code class="language-plaintext highlighter-rouge">tmux</code> 빠져나와서 복사</strong></h4>
-
-<p>즉, 복사할 때만 <code class="language-plaintext highlighter-rouge">tmux</code>를 빠져나와서 복사하고, 다시 돌아옵니다. 불편하지만 그냥 <code class="language-plaintext highlighter-rouge">tmux</code> 쓰면서 가끔 복사하는 정도면 감수할 수
-있는 방법입니다.</p>
-
-<hr />
-
-<h4 id="3-터미널에서-override-mouse-handling-기능-지원하는-경우-매우-일부-터미널만">3. <strong>터미널에서 “override mouse handling” 기능 지원하는 경우 (매우 일부 터미널만)</strong></h4>
-
-<p>일부 고급 터미널(MobaXterm, iTerm2, etc)은 <code class="language-plaintext highlighter-rouge">tmux</code>가 마우스를 장악하고 있어도 강제로 텍스트 선택하게 해주는 기능이
-있습니다. MATE Terminal에는 없습니다.</p>
-
-<hr />
-
-<h3 id="-결론-1">🔚 결론</h3>
-
-<ul>
-  <li>
-    <p>마우스 스크롤과 복사를 <strong>동시에</strong> 편하게 하고 싶다면:</p>
-
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">mouse on</code> 유지하고, <code class="language-plaintext highlighter-rouge">tmux copy-mode</code> + <code class="language-plaintext highlighter-rouge">xclip</code> 설정하는 것이 가장 합리적입니다.</li>
-    </ul>
-  </li>
-  <li>
-    <p>단순히 마우스로 드래그해서 복사하려면 <code class="language-plaintext highlighter-rouge">mouse off</code>밖에 답이 없지만, 이 경우 스크롤은 안 됩니다.</p>
-  </li>
-</ul>
-
-<p>선택지가 불편한 건 사실입니다. <code class="language-plaintext highlighter-rouge">tmux</code> 구조상 어쩔 수 없는 트레이드오프입니다.<br />
-필요하시면 <code class="language-plaintext highlighter-rouge">~/.tmux.conf</code> 전체 예제도 드리겠습니다.</p>
-
-<p class="chat--user">
-
-Ctrl + b [ 모드 끄는 법
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">Ctrl + b [</code>는 <code class="language-plaintext highlighter-rouge">tmux</code>의 <strong>copy-mode</strong> 진입 명령입니다. 이 모드는 기본적으로 스크롤 및 텍스트 선택을 위한
-모드이며, 수동으로 빠져나와야 합니다.</p>
-
-<hr />
-
-<h3 id="-copy-mode에서-나오는-방법">✅ <strong>copy-mode에서 나오는 방법</strong></h3>
-
-<p>아래 중 하나를 누르시면 됩니다:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>키</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">q</code></td>
-      <td>그냥 나가기 (선택 취소)</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Esc</code></td>
-      <td>동일하게 copy-mode 종료</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Enter</code></td>
-      <td>선택 완료 + 복사 (단, <code class="language-plaintext highlighter-rouge">copy-pipe</code>가 설정되지 않으면 tmux buffer에만 저장됨)</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>즉, 상황별로 정리하면:</p>
-
-<ul>
-  <li>
-    <p><strong>그냥 나오고 싶다</strong> → <code class="language-plaintext highlighter-rouge">q</code> 또는 <code class="language-plaintext highlighter-rouge">Esc</code></p>
-  </li>
-  <li>
-    <p><strong>선택 완료하고 복사도 하고 싶다</strong> → <code class="language-plaintext highlighter-rouge">Enter</code><br />
-(단, 시스템 클립보드에 붙이려면 <code class="language-plaintext highlighter-rouge">xclip</code> 연동 필요)</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="-참고-copy-mode-안에-있다는-표시">🧠 참고: <code class="language-plaintext highlighter-rouge">copy-mode</code> 안에 있다는 표시</h3>
-
-<p>copy-mode에 들어가면 커서가 생기고 방향키로 움직일 수 있습니다. 이 상태는 일반 명령 입력 상태가 아니기 때문에, <code class="language-plaintext highlighter-rouge">Ctrl +
-b</code> 단축키도 일시적으로 동작하지 않습니다. 먼저 <code class="language-plaintext highlighter-rouge">copy-mode</code>에서 빠져나와야 정상 작동합니다.</p>
-
-<hr />
-
-<p>필요하시면 copy-mode를 vim처럼 커스터마이징하거나, 자동으로 특정 키 누르면 copy-mode 진입/복사/종료까지 한 번에 처리하는
-스크립트도 도와드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-복사를 한 걸 붙여넣고 싶으면?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">tmux</code> 안에서 복사한 내용을 붙여넣는 방식은 <strong>어떻게 복사했느냐</strong> 에 따라 달라집니다. 세 가지 상황으로 나눠서 설명드리겠습니다.</p>
-
-<hr />
-
-<h3 id="-1-copy-mode로-복사만-한-경우-ctrl--b--선택-enter">✅ 1. <strong><code class="language-plaintext highlighter-rouge">copy-mode</code>로 복사만 한 경우 (<code class="language-plaintext highlighter-rouge">Ctrl + b [</code>, 선택, <code class="language-plaintext highlighter-rouge">Enter</code>)</strong></h3>
-
-<p>이 경우 복사된 내용은 <strong>tmux 내부 buffer</strong> 에만 들어갑니다.</p>
-
-<h4 id="-붙여넣기-방법">🔹 붙여넣기 방법:</h4>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ctrl + b <span class="o">]</span>
-</code></pre></div></div>
-
-<p>즉, <code class="language-plaintext highlighter-rouge">]</code>는 <code class="language-plaintext highlighter-rouge">tmux</code> 내부 buffer에서 붙여넣기입니다.<br />
-하지만 이건 시스템 클립보드와는 <strong>전혀 관련이 없습니다.</strong></p>
-
-<hr />
-
-<h3 id="-2-copy-pipe를-통해-시스템-클립보드에-복사한-경우">✅ 2. <strong><code class="language-plaintext highlighter-rouge">copy-pipe</code>를 통해 시스템 클립보드에 복사한 경우</strong></h3>
-
-<p>예: <code class="language-plaintext highlighter-rouge">tmux.conf</code>에 이런 설정이 있는 경우:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
-</code></pre></div></div>
-
-<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">y</code>를 눌러 복사한 내용이 <strong>시스템 클립보드</strong> 로 들어갑니다.</p>
-
-<h4 id="-붙여넣기-방법-1">🔹 붙여넣기 방법:</h4>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code> (MATE Terminal에서 시스템 클립보드 붙여넣기)</p>
-  </li>
-  <li>
-    <p>또는 <code class="language-plaintext highlighter-rouge">마우스 오른쪽 클릭 → Paste</code></p>
-  </li>
-</ul>
-
-<p>이건 <code class="language-plaintext highlighter-rouge">tmux</code>가 아니라 터미널이 처리합니다.</p>
-
-<hr />
-
-<h3 id="-3-마우스로-드래그해서-복사한-경우">✅ 3. <strong>마우스로 드래그해서 복사한 경우</strong></h3>
-
-<p>이건 <code class="language-plaintext highlighter-rouge">tmux</code>와 상관없이 터미널이 클립보드에 복사한 것이므로,</p>
-
-<h4 id="-붙여넣기-방법-2">🔹 붙여넣기 방법:</h4>
-
-<ul>
-  <li>
-    <p>동일하게 <code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></p>
-  </li>
-  <li>
-    <p>마우스 우클릭 → Paste</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="-요약">🔒 요약</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>복사 방법</th>
-      <th>붙여넣기 방법</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">tmux</code> copy-mode + <code class="language-plaintext highlighter-rouge">Enter</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Ctrl + b ]</code></td>
-      <td><code class="language-plaintext highlighter-rouge">tmux</code> 내부 버퍼에서 붙여넣음</td>
-    </tr>
-    <tr>
-      <td>copy-pipe로 시스템 클립보드에 복사</td>
-      <td><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></td>
-      <td>터미널 붙여넣기</td>
-    </tr>
-    <tr>
-      <td>마우스로 복사</td>
-      <td><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></td>
-      <td>일반 복사/붙여넣기</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정 전체 예시도 드릴 수 있습니다. <code class="language-plaintext highlighter-rouge">xclip</code>, <code class="language-plaintext highlighter-rouge">xsel</code>, <code class="language-plaintext highlighter-rouge">wl-copy</code> 등 어떤 환경인지
-알려주시면 더 구체적으로 도와드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-tmux mouse mode on/off 하면서 쓰는건 어때
-
-</p>
-
-<p>좋은 질문입니다.<br />
-결론부터 말하면 <strong>"mouse mode on/off를 상황에 따라 수동으로 토글하며 사용하는 건 가능하지만 불편하고 비효율적입니다."</strong><br />
-왜 그런지 단계적으로 설명드리겠습니다.</p>
-
-<hr />
-
-<h2 id="-장점-명확함">✅ 장점: 명확함</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">mouse on</code>: 스크롤, 패널 리사이즈, 클릭으로 창 전환 등 <code class="language-plaintext highlighter-rouge">tmux</code> 기능에 최적화</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">mouse off</code>: 마우스 드래그 복사 가능, 텍스트 편하게 선택</p>
-  </li>
-</ul>
-
-<p>필요할 때만 <code class="language-plaintext highlighter-rouge">mouse</code> 모드를 껐다 켜는 건 <strong>명시적인 컨트롤</strong> 이라는 면에서 장점이 있습니다.<br />
-즉, 당신이 정확히 무엇을 원하는지 알고 있고, 그 순간에 따라 <code class="language-plaintext highlighter-rouge">tmux</code> 동작을 바꿀 수 있다는 뜻입니다.</p>
-
-<hr />
-
-<h2 id="-단점-번거롭고-흐름-끊김">❌ 단점: 번거롭고 흐름 끊김</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tmux set -g mouse on</code> / <code class="language-plaintext highlighter-rouge">off</code>를 매번 치는 건 너무 번거로움</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tmux.conf</code> 수정 → 재적용하려면 <code class="language-plaintext highlighter-rouge">tmux source-file ~/.tmux.conf</code>까지 필요</p>
-  </li>
-  <li>
-    <p>복사하려고 모드 끄고, 끝나면 다시 켜고… 이 흐름이 반복되면 집중력 깨짐</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-대안-토글-단축키-만들기">🛠 대안: 토글 단축키 만들기</h2>
-
-<p>그래도 이 방식을 쓰고 싶다면 <strong>단축키로 mouse 모드 토글</strong> 하는 방법이 있습니다:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ~/.tmux.conf에 추가</span>
-<span class="nb">bind </span>m run-shell <span class="s1">'tmux show -g mouse | grep -q on &amp;&amp; tmux set -g mouse off || tmux set -g mouse on'</span>
-</code></pre></div></div>
-
-<p>이렇게 하면 <code class="language-plaintext highlighter-rouge">Ctrl + b m</code>을 누를 때마다 mouse 모드가 on/off 전환됩니다.<br />
-(원한다면 <code class="language-plaintext highlighter-rouge">m</code> 대신 다른 키로 바꿔도 됩니다)</p>
-
-<hr />
-
-<h2 id="-추천-전략">🧠 추천 전략</h2>
-
-<p>당신이 복사/스크롤을 <strong>자주 번갈아 사용</strong> 한다면, 다음 중 하나가 현실적인 선택입니다:</p>
-
-<h3 id="-옵션-1-mouse-on-유지--copy-mode--copy-pipe-연동">📌 옵션 1: <code class="language-plaintext highlighter-rouge">mouse on</code> 유지 + <code class="language-plaintext highlighter-rouge">copy-mode + copy-pipe</code> 연동</h3>
-
-<p>→ 복사도 되고 스크롤도 되는 <strong>현실적 절충안</strong><br />
-→ 마우스 드래그는 포기, 대신 <code class="language-plaintext highlighter-rouge">Ctrl + b [</code> + <code class="language-plaintext highlighter-rouge">y</code>로 복사</p>
-
-<h3 id="-옵션-2-마우스-드래그-복사가-중요하면">📌 옵션 2: 마우스 드래그 복사가 중요하면</h3>
-
-<p>→ <code class="language-plaintext highlighter-rouge">mouse off</code>로 상시 유지하고, <code class="language-plaintext highlighter-rouge">Ctrl + b</code> 기반 기능은 최소화<br />
-→ 하지만 이건 <code class="language-plaintext highlighter-rouge">tmux</code>의 장점을 많이 포기하는 것</p>
-
-<h3 id="-옵션-3-위에-설정한-ctrl--b-m-으로-토글">📌 옵션 3: 위에 설정한 <code class="language-plaintext highlighter-rouge">Ctrl + b m</code> 으로 토글</h3>
-
-<p>→ 선택적이고 통제 가능한 절충안, 귀찮지만 통제 가능</p>
-
-<hr />
-
-<h2 id="-결론-2">🔚 결론</h2>
-
-<p><strong>“tmux mouse 모드를 상황에 따라 껐다 켰다 하는 전략”은 기능적으로는 가능하지만, 불편함이 큽니다.</strong><br />
-이 전략을 쓸 거라면 <strong>단축키 토글 설정은 필수</strong> 입니다.<br />
-개인적으로는 <code class="language-plaintext highlighter-rouge">mouse on</code> + <code class="language-plaintext highlighter-rouge">copy-pipe</code> 전략을 추천드립니다. 이게 가장 일관되고 반복 없이 사용할 수 있는 방식입니다.</p>
-
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code> 예제 전체 드릴게요.</p>
-
-<p class="chat--user">
-
-근데 copy 모드에서 특정 부분만 copy 하는 법 뭐야?
-
-</p>
-
-<p>좋은 질문입니다. <code class="language-plaintext highlighter-rouge">tmux</code> copy-mode에서는 단순히 마우스로 드래그하는 방식이 아니라, <strong>키보드나 마우스로 시작과 끝을 정확히
-선택해서 복사</strong> 하는 식입니다.<br />
-아래는 <strong>특정 부분만 정확하게 복사하는 방법</strong> 에 대한 구체적인 설명입니다.</p>
-
-<hr />
-
-<h2 id="-기본-전제">✅ 기본 전제</h2>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">tmux</code> 설정에서 <code class="language-plaintext highlighter-rouge">vi mode</code>가 켜져 있다고 가정합니다:</li>
-</ul>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setw <span class="nt">-g</span> mode-keys vi
-</code></pre></div></div>
-
-<p>이걸 켜면 Vim 스타일로 텍스트 선택이 가능합니다. (기본적으로 많은 사용자 설정에 포함됨)</p>
-
-<hr />
-
-<h2 id="-특정-부분-복사-키보드-사용-vim-스타일">✅ 특정 부분 복사: 키보드 사용 (vim 스타일)</h2>
-
-<ol>
-  <li><strong>copy-mode 진입</strong>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx
-     
-Ctrl + b [
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p><strong>커서 이동</strong></p>
-
-    <ul>
-      <li>
-        <p>방향키, 또는 <code class="language-plaintext highlighter-rouge">h</code>, <code class="language-plaintext highlighter-rouge">j</code>, <code class="language-plaintext highlighter-rouge">k</code>, <code class="language-plaintext highlighter-rouge">l</code>로 이동</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">w</code>, <code class="language-plaintext highlighter-rouge">b</code> 등 Vim처럼 단어 단위 이동 가능</p>
-      </li>
-    </ul>
-  </li>
-  <li><strong>선택 시작</strong>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mathematica
-     
-Space
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<p>→ 이걸 누르면 선택 시작 위치가 설정됨 (시각적 표시 없음)</p>
-
-<ol>
-  <li>
-    <p><strong>선택 범위 이동</strong></p>
-
-    <ul>
-      <li>원하는 끝 지점까지 커서를 이동시킴</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>복사 실행</strong></p>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mathematica
-     
-Enter
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<p>→ 복사 완료됨 (내부 tmux buffer 또는 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정된 클립보드로)</p>
-
-<hr />
-
-<h2 id="-마우스로-특정-부분만-복사-mouse-on인-경우">✅ 마우스로 특정 부분만 복사 (mouse on인 경우)</h2>
-
-<p><code class="language-plaintext highlighter-rouge">mouse on</code>이면 마우스로도 selection이 가능하지만 <strong>선택 방식은 직사각형(blockwise)</strong>입니다.<br />
-즉, 마우스로 선택하면 Vim에서 <code class="language-plaintext highlighter-rouge">Ctrl-v</code>로 blockwise 선택한 것처럼 됩니다.</p>
-
-<p>이건 코드나 로그처럼 <strong>열 정렬된 텍스트</strong> 에선 유용하지만, 자유로운 줄/문장 선택에는 불편합니다.</p>
-
-<hr />
-
-<h2 id="-줄-전체-말고-특정-단어-또는-문장만-복사하려면">✅ 줄 전체 말고 "특정 단어 또는 문장만" 복사하려면?</h2>
-
-<p>Vim 스타일로 <strong>텍스트 범위를 미세 조정</strong> 해야 합니다:</p>
-
-<p>예:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 이동해서 커서를 단어 앞에 두고</span>
-Space      <span class="c"># 선택 시작</span>
-w w w...   <span class="c"># 단어 단위로 커서 이동</span>
-Enter      <span class="c"># 복사</span>
-</code></pre></div></div>
-
-<p>필요하면 <code class="language-plaintext highlighter-rouge">v</code>로 시각 모드 진입하는 방법도 <code class="language-plaintext highlighter-rouge">tmux</code>에서 구현할 수 있지만, 기본은 위 방식입니다.</p>
-
-<hr />
-
-<h2 id="-참고-선택한-걸-시스템-클립보드로-보내려면">✅ 참고: 선택한 걸 시스템 클립보드로 보내려면?</h2>
-
-<p>복사 이후 <code class="language-plaintext highlighter-rouge">tmux.conf</code>에 아래처럼 설정된 경우에만 <code class="language-plaintext highlighter-rouge">xclip</code>을 통해 시스템 클립보드로 복사됩니다:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
-</code></pre></div></div>
-
-<p>→ 이 경우 마지막 복사 키는 <code class="language-plaintext highlighter-rouge">Enter</code>가 아니라 <strong><code class="language-plaintext highlighter-rouge">y</code></strong>입니다.</p>
-
-<hr />
-
-<h2 id="-정리">🔚 정리</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>동작</th>
-      <th>키</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>copy-mode 진입</td>
-      <td><code class="language-plaintext highlighter-rouge">Ctrl + b [</code></td>
-    </tr>
-    <tr>
-      <td>커서 이동</td>
-      <td>화살표, 또는 <code class="language-plaintext highlighter-rouge">h/j/k/l</code></td>
-    </tr>
-    <tr>
-      <td>선택 시작</td>
-      <td><code class="language-plaintext highlighter-rouge">Space</code></td>
-    </tr>
-    <tr>
-      <td>선택 종료 + 복사</td>
-      <td><code class="language-plaintext highlighter-rouge">Enter</code> 또는 <code class="language-plaintext highlighter-rouge">y</code> (copy-pipe 있을 때)</td>
-    </tr>
-    <tr>
-      <td>copy-mode 종료</td>
-      <td><code class="language-plaintext highlighter-rouge">q</code>, <code class="language-plaintext highlighter-rouge">Esc</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<p>필요하시면 "단어 단위로만 선택", "blockwise 비활성화", "시각적 표시 추가" 같은 고급 커스터마이징도 알려드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-아 마우스 모드 켜고 드래그해서 highlighting된 상태로 enter를 치니 tmux clip buffer에 복사되는 듯
-
-</p>
-
-<p>맞습니다. 정확히 보셨습니다.<br />
-요약하자면 <strong>tmux에서 mouse mode가<code class="language-plaintext highlighter-rouge">on</code> 상태일 때, 마우스로 드래그해서 텍스트 하이라이트한 후 <code class="language-plaintext highlighter-rouge">Enter</code>를 누르면, 그
-선택 영역이 <code class="language-plaintext highlighter-rouge">tmux</code>의 copy-mode buffer로 복사됩니다.</strong></p>
-
-<hr />
-
-<h2 id="-왜-그런가">🔍 왜 그런가?</h2>
-
-<p>mouse mode가 <code class="language-plaintext highlighter-rouge">on</code>이면 마우스 드래그 자체가 터미널 수준이 아니라 <strong>tmux의 copy-mode</strong> 동작으로 처리됩니다.<br />
-즉, <code class="language-plaintext highlighter-rouge">tmux</code>가 하이라이팅된 영역을 내부적으로 감지하고 복사 가능한 상태로 만든 것입니다.</p>
-
-<ul>
-  <li>
-    <p>마우스로 드래그 → 내부적으로 copy-mode 진입 + blockwise selection 발생</p>
-  </li>
-  <li>
-    <p>하이라이팅 상태에서 <code class="language-plaintext highlighter-rouge">Enter</code> 누르면 → 복사 완료됨 (<code class="language-plaintext highlighter-rouge">tmux</code> buffer에 저장)</p>
-  </li>
-  <li>
-    <p>이후 <code class="language-plaintext highlighter-rouge">Ctrl + b ]</code>로 붙여넣기 가능</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-참고-이것도-blockwise임">🧠 참고: 이것도 blockwise임</h2>
-
-<p>단, 이 방식은 <strong>linewise가 아닌 blockwise (직사각형 형태)</strong> 복사입니다.<br />
-예시:</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] Something happened
-[WARN] Something else
-</code></pre></div></div>
-
-<p>위 두 줄에서 중간 단어만 마우스로 선택하면:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
-
-INFO]
-WARN]
-</code></pre></div></div>
-
-<p>이렇게 잘릴 수 있습니다. <strong>일반적인 줄 선택이 아님</strong> 에 주의하십시오.</p>
-
-<hr />
-
-<h2 id="-팁-copy-pipe-연동-시에도-동작함">✅ 팁: copy-pipe 연동 시에도 동작함</h2>
-
-<p>만약 <code class="language-plaintext highlighter-rouge">tmux.conf</code>에 아래처럼 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정이 되어 있다면:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bind-key <span class="nt">-T</span> copy-mode-vi y send <span class="nt">-X</span> copy-pipe-and-cancel <span class="s2">"xclip -sel clip -i"</span>
-</code></pre></div></div>
-
-<p>이 경우 마우스로 드래그 후 <code class="language-plaintext highlighter-rouge">y</code>를 누르면, <strong>선택 영역이 시스템 클립보드로 복사됩니다.</strong></p>
-
-<hr />
-
-<h2 id="-결론-3">🔚 결론</h2>
-
-<ul>
-  <li>
-    <p>mouse mode <code class="language-plaintext highlighter-rouge">on</code>일 때 마우스 드래그 + <code class="language-plaintext highlighter-rouge">Enter</code> = <code class="language-plaintext highlighter-rouge">tmux</code> internal copy</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">Ctrl + b ]</code>로 붙여넣기 가능</p>
-  </li>
-  <li>
-    <p>blockwise 선택이라 예쁘게 잘리진 않을 수 있음</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">copy-pipe</code> 연동하면 <code class="language-plaintext highlighter-rouge">y</code>로 시스템 클립보드 복사도 가능</p>
-  </li>
-</ul>
-
-<p>궁금한 점 더 있으시면 <code class="language-plaintext highlighter-rouge">copy-pipe</code> 설정 예시나 mouse selection 모양 바꾸는 것도 도와드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-마우스 휠 클릭했을 때 tmux에 붙여넣기가 되게 할 순 없어?
-
-</p>
-
-<p>핵심부터 말하자면:</p>
-
-<blockquote>
-  <p><strong>마우스 휠 클릭 (middle click)으로<code class="language-plaintext highlighter-rouge">tmux</code> 안에 붙여넣기 하려면, 복사한 내용이 “X11의 primary
-selection”에 들어 있어야 하고, <code class="language-plaintext highlighter-rouge">tmux</code> mouse mode가 꺼져 있어야 정상 동작합니다.</strong></p>
-</blockquote>
-
-<p>근데 상황에 따라 다르게 작동할 수 있어서, <strong>그 조건과 제한 사항</strong> 을 정리해드리겠습니다.</p>
-
-<hr />
-
-<h2 id="-전제-마우스-중간-버튼은-primary-selection-붙여넣기">✅ 전제: 마우스 중간 버튼은 "primary selection" 붙여넣기</h2>
-
-<p>Linux에서는 마우스 중간 클릭은 일반적으로 <strong>X11의 primary selection</strong> 을 붙여넣는 동작입니다.<br />
-이건 <code class="language-plaintext highlighter-rouge">Ctrl+C</code>로 복사한 게 아니라, <strong>마우스로 드래그만 한</strong> 텍스트가 들어가는 버퍼입니다.</p>
-
-<p>→ <code class="language-plaintext highlighter-rouge">xclip -selection primary -o</code>로 확인 가능</p>
-
-<hr />
-
-<h2 id="-tmux가-이걸-받으려면-필요한-조건">✅ tmux가 이걸 받으려면 필요한 조건</h2>
-
-<h3 id="1-tmux-mouse-mode-꺼짐">1. <strong>tmux mouse mode 꺼짐</strong></h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux <span class="nb">set</span> <span class="nt">-g</span> mouse off
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p>그래야 터미널이 직접 마우스 클릭 이벤트를 처리하고, 중간 클릭도 <strong>원래대로 작동</strong> 함</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">mouse on</code>이면 <code class="language-plaintext highlighter-rouge">tmux</code>가 클릭 이벤트를 가로채서 붙여넣기가 안 됨</p>
-  </li>
-</ul>
-
-<h3 id="2-터미널이-붙여넣기를-지원해야-함">2. <strong>터미널이 붙여넣기를 지원해야 함</strong></h3>
-
-<ul>
-  <li>
-    <p>MATE Terminal 같은 대부분의 리눅스 터미널에서는 중간 클릭 붙여넣기를 지원함</p>
-  </li>
-  <li>
-    <p>Wayland 환경에서는 clipboard와 primary selection 동작이 미묘하게 다를 수 있음</p>
-  </li>
-</ul>
-
-<h3 id="3-붙여넣을-위치가-쉘-prompt여야-함">3. <strong>붙여넣을 위치가 쉘 prompt여야 함</strong></h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">vim</code>, <code class="language-plaintext highlighter-rouge">less</code> 같은 풀스크린 애플리케이션 안에서는 중간 클릭으로 붙여넣기 안 됨</p>
-  </li>
-  <li>
-    <p>셸에서 입력 대기 상태일 때만 가능</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-mouse-on-상태에서는-왜-안-되나">❌ <code class="language-plaintext highlighter-rouge">mouse on</code> 상태에서는 왜 안 되나?</h2>
-
-<p><code class="language-plaintext highlighter-rouge">tmux set -g mouse on</code> 상태에선 모든 마우스 이벤트(클릭, 휠, 드래그 등)를 <code class="language-plaintext highlighter-rouge">tmux</code>가 직접 처리합니다.<br />
-따라서 <strong>중간 버튼 클릭 이벤트가 원래 의도대로 터미널로 전달되지 않음</strong>.</p>
-
-<p>즉, <code class="language-plaintext highlighter-rouge">middle click</code>은 그냥 무시되거나 이상하게 작동합니다.</p>
-
-<hr />
-
-<h2 id="-대안-마우스-모드-켜진-상태에서도-붙여넣기-하고-싶다면">🛠 대안: 마우스 모드 켜진 상태에서도 붙여넣기 하고 싶다면?</h2>
-
-<p>중간 클릭 말고:</p>
-
-<ul>
-  <li>
-    <p><strong><code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code></strong> (터미널에서 클립보드 붙여넣기)</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tmux</code> 자체 붙여넣기 (<code class="language-plaintext highlighter-rouge">Ctrl + b ]</code>)</p>
-  </li>
-  <li>
-    <p>또는 <code class="language-plaintext highlighter-rouge">xclip -o</code>를 tmux에서 실행해서 수동 붙여넣기</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-결론-4">🔚 결론</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>조건</th>
-      <th>중간 클릭 붙여넣기 가능 여부</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">mouse off</code>, 쉘 prompt</td>
-      <td>✅ 됨</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">mouse on</code> 상태</td>
-      <td>❌ 안 됨</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">vim</code>, <code class="language-plaintext highlighter-rouge">less</code> 등 풀스크린 앱</td>
-      <td>❌ 안 됨</td>
-    </tr>
-    <tr>
-      <td>Wayland + 일부 터미널 조합</td>
-      <td>❌ 불안정 가능</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<p>그래서 현실적인 전략은:</p>
-
-<ul>
-  <li>
-    <p><strong>마우스 복사/붙여넣기 위주라면<code class="language-plaintext highlighter-rouge">mouse off</code> 유지</strong></p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">tmux</code> 기능 위주면 <code class="language-plaintext highlighter-rouge">mouse on</code> + <code class="language-plaintext highlighter-rouge">copy-pipe</code> 기반 키보드 복사/붙여넣기</p>
-  </li>
-</ul>
-
-<p>궁금하신 환경이 X11인지 Wayland인지, 또는 MATE Terminal 외의 것인지 알려주시면 좀 더 구체적인 대안도 드릴 수
-있습니다.</p>
-
-<p class="chat--user">
-
-그러면 clipboard의 것을 tmux에 붙여넣을 방법은 없어?
-
-</p>
-
-<p>좋은 질문입니다.<br />
-<strong>결론부터 말하면:<em>"시스템 클립보드의 내용을 tmux 안으로 붙여넣는 방법은 있다."</em></strong><br />
-하지만 <strong>직접적으로<code class="language-plaintext highlighter-rouge">tmux</code>가 클립보드를 읽어오는 기능은 없다</strong>는 걸 전제로 해야 합니다.</p>
-
-<hr />
-
-<h2 id="-방법-1-터미널-붙여넣기-가장-직관적">✅ 방법 1: 터미널 붙여넣기 (가장 직관적)</h2>
-
-<h3 id="-ctrl--shift--v-mate-terminal-기준">▶ <code class="language-plaintext highlighter-rouge">Ctrl + Shift + V</code> (MATE Terminal 기준)</h3>
-
-<ul>
-  <li>
-    <p>클립보드에 있는 내용이 <code class="language-plaintext highlighter-rouge">tmux</code> 세션 안으로 바로 입력됩니다</p>
-  </li>
-  <li>
-    <p>단, <code class="language-plaintext highlighter-rouge">tmux</code>가 mouse mode를 잡고 있어도 이건 됩니다</p>
-  </li>
-  <li>
-    <p><strong>단점</strong> : 풀스크린 앱 (ex. <code class="language-plaintext highlighter-rouge">vim</code>, <code class="language-plaintext highlighter-rouge">less</code>) 안에서는 안 됨</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-방법-2-마우스-중간-클릭-앞서-말한-primary-selection">✅ 방법 2: 마우스 중간 클릭 (앞서 말한 primary selection)</h2>
-
-<ul>
-  <li>
-    <p>마우스로 드래그한 텍스트는 <strong>primary selection</strong> 으로 들어감</p>
-  </li>
-  <li>
-    <p>이건 <code class="language-plaintext highlighter-rouge">mouse off</code> 상태에서만 <code class="language-plaintext highlighter-rouge">middle click</code>으로 붙여넣기 가능</p>
-  </li>
-  <li>
-    <p><strong>클립보드(Ctrl+C)</strong>와는 별개라 헷갈릴 수 있음</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-방법-3-명시적으로-xclip-or-xsel을-써서-붙여넣기">✅ 방법 3: 명시적으로 <code class="language-plaintext highlighter-rouge">xclip</code> or <code class="language-plaintext highlighter-rouge">xsel</code>을 써서 붙여넣기</h2>
-
-<h3 id="예시-bash-prompt에서">예시 (bash prompt에서):</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xclip <span class="nt">-sel</span> clip <span class="nt">-o</span> | tmux load-buffer -
-tmux paste-buffer
-</code></pre></div></div>
-
-<p>또는 한 줄로:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux set-buffer <span class="s2">"</span><span class="si">$(</span>xclip <span class="nt">-sel</span> clip <span class="nt">-o</span><span class="si">)</span><span class="s2">"</span> <span class="se">\;</span> paste-buffer
-</code></pre></div></div>
-
-<p>이렇게 하면 <strong>시스템 클립보드 → tmux buffer → 붙여넣기</strong> 로 연결됩니다.</p>
-
-<h3 id="-만약-wl-copy--wl-paste-wayland-환경이라면">▶ 만약 <code class="language-plaintext highlighter-rouge">wl-copy</code> / <code class="language-plaintext highlighter-rouge">wl-paste</code> (Wayland) 환경이라면:</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux set-buffer <span class="s2">"</span><span class="si">$(</span>wl-paste<span class="si">)</span><span class="s2">"</span> <span class="se">\;</span> paste-buffer
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-방법-4-tmuxconf에-붙여넣기-단축키-정의-선택-사항">✅ 방법 4: <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에 붙여넣기 단축키 정의 (선택 사항)</h2>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux
-
-bind-key P run-shell "tmux set-buffer \"\$(xclip -sel clip -o)\" \; paste-buffer"
-</code></pre></div></div>
-
-<p>→ 이제 <code class="language-plaintext highlighter-rouge">Ctrl + b P</code> 누르면 시스템 클립보드가 붙여넣어짐</p>
-
-<hr />
-
-<h2 id="️-한계-및-주의점">⚠️ 한계 및 주의점</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">xclip</code>, <code class="language-plaintext highlighter-rouge">xsel</code>, <code class="language-plaintext highlighter-rouge">wl-paste</code> 같은 도구가 <strong>로컬에서 실행 가능한 환경</strong> 이어야 함</p>
-
-    <ul>
-      <li>SSH 환경에서는 서버에 클립보드 없음 → 안 됨</li>
-    </ul>
-  </li>
-  <li>
-    <p>터미널의 붙여넣기는 단순하게 shell에 입력하는 방식</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">vim</code> 등 프로그램 안에서는 동작이 다름</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-결론-5">🔚 결론</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>방법</th>
-      <th>설명</th>
-      <th>장점</th>
-      <th>단점</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Ctrl+Shift+V</td>
-      <td>터미널 자체 붙여넣기</td>
-      <td>간단함</td>
-      <td>풀스크린 앱에선 제한</td>
-    </tr>
-    <tr>
-      <td>middle click</td>
-      <td>primary selection 붙여넣기</td>
-      <td>빠름</td>
-      <td>mouse off 필요</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">tmux set-buffer</code> + <code class="language-plaintext highlighter-rouge">paste-buffer</code></td>
-      <td>명령어로 붙여넣기</td>
-      <td>확실함</td>
-      <td>도구 필요</td>
-    </tr>
-    <tr>
-      <td>tmux 단축키 바인딩</td>
-      <td>자동화 가능</td>
-      <td>편리</td>
-      <td>설정 필요</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<p>필요하시면 SSH 원격 환경에서의 클립보드 붙여넣기 같은 특수 상황도 안내해 드릴 수 있습니다.<br />
-현재 사용 중인 환경 (X11 vs Wayland, 로컬 vs SSH 등) 알려주시면 더 구체적으로 도와드리겠습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">GVim 파일 탭 열기</title><link href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" rel="alternate" type="text/html" title="GVim 파일 탭 열기" /><published>2025-07-23T09:54:41+09:00</published><updated>2025-07-23T09:54:41+09:00</updated><id>https://hvppycoding.github.io/vim/vim-open-file-under-cursor</id><content type="html" xml:base="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/"><![CDATA[<p class="chat--user">
-
-gvim 설정에서 cursor 밑에 있는 파일을 새 탭으로 여는 함수 작성해줘. 이 때 파일 경로가 상대경로일 경우 현재 열려있는 파일로부터
-상대 경로로 찾아야 해. 그리고 만약 파일이 없으면 input() 으로 새로 해당 파일을 만들지 질문하고 y로 답할 경우 만들고 열어줘.
-
-</p>
-
-<p>아래는 <code class="language-plaintext highlighter-rouge">gvim</code>에서 사용할 수 있는 Vimscript 함수입니다. 커서 아래 있는 단어(파일 경로로 간주)를 새 탭으로 열되, 상대경로일
-경우 현재 열려 있는 파일 기준으로 처리하고, 해당 파일이 존재하지 않으면 생성 여부를 묻는 기능을 포함하고 있습니다.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  " 커서 아래 단어 가져오기
-  let l:filename = expand('&lt;cfile&gt;')
-
-  " 현재 버퍼의 디렉토리 기준으로 상대경로 처리
-  let l:current_dir = expand('%:p:h')
-  let l:fullpath = fnamemodify(l:filename, ':p')
-  if !isdirectory(fnamemodify(l:filename, ':h'))
-    let l:fullpath = resolve(l:current_dir . '/' . l:filename)
-  endif
-
-  " 파일 존재 여부 확인
-  if filereadable(l:fullpath)
-    " 새 탭으로 열기
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    " 파일 생성 여부 확인
-    let l:answer = input("File does not exist. Create it? (y/N): ")
-    if l:answer ==? 'y'
-      " 디렉토리 없으면 생성
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      " 새 탭으로 열기 (파일 생성 포함)
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-
-" 매핑 예시 (원하는 키로 변경 가능)
-nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
-</code></pre></div></div>
-
-<h3 id="요점-정리">요점 정리:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">expand('&lt;cfile&gt;')</code>을 사용하여 커서 아래 파일명 추출.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">expand('%:p:h')</code>로 현재 파일 기준 경로 가져와서 상대경로 처리.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">filereadable()</code>로 존재 여부 확인 후 <code class="language-plaintext highlighter-rouge">tabedit</code>로 새 탭에서 열기.</p>
-  </li>
-  <li>
-    <p>없을 경우 <code class="language-plaintext highlighter-rouge">input()</code>으로 사용자에게 파일 생성 여부 묻기.</p>
-  </li>
-</ul>
-
-<h3 id="참고-사항">참고 사항:</h3>
-
-<ul>
-  <li>
-    <p>상대경로 처리에서 Vim이 <code class="language-plaintext highlighter-rouge">:p</code>로 풀지 못하는 경우가 있어 <code class="language-plaintext highlighter-rouge">resolve()</code>와 디렉토리 접합을 함께 사용함.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">mkdir(..., 'p')</code>는 상위 디렉토리까지 포함해 생성함.</p>
-  </li>
-</ul>
-
-<p>테스트 후 의도대로 작동하지 않는 부분이 있으면 알려주세요. 삽질 없이 바로 고칠 수 있도록 도와드리겠습니다.</p>
-
-<p class="chat--user">
-
-만들지 물을 때 절대 경로를 보여주고 물어주면 좋겠어.
-
-</p>
-
-<p>아래는 요청하신 대로 <strong>파일이 없을 때 절대 경로를 보여주고</strong> 생성 여부를 묻도록 수정한 버전입니다:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  " 커서 아래 단어 가져오기
-  let l:filename = expand('&lt;cfile&gt;')
-
-  " 현재 파일 기준 디렉토리에서 상대경로 처리
-  let l:current_dir = expand('%:p:h')
-  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
-
-  " 파일 존재 확인
-  if filereadable(l:fullpath)
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    " 경고 및 절대 경로 출력
-    let l:answer = input("File does not exist: " . l:fullpath . "\nCreate it? (y/N): ")
-    if l:answer ==? 'y'
-      " 디렉토리 없으면 생성
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-
-" 예시 키 매핑
-nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
-</code></pre></div></div>
-
-<h3 id="변경-사항-요약">변경 사항 요약:</h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">input()</code> 메시지에 <code class="language-plaintext highlighter-rouge">l:fullpath</code> (절대 경로)를 출력함으로써 사용자가 어떤 경로에 파일을 만들게 되는지 명확하게 보여줌.</li>
-</ul>
-
-<p>이제 실수로 엉뚱한 위치에 파일을 만드는 일은 줄어들 겁니다. 더 개선하고 싶은 점 있으시면 말씀해 주세요.</p>
-
-<p class="chat--user">
-
-질문에 색깔을 넣을 수도 있어?
-
-</p>
-
-<p>네, <strong>GVim이나 터미널 Vim에서 색깔을 넣는 건 제한적</strong> 입니다.<br />
-하지만 <strong>GVim</strong> , 특히 GUI 환경에서는 <code class="language-plaintext highlighter-rouge">:echohl</code>을 활용하면 <strong>색상 강조</strong> 를 넣을 수 있습니다. 단,
-<code class="language-plaintext highlighter-rouge">input()</code> 자체는 하이라이팅을 직접 지원하지 않아서 <strong>질문 전체를 색상 있게 출력하고, 입력은 따로 받는 방식</strong> 으로 우회해야
-합니다.</p>
-
-<p>예시 코드는 다음과 같습니다:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  let l:filename = expand('&lt;cfile&gt;')
-  let l:current_dir = expand('%:p:h')
-  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
-
-  if filereadable(l:fullpath)
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    " 강조된 질문 메시지 출력
-    echohl Question
-    echon "File does not exist: "
-    echohl Directory
-    echon l:fullpath
-    echohl Question
-    echon "\nCreate it? (y/N): "
-    echohl None
-
-    " 입력은 따로 처리
-    let l:answer = nr2char(getchar())
-
-    if l:answer ==? 'y'
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-</code></pre></div></div>
-
-<h3 id="설명">설명:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">echohl</code>은 특정 하이라이트 그룹으로 색상을 바꿉니다.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">Question</code>, <code class="language-plaintext highlighter-rouge">Directory</code> 같은 기본 하이라이트 그룹을 사용했지만, <code class="language-plaintext highlighter-rouge">:highlight</code>로 사용자 지정도 가능함.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">echon</code>은 개행 없이 출력합니다. <code class="language-plaintext highlighter-rouge">getchar()</code>로 입력을 따로 받아야 <code class="language-plaintext highlighter-rouge">input()</code> 없이 색상 출력이 가능합니다.</p>
-  </li>
-</ul>
-
-<h3 id="참고">참고:</h3>
-
-<ul>
-  <li>
-    <p>터미널 Vim에서는 색이 보이지 않거나 제한될 수 있습니다. GVim이나 색상 지원 터미널에서 확인하세요.</p>
-  </li>
-  <li>
-    <p>원하는 색감이 아니면 <code class="language-plaintext highlighter-rouge">:highlight Question</code> 등의 명령어로 색상 조정 가능합니다.</p>
-  </li>
-</ul>
-
-<p>필요하시면 사용자 정의 색상까지 설정하는 방법도 알려드릴게요.</p>
-
-<p class="chat--user">
-
-파일 경로가 /로 시작하면 절대 경로니깐 상대 경로로 찾지 말아줘
-
-</p>
-
-<p>네, 그게 맞습니다. 파일 경로가 <code class="language-plaintext highlighter-rouge">/</code>로 시작하면 이미 절대 경로이므로, 상대 경로 계산을 피해야 합니다. 이를 반영한 전체 코드를 아래에
-정리해 드리겠습니다:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  let l:filename = expand('&lt;cfile&gt;')
-
-  " 절대 경로 여부 확인
-  if fnamemodify(l:filename, ':p') ==# l:filename
-    let l:fullpath = resolve(l:filename)
-  else
-    let l:current_dir = expand('%:p:h')
-    let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
-  endif
-
-  " 파일 존재 여부 확인
-  if filereadable(l:fullpath)
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    " 강조된 메시지 출력 (GVim 또는 컬러 터미널에서 유효)
-    echohl Question
-    echon "File does not exist: "
-    echohl Directory
-    echon l:fullpath
-    echohl Question
-    echon "\nCreate it? (y/N): "
-    echohl None
-
-    let l:answer = nr2char(getchar())
-
-    if l:answer ==? 'y'
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-
-" 키 매핑 예시
-nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="핵심-변경-사항">핵심 변경 사항:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p') ==# ...</code> 비교로 절대 경로 여부를 판단함.</p>
-  </li>
-  <li>
-    <p>절대 경로일 경우 상대 경로 붙이지 않고 그대로 <code class="language-plaintext highlighter-rouge">resolve()</code>만 적용.</p>
-  </li>
-  <li>
-    <p>상대 경로일 경우에만 현재 버퍼 기준으로 조합.</p>
-  </li>
-  <li>
-    <p>질문 메시지는 하이라이트(<code class="language-plaintext highlighter-rouge">echohl</code>)로 컬러 출력하며 <code class="language-plaintext highlighter-rouge">getchar()</code>로 직접 입력 받음.</p>
-  </li>
-</ul>
-
-<p>이제 절대 경로와 상대 경로 모두 정확히 처리됩니다.<br />
-필요하면 하이라이트 색상도 커스터마이즈해서 시각적으로 더 분명하게 만들 수 있습니다.</p>
-
-<p class="chat--user">
-
-절대 경로 여부 판단 원리가 뭐야? "./abcd"라고하면 상대경로로 인식해야할 것 같은데 절대 경로로 인식하는 것 같음
-
-</p>
-
-<p>좋은 지적입니다. Vim의 <code class="language-plaintext highlighter-rouge">fnamemodify({fname}, ':p')</code>는 <strong>상대 경로를 절대 경로로 변환</strong> 해주기 때문에, 아래와
-같은 판단:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-if fnamemodify(l:filename, ':p') ==# l:filename
-</code></pre></div></div>
-
-<p>은 사실 <strong>절대 경로 판별로는 부정확합니다</strong>. 예를 들어:</p>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"./abcd"</code> → <code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p')</code> 결과는 <code class="language-plaintext highlighter-rouge">/현재경로/abcd</code> → 절대 경로처럼 보임</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"abcd"</code> → 마찬가지로 절대 경로로 변환됨</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"/etc/passwd"</code> → 애초에 절대 경로임</p>
-  </li>
-</ul>
-
-<p>결국 위 조건은 <code class="language-plaintext highlighter-rouge">"./abcd"</code> 같은 <strong>상대 경로도 절대 경로로 인식해버리는</strong> 문제가 있습니다.</p>
-
-<hr />
-
-<h3 id="정확한-절대-경로-판단-방법은">정확한 절대 경로 판단 방법은?</h3>
-
-<p>Vim에서는 <strong>파일 이름이 루트(<code class="language-plaintext highlighter-rouge">/</code>)로 시작하는지</strong> 직접 판단하는 것이 더 정확합니다:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-if l:filename =~ '^/'
-  " 절대 경로
-else
-  " 상대 경로
-endif
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="수정된-코드-절대-경로-판별-정확하게-반영">수정된 코드 (절대 경로 판별 정확하게 반영):</h3>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
-
-function! OpenFileUnderCursorInTab()
-  let l:filename = expand('&lt;cfile&gt;')
-
-  " 절대 경로 여부: 슬래시로 시작하면 절대 경로
-  if l:filename =~ '^/'
-    let l:fullpath = resolve(l:filename)
-  else
-    let l:current_dir = expand('%:p:h')
-    let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
-  endif
-
-  if filereadable(l:fullpath)
-    execute 'tabedit ' . fnameescape(l:fullpath)
-  else
-    echohl Question
-    echon "File does not exist: "
-    echohl Directory
-    echon l:fullpath
-    echohl Question
-    echon "\nCreate it? (y/N): "
-    echohl None
-
-    let l:answer = nr2char(getchar())
-
-    if l:answer ==? 'y'
-      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
-      execute 'tabedit ' . fnameescape(l:fullpath)
-    else
-      echo "Aborted."
-    endif
-  endif
-endfunction
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="결론">결론:</h3>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p') == ...</code>는 절대 경로 판별용으로 <strong>틀림</strong>.</p>
-  </li>
-  <li>
-    <p>파일 경로가 <code class="language-plaintext highlighter-rouge">/</code>로 시작하는지를 직접 정규식(<code class="language-plaintext highlighter-rouge">^/</code>)으로 검사하는 게 <strong>정확하고 신뢰할 수 있는 방법</strong> 입니다.</p>
-  </li>
-</ul>
-
-<p>의심을 잘 하셨습니다. 이 부분에서 실수하는 경우 많습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="vim" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+지금 코드 기준으로 실무에 써도 무방합니다 (단, RTL 시뮬레이션 검증은 반드시 하셔야 합니다).</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry></feed>

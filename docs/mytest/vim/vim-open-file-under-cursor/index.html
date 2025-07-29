@@ -1,0 +1,852 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>GVim 파일 탭 열기 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="GVim 파일 탭 열기">
+<meta property="og:url" content="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-23T09:54:41+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="GVim 파일 탭 열기">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-23T09:54:41+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/vim/vim-open-file-under-cursor/" itemprop="url">GVim 파일 탭 열기
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-23T09:54:41+09:00">2025-07-23</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+gvim 설정에서 cursor 밑에 있는 파일을 새 탭으로 여는 함수 작성해줘. 이 때 파일 경로가 상대경로일 경우 현재 열려있는 파일로부터
+상대 경로로 찾아야 해. 그리고 만약 파일이 없으면 input() 으로 새로 해당 파일을 만들지 질문하고 y로 답할 경우 만들고 열어줘.
+
+</p>
+
+<p>아래는 <code class="language-plaintext highlighter-rouge">gvim</code>에서 사용할 수 있는 Vimscript 함수입니다. 커서 아래 있는 단어(파일 경로로 간주)를 새 탭으로 열되, 상대경로일
+경우 현재 열려 있는 파일 기준으로 처리하고, 해당 파일이 존재하지 않으면 생성 여부를 묻는 기능을 포함하고 있습니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  " 커서 아래 단어 가져오기
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 현재 버퍼의 디렉토리 기준으로 상대경로 처리
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = fnamemodify(l:filename, ':p')
+  if !isdirectory(fnamemodify(l:filename, ':h'))
+    let l:fullpath = resolve(l:current_dir . '/' . l:filename)
+  endif
+
+  " 파일 존재 여부 확인
+  if filereadable(l:fullpath)
+    " 새 탭으로 열기
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 파일 생성 여부 확인
+    let l:answer = input("File does not exist. Create it? (y/N): ")
+    if l:answer ==? 'y'
+      " 디렉토리 없으면 생성
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      " 새 탭으로 열기 (파일 생성 포함)
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+
+" 매핑 예시 (원하는 키로 변경 가능)
+nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
+</code></pre></div></div>
+
+<h3 id="요점-정리">요점 정리:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">expand('&lt;cfile&gt;')</code>을 사용하여 커서 아래 파일명 추출.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">expand('%:p:h')</code>로 현재 파일 기준 경로 가져와서 상대경로 처리.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">filereadable()</code>로 존재 여부 확인 후 <code class="language-plaintext highlighter-rouge">tabedit</code>로 새 탭에서 열기.</p>
+  </li>
+  <li>
+    <p>없을 경우 <code class="language-plaintext highlighter-rouge">input()</code>으로 사용자에게 파일 생성 여부 묻기.</p>
+  </li>
+</ul>
+
+<h3 id="참고-사항">참고 사항:</h3>
+
+<ul>
+  <li>
+    <p>상대경로 처리에서 Vim이 <code class="language-plaintext highlighter-rouge">:p</code>로 풀지 못하는 경우가 있어 <code class="language-plaintext highlighter-rouge">resolve()</code>와 디렉토리 접합을 함께 사용함.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mkdir(..., 'p')</code>는 상위 디렉토리까지 포함해 생성함.</p>
+  </li>
+</ul>
+
+<p>테스트 후 의도대로 작동하지 않는 부분이 있으면 알려주세요. 삽질 없이 바로 고칠 수 있도록 도와드리겠습니다.</p>
+
+<p class="chat--user">
+
+만들지 물을 때 절대 경로를 보여주고 물어주면 좋겠어.
+
+</p>
+
+<p>아래는 요청하신 대로 <strong>파일이 없을 때 절대 경로를 보여주고</strong> 생성 여부를 묻도록 수정한 버전입니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  " 커서 아래 단어 가져오기
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 현재 파일 기준 디렉토리에서 상대경로 처리
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+
+  " 파일 존재 확인
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 경고 및 절대 경로 출력
+    let l:answer = input("File does not exist: " . l:fullpath . "\nCreate it? (y/N): ")
+    if l:answer ==? 'y'
+      " 디렉토리 없으면 생성
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+
+" 예시 키 매핑
+nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
+</code></pre></div></div>
+
+<h3 id="변경-사항-요약">변경 사항 요약:</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">input()</code> 메시지에 <code class="language-plaintext highlighter-rouge">l:fullpath</code> (절대 경로)를 출력함으로써 사용자가 어떤 경로에 파일을 만들게 되는지 명확하게 보여줌.</li>
+</ul>
+
+<p>이제 실수로 엉뚱한 위치에 파일을 만드는 일은 줄어들 겁니다. 더 개선하고 싶은 점 있으시면 말씀해 주세요.</p>
+
+<p class="chat--user">
+
+질문에 색깔을 넣을 수도 있어?
+
+</p>
+
+<p>네, <strong>GVim이나 터미널 Vim에서 색깔을 넣는 건 제한적</strong> 입니다.<br />
+하지만 <strong>GVim</strong> , 특히 GUI 환경에서는 <code class="language-plaintext highlighter-rouge">:echohl</code>을 활용하면 <strong>색상 강조</strong> 를 넣을 수 있습니다. 단,
+<code class="language-plaintext highlighter-rouge">input()</code> 자체는 하이라이팅을 직접 지원하지 않아서 <strong>질문 전체를 색상 있게 출력하고, 입력은 따로 받는 방식</strong> 으로 우회해야
+합니다.</p>
+
+<p>예시 코드는 다음과 같습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+  let l:current_dir = expand('%:p:h')
+  let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 강조된 질문 메시지 출력
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    " 입력은 따로 처리
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+</code></pre></div></div>
+
+<h3 id="설명">설명:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">echohl</code>은 특정 하이라이트 그룹으로 색상을 바꿉니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Question</code>, <code class="language-plaintext highlighter-rouge">Directory</code> 같은 기본 하이라이트 그룹을 사용했지만, <code class="language-plaintext highlighter-rouge">:highlight</code>로 사용자 지정도 가능함.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">echon</code>은 개행 없이 출력합니다. <code class="language-plaintext highlighter-rouge">getchar()</code>로 입력을 따로 받아야 <code class="language-plaintext highlighter-rouge">input()</code> 없이 색상 출력이 가능합니다.</p>
+  </li>
+</ul>
+
+<h3 id="참고">참고:</h3>
+
+<ul>
+  <li>
+    <p>터미널 Vim에서는 색이 보이지 않거나 제한될 수 있습니다. GVim이나 색상 지원 터미널에서 확인하세요.</p>
+  </li>
+  <li>
+    <p>원하는 색감이 아니면 <code class="language-plaintext highlighter-rouge">:highlight Question</code> 등의 명령어로 색상 조정 가능합니다.</p>
+  </li>
+</ul>
+
+<p>필요하시면 사용자 정의 색상까지 설정하는 방법도 알려드릴게요.</p>
+
+<p class="chat--user">
+
+파일 경로가 /로 시작하면 절대 경로니깐 상대 경로로 찾지 말아줘
+
+</p>
+
+<p>네, 그게 맞습니다. 파일 경로가 <code class="language-plaintext highlighter-rouge">/</code>로 시작하면 이미 절대 경로이므로, 상대 경로 계산을 피해야 합니다. 이를 반영한 전체 코드를 아래에
+정리해 드리겠습니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 절대 경로 여부 확인
+  if fnamemodify(l:filename, ':p') ==# l:filename
+    let l:fullpath = resolve(l:filename)
+  else
+    let l:current_dir = expand('%:p:h')
+    let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+  endif
+
+  " 파일 존재 여부 확인
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    " 강조된 메시지 출력 (GVim 또는 컬러 터미널에서 유효)
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+
+" 키 매핑 예시
+nnoremap &lt;Leader&gt;ot :call OpenFileUnderCursorInTab()&lt;CR&gt;
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="핵심-변경-사항">핵심 변경 사항:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p') ==# ...</code> 비교로 절대 경로 여부를 판단함.</p>
+  </li>
+  <li>
+    <p>절대 경로일 경우 상대 경로 붙이지 않고 그대로 <code class="language-plaintext highlighter-rouge">resolve()</code>만 적용.</p>
+  </li>
+  <li>
+    <p>상대 경로일 경우에만 현재 버퍼 기준으로 조합.</p>
+  </li>
+  <li>
+    <p>질문 메시지는 하이라이트(<code class="language-plaintext highlighter-rouge">echohl</code>)로 컬러 출력하며 <code class="language-plaintext highlighter-rouge">getchar()</code>로 직접 입력 받음.</p>
+  </li>
+</ul>
+
+<p>이제 절대 경로와 상대 경로 모두 정확히 처리됩니다.<br />
+필요하면 하이라이트 색상도 커스터마이즈해서 시각적으로 더 분명하게 만들 수 있습니다.</p>
+
+<p class="chat--user">
+
+절대 경로 여부 판단 원리가 뭐야? "./abcd"라고하면 상대경로로 인식해야할 것 같은데 절대 경로로 인식하는 것 같음
+
+</p>
+
+<p>좋은 지적입니다. Vim의 <code class="language-plaintext highlighter-rouge">fnamemodify({fname}, ':p')</code>는 <strong>상대 경로를 절대 경로로 변환</strong> 해주기 때문에, 아래와
+같은 판단:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+if fnamemodify(l:filename, ':p') ==# l:filename
+</code></pre></div></div>
+
+<p>은 사실 <strong>절대 경로 판별로는 부정확합니다</strong>. 예를 들어:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"./abcd"</code> → <code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p')</code> 결과는 <code class="language-plaintext highlighter-rouge">/현재경로/abcd</code> → 절대 경로처럼 보임</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"abcd"</code> → 마찬가지로 절대 경로로 변환됨</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"/etc/passwd"</code> → 애초에 절대 경로임</p>
+  </li>
+</ul>
+
+<p>결국 위 조건은 <code class="language-plaintext highlighter-rouge">"./abcd"</code> 같은 <strong>상대 경로도 절대 경로로 인식해버리는</strong> 문제가 있습니다.</p>
+
+<hr />
+
+<h3 id="정확한-절대-경로-판단-방법은">정확한 절대 경로 판단 방법은?</h3>
+
+<p>Vim에서는 <strong>파일 이름이 루트(<code class="language-plaintext highlighter-rouge">/</code>)로 시작하는지</strong> 직접 판단하는 것이 더 정확합니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+if l:filename =~ '^/'
+  " 절대 경로
+else
+  " 상대 경로
+endif
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="수정된-코드-절대-경로-판별-정확하게-반영">수정된 코드 (절대 경로 판별 정확하게 반영):</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim
+
+function! OpenFileUnderCursorInTab()
+  let l:filename = expand('&lt;cfile&gt;')
+
+  " 절대 경로 여부: 슬래시로 시작하면 절대 경로
+  if l:filename =~ '^/'
+    let l:fullpath = resolve(l:filename)
+  else
+    let l:current_dir = expand('%:p:h')
+    let l:fullpath = resolve(fnamemodify(l:current_dir . '/' . l:filename, ':p'))
+  endif
+
+  if filereadable(l:fullpath)
+    execute 'tabedit ' . fnameescape(l:fullpath)
+  else
+    echohl Question
+    echon "File does not exist: "
+    echohl Directory
+    echon l:fullpath
+    echohl Question
+    echon "\nCreate it? (y/N): "
+    echohl None
+
+    let l:answer = nr2char(getchar())
+
+    if l:answer ==? 'y'
+      call mkdir(fnamemodify(l:fullpath, ':h'), 'p')
+      execute 'tabedit ' . fnameescape(l:fullpath)
+    else
+      echo "Aborted."
+    endif
+  endif
+endfunction
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="결론">결론:</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">fnamemodify(..., ':p') == ...</code>는 절대 경로 판별용으로 <strong>틀림</strong>.</p>
+  </li>
+  <li>
+    <p>파일 경로가 <code class="language-plaintext highlighter-rouge">/</code>로 시작하는지를 직접 정규식(<code class="language-plaintext highlighter-rouge">^/</code>)으로 검사하는 게 <strong>정확하고 신뢰할 수 있는 방법</strong> 입니다.</p>
+  </li>
+</ul>
+
+<p>의심을 잘 하셨습니다. 이 부분에서 실수하는 경우 많습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#vim" class="page__taxonomy-item p-category" rel="tag">vim</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-23T09:54:41+09:00">2025-07-23</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/python/python-dotenv/" class="pagination--pager" title="Python dotenv 설명">Previous</a>
+    
+    
+      <a href="/linux/tmux-clipboard/" class="pagination--pager" title="tmux 마우스 복사 설정">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/vllm-curl/" rel="permalink">Curl로 vLLM 쿼리 보내기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:53+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:51+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/mac-background-server/" rel="permalink">Mac 백그라운드 서버 실행
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:29:17+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/system-trading-terms/" rel="permalink">증권사 API 용어 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

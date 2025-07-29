@@ -1,0 +1,701 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Pydantic 설명 장단점 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Pydantic 설명 장단점">
+<meta property="og:url" content="https://hvppycoding.github.io/python/python-pydantic/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-25T16:39:01+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/python/python-pydantic/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Pydantic 설명 장단점">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-25T16:39:01+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/python/python-pydantic/" itemprop="url">Pydantic 설명 장단점
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T16:39:01+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+pydantic이 뭔지, 왜 쓰는건지 장단점 등을 설명해줘
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">Pydantic</code>은 Python의 데이터 유효성 검사(validation)와 설정 관리(settings management)를 위한
+라이브러리입니다. 주로 FastAPI나 다른 Python 웹 프레임워크에서 많이 사용됩니다.</p>
+
+<hr />
+
+<h2 id="-무엇인가">📌 무엇인가?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Pydantic</code>은 Python의 <code class="language-plaintext highlighter-rouge">dataclass</code>와 비슷한 구조를 가지고 있지만, <strong>입력 데이터의 타입을 강제하고 유효성을 검사</strong>
+합니다. 핵심은 "type hints를 이용해서 런타임에서 실제로 검사한다"는 점입니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">123</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># id는 str이지만 int로 자동 변환됨
+</span><span class="nf">print</span><span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>  <span class="c1"># 123
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="-왜-쓰는가">🔍 왜 쓰는가?</h2>
+
+<h3 id="-목적">✅ 목적</h3>
+
+<ol>
+  <li>
+    <p><strong>입력 검증</strong> : 외부에서 들어오는 데이터(json 등)를 타입 검증하고 잘못된 값을 막기 위함</p>
+  </li>
+  <li>
+    <p><strong>자동 변환</strong> : 가능한 경우 타입을 자동으로 변환</p>
+  </li>
+  <li>
+    <p><strong>명확한 구조 정의</strong> : 코드 상에서 데이터 구조를 명확히 표현 가능</p>
+  </li>
+  <li>
+    <p><strong>정적 분석 가능</strong> : IDE나 타입 체커가 인식할 수 있음</p>
+  </li>
+  <li>
+    <p><strong>FastAPI 연동</strong> : FastAPI에서 request body를 검증할 때 거의 필수</p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-장점">👍 장점</h2>
+
+<h3 id="1-타입-기반-검증">1. 타입 기반 검증</h3>
+
+<p>타입 힌트를 활용해 런타임에서 오류를 조기에 잡아냄.</p>
+
+<h3 id="2-자동-형변환">2. 자동 형변환</h3>
+
+<p>가능하면 타입을 자동으로 맞춰줌. 예: <code class="language-plaintext highlighter-rouge">'1'</code> → <code class="language-plaintext highlighter-rouge">1</code> (int)</p>
+
+<h3 id="3-구조화된-에러-메시지">3. 구조화된 에러 메시지</h3>
+
+<p>에러가 나면 어디서 어떤 타입이 잘못됐는지 명확하게 알려줌.</p>
+
+<h3 id="4-nesting-및-재사용성">4. Nesting 및 재사용성</h3>
+
+<p>다른 <code class="language-plaintext highlighter-rouge">BaseModel</code>을 중첩해서 사용할 수 있어서 복잡한 구조도 표현 가능.</p>
+
+<h3 id="5-빠름">5. 빠름</h3>
+
+<p>내부적으로 <code class="language-plaintext highlighter-rouge">Cython</code>을 사용하여 빠르게 동작함 (v2 기준)</p>
+
+<hr />
+
+<h2 id="-단점">👎 단점</h2>
+
+<h3 id="1-러닝커브">1. 러닝커브</h3>
+
+<p>단순한 프로젝트에 쓰기에는 문법이나 개념이 복잡할 수 있음</p>
+
+<h3 id="2-동적-스키마-어려움">2. 동적 스키마 어려움</h3>
+
+<p>스키마가 런타임에서 바뀌는 경우에는 유연하지 않음</p>
+
+<h3 id="3-성능-이슈-일부-경우">3. 성능 이슈 (일부 경우)</h3>
+
+<p>대규모 데이터 처리 시 자동 형변환이 오히려 성능 병목이 될 수 있음</p>
+
+<h3 id="4-에러-추적-어려움-복잡한-모델일-경우">4. 에러 추적 어려움 (복잡한 모델일 경우)</h3>
+
+<p>중첩 모델이 깊어지면 어느 필드에서 에러 났는지 파악하기 어려울 수 있음</p>
+
+<hr />
+
+<h2 id="-언제-쓰는-게-적절한가">🧠 언제 쓰는 게 적절한가?</h2>
+
+<ul>
+  <li>
+    <p>외부 입력(json, form, query)을 다루는 API 서버 (FastAPI, Flask 등)</p>
+  </li>
+  <li>
+    <p>데이터 파이프라인에서 중간 결과를 검증할 때</p>
+  </li>
+  <li>
+    <p>설정 파일을 로드하고 검증할 때</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="총평">❗총평</h2>
+
+<p><code class="language-plaintext highlighter-rouge">pydantic</code>은 잘 쓰면 생산성과 안정성을 크게 올릴 수 있지만, 단순한 스크립트나 내부 전용 툴에는 과도한 도구일 수도 있습니다.
+데이터 유효성 검사가 필요 없다면 굳이 쓸 이유는 없습니다.</p>
+
+<p>궁금한 점 더 있으시면 말씀해주세요.</p>
+
+<p class="chat--user">
+
+데이터가 안맞으면 어떻게 돼?
+
+</p>
+
+<p><code class="language-plaintext highlighter-rouge">pydantic</code>에서는 데이터가 타입에 맞지 않으면 예외(<code class="language-plaintext highlighter-rouge">ValidationError</code>)가 발생합니다. 이건 <strong>런타임에서 바로 발생</strong>
+하고, 명확하게 어떤 필드에 어떤 문제가 있었는지를 알려줍니다.</p>
+
+<hr />
+
+<h2 id="-예시-타입이-안-맞을-때">❌ 예시: 타입이 안 맞을 때</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">abc</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이렇게 실행하면 아래와 같은 <code class="language-plaintext highlighter-rouge">ValidationError</code>가 발생합니다:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
+
+pydantic.error_wrappers.ValidationError: 2 validation errors for User
+id
+  value is not a valid integer (type=type_error.integer)
+name
+  str type expected (type=type_error.str)
+</code></pre></div></div>
+
+<p>즉, <code class="language-plaintext highlighter-rouge">id='abc'</code>는 int로 변환 불가능하고, <code class="language-plaintext highlighter-rouge">name=123</code>도 str이 아니기 때문에 에러를 던집니다.</p>
+
+<hr />
+
+<h2 id="-예시-자동-변환이-가능한-경우">✅ 예시: 자동 변환이 가능한 경우</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">42</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>    <span class="c1"># 42 (str → int 자동 변환)
+</span><span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># 'Alice'
+</span></code></pre></div></div>
+
+<p>자동 형변환이 가능한 경우에는 문제없이 처리됩니다. 하지만 <strong>불가능한 경우는 예외 발생</strong>.</p>
+
+<hr />
+
+<h2 id="예외-처리-방법">예외 처리 방법</h2>
+
+<p>물론 try-except로 예외를 잡을 수도 있습니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">xyz</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Bob</span><span class="sh">'</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="nf">json</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>출력 예시:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"loc"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value is not a valid integer"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"type_error.integer"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>구조화된 JSON 형태로 어떤 필드에 무슨 문제가 있었는지 파악할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="결론">결론</h2>
+
+<ul>
+  <li>
+    <p><strong>타입이 안 맞으면 무조건 예외 발생</strong></p>
+  </li>
+  <li>
+    <p><strong>가능하면 자동 변환</strong></p>
+  </li>
+  <li>
+    <p><strong>ValidationError는 매우 상세하고 디버깅에 유리</strong></p>
+  </li>
+  <li>
+    <p>FastAPI와 연동할 경우, 이 에러는 HTTP 422 응답으로 자동 변환됨</p>
+  </li>
+</ul>
+
+<p>pydantic을 도입하는 주 이유 중 하나가 이 <strong>강력하고 친절한 검증 메커니즘</strong> 입니다.<br />
+더 알고 싶은 부분 있으시면 말씀해주세요.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#python" class="page__taxonomy-item p-category" rel="tag">python</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-25T16:39:01+09:00">2025-07-25</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/python/python-httpx/" class="pagination--pager" title="httpx 패키지 설명">Previous</a>
+    
+    
+      <a href="/investing/system-trading-terms/" class="pagination--pager" title="증권사 API 용어 설명">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/vllm-curl/" rel="permalink">Curl로 vLLM 쿼리 보내기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:53+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:51+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/mac-background-server/" rel="permalink">Mac 백그라운드 서버 실행
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:29:17+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/system-trading-terms/" rel="permalink">증권사 API 용어 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

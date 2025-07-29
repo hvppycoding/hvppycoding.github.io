@@ -1,0 +1,979 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>tmux 기본 조작법 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="tmux 기본 조작법">
+<meta property="og:url" content="https://hvppycoding.github.io/linux/tmux-basic/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-22T22:19:37+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/linux/tmux-basic/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="tmux 기본 조작법">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-22T22:19:37+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/linux/tmux-basic/" itemprop="url">tmux 기본 조작법
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-22T22:19:37+09:00">2025-07-22</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+tmux 기본 조작법 알려줘
+
+</p>
+
+<p>tmux는 터미널 멀티플렉서로, 하나의 터미널 창에서 여러 세션, 창, 패널을 관리할 수 있게 해줍니다. 아래는 <strong>기본 조작법</strong> 을
+정리한 것입니다.</p>
+
+<hr />
+
+<h3 id="-1-tmux-시작--종료">✅ 1. tmux 시작 / 종료</h3>
+
+<ul>
+  <li><strong>세션 시작</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>또는 세션 이름 지정</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```bash
+tmux new -s mysession
+```
+</code></pre></div></div>
+
+<ul>
+  <li><strong>세션 종료</strong><br />
+패널 내에서 <code class="language-plaintext highlighter-rouge">exit</code> 입력하거나 <code class="language-plaintext highlighter-rouge">Ctrl-b</code> 누른 뒤 <code class="language-plaintext highlighter-rouge">:</code> 입력하고 <code class="language-plaintext highlighter-rouge">kill-session</code> 실행</li>
+</ul>
+
+<hr />
+
+<h3 id="-2-기본-prefix-키">✅ 2. 기본 prefix 키</h3>
+
+<ul>
+  <li><strong>기본 prefix (명령 대기 상태 진입)</strong> : <code class="language-plaintext highlighter-rouge">Ctrl-b</code><br />
+이걸 누르고 나서 단축키를 입력해야 합니다. 예: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">c</code></li>
+</ul>
+
+<hr />
+
+<h3 id="-3-세션--창--패널-관련-주요-단축키">✅ 3. 세션 / 창 / 패널 관련 주요 단축키</h3>
+
+<h4 id="-세션session">🎯 세션(Session)</h4>
+
+<ul>
+  <li>세션 목록 보기:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux <span class="nb">ls</span>
+</code></pre></div>    </div>
+  </li>
+  <li>세션에 attach:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux attach <span class="nt">-t</span> 세션이름
+</code></pre></div>    </div>
+  </li>
+  <li>세션 종료:<br />
+패널에서 <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code> → <code class="language-plaintext highlighter-rouge">kill-session</code></li>
+</ul>
+
+<h4 id="-창window">🪟 창(Window)</h4>
+
+<ul>
+  <li>
+    <p>새 창 생성: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">c</code></p>
+  </li>
+  <li>
+    <p>창 간 이동: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">n</code> (next), <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">p</code> (previous)</p>
+  </li>
+  <li>
+    <p>창 목록: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">w</code></p>
+  </li>
+  <li>
+    <p>창 이름 변경: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">,</code></p>
+  </li>
+  <li>
+    <p>창 닫기: <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-d</code></p>
+  </li>
+</ul>
+
+<h4 id="-패널pane">🔲 패널(Pane)</h4>
+
+<ul>
+  <li>
+    <p>패널 수직 분할: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">"</code></p>
+  </li>
+  <li>
+    <p>패널 수평 분할: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">%</code></p>
+  </li>
+  <li>
+    <p>패널 간 이동: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → 방향키 (<code class="language-plaintext highlighter-rouge">←</code>, <code class="language-plaintext highlighter-rouge">→</code>, <code class="language-plaintext highlighter-rouge">↑</code>, <code class="language-plaintext highlighter-rouge">↓</code>)</p>
+  </li>
+  <li>
+    <p>패널 종료: <code class="language-plaintext highlighter-rouge">exit</code> 또는 <code class="language-plaintext highlighter-rouge">Ctrl-d</code></p>
+  </li>
+  <li>
+    <p>패널 크기 조절: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code> → <code class="language-plaintext highlighter-rouge">resize-pane -D</code> (아래로 줄이기), <code class="language-plaintext highlighter-rouge">-U</code>, <code class="language-plaintext highlighter-rouge">-L</code>, <code class="language-plaintext highlighter-rouge">-R</code></p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-4-기타-유용한-명령">✅ 4. 기타 유용한 명령</h3>
+
+<ul>
+  <li>
+    <p>명령 모드 진입: <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">:</code><br />
+예: <code class="language-plaintext highlighter-rouge">rename-session</code>, <code class="language-plaintext highlighter-rouge">kill-pane</code>, <code class="language-plaintext highlighter-rouge">list-keys</code> 등 입력 가능</p>
+  </li>
+  <li>
+    <p>복사 모드 진입 (스크롤, 복사 등): <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">[</code><br />
+→ 화살표 키로 이동, 스페이스로 복사 시작, Enter로 복사 완료</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-5-세션-유지하고-나가기">✅ 5. 세션 유지하고 나가기</h3>
+
+<ul>
+  <li><strong>detach</strong> : <code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">d</code><br />
+세션은 백그라운드에 남고 나중에 다시 attach 가능</li>
+</ul>
+
+<hr />
+
+<p>필요하면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code> 설정이나 키 리매핑에 대해서도 도와드릴 수 있습니다. 더 고급 기능이 필요하신가요?</p>
+
+<p class="chat--user">
+
+Ctrl+d 누르니 Use "logout" to logout 이라고 떠
+
+</p>
+
+<p>네, 그 메시지는 현재 사용 중인 쉘에서 <code class="language-plaintext highlighter-rouge">exit</code>이나 <code class="language-plaintext highlighter-rouge">logout</code> 명령어로 세션을 종료하라는 의미입니다. 자세히 설명드리면 다음과
+같습니다.</p>
+
+<hr />
+
+<h2 id="-문제-원인">🔍 문제 원인</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Ctrl-d</code>는 일반적으로 <strong>EOF (End Of File)</strong> 신호를 보내서 셸을 종료시키는 역할을 합니다.</p>
+  </li>
+  <li>
+    <p>그런데 지금 그 명령이 작동하지 않고 <code class="language-plaintext highlighter-rouge">Use "logout" to logout</code>이라고 나오는 이유는:</p>
+
+    <ul>
+      <li>
+        <p>사용 중인 셸이 <strong><code class="language-plaintext highlighter-rouge">login shell</code></strong>이기 때문입니다.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">login shell</code>에서는 보통 <code class="language-plaintext highlighter-rouge">exit</code>이나 <code class="language-plaintext highlighter-rouge">logout</code> 명시적 명령어를 요구합니다.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>👉 즉, 단순히 <code class="language-plaintext highlighter-rouge">tmux</code>의 문제가 아니라 <strong>쉘 자체 설정</strong> 문제입니다.</p>
+
+<hr />
+
+<h2 id="-해결-방법">🛠 해결 방법</h2>
+
+<ol>
+  <li>
+    <p><strong>그냥<code class="language-plaintext highlighter-rouge">logout</code> 명령 입력</strong><br />
+해당 패널에서 다음 명령을 입력하세요:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">logout</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>또는</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ```bash
+ exit
+ ```
+</code></pre></div></div>
+
+<p>둘 중 하나는 작동할 겁니다.</p>
+
+<ol>
+  <li><strong>login shell 아닌 셸에서 tmux 실행하도록 설정 변경 (선택사항)</strong><br />
+<code class="language-plaintext highlighter-rouge">.bash_profile</code>이나 <code class="language-plaintext highlighter-rouge">.zprofile</code> 같은 데서 강제로 login shell로 만드는 설정이 있을 수도 있습니다. 그것을
+수정할 수도 있지만, 보통은 굳이 그럴 필요 없습니다.</li>
+</ol>
+
+<hr />
+
+<h2 id="-확인용">🧪 확인용</h2>
+
+<p>해당 패널이 login shell인지 확인해보려면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">shopt</span> <span class="nt">-q</span> login_shell <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"login shell"</span> <span class="o">||</span> <span class="nb">echo</span> <span class="s2">"not login shell"</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>요약: <code class="language-plaintext highlighter-rouge">Ctrl-d</code>가 안 먹히는 건 <code class="language-plaintext highlighter-rouge">login shell</code>이라서 그렇고, <code class="language-plaintext highlighter-rouge">logout</code> 또는 <code class="language-plaintext highlighter-rouge">exit</code> 명령을 직접 입력하시면
+됩니다. 이게 귀찮으시면 <code class="language-plaintext highlighter-rouge">.bashrc</code>나 <code class="language-plaintext highlighter-rouge">.zshrc</code>를 조금 손보는 방법도 있습니다. 그게 필요하시면 말씀해 주세요.</p>
+
+<p class="chat--user">
+
+tmux 창닫기가 하고 싶어
+
+</p>
+
+<p>tmux에서 "창 닫기"는 정확히 말하면 <strong>현재 활성화된 창(Window)을 종료</strong> 하는 것을 말합니다. 방법은 아래와 같습니다.</p>
+
+<hr />
+
+<h2 id="-tmux-창-닫는-방법-현재-창-종료">✅ tmux 창 닫는 방법 (현재 창 종료)</h2>
+
+<h3 id="1-창-안에서exit-입력">1. <strong>창 안에서<code class="language-plaintext highlighter-rouge">exit</code> 입력</strong></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">exit</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>가장 확실한 방법입니다.</p>
+  </li>
+  <li>
+    <p>해당 창 안의 모든 패널이 종료되면 창 자체가 닫힙니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="2-단축키로-창-닫기">2. <strong>단축키로 창 닫기</strong></h3>
+
+<p><strong>단축키 직접 존재하진 않지만</strong> , 이렇게 할 수 있습니다:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">&amp;</code></li>
+</ul>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Kill window</code> 물어보면 <code class="language-plaintext highlighter-rouge">y</code> 입력</p>
+</blockquote>
+
+<p>이게 창 전체를 강제로 닫는 tmux 기본 키입니다.</p>
+
+<hr />
+
+<h3 id="3-명령-모드에서-닫기">3. <strong>명령 모드에서 닫기</strong></h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ctrl-b :
+kill-window
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="️주의할-점">❗️주의할 점</h2>
+
+<ul>
+  <li>
+    <p>창(Window)은 여러 패널(Pane)을 포함할 수 있습니다.</p>
+  </li>
+  <li>
+    <p>창을 닫으면 그 안의 모든 패널도 함께 사라집니다.</p>
+  </li>
+  <li>
+    <p>만약 여러 창을 돌리는 중이고 하나만 닫고 싶을 때, 꼭 확인하세요.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면 특정 번호의 창을 닫거나, 여러 창을 자동으로 정리하는 것도 도와드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+tmux history가 바로바로 없어지는거 같아.
+
+</p>
+
+<p>좋은 지적입니다. <code class="language-plaintext highlighter-rouge">tmux</code>에서 <strong>스크롤 히스토리(history)가 바로 없어지는 문제</strong> 는 꽤 자주 발생하며, 다음과 같은 이유와
+해결책이 있습니다.</p>
+
+<hr />
+
+<h2 id="-문제-원인-요약">🧨 문제 원인 요약</h2>
+
+<ol>
+  <li>
+    <p><strong>tmux 기본 설정에서는 history buffer(스크롤백 버퍼)가 작음</strong></p>
+
+    <ul>
+      <li>
+        <p>기본값은 <code class="language-plaintext highlighter-rouge">2000</code>줄 정도로 제한되어 있음.</p>
+      </li>
+      <li>
+        <p>그래서 출력이 많으면 오래된 히스토리가 밀려 사라짐.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>쉘 레벨 history와는 별개임</strong></p>
+
+    <ul>
+      <li>tmux 히스토리는 tmux 내부의 스크롤백이고, bash/zsh의 <code class="language-plaintext highlighter-rouge">history</code> 명령과는 다름.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>터미널에서 마우스 스크롤이 안 되는 경우도 있음</strong></p>
+
+    <ul>
+      <li>tmux가 마우스를 "가로채기" 하도록 설정되었을 수 있음.</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-해결-방법-1">✅ 해결 방법</h2>
+
+<h3 id="1-tmuxconf에서-history-size-늘리기">1. <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에서 history size 늘리기</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set-option <span class="nt">-g</span> history-limit 100000
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>최대 <code class="language-plaintext highlighter-rouge">100000</code>줄까지 저장 가능 (더 늘려도 되지만 성능 저하 가능성 있음)</p>
+  </li>
+  <li>
+    <p>변경 후에는 <strong>tmux를 완전히 재시작</strong> 해야 반영됩니다.</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux kill-server
+tmux
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="2-복사-모드에서-스크롤-확인">2. 복사 모드에서 스크롤 확인</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">[</code><br />
+→ 방향키로 과거 출력 탐색 가능<br />
+→ <code class="language-plaintext highlighter-rouge">q</code> 눌러 종료</li>
+</ul>
+
+<hr />
+
+<h3 id="3-마우스-스크롤-안-되는-경우-선택사항">3. 마우스 스크롤 안 되는 경우 (선택사항)</h3>
+
+<p>터미널에서 마우스 스크롤이 안 되는 경우 <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에서 다음 줄 제거하거나 수정:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 마우스 사용을 비활성화 (원래 설정돼 있다면)</span>
+<span class="nb">set</span> <span class="nt">-g</span> mouse off
+</code></pre></div></div>
+
+<p>또는 반대로 사용하려면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">set</span> <span class="nt">-g</span> mouse on
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="4-현재-설정-확인">4. 현재 설정 확인</h3>
+
+<p>tmux 안에서 다음 명령으로 현재 history limit 확인 가능:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux show-options <span class="nt">-g</span> history-limit
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-정리">🧪 정리</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmux</code>는 기본적으로 <strong>출력 히스토리를 많이 안 보관</strong> 합니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">.tmux.conf</code>에서 <code class="language-plaintext highlighter-rouge">history-limit</code>을 충분히 크게 설정해야 하고,</p>
+  </li>
+  <li>
+    <p>복사 모드(<code class="language-plaintext highlighter-rouge">Ctrl-b</code> → <code class="language-plaintext highlighter-rouge">[</code>)를 활용해서 탐색해야 합니다.</p>
+  </li>
+  <li>
+    <p>위 설정 적용 후에도 안 된다면 <code class="language-plaintext highlighter-rouge">.bashrc</code>, <code class="language-plaintext highlighter-rouge">.zshrc</code> 또는 터미널 프로그램 설정까지 봐야 할 수도 있습니다.</p>
+  </li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">.tmux.conf</code> 설정 예시가 필요하시면 말씀 주세요.</p>
+
+<p class="chat--user">
+
+마우스말고 Ctrl-b [ 하면 되는데 마우스 스크롤 하면 안보여
+
+</p>
+
+<p>좋습니다. 지금 상황은 다음과 같이 정리됩니다:</p>
+
+<hr />
+
+<h2 id="-현재-증상-정리">📌 현재 증상 정리</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Ctrl-b [</code> (복사 모드) → 정상적으로 히스토리 스크롤 됨 ✅</p>
+  </li>
+  <li>
+    <p><strong>마우스 휠로는 스크롤이 안 됨</strong> ❌</p>
+  </li>
+</ul>
+
+<p>즉, <strong>터미널에서 마우스 스크롤이 tmux 내부로 전달되지 않고 있다</strong> 는 뜻입니다.</p>
+
+<hr />
+
+<h2 id="-원인">🧨 원인</h2>
+
+<p>기본적으로 <code class="language-plaintext highlighter-rouge">tmux</code>는 마우스 이벤트(스크롤 포함)를 무시합니다.<br />
+그래서 휠을 써도 터미널이 아니라 tmux의 히스토리 버퍼로 안 넘어갑니다.</p>
+
+<hr />
+
+<h2 id="-해결-방법-tmuxconf에-마우스-활성화-추가">✅ 해결 방법: <code class="language-plaintext highlighter-rouge">.tmux.conf</code>에 마우스 활성화 추가</h2>
+
+<p><code class="language-plaintext highlighter-rouge">~/.tmux.conf</code> 파일에 다음을 추가하세요:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">set</span> <span class="nt">-g</span> mouse on
+</code></pre></div></div>
+
+<p>그리고 설정 적용을 위해 새로고침 또는 재시작합니다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 현재 실행 중인 tmux에 적용 (선택적)</span>
+tmux source-file ~/.tmux.conf
+
+<span class="c"># 또는 완전히 재시작</span>
+tmux kill-server
+tmux
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="주의-사항">❗주의 사항</h2>
+
+<ul>
+  <li>
+    <p>마우스를 켜면:</p>
+
+    <ul>
+      <li>
+        <p>휠 스크롤 → 복사 모드로 자동 진입하여 스크롤 가능</p>
+      </li>
+      <li>
+        <p>클릭으로 패널 선택, 텍스트 복사 등 가능해짐</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>일부 터미널 (예: <code class="language-plaintext highlighter-rouge">alacritty</code>, <code class="language-plaintext highlighter-rouge">kitty</code>, <code class="language-plaintext highlighter-rouge">iterm2</code>, <code class="language-plaintext highlighter-rouge">gnome-terminal</code>)은 자체적으로 마우스 입력을 tmux와 충돌시킬 수 있음. 그럴 경우 해당 터미널 설정도 살펴봐야 함.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-확인">🧪 확인</h2>
+
+<p>설정 반영 후:</p>
+
+<ul>
+  <li>
+    <p>마우스 휠로 스크롤 하면 복사 모드처럼 위/아래 출력이 보여야 함</p>
+  </li>
+  <li>
+    <p>만약 여전히 안 된다면:</p>
+
+    <ul>
+      <li>
+        <p>사용 중인 <strong>터미널 종류</strong> 말씀해 주세요 (<code class="language-plaintext highlighter-rouge">gnome-terminal</code>, <code class="language-plaintext highlighter-rouge">iterm2</code>, <code class="language-plaintext highlighter-rouge">tmux + ssh</code>, 등)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">.tmux.conf</code> 전체 내용 보여주시면 분석해 드릴 수 있습니다</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면 <code class="language-plaintext highlighter-rouge">.tmux.conf</code>를 전체적으로 구성해 드릴 수도 있습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#linux" class="page__taxonomy-item p-category" rel="tag">linux</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-22T22:19:37+09:00">2025-07-22</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/python/python-logging/" class="pagination--pager" title="파이썬 로그 시스템">Previous</a>
+    
+    
+      <a href="/python/python-dotenv/" class="pagination--pager" title="Python dotenv 설명">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/vllm-curl/" rel="permalink">Curl로 vLLM 쿼리 보내기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:53+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T00:56:51+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/mac-background-server/" rel="permalink">Mac 백그라운드 서버 실행
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:29:17+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/system-trading-terms/" rel="permalink">증권사 API 용어 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
