@@ -1,0 +1,727 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Python 우선순위 큐 예제 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Python 우선순위 큐 예제">
+<meta property="og:url" content="https://hvppycoding.github.io/python/python-priority-queue/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-07-31T20:45:57+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/python/python-priority-queue/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Python 우선순위 큐 예제">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-07-31T20:45:57+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/python/python-priority-queue/" itemprop="url">Python 우선순위 큐 예제
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-31T20:45:57+09:00">2025-07-31</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+python priority queue 예제 만들어줘
+
+</p>
+
+<p>Python의 <code class="language-plaintext highlighter-rouge">priority queue</code>는 우선순위를 기준으로 항목을 정렬하여 꺼낼 수 있는 자료구조입니다. 일반적으로 <code class="language-plaintext highlighter-rouge">heapq</code>
+모듈을 이용해 구현합니다. 아래에 예제를 단계별로 설명드릴게요.</p>
+
+<hr />
+
+<h2 id="-step-by-step-예제-heapq로-우선순위-큐-만들기">🧱 Step-by-Step 예제: <code class="language-plaintext highlighter-rouge">heapq</code>로 우선순위 큐 만들기</h2>
+
+<h3 id="-1-heapq-모듈-소개">✅ 1. <code class="language-plaintext highlighter-rouge">heapq</code> 모듈 소개</h3>
+
+<p>Python의 <code class="language-plaintext highlighter-rouge">heapq</code>는 <strong>min-heap</strong> 을 기반으로 합니다. 즉, 우선순위가 낮은 항목이 가장 먼저 나옵니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-2-기본적인-우선순위-큐-예제-숫자">✅ 2. 기본적인 우선순위 큐 예제 (숫자)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
+
+<span class="c1"># 빈 리스트를 힙으로 사용
+</span><span class="n">pq</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># 요소 추가 (heap push)
+</span><span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># 우선순위가 가장 높은(가장 작은) 요소 꺼내기
+</span><span class="k">while</span> <span class="n">pq</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">pq</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="출력">출력:</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1
+3
+5
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-3-튜플을-활용한-우선순위-큐-우선순위-값">✅ 3. 튜플을 활용한 우선순위 큐 (우선순위, 값)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
+
+<span class="n">pq</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># (우선순위, 값) 형태로 삽입
+</span><span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">))</span>
+<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">))</span>
+<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">))</span>
+
+<span class="k">while</span> <span class="n">pq</span><span class="p">:</span>
+    <span class="n">priority</span><span class="p">,</span> <span class="n">task</span> <span class="o">=</span> <span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">pq</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s"> (우선순위: </span><span class="si">{</span><span class="n">priority</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="출력-1">출력:</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scss
+
+공부 (우선순위: 1)
+청소 (우선순위: 2)
+게임 (우선순위: 3)
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-4-우선순위-큐-클래스로-추상화">✅ 4. 우선순위 큐 클래스로 추상화</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
+
+<span class="k">class</span> <span class="nc">PriorityQueue</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 동일 우선순위 처리용
+</span>
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">priority</span><span class="p">):</span>
+        <span class="c1"># 우선순위 같을 때는 순서대로 처리하기 위해 index 사용
+</span>        <span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_index</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># 사용 예시
+</span><span class="n">pq</span> <span class="o">=</span> <span class="nc">PriorityQueue</span><span class="p">()</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="nf">pop</span><span class="p">())</span>
+    <span class="k">except</span> <span class="nb">IndexError</span><span class="p">:</span>
+        <span class="k">break</span>
+</code></pre></div></div>
+
+<h4 id="출력-2">출력:</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>공부
+청소
+게임
+</code></pre></div></div>
+
+<hr />
+
+<p>필요하다면 <strong>최대 힙</strong> , <strong>dict 기반 우선순위 큐</strong> , 혹은 <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 클래스를 이용한 스레드
+안전한 큐 예제도 제공해드릴 수 있어요. 원하시는 방향 있으신가요?</p>
+
+<p class="chat--user">
+
+응 둘 다 해줘. 근데 queue.PriorityQueue는 많이 느렸던 것 같은 기억이 있는데 맞아?
+
+</p>
+
+<p>좋은 질문이에요! 먼저 요청하신 두 가지 예제를 각각 설명드리고, 마지막에 <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>의 성능 이슈에 대해서도
+짚어드릴게요.</p>
+
+<hr />
+
+<h2 id="-1-최대-힙-max-heap-구현-방법">✅ 1. 최대 힙 (Max-Heap) 구현 방법</h2>
+
+<p>Python의 <code class="language-plaintext highlighter-rouge">heapq</code>는 <strong>min-heap</strong> 만 지원하므로, <strong>우선순위가 클수록 먼저 나오는</strong> 최대 힙을 만들려면 <strong>우선순위를
+음수로 변환</strong> 해야 합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
+
+<span class="k">class</span> <span class="nc">MaxHeap</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">priority</span><span class="p">):</span>
+        <span class="c1"># priority를 음수로 바꿔서 최대 힙처럼 동작
+</span>        <span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">priority</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># 사용 예시
+</span><span class="n">pq</span> <span class="o">=</span> <span class="nc">MaxHeap</span><span class="p">()</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="n">pq</span><span class="p">.</span><span class="n">_queue</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="nf">pop</span><span class="p">())</span>
+</code></pre></div></div>
+
+<h4 id="출력-3">출력:</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>게임
+청소
+공부
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-2-queuepriorityqueue를-이용한-예제-스레드-안전">✅ 2. <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>를 이용한 예제 (스레드 안전)</h2>
+
+<p><code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>는 <strong>스레드 안전(thread-safe)</strong> 한 큐입니다. <code class="language-plaintext highlighter-rouge">heapq</code>보다 상대적으로 느릴 수
+있는데, 이유는 아래에 설명드릴게요.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">queue</span> <span class="kn">import</span> <span class="n">PriorityQueue</span>
+
+<span class="n">pq</span> <span class="o">=</span> <span class="nc">PriorityQueue</span><span class="p">()</span>
+
+<span class="n">pq</span><span class="p">.</span><span class="nf">put</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">))</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">put</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">))</span>
+<span class="n">pq</span><span class="p">.</span><span class="nf">put</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">))</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">pq</span><span class="p">.</span><span class="nf">empty</span><span class="p">():</span>
+    <span class="n">priority</span><span class="p">,</span> <span class="n">task</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="nf">get</span><span class="p">()</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s"> (우선순위: </span><span class="si">{</span><span class="n">priority</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="출력-4">출력:</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scss
+
+공부 (우선순위: 1)
+청소 (우선순위: 2)
+게임 (우선순위: 3)
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="️-queuepriorityqueue-성능-이슈에-대한-설명">⚠️ <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 성능 이슈에 대한 설명</h2>
+
+<p><code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>가 <strong>느릴 수 있는 이유</strong> 는 다음과 같습니다:</p>
+
+<ol>
+  <li>
+    <p><strong>스레드 안전 구현</strong> :</p>
+
+    <ul>
+      <li>
+        <p>내부적으로 <code class="language-plaintext highlighter-rouge">threading.Lock</code>을 사용해 동시성 제어를 합니다.</p>
+      </li>
+      <li>
+        <p>단일 스레드 환경에서는 불필요한 락(lock) 오버헤드가 생깁니다.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>유연성 부족</strong> :</p>
+
+    <ul>
+      <li>
+        <p>튜플 외에 커스텀 우선순위 로직을 넣기가 까다롭습니다.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">heapq</code>는 더 자유롭고 가볍습니다.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="-결론">🟡 결론</h3>
+
+<ul>
+  <li>
+    <p><strong>단일 스레드 / 빠른 작업 필요</strong> : <code class="language-plaintext highlighter-rouge">heapq</code> 기반 구현 권장</p>
+  </li>
+  <li>
+    <p><strong>멀티스레드 환경 / 큐 안전성 필요</strong> : <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 사용</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>원하신다면 <code class="language-plaintext highlighter-rouge">heapq</code> vs <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 성능 비교 실험 코드도 만들어드릴 수 있어요. 원하세요?</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#python" class="page__taxonomy-item p-category" rel="tag">python</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-31T20:45:57+09:00">2025-07-31</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/investing/peg/" class="pagination--pager" title="PEG 비율 설명">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T23:30:44+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/vllm-curl/" rel="permalink">Curl로 vLLM 쿼리 보내기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T01:03:41+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/dev/mac-background-server/" rel="permalink">Mac 백그라운드 서버 실행
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T22:29:17+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/system-trading-terms/" rel="permalink">증권사 API 용어 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-25T18:59:30+09:00">2025-07-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
