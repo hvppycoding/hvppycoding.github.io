@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-07-25T15:33:14+09:00">
+  <meta property="article:published_time" content="2025-07-31T22:43:26+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Loguru 패키지 설명">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-07-25T15:33:14+09:00">
+    <meta itemprop="datePublished" content="2025-07-31T22:43:26+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-07-25T15:33:14+09:00">2025-07-25</time>
+        <time datetime="2025-07-31T22:43:26+09:00">2025-07-31</time>
       </span>
     
 
@@ -613,6 +613,236 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 <p>필요하시면 <code class="language-plaintext highlighter-rouge">stdout</code>, <code class="language-plaintext highlighter-rouge">stderr</code>, 파일 등 <strong>출력 경로별로 레벨이나 포맷을 다르게 설정</strong> 하는 방법도 설명해드릴 수
 있습니다.</p>
 
+<p class="chat--user">
+
+원래는 logging.getLogger(<strong>name</strong>) 이렇게 해줬잖아. 이런건 필요없어?
+
+</p>
+
+<p>좋은 지적입니다. <code class="language-plaintext highlighter-rouge">loguru</code>를 쓸 때는 <code class="language-plaintext highlighter-rouge">logging.getLogger(__name__)</code> 같은 <strong>모듈별 Logger 생성</strong> 을
+더 이상 <strong>직접 할 필요가 없습니다.</strong></p>
+
+<p>하지만 그게 정말 "문제가 없느냐"는 건 얘기해볼 가치가 있습니다. 아래에 하나씩 설명드릴게요.</p>
+
+<hr />
+
+<h2 id="-loguru는-싱글톤-logger만-제공합니다">✅ loguru는 싱글톤 logger만 제공합니다</h2>
+
+<p>기존 표준 <code class="language-plaintext highlighter-rouge">logging</code> 모듈에서는 이렇게 모듈별로 logger를 만들었습니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이렇게 하면 모듈마다 이름이 붙은 logger가 생기고, 나중에 어떤 모듈에서 로그를 찍었는지 추적이 쉬웠죠.</p>
+
+<hr />
+
+<h2 id="-하지만-loguru는-이렇게-안-씁니다">🟦 하지만 loguru는 이렇게 안 씁니다</h2>
+
+<p><code class="language-plaintext highlighter-rouge">loguru</code>는 <code class="language-plaintext highlighter-rouge">from loguru import logger</code> 하면 <strong>무조건 전역 공유 싱글톤 인스턴스를 씁니다.</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 어떤 모듈에서든
+</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>모듈명, 줄 번호, 함수명 같은 메타데이터는 자동으로 로그에 포함되기 때문에<br />
+<code class="language-plaintext highlighter-rouge">__name__</code> 기반의 이름붙은 logger를 직접 쓸 이유가 없습니다.</p>
+
+<p>예시 출력:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
+
+2025-07-25 15:00:01.123 | INFO     | utils.db:get_user:42 - fetching user
+</code></pre></div></div>
+
+<p>→ <code class="language-plaintext highlighter-rouge">utils.db</code> 모듈, <code class="language-plaintext highlighter-rouge">get_user</code> 함수, 42번째 줄이 자동으로 찍힘.</p>
+
+<hr />
+
+<h2 id="-진짜-다-필요-없을까">❗ 진짜 다 필요 없을까?</h2>
+
+<p>기술적으로는 <code class="language-plaintext highlighter-rouge">loguru</code>가 모듈명 등을 로그 메시지에 자동으로 포함하니 <code class="language-plaintext highlighter-rouge">__name__</code> 기반 logger가 필요 없어 보이지만,
+아래와 같은 <strong>상황에선 표준 방식이 더 나을 수도 있습니다</strong> :</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>상황</th>
+      <th><code class="language-plaintext highlighter-rouge">loguru</code> 단점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>라이브러리 개발</strong></td>
+      <td>전역 싱글톤 logger는 외부 앱에서 핸들링이 어렵고, 사용자 설정을 침범할 수 있음</td>
+    </tr>
+    <tr>
+      <td><strong>로거 이름 기반 필터링</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">loguru</code>는 기본적으로 <code class="language-plaintext highlighter-rouge">logger.name</code>이 없으므로 이름 기반 레벨 제어가 불편함</td>
+    </tr>
+    <tr>
+      <td><strong>기존<code class="language-plaintext highlighter-rouge">logging</code> 기반 시스템과 통합</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">loguru</code>와 <code class="language-plaintext highlighter-rouge">logging</code>은 전혀 다른 시스템이라 브리징이 필요함</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-타협안-loguru를-logging처럼-쓰고-싶다면">🔄 타협안: <code class="language-plaintext highlighter-rouge">loguru</code>를 <code class="language-plaintext highlighter-rouge">logging</code>처럼 쓰고 싶다면?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">loguru</code>는 <code class="language-plaintext highlighter-rouge">logger.bind()</code>를 제공해서 일부 유사한 기능을 흉내낼 수 있습니다:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="sh">"</span><span class="s">my.module</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 로그에 module="my.module" 붙음
+</span></code></pre></div></div>
+
+<p>또는 <code class="language-plaintext highlighter-rouge">enqueue=True</code>와 <code class="language-plaintext highlighter-rouge">filter=</code> 같은 옵션으로 조건부 로깅도 구현 가능합니다. 하지만 <strong>모듈별 logger 관리가
+깔끔하지는 않습니다.</strong></p>
+
+<hr />
+
+<h2 id="-결론">✅ 결론</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>질문</th>
+      <th>답변</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">loguru</code>에서는 <code class="language-plaintext highlighter-rouge">getLogger(__name__)</code>이 필요 없나?</td>
+      <td>✅ 네, 자동 메타정보 덕분에 필요 없습니다.</td>
+    </tr>
+    <tr>
+      <td>그럼 완전히 대체되나?</td>
+      <td>❌ 아니요. 모듈별 로거 이름이 중요한 상황 (예: 필터링, 레벨 분리 등)에서는 부족할 수 있습니다.</td>
+    </tr>
+    <tr>
+      <td>표준 방식처럼 쓸 방법은 없나?</td>
+      <td>일부는 <code class="language-plaintext highlighter-rouge">bind()</code>, <code class="language-plaintext highlighter-rouge">filter</code> 등으로 흉내낼 수 있지만 완전히 동일하진 않습니다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>결론적으로, <strong>작은 앱이나 스크립트에는<code class="language-plaintext highlighter-rouge">loguru</code>가 매우 편하지만</strong>,<br />
+<strong>라이브러리나 대규모 프로젝트에서는 신중하게 선택할 필요가 있습니다.</strong></p>
+
+<p>필요하시다면 <code class="language-plaintext highlighter-rouge">loguru</code>와 <code class="language-plaintext highlighter-rouge">logging</code>을 혼용하거나 브리징하는 방법도 안내해드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+기본 표준출력의 로그 수준을 바꾸고 싶으면?
+
+</p>
+
+<p>좋은 질문입니다. <strong>loguru에서 기본 표준 출력(stdout)의 로그 레벨을 바꾸려면</strong> — <code class="language-plaintext highlighter-rouge">logger.remove()</code>로 기존
+핸들러를 지우고, 원하는 수준으로 다시 등록해야 합니다.</p>
+
+<p>loguru는 초기화 시 <strong>기본 stderr 핸들러를 DEBUG 레벨로 등록</strong> 합니다. 하지만 이 핸들러는 직접 제어할 수 없습니다.
+<strong>따라서 표준 출력 로그 수준을 바꾸려면 다음 순서로 작업해야 합니다.</strong></p>
+
+<hr />
+
+<h2 id="-로그-수준-변경-방법-표준-출력">✅ 로그 수준 변경 방법 (표준 출력)</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="n">sys</span>
+
+<span class="c1"># 기존 핸들러 제거 (stdout 출력 포함됨)
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>
+
+<span class="c1"># 새 핸들러 추가: INFO 이상만 출력하도록
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이렇게 하면, <code class="language-plaintext highlighter-rouge">DEBUG</code> 로그는 출력되지 않고 <code class="language-plaintext highlighter-rouge">INFO</code>, <code class="language-plaintext highlighter-rouge">WARNING</code>, <code class="language-plaintext highlighter-rouge">ERROR</code>, <code class="language-plaintext highlighter-rouge">CRITICAL</code>만 출력됩니다.</p>
+
+<hr />
+
+<h2 id="-예시-코드">🧪 예시 코드</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="n">sys</span>
+
+<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>  <span class="c1"># 기본 stderr 핸들러 제거
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">WARNING</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># WARNING 이상만 출력
+</span>
+<span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">This is DEBUG</span><span class="sh">"</span><span class="p">)</span>     <span class="c1"># 출력 안 됨
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">This is INFO</span><span class="sh">"</span><span class="p">)</span>       <span class="c1"># 출력 안 됨
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="sh">"</span><span class="s">This is WARNING</span><span class="sh">"</span><span class="p">)</span> <span class="c1"># 출력됨
+</span><span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">This is ERROR</span><span class="sh">"</span><span class="p">)</span>     <span class="c1"># 출력됨
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="-참고-레벨-이름">📌 참고: 레벨 이름</h2>
+
+<p>loguru에서 사용할 수 있는 로그 레벨은 다음과 같습니다:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"TRACE"</code> – 가장 상세한 로그</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"DEBUG"</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"INFO"</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"SUCCESS"</code> – loguru 전용 커스텀 레벨 (기본 INFO보다 약간 위)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"WARNING"</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"ERROR"</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">"CRITICAL"</code></p>
+  </li>
+</ul>
+
+<p>필요하다면 커스텀 레벨도 추가할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="️-주의사항">⚠️ 주의사항</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">logger.remove()</code>를 하지 않고 <code class="language-plaintext highlighter-rouge">logger.add(sys.stdout, level="INFO")</code>만 하면, 기존 핸들러는 그대로 남아서 <strong>여전히 DEBUG까지 출력</strong> 됩니다. 즉, 중복 로그가 생깁니다.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">sys.stdout</code> 대신 <code class="language-plaintext highlighter-rouge">sys.stderr</code>으로도 출력할 수는 있으나, 대부분의 경우는 <code class="language-plaintext highlighter-rouge">sys.stdout</code>이 더 직관적입니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-요약-1">✅ 요약</h2>
+
+<p>하고 싶은 일| 해야 할 일<br />
+—|—<br />
+표준 출력 로그 레벨 바꾸기| <code class="language-plaintext highlighter-rouge">logger.remove()</code> 후 <code class="language-plaintext highlighter-rouge">logger.add(sys.stdout, level="INFO")</code>
+식으로 재등록<br />
+그냥 <code class="language-plaintext highlighter-rouge">logger.add()</code>만 하면 되나?| ❌ 안 됩니다. 기본 핸들러도 계속 남아있어 로그가 중복되거나 DEBUG까지 찍힙니다<br />
+stdout과 파일 각각 다른 레벨로 설정 가능?| ✅ 예. 핸들러는 여러 개 등록 가능하고 각각 다른 레벨을 가질 수 있습니다</p>
+
+<hr />
+
+<p>필요하시면 여러 핸들러에 대해 레벨, 포맷, 필터 등을 다르게 적용하는 구성도 도와드릴 수 있습니다.</p>
+
         
       </section>
 
@@ -638,7 +868,7 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-25T15:33:14+09:00">2025-07-25</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-07-31T22:43:26+09:00">2025-07-31</time></p>
 
       </footer>
 
@@ -647,10 +877,10 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
       
   <nav class="pagination">
     
-      <a href="/git/global-gitignore/" class="pagination--pager" title="Global gitignore 설정 방법">Previous</a>
+      <a href="/python/python-priority-queue/" class="pagination--pager" title="Python 우선순위 큐 예제">Previous</a>
     
     
-      <a href="/python/python-httpx/" class="pagination--pager" title="httpx 패키지 설명">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
