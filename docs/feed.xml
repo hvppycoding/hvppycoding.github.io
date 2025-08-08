@@ -1,4 +1,740 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-08T16:26:35+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">간단한 notice 애플리케이션</title><link href="https://hvppycoding.github.io/program/simple-notice-application/" rel="alternate" type="text/html" title="간단한 notice 애플리케이션" /><published>2025-08-08T16:26:30+09:00</published><updated>2025-08-08T16:26:30+09:00</updated><id>https://hvppycoding.github.io/program/simple-notice-application</id><content type="html" xml:base="https://hvppycoding.github.io/program/simple-notice-application/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-08T17:08:56+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">커스터마이즈된 크롬 배포 방법</title><link href="https://hvppycoding.github.io/program/deploying-customized-chrome/" rel="alternate" type="text/html" title="커스터마이즈된 크롬 배포 방법" /><published>2025-08-08T17:08:52+09:00</published><updated>2025-08-08T17:08:52+09:00</updated><id>https://hvppycoding.github.io/program/deploying-customized-chrome</id><content type="html" xml:base="https://hvppycoding.github.io/program/deploying-customized-chrome/"><![CDATA[<p class="chat--user">
+
+나의 업무 환경에서 모든 사람이 스토리지를 공유할 수 있어. 이 상황에서 크롬 실행 스크립트를 공유해서 모두가 같은 세팅으로 크롬을 사용할 수 있게 하려고 해. 근데 몇몇 사이트에 대해 탬퍼몽키를 작동시키고 싶어. 탬퍼몽키 스크립트를 내장에서 같이 배포를 할 수 있을까?
+
+</p>
+
+<p>가능은 한데, <strong>어떻게 배포·관리하느냐</strong> 에 따라 난이도와 안정성이 크게 달라져요. 한 줄 요약부터:</p>
+
+<ul>
+  <li>
+    <p><strong>진짜 추천</strong> : 탬퍼몽키 없이 <strong>사용자 스크립트를 크롬 확장 프로그램으로 포장</strong> 해서 기업 정책(ExtensionInstallForcelist)으로 강제 배포</p>
+  </li>
+  <li>
+    <p>“탬퍼몽키를 꼭 써야 해요”라면: <strong>자동 설치는 사실상 불가(사용자 확인 필요)</strong> , 대신 <strong>공유 서버에 .user.js 올려 링크 배포</strong> 또는 <strong>설정 백업파일(.zip) 배포 후 수동 Import</strong> 가 현실적</p>
+  </li>
+</ul>
+
+<p>아래에 단계별로 정리해볼게요. (요청하신 “몇몇 사이트에서만 작동”도 포함)</p>
+
+<hr />
+
+<h1 id="1-베스트-프랙티스-사용자-스크립트를-크롬-확장-으로-변환해-배포">1) 베스트 프랙티스: 사용자 스크립트를 <strong>크롬 확장</strong> 으로 변환해 배포</h1>
+
+<p>탬퍼몽키 의존을 없애고, 모든 사용자가 동일 설정으로 <strong>조용히(무인간섭)</strong> 쓰게 하려면 이게 가장 깔끔하고 안정적입니다.</p>
+
+<h3 id="어떻게">어떻게?</h3>
+
+<ol>
+  <li>
+    <p>기존 .user.js 내용을 <strong>content script</strong> 로 옮깁니다.</p>
+  </li>
+  <li>
+    <p>어떤 사이트에서만 돌릴지 <code class="language-plaintext highlighter-rouge">matches</code>(또는 <code class="language-plaintext highlighter-rouge">exclude_matches</code>)로 지정.</p>
+  </li>
+  <li>
+    <p>필요 권한은 <code class="language-plaintext highlighter-rouge">host_permissions</code>/<code class="language-plaintext highlighter-rouge">permissions</code>에 명시.</p>
+  </li>
+  <li>
+    <p>내부 웹 서버(사내 HTTP(S))에 <strong>업데이트 피드(update.xml)</strong>를 올려 <strong>사내 전용 확장</strong> 으로 운영하거나, 크롬 웹스토어를 <strong>비공개</strong> 로 써도 됩니다.</p>
+  </li>
+  <li>
+    <p>관리용 정책으로 <strong>강제 설치</strong> :</p>
+
+    <ul>
+      <li>조직 관리(Windows GPO / macOS 프로파일 / Linux 정책 파일)에서 <code class="language-plaintext highlighter-rouge">ExtensionInstallForcelist</code>에 <code class="language-plaintext highlighter-rouge">확장ID;업데이트URL</code> 추가.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="최소-예시-manifest-v3">최소 예시 (Manifest V3)</h3>
+
+<p><code class="language-plaintext highlighter-rouge">manifest.json</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"manifest_version"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Corp Userscript Pack"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"사내 사이트용 사용자 스크립트 모음"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"storage"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"host_permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"https://example1.internal/*"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"https://example2.com/*"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"content_scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"matches"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://example1.internal/*"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"js"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"script1.js"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"run_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document-idle"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"matches"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://example2.com/*"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"js"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"script2.js"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"run_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document-idle"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">script1.js</code>/<code class="language-plaintext highlighter-rouge">script2.js</code>에 기존 탬퍼몽키 코드 내용 이식.<br />
+※ <code class="language-plaintext highlighter-rouge">GM_*</code> API를 썼다면, 크롬 확장 API(예: <code class="language-plaintext highlighter-rouge">chrome.storage</code>, <code class="language-plaintext highlighter-rouge">fetch</code>, 메시징 등)로 대체가 필요할 수 있어요. 대부분 치환 가능합니다.</p>
+
+<h3 id="장점">장점</h3>
+
+<ul>
+  <li>
+    <p>전원 <strong>동일 버전</strong> 강제, 자동 업데이트.</p>
+  </li>
+  <li>
+    <p>사용자 클릭 없이 <strong>조용히 배포</strong> 가능.</p>
+  </li>
+  <li>
+    <p>프로필 공유나 확장 데이터 충돌 이슈 없음.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="2-탬퍼몽키를-꼭-쓰고-싶다면-배포-선택지와-한계">2) “탬퍼몽키를 꼭 쓰고 싶다”면: 배포 선택지와 한계</h1>
+
+<h3 id="a-링크-배포사내-서버에-userjs-호스팅">A. 링크 배포(사내 서버에 .user.js 호스팅)</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">.user.js</code>를 내부 서버에 올리고, 첫 실행 시 <strong>탬퍼몽키가 설치 확인 팝업을 띄워</strong> 사용자가 “설치”를 눌러야 합니다.</p>
+  </li>
+  <li>
+    <p><strong>완전 무인 설치는 보안상 막혀</strong> 있습니다.</p>
+  </li>
+  <li>
+    <p>크롬 실행 스크립트에서 처음 띄울 URL로 해당 .user.js 링크를 열게 하여, <strong>최초 1회만</strong> 클릭하도록 안내하는 방식이 현실적.</p>
+  </li>
+</ul>
+
+<h3 id="b-탬퍼몽키-설정-백업복원으로-배포">B. 탬퍼몽키 설정 백업/복원으로 배포</h3>
+
+<ul>
+  <li>
+    <p>관리자가 탬퍼몽키 대시보드에서 <strong>Export(백업)</strong> → 사용자에게 <code class="language-plaintext highlighter-rouge">.zip</code> 전달 → 각자 <strong>Import</strong>.</p>
+  </li>
+  <li>
+    <p>역시 사용자 상호작용이 필요하고, 자동 업데이트·버전 통일을 보장하기 어렵습니다.</p>
+  </li>
+</ul>
+
+<h3 id="c-강제-설치extensioninstallforcelist--탬퍼몽키만">C. 강제 설치(ExtensionInstallForcelist) + 탬퍼몽키만</h3>
+
+<ul>
+  <li>
+    <p>정책으로 <strong>탬퍼몽키 자체를 강제 설치</strong> 하는 건 가능합니다.</p>
+  </li>
+  <li>
+    <p>하지만 <strong>개별 사용자 스크립트까지 자동 주입·업데이트</strong> 하는 방법은 공식적으로 제공되지 않습니다(사용자 확인 필요).</p>
+  </li>
+  <li>
+    <p>따라서 “모두 같은 스크립트를, 클릭 없이”가 목표라면 1)번 방식이 낫습니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="3-몇몇-사이트에서만-작동-설정">3) “몇몇 사이트에서만 작동” 설정</h1>
+
+<ul>
+  <li>
+    <p><strong>확장 방식</strong> : <code class="language-plaintext highlighter-rouge">manifest.json</code>의 <code class="language-plaintext highlighter-rouge">content_scripts.matches</code>에 사이트 패턴만 넣으면 끝.</p>
+  </li>
+  <li>
+    <p><strong>탬퍼몽키 방식</strong> : 스크립트 헤더에 <code class="language-plaintext highlighter-rouge">@match</code>/<code class="language-plaintext highlighter-rouge">@include</code>를 넣어 해당 도메인에서만 동작하도록 설정.</p>
+  </li>
+</ul>
+
+<p>예)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>js
+
+// ==UserScript==
+// @name         Corp Helper
+// @match        https://example1.internal/*
+// @match        https://example2.com/path/*
+// @run-at       document-idle
+// ==/UserScript==
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="4-크롬-실행-스크립트로-통일하려는-경우의-주의점">4) 크롬 “실행 스크립트”로 통일하려는 경우의 주의점</h1>
+
+<ul>
+  <li>
+    <p><strong>프로필 폴더를 공유 스토리지에서 공용으로 쓰는 건 비권장</strong>(락/손상/동시쓰기/성능 문제).</p>
+  </li>
+  <li>
+    <p>대신 각 사용자 <strong>로컬 프로필</strong> 을 쓰되, 정책으로 <strong>확장 강제 설치</strong> 와 <strong>홈페이지/스타트업 URL</strong> 등을 통일하세요.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--user-data-dir=</code>로 네트워크 경로를 강제로 쓰는 건 위험합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="5-권장-아키텍처요약">5) 권장 아키텍처(요약)</h1>
+
+<ol>
+  <li>
+    <p>사용자 스크립트를 <strong>확장으로 변환</strong></p>
+  </li>
+  <li>
+    <p>사내 웹 서버에 확장 업데이트 피드 구성(또는 웹스토어 비공개)</p>
+  </li>
+  <li>
+    <p><strong>ExtensionInstallForcelist</strong> 정책으로 강제 설치</p>
+  </li>
+  <li>
+    <p>사이트 타깃팅은 <code class="language-plaintext highlighter-rouge">matches</code>로 관리</p>
+  </li>
+  <li>
+    <p>필요 시 버전 업은 업데이트 서버에 새 버전 배포 → 전원 자동 반영</p>
+  </li>
+</ol>
+
+<hr />
+
+<p>원하시면</p>
+
+<ul>
+  <li>
+    <p>기존 탬퍼몽키 스크립트(코드) 보여주시면 <strong>확장용으로 변환</strong> 해 드리고,</p>
+  </li>
+  <li>
+    <p>사내 업데이트 피드(<code class="language-plaintext highlighter-rouge">update.xml</code>)와 정책 값도 <strong>딱 맞게</strong> 만들어 드릴게요.<br />
+환경(Windows AD/GPO, macOS, Linux)도 알려주시면 정책 예시까지 세팅해 드릴 수 있어요.</p>
+  </li>
+</ul>
+
+<p class="chat--user">
+
+무슨 말인지 전혀 모르겠어; content script가 뭔데?
+
+</p>
+
+<p>좋아요, 그럼 아주 기초부터 설명할게요.<br />
+<strong>content script</strong> 는 크롬 확장 프로그램에서 쓰이는 개념인데, 쉽게 말하면 <strong>"특정 웹사이트에 자동으로 주입되어 실행되는 자바스크립트"</strong>예요.</p>
+
+<hr />
+
+<h2 id="1-왜-content-script가-필요한가">1. 왜 content script가 필요한가?</h2>
+
+<p>탬퍼몽키(UserScript)도 결국은 브라우저가 어떤 웹페이지를 불러올 때 <strong>자바스크립트를 페이지 안에 넣어서 실행</strong> 하는 구조예요.<br />
+크롬 확장에서 content script가 하는 역할이 <strong>탬퍼몽키 스크립트와 동일</strong> 합니다.<br />
+차이점은:</p>
+
+<ul>
+  <li>
+    <p><strong>탬퍼몽키</strong> : 브라우저에 설치된 확장 프로그램이 여러 개의 <code class="language-plaintext highlighter-rouge">.user.js</code>를 관리하고, @match 규칙에 따라 해당 페이지에 주입.</p>
+  </li>
+  <li>
+    <p><strong>content script</strong> : 확장 프로그램 자체의 일부로, 미리 <code class="language-plaintext highlighter-rouge">manifest.json</code>에 어느 사이트에 넣을지 정의.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="2-동작-흐름">2. 동작 흐름</h2>
+
+<ol>
+  <li>
+    <p>사용자가 웹사이트 A(예: <code class="language-plaintext highlighter-rouge">https://example.com</code>)에 접속.</p>
+  </li>
+  <li>
+    <p>크롬이 <code class="language-plaintext highlighter-rouge">manifest.json</code>을 보고 “이 사이트에 <code class="language-plaintext highlighter-rouge">myscript.js</code>라는 content script를 넣어야 하네?” 판단.</p>
+  </li>
+  <li>
+    <p>해당 자바스크립트를 페이지 안에 삽입해 실행.</p>
+  </li>
+  <li>
+    <p>그 코드가 HTML 조작, 버튼 클릭 자동화, 스타일 변경 등 원하는 작업 수행.</p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="3-탬퍼몽키와-비교">3. 탬퍼몽키와 비교</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>구분</th>
+      <th>탬퍼몽키(UserScript)</th>
+      <th>content script(크롬 확장)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>설치</td>
+      <td>확장 설치 + 스크립트 개별 설치</td>
+      <td>확장만 설치</td>
+    </tr>
+    <tr>
+      <td>배포</td>
+      <td><code class="language-plaintext highlighter-rouge">.user.js</code> 링크나 파일로 배포 → 사용자가 설치 클릭</td>
+      <td>확장 자체를 배포(정책으로 강제 가능)</td>
+    </tr>
+    <tr>
+      <td>업데이트</td>
+      <td>스크립트마다 별도 관리</td>
+      <td>확장 버전 업데이트 시 전부 자동 반영</td>
+    </tr>
+    <tr>
+      <td>사이트 지정</td>
+      <td><code class="language-plaintext highlighter-rouge">@match</code>/<code class="language-plaintext highlighter-rouge">@include</code></td>
+      <td><code class="language-plaintext highlighter-rouge">manifest.json</code>의 <code class="language-plaintext highlighter-rouge">matches</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="4-간단한-예">4. 간단한 예</h2>
+
+<p><code class="language-plaintext highlighter-rouge">manifest.json</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"manifest_version"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My Helper"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"content_scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"matches"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://example.com/*"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"js"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"myscript.js"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"run_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document-idle"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">myscript.js</code></p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">이 메시지는 example.com에 접속할 때만 보임!</span><span class="dl">"</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">yellow</span><span class="dl">"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>➡ 이 확장을 설치하면 example.com을 열 때마다 자동으로 배경이 노란색이 되고 콘솔 메시지가 찍혀요.<br />
+탬퍼몽키라면 <code class="language-plaintext highlighter-rouge">.user.js</code>에 넣을 내용을 여기서 <code class="language-plaintext highlighter-rouge">myscript.js</code>로 넣는 거죠.</p>
+
+<hr />
+
+<h2 id="5-당신-상황에-적용하면">5. 당신 상황에 적용하면</h2>
+
+<ul>
+  <li>
+    <p>크롬 실행 스크립트로 모든 직원이 같은 프로필을 쓰게 하는 대신,<br />
+content script를 가진 <strong>전용 확장</strong> 을 만들어서 정책으로 강제 설치하면<br />
+탬퍼몽키 없이도 “특정 사이트에서만 작동하는 자동화”가 가능합니다.</p>
+  </li>
+  <li>
+    <p>이렇게 하면 <code class="language-plaintext highlighter-rouge">.user.js</code> 파일을 따로 배포하고 설치시키는 번거로움이 사라지고,<br />
+업데이트도 한 번에 됩니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>원하시면 제가 <strong>기존 탬퍼몽키 스크립트를 content script로 변환</strong> 해서 드릴 수 있어요.<br />
+혹시 지금 쓰고 있는 <code class="language-plaintext highlighter-rouge">.user.js</code> 코드가 준비되어 있나요? 그러면 그대로 확장 형태로 만들어 드릴게요.</p>
+
+<p class="chat--user">
+
+manifest.json은 어디있는데
+
+</p>
+
+<p>좋은 질문이에요.<br />
+<code class="language-plaintext highlighter-rouge">manifest.json</code>은 <strong>크롬 확장 프로그램을 구성하는 설정 파일</strong> 이고,<br />
+기본적으로 <strong>크롬 안에는 없는 파일</strong> 이에요.<br />
+우리가 직접 <strong>새 확장 프로그램 폴더</strong> 를 만들어서 거기에 넣어야 합니다.</p>
+
+<hr />
+
+<h2 id="1-manifestjson이-왜-필요한가">1. manifest.json이 왜 필요한가?</h2>
+
+<p>크롬은 “이 확장이 어떤 이름인지, 어떤 권한을 쓰는지, 어떤 스크립트를 어디에 넣을지”를<br />
+<code class="language-plaintext highlighter-rouge">manifest.json</code>에서 읽어옵니다.<br />
+즉, <strong>확장의 설명서</strong> 역할을 하는 파일이에요.</p>
+
+<hr />
+
+<h2 id="2-어디서-만들고-두는가">2. 어디서 만들고 두는가?</h2>
+
+<ol>
+  <li>
+    <p>컴퓨터 어딘가(예: <code class="language-plaintext highlighter-rouge">C:\chrome-extension\</code> 또는 <code class="language-plaintext highlighter-rouge">~/chrome-extension/</code>)에 <strong>폴더 하나</strong> 를 만듭니다.</p>
+  </li>
+  <li>
+    <p>그 폴더 안에 <code class="language-plaintext highlighter-rouge">manifest.json</code>을 새로 만듭니다.<br />
+(메모장, VS Code, nano, vim 등 아무 텍스트 편집기로 작성)</p>
+  </li>
+  <li>
+    <p>같은 폴더 안에 content script 파일(예: <code class="language-plaintext highlighter-rouge">myscript.js</code>)도 둡니다.</p>
+  </li>
+</ol>
+
+<p>폴더 구조 예시:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
+
+C:\chrome-extension\
+ ├─ manifest.json
+ ├─ myscript.js
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-크롬에서-로드하는-방법">3. 크롬에서 로드하는 방법</h2>
+
+<ol>
+  <li>
+    <p>크롬 주소창에 <code class="language-plaintext highlighter-rouge">chrome://extensions/</code> 입력.</p>
+  </li>
+  <li>
+    <p><strong>개발자 모드</strong> 켜기 (오른쪽 상단 토글).</p>
+  </li>
+  <li>
+    <p><strong>압축해제된 확장 프로그램 로드</strong> 버튼 클릭.</p>
+  </li>
+  <li>
+    <p>아까 만든 <code class="language-plaintext highlighter-rouge">C:\chrome-extension\</code> 폴더 선택.</p>
+  </li>
+</ol>
+
+<p>➡ 이제 그 폴더 안의 <code class="language-plaintext highlighter-rouge">manifest.json</code>과 스크립트를 읽어서 확장으로 설치됩니다.</p>
+
+<hr />
+
+<h2 id="4-다음-단계">4. 다음 단계</h2>
+
+<ul>
+  <li>
+    <p>제가 아까 예시로 보여드린 <code class="language-plaintext highlighter-rouge">manifest.json</code>을 그대로 저장하면,</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">myscript.js</code>에 원하는 탬퍼몽키 코드(필요시 수정) 넣고,</p>
+  </li>
+  <li>
+    <p>위 절차로 로드하면 바로 실행됩니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>원하시면 제가</p>
+
+<ol>
+  <li>
+    <p><strong>탬퍼몽키 코드 → content script 변환본</strong></p>
+  </li>
+  <li>
+    <p><strong>완성된 manifest.json</strong><br />
+두 개를 만들어서 그대로 폴더에 넣고 로드만 하면 되게 해드릴까요?<br />
+그러면 지금 바로 실행해볼 수 있습니다.</p>
+  </li>
+</ol>
+
+<p class="chat--user">
+
+그럼 내가 직접 커스텀 확장을 만들라는 말이야? 그렇게 이해하면 되는건가
+
+</p>
+
+<p>네, 맞아요.<br />
+제가 말한 <strong>content script 방식</strong> 은 결국 “탬퍼몽키 대신 내가 직접 만든 커스텀 크롬 확장”을 만드는 걸 의미해요.</p>
+
+<hr />
+
+<h2 id="왜-굳이-이렇게-하자고-하는지">왜 굳이 이렇게 하자고 하는지</h2>
+
+<ol>
+  <li>
+    <p><strong>탬퍼몽키 단점</strong></p>
+
+    <ul>
+      <li>
+        <p>스크립트 배포 시 사용자마다 “설치” 클릭이 필요 (자동 주입 불가)</p>
+      </li>
+      <li>
+        <p>업데이트나 버전 통일이 어려움</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>커스텀 확장 장점</strong></p>
+
+    <ul>
+      <li>
+        <p>모든 사람에게 <strong>정책으로 강제 설치 가능</strong> (아예 클릭 없이)</p>
+      </li>
+      <li>
+        <p>업데이트 시 한 번에 전원 반영</p>
+      </li>
+      <li>
+        <p>“이 사이트에서만 실행”을 확장 설정으로 깔끔하게 관리 가능</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="작업-과정-요약">작업 과정 요약</h2>
+
+<ol>
+  <li>
+    <p><strong>폴더 만들기</strong> (확장 전용)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">manifest.json</code> 작성 → 확장 정보와 동작 사이트 지정</p>
+  </li>
+  <li>
+    <p>기존 탬퍼몽키 <code class="language-plaintext highlighter-rouge">.user.js</code> 내용을 <code class="language-plaintext highlighter-rouge">myscript.js</code>에 옮기기</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">@match</code>, <code class="language-plaintext highlighter-rouge">GM_*</code> 같은 건 확장 API 방식으로 변환</li>
+    </ul>
+  </li>
+  <li>
+    <p>크롬에서 <code class="language-plaintext highlighter-rouge">chrome://extensions</code> → “개발자 모드” → “압축해제된 확장 프로그램 로드”</p>
+  </li>
+  <li>
+    <p>잘 동작하면 이걸 <strong>사내 정책(ExtensionInstallForcelist)</strong> 으로 모든 사람에게 배포</p>
+  </li>
+</ol>
+
+<hr />
+
+<p>즉, 제안하는 건:</p>
+
+<blockquote>
+  <p>“탬퍼몽키 스크립트를 그대로 쓰는 대신, 그걸 content script 형태로 포장해서 우리 회사 전용 확장으로 만드는 것”</p>
+</blockquote>
+
+<hr />
+
+<p>원하시면 제가</p>
+
+<ul>
+  <li>
+    <p>지금 쓰고 있는 <strong>탬퍼몽키 코드</strong> 를 받아서</p>
+  </li>
+  <li>
+    <p>바로 실행 가능한 <strong>커스텀 확장 패키지(폴더 구조 + manifest.json + script)</strong>로 변환해서<br />
+테스트까지 가능한 상태로 만들어 드릴 수 있어요.</p>
+  </li>
+</ul>
+
+<p>혹시 탬퍼몽키 스크립트 원본을 보여줄 수 있나요?<br />
+그러면 제가 확장으로 옮겨드릴게요.</p>
+
+<p class="chat--user">
+
+알았어. 그런데 스크립트를 어떻게 작성해야할지 모르겠어. open web ui 사이트에서 한/영 전환을 google input tools 확장으로 하고 있단 말야? 근데 채팅창에 글자를 치면 첫 글자가 ㅇㅏㄴ녕하세요 이렇게 깨져서 스페이스를 치고 “ 안녕하세요” 이렇게 해야해
+
+</p>
+
+<p>맞아요—이건 <strong>IME(한/영 입력기) 조합 중에 사이트 쪽 키 이벤트가 먼저 개입</strong> 해서 생기는 전형적인 증상이에요. 해결 포인트는 간단해요:</p>
+
+<blockquote>
+  <p><strong>“한글 조합 중(composition)일 때는 사이트의 키 핸들러가 못 끼어들게 막는다.”</strong><br />
+ 즉, <code class="language-plaintext highlighter-rouge">isComposing</code>(또는 <code class="language-plaintext highlighter-rouge">keyCode === 229</code>)인 동안 <strong>keydown/keypress/keyup/input/beforeinput</strong> 이벤트의 전파를 차단합니다.</p>
+</blockquote>
+
+<p>아래에 <strong>바로 쓸 수 있는 content script</strong> 를 드릴게요. 이걸 “커스텀 확장”의 <code class="language-plaintext highlighter-rouge">myscript.js</code>로 두고, <code class="language-plaintext highlighter-rouge">manifest.json</code>에서 해당 사이트에만 주입하면 됩니다.</p>
+
+<hr />
+
+<h1 id="0-뭐가-어떻게-고쳐지는가-한줄-요약">0) 뭐가 어떻게 고쳐지는가 (한줄 요약)</h1>
+
+<ul>
+  <li>
+    <p>한글 조합 중에는 사이트의 “엔터로 전송” 같은 핫키나, 값 덮어쓰기 로직이 <strong>동작하지 않도록</strong> 막습니다.</p>
+  </li>
+  <li>
+    <p>그 결과 첫 글자가 <code class="language-plaintext highlighter-rouge">ㅇㅏ</code>처럼 깨지지 않고 <strong>정상적으로 “안녕하세요”</strong>가 바로 입력됩니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="1-manifestjson-예시">1) manifest.json (예시)</h1>
+
+<blockquote>
+  <p><strong>도메인만 당신 환경에 맞게 바꾸세요.</strong><br />
+ Open WebUI를 로컬로 쓰면 <code class="language-plaintext highlighter-rouge">http://localhost:*/*</code> 또는 사내 도메인으로 바꾸면 됩니다.</p>
+  <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"manifest_version"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Open WebUI IME Fix"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"한글 IME 조합 시 이벤트 충돌을 막아 첫 글자 깨짐 방지"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"content_scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"matches"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://openwebui.example.com/*"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"http://localhost:3000/*"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"js"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"myscript.js"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"run_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document_start"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>  </div>
+</blockquote>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">run_at: "document_start"</code>로 최대한 빨리 주입해, 사이트가 자체 리스너를 붙이기 전에 <strong>캡처링 단계에서 먼저 가로챕니다.</strong></li>
+</ul>
+
+<hr />
+
+<h1 id="2-myscriptjs-붙여넣기-그대로-사용">2) myscript.js (붙여넣기 그대로 사용)</h1>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Open WebUI IME(한글) 깨짐 방지 패치</span>
+<span class="c1">// 아이디어: 조합 중(isComposing / keyCode 229)에는 키/입력 이벤트 전파를 막아</span>
+<span class="c1">// 사이트 단축키(Enter 전송 등)나 값 덮어쓰기가 끼어들지 못하게 함.</span>
+
+<span class="p">(</span><span class="nf">function </span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">DEBUG</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nf">log</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if </span><span class="p">(</span><span class="nx">DEBUG</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">[IME-FIX]</span><span class="dl">"</span><span class="p">,</span> <span class="p">...</span><span class="nx">args</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// IME 조합 중인지 판별: e.isComposing이 표준, 일부 환경은 keyCode 229를 병행</span>
+  <span class="kd">function</span> <span class="nf">isIMEComposingEvent</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 일부 브라우저/확장 조합에서 e.isComposing이 undefined일 수 있음</span>
+    <span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">isComposing</span> <span class="o">===</span> <span class="kc">true</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">===</span> <span class="mi">229</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 조합 중 이벤트는 막아버림(캡처링 단계에서)</span>
+  <span class="kd">function</span> <span class="nf">stopIfComposing</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if </span><span class="p">(</span><span class="nf">isIMEComposingEvent</span><span class="p">(</span><span class="nx">e</span><span class="p">))</span> <span class="p">{</span>
+      <span class="c1">// Enter가 조합 중에 눌리면 전송 방지</span>
+      <span class="k">if </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span> <span class="o">&amp;&amp;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">key</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">Enter</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nf">preventDefault</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nf">stopImmediatePropagation</span><span class="p">();</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nf">stopPropagation</span><span class="p">();</span>
+      <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">blocked during composition:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 일부 사이트는 beforeinput/input에서 값 조작을 함 → 조합 중에는 이것도 차단</span>
+  <span class="kd">function</span> <span class="nf">stopInputIfComposing</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// isComposing이 이벤트에 없을 수 있어 activeElement 상태도 참고</span>
+    <span class="c1">// 다만 표준적으론 e.isComposing 체크가 핵심</span>
+    <span class="k">if </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">isComposing</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nf">stopImmediatePropagation</span><span class="p">();</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nf">stopPropagation</span><span class="p">();</span>
+      <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">blocked input during composition:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 문서 전체에 “먼저” 붙여 사이트 리스너보다 우선권 확보</span>
+  <span class="p">[</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keypress</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keyup</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span> <span class="c1">// useCapture = true</span>
+  <span class="p">});</span>
+
+  <span class="p">[</span><span class="dl">"</span><span class="s2">beforeinput</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopInputIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="c1">// 추가 안전장치: 채팅 입력 필드에 직접 패치(중복 부착 방지)</span>
+  <span class="kd">function</span> <span class="nf">patchEditable</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">el</span> <span class="o">||</span> <span class="nx">el</span><span class="p">.</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">imePatched</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="nx">el</span><span class="p">.</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">imePatched</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">;</span>
+    <span class="p">[</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keypress</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keyup</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="p">[</span><span class="dl">"</span><span class="s2">beforeinput</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopInputIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">patched:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">el</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Open WebUI는 textarea나 contenteditable을 쓸 수 있으니 둘 다 케어</span>
+  <span class="kd">function</span> <span class="nf">scanAndPatch</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">candidates</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">...</span><span class="nb">document</span><span class="p">.</span><span class="nf">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">textarea, input[type="text"], [contenteditable="true"]</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">];</span>
+    <span class="nx">candidates</span><span class="p">.</span><span class="nf">forEach</span><span class="p">(</span><span class="nx">patchEditable</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// 초기 스캔</span>
+  <span class="nf">scanAndPatch</span><span class="p">();</span>
+
+  <span class="c1">// 동적 생성 대응</span>
+  <span class="kd">const</span> <span class="nx">mo</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MutationObserver</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nf">scanAndPatch</span><span class="p">());</span>
+  <span class="nx">mo</span><span class="p">.</span><span class="nf">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">,</span> <span class="p">{</span> <span class="na">childList</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="na">subtree</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
+
+  <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">IME fix initialized</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">})();</span>
+</code></pre></div></div>
+
+<h3 id="왜-이렇게-하는가">왜 이렇게 하는가?</h3>
+
+<ul>
+  <li>
+    <p><strong>문제 원인</strong> : 사이트가 <code class="language-plaintext highlighter-rouge">keydown</code>/<code class="language-plaintext highlighter-rouge">input</code>에서 값 조작·전송을 먼저 해버려서, IME가 조합을 끝내기 전에 문자열이 쪼개지거나 깨집니다.</p>
+  </li>
+  <li>
+    <p><strong>해결</strong> : 조합 중엔(IME가 입력을 “완성”하기 전) <strong>사이트 쪽 리스너가 돌아가지 못하게</strong> 캡처 단계에서 막습니다. 조합이 끝나면(<code class="language-plaintext highlighter-rouge">compositionend</code>) 브라우저가 <strong>완성된 글자</strong> 를 정상 전달합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="3-적용-순서-진짜-쉬운-버전">3) 적용 순서 (진짜 쉬운 버전)</h1>
+
+<ol>
+  <li>
+    <p>위 <code class="language-plaintext highlighter-rouge">manifest.json</code>/<code class="language-plaintext highlighter-rouge">myscript.js</code> 두 파일을 폴더에 넣기</p>
+  </li>
+  <li>
+    <p>크롬 주소창 → <code class="language-plaintext highlighter-rouge">chrome://extensions/</code></p>
+  </li>
+  <li>
+    <p>오른쪽 상단 <strong>개발자 모드</strong> 켜기 → <strong>압축해제된 확장 프로그램 로드</strong> → 폴더 선택</p>
+  </li>
+  <li>
+    <p>Open WebUI 페이지 새로고침 후, 채팅창에 <strong>그냥 “안녕하세요”</strong> 쳐보기</p>
+
+    <ul>
+      <li>처음 글자가 <code class="language-plaintext highlighter-rouge">ㅇㅏ</code>로 깨지지 않고 <strong>한 번에 “안”</strong>이 나와야 정상</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="4-자주-묻는-질문-빠른-체크">4) 자주 묻는 질문 (빠른 체크)</h1>
+
+<ul>
+  <li>
+    <p><strong>Enter가 조합 중에 눌리면 메시지 전송되던데?</strong><br />
+위 스크립트는 조합 중 <code class="language-plaintext highlighter-rouge">Enter</code>에 <code class="language-plaintext highlighter-rouge">preventDefault()</code>를 걸어서 <strong>전송을 막습니다.</strong></p>
+  </li>
+  <li>
+    <p><strong>사이트 단축키(예: Ctrl+K)는 괜찮을까?</strong><br />
+조합 중일 때만 막습니다. 조합이 끝난 이후엔 단축키 정상 동작.</p>
+  </li>
+  <li>
+    <p><strong>Google Input Tools 말고 다른 IME(윈도우 한글, macOS 한글)도 되나?</strong><br />
+네. 핵심은 <code class="language-plaintext highlighter-rouge">isComposing/229</code> 체크라서 <strong>IME 종류와 무관</strong> 하게 동작합니다.</p>
+  </li>
+  <li>
+    <p><strong>특정 도메인만 패치하고 싶어</strong><br />
+<code class="language-plaintext highlighter-rouge">manifest.json</code>의 <code class="language-plaintext highlighter-rouge">matches</code> 배열에서 원하는 도메인만 남기세요.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하면 이걸 <strong>탬퍼몽키용</strong> 으로도 만들어 드릴 수 있지만, 조직 전체 배포/통일이 목표라면 지금처럼 <strong>커스텀 확장</strong> 으로 가는 게 훨씬 깔끔합니다.</p>
+
+<p>원하시면 당신 환경의 <strong>정확한 도메인</strong> 을 알려주면, <code class="language-plaintext highlighter-rouge">manifest.json</code>을 그에 맞춰 딱 맞게 수정해 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="program" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">간단한 notice 애플리케이션</title><link href="https://hvppycoding.github.io/program/simple-notice-application/" rel="alternate" type="text/html" title="간단한 notice 애플리케이션" /><published>2025-08-08T16:26:30+09:00</published><updated>2025-08-08T16:26:30+09:00</updated><id>https://hvppycoding.github.io/program/simple-notice-application</id><content type="html" xml:base="https://hvppycoding.github.io/program/simple-notice-application/"><![CDATA[<p class="chat--user">
 
 데스크탑 환경에서 notice pop-up을 위한 조그많고 간단한 애플리케이션을 만들고 싶어. notice는 python mkdocs 패키지를 이용해서 local file 배포가 가능한 web으로 제작될거라서 가운데는 web viewer가 있어야해. 시작 커맨드는 simple_notice path/to/index.html 로 하면 될 것 같아. 애플리케이션이 열리면 가장 위에 떠야해. 그리고 제일 아래에는 “7일간 다시 열지 않음” 버튼과 닫기 버튼이 있어야해. “7일간 다시 열지 않음”을 선택했으면 유저 홈디렉토리의 .config 같은 곳에 해당 파일의 경로와 버튼을 누른 시간을 저장해서 실제로 7일간은 뜨지 않아야해
 
@@ -7028,216 +7764,4 @@ launchctl list | <span class="nb">grep </span>com.myproject.webapi
 <p>자동매매는 “코드 몇 줄”보다 <strong>문서와 위험 관리</strong> 가 성공을 결정합니다. 항상 “이 정의가 브로커마다 동일한가?”를 의심하시고, 의심이
 풀릴 때까지 실제 호가·체결 데이터로 검증하시기 바랍니다.</p>
 
-<p>궁금한 점이 더 있으시면 언제든 추가로 말씀해 주십시오.</p>]]></content><author><name>hvppycoding</name></author><category term="investing" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Pydantic 설명 장단점</title><link href="https://hvppycoding.github.io/python/python-pydantic/" rel="alternate" type="text/html" title="Pydantic 설명 장단점" /><published>2025-07-25T16:39:01+09:00</published><updated>2025-07-25T16:39:01+09:00</updated><id>https://hvppycoding.github.io/python/python-pydantic</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-pydantic/"><![CDATA[<p class="chat--user">
-
-pydantic이 뭔지, 왜 쓰는건지 장단점 등을 설명해줘
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">Pydantic</code>은 Python의 데이터 유효성 검사(validation)와 설정 관리(settings management)를 위한
-라이브러리입니다. 주로 FastAPI나 다른 Python 웹 프레임워크에서 많이 사용됩니다.</p>
-
-<hr />
-
-<h2 id="-무엇인가">📌 무엇인가?</h2>
-
-<p><code class="language-plaintext highlighter-rouge">Pydantic</code>은 Python의 <code class="language-plaintext highlighter-rouge">dataclass</code>와 비슷한 구조를 가지고 있지만, <strong>입력 데이터의 타입을 강제하고 유효성을 검사</strong>
-합니다. 핵심은 "type hints를 이용해서 런타임에서 실제로 검사한다"는 점입니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-
-<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-
-<span class="n">u</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">123</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># id는 str이지만 int로 자동 변환됨
-</span><span class="nf">print</span><span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>  <span class="c1"># 123
-</span></code></pre></div></div>
-
-<hr />
-
-<h2 id="-왜-쓰는가">🔍 왜 쓰는가?</h2>
-
-<h3 id="-목적">✅ 목적</h3>
-
-<ol>
-  <li>
-    <p><strong>입력 검증</strong> : 외부에서 들어오는 데이터(json 등)를 타입 검증하고 잘못된 값을 막기 위함</p>
-  </li>
-  <li>
-    <p><strong>자동 변환</strong> : 가능한 경우 타입을 자동으로 변환</p>
-  </li>
-  <li>
-    <p><strong>명확한 구조 정의</strong> : 코드 상에서 데이터 구조를 명확히 표현 가능</p>
-  </li>
-  <li>
-    <p><strong>정적 분석 가능</strong> : IDE나 타입 체커가 인식할 수 있음</p>
-  </li>
-  <li>
-    <p><strong>FastAPI 연동</strong> : FastAPI에서 request body를 검증할 때 거의 필수</p>
-  </li>
-</ol>
-
-<hr />
-
-<h2 id="-장점">👍 장점</h2>
-
-<h3 id="1-타입-기반-검증">1. 타입 기반 검증</h3>
-
-<p>타입 힌트를 활용해 런타임에서 오류를 조기에 잡아냄.</p>
-
-<h3 id="2-자동-형변환">2. 자동 형변환</h3>
-
-<p>가능하면 타입을 자동으로 맞춰줌. 예: <code class="language-plaintext highlighter-rouge">'1'</code> → <code class="language-plaintext highlighter-rouge">1</code> (int)</p>
-
-<h3 id="3-구조화된-에러-메시지">3. 구조화된 에러 메시지</h3>
-
-<p>에러가 나면 어디서 어떤 타입이 잘못됐는지 명확하게 알려줌.</p>
-
-<h3 id="4-nesting-및-재사용성">4. Nesting 및 재사용성</h3>
-
-<p>다른 <code class="language-plaintext highlighter-rouge">BaseModel</code>을 중첩해서 사용할 수 있어서 복잡한 구조도 표현 가능.</p>
-
-<h3 id="5-빠름">5. 빠름</h3>
-
-<p>내부적으로 <code class="language-plaintext highlighter-rouge">Cython</code>을 사용하여 빠르게 동작함 (v2 기준)</p>
-
-<hr />
-
-<h2 id="-단점">👎 단점</h2>
-
-<h3 id="1-러닝커브">1. 러닝커브</h3>
-
-<p>단순한 프로젝트에 쓰기에는 문법이나 개념이 복잡할 수 있음</p>
-
-<h3 id="2-동적-스키마-어려움">2. 동적 스키마 어려움</h3>
-
-<p>스키마가 런타임에서 바뀌는 경우에는 유연하지 않음</p>
-
-<h3 id="3-성능-이슈-일부-경우">3. 성능 이슈 (일부 경우)</h3>
-
-<p>대규모 데이터 처리 시 자동 형변환이 오히려 성능 병목이 될 수 있음</p>
-
-<h3 id="4-에러-추적-어려움-복잡한-모델일-경우">4. 에러 추적 어려움 (복잡한 모델일 경우)</h3>
-
-<p>중첩 모델이 깊어지면 어느 필드에서 에러 났는지 파악하기 어려울 수 있음</p>
-
-<hr />
-
-<h2 id="-언제-쓰는-게-적절한가">🧠 언제 쓰는 게 적절한가?</h2>
-
-<ul>
-  <li>
-    <p>외부 입력(json, form, query)을 다루는 API 서버 (FastAPI, Flask 등)</p>
-  </li>
-  <li>
-    <p>데이터 파이프라인에서 중간 결과를 검증할 때</p>
-  </li>
-  <li>
-    <p>설정 파일을 로드하고 검증할 때</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="총평">❗총평</h2>
-
-<p><code class="language-plaintext highlighter-rouge">pydantic</code>은 잘 쓰면 생산성과 안정성을 크게 올릴 수 있지만, 단순한 스크립트나 내부 전용 툴에는 과도한 도구일 수도 있습니다.
-데이터 유효성 검사가 필요 없다면 굳이 쓸 이유는 없습니다.</p>
-
-<p>궁금한 점 더 있으시면 말씀해주세요.</p>
-
-<p class="chat--user">
-
-데이터가 안맞으면 어떻게 돼?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">pydantic</code>에서는 데이터가 타입에 맞지 않으면 예외(<code class="language-plaintext highlighter-rouge">ValidationError</code>)가 발생합니다. 이건 <strong>런타임에서 바로 발생</strong>
-하고, 명확하게 어떤 필드에 어떤 문제가 있었는지를 알려줍니다.</p>
-
-<hr />
-
-<h2 id="-예시-타입이-안-맞을-때">❌ 예시: 타입이 안 맞을 때</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-
-<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-
-<span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">abc</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>이렇게 실행하면 아래와 같은 <code class="language-plaintext highlighter-rouge">ValidationError</code>가 발생합니다:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
-
-pydantic.error_wrappers.ValidationError: 2 validation errors for User
-id
-  value is not a valid integer (type=type_error.integer)
-name
-  str type expected (type=type_error.str)
-</code></pre></div></div>
-
-<p>즉, <code class="language-plaintext highlighter-rouge">id='abc'</code>는 int로 변환 불가능하고, <code class="language-plaintext highlighter-rouge">name=123</code>도 str이 아니기 때문에 에러를 던집니다.</p>
-
-<hr />
-
-<h2 id="-예시-자동-변환이-가능한-경우">✅ 예시: 자동 변환이 가능한 경우</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">42</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>    <span class="c1"># 42 (str → int 자동 변환)
-</span><span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># 'Alice'
-</span></code></pre></div></div>
-
-<p>자동 형변환이 가능한 경우에는 문제없이 처리됩니다. 하지만 <strong>불가능한 경우는 예외 발생</strong>.</p>
-
-<hr />
-
-<h2 id="예외-처리-방법">예외 처리 방법</h2>
-
-<p>물론 try-except로 예외를 잡을 수도 있습니다:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">xyz</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Bob</span><span class="sh">'</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="nf">json</span><span class="p">())</span>
-</code></pre></div></div>
-
-<p>출력 예시:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"loc"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span><span class="w">
-    </span><span class="nl">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value is not a valid integer"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"type_error.integer"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre></div></div>
-
-<p>구조화된 JSON 형태로 어떤 필드에 무슨 문제가 있었는지 파악할 수 있습니다.</p>
-
-<hr />
-
-<h2 id="결론">결론</h2>
-
-<ul>
-  <li>
-    <p><strong>타입이 안 맞으면 무조건 예외 발생</strong></p>
-  </li>
-  <li>
-    <p><strong>가능하면 자동 변환</strong></p>
-  </li>
-  <li>
-    <p><strong>ValidationError는 매우 상세하고 디버깅에 유리</strong></p>
-  </li>
-  <li>
-    <p>FastAPI와 연동할 경우, 이 에러는 HTTP 422 응답으로 자동 변환됨</p>
-  </li>
-</ul>
-
-<p>pydantic을 도입하는 주 이유 중 하나가 이 <strong>강력하고 친절한 검증 메커니즘</strong> 입니다.<br />
-더 알고 싶은 부분 있으시면 말씀해주세요.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>궁금한 점이 더 있으시면 언제든 추가로 말씀해 주십시오.</p>]]></content><author><name>hvppycoding</name></author><category term="investing" /><summary type="html"><![CDATA[]]></summary></entry></feed>
