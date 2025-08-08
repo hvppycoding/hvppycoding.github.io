@@ -1,0 +1,587 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Pyverilog 인스턴스 CSV 생성 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Pyverilog 인스턴스 CSV 생성">
+<meta property="og:url" content="https://hvppycoding.github.io/verilog/pyverilog-top-module-extract-instance/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-08-08T14:52:41+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/verilog/pyverilog-top-module-extract-instance/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Pyverilog 인스턴스 CSV 생성">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-08-08T14:52:41+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/verilog/pyverilog-top-module-extract-instance/" itemprop="url">Pyverilog 인스턴스 CSV 생성
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T14:52:41+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+pyverilog 이용해서 top module 바로 아래에 위치한 모든 인스턴스에 대해 모듈명, 인스턴스명을 csv로 만들고 싶어.
+
+</p>
+
+<p>좋아요! <strong>pyverilog</strong> 로 “top 모듈 바로 아래에 있는 모든 인스턴스”의 <strong>모듈명, 인스턴스명</strong> 을 CSV로 뽑는 가장 간단한 스크립트를 드릴게요.<br />
+(직계 하위만 대상으로, <code class="language-plaintext highlighter-rouge">generate</code> 안쪽이나 더 깊은 계층은 탐색하지 않습니다.)</p>
+
+<h1 id="사용법-요약">사용법 요약</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python dump_top_instances.py <span class="nt">-t</span> TOP_MODULE <span class="se">\</span>
+  <span class="nt">-o</span> out.csv <span class="se">\</span>
+  <span class="nt">-I</span> include/ <span class="nt">-I</span> rtl/include <span class="se">\</span>
+  <span class="nt">-D</span> <span class="nv">SYNTH</span><span class="o">=</span>1 <span class="nt">-D</span> <span class="nv">FOO</span><span class="o">=</span>BAR <span class="se">\</span>
+  rtl/top.sv rtl/a.v rtl/b.v
+</code></pre></div></div>
+
+<h1 id="스크립트">스크립트</h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+# dump_top_instances.py
+</span><span class="kn">import</span> <span class="n">argparse</span><span class="p">,</span> <span class="n">csv</span><span class="p">,</span> <span class="n">sys</span>
+<span class="kn">from</span> <span class="n">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="n">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="n">ModuleDef</span><span class="p">,</span> <span class="n">InstanceList</span>
+
+<span class="k">def</span> <span class="nf">find_top_module</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">top_name</span><span class="p">):</span>
+    <span class="c1"># ast.description.definitions 안에서 모듈 정의 찾기
+</span>    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">ast</span><span class="p">.</span><span class="n">description</span><span class="p">,</span> <span class="sh">'</span><span class="s">definitions</span><span class="sh">'</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">ModuleDef</span><span class="p">)</span> <span class="ow">and</span> <span class="n">d</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">top_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">d</span>
+    <span class="k">return</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">collect_direct_instances</span><span class="p">(</span><span class="n">top_def</span><span class="p">:</span> <span class="n">ModuleDef</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
+    top 모듈의 직계 하위 인스턴스만 수집
+    (Generate 블록 내부나 하위 계층은 보지 않음)
+    반환: [(module_name, instance_name), ...]
+    </span><span class="sh">"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">top_def</span><span class="p">,</span> <span class="sh">'</span><span class="s">items</span><span class="sh">'</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
+            <span class="n">modname</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span>  <span class="c1"># 인스턴스의 모듈명 (str)
+</span>            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">instances</span><span class="p">:</span>
+                <span class="n">rows</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">modname</span><span class="p">,</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">rows</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="sh">"</span><span class="s">Dump direct child instances of a top module to CSV</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">files</span><span class="sh">"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="sh">"</span><span class="s">+</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Verilog/SystemVerilog source files</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-t</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--top</span><span class="sh">"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Top module name</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-o</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--out</span><span class="sh">"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">"</span><span class="s">instances.csv</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Output CSV path (default: instances.csv)</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-I</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--incdir</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">append</span><span class="sh">"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Include directories (repeatable)</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-D</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--define</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">append</span><span class="sh">"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Preprocessor defines (e.g., FOO=1). Repeatable</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="nf">parse_args</span><span class="p">()</span>
+
+    <span class="c1"># pyverilog 전처리 옵션 구성
+</span>    <span class="n">incs</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">incdir</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">defs</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">define</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">.</span><span class="n">files</span><span class="p">,</span>
+        <span class="n">preprocess_include</span><span class="o">=</span><span class="n">incs</span><span class="p">,</span>
+        <span class="n">preprocess_define</span><span class="o">=</span><span class="n">defs</span>
+    <span class="p">)</span>
+
+    <span class="n">top_def</span> <span class="o">=</span> <span class="nf">find_top_module</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">top</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">top_def</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[ERROR] Top module </span><span class="sh">'</span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">top</span><span class="si">}</span><span class="sh">'</span><span class="s"> not found.</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="nf">collect_direct_instances</span><span class="p">(</span><span class="n">top_def</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">out</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="sh">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">csv</span><span class="p">.</span><span class="nf">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">w</span><span class="p">.</span><span class="nf">writerow</span><span class="p">([</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">instance</span><span class="sh">"</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">w</span><span class="p">.</span><span class="nf">writerow</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Wrote </span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="si">}</span><span class="s"> rows to </span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">out</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h1 id="체크-포인트">체크 포인트</h1>
+
+<ul>
+  <li>
+    <p><strong>정확히 “top 바로 아래”</strong>만 원하셔서 <code class="language-plaintext highlighter-rouge">InstanceList</code>만 훑습니다.<br />
+(만약 <code class="language-plaintext highlighter-rouge">generate</code> 블록 안의 인스턴스도 포함하고 싶으면, <code class="language-plaintext highlighter-rouge">GenerateStatement</code> 등을 재귀적으로 내려가게 바꿔드릴 수 있어요.)</p>
+  </li>
+  <li>
+    <p>전처리가 필요한 경우 <code class="language-plaintext highlighter-rouge">-I</code>, <code class="language-plaintext highlighter-rouge">-D</code> 옵션을 적절히 넣어주세요.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">SystemVerilog(.sv)</code>도 pyverilog 전처리/파서가 처리 가능한 한 읽힙니다(문법적으로 너무 최신 기능은 제한이 있을 수 있어요).</p>
+  </li>
+</ul>
+
+<p>원하시면 <strong>generate 내부까지 포함</strong> 하는 버전이나, <strong>CSV 컬럼 추가(파일/라인, 파라미터 값 등)</strong> 도 바로 확장해 드릴게요.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#verilog" class="page__taxonomy-item p-category" rel="tag">verilog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-08T14:52:41+09:00">2025-08-08</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/investing/etf-backtesting/" class="pagination--pager" title="ETF backtesting model - o3pro">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/etf-backtesting/" rel="permalink">ETF backtesting model - o3pro
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-06T00:07:20+09:00">2025-08-06</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-loguru/" rel="permalink">Loguru 패키지 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-31T22:43:26+09:00">2025-07-31</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-priority-queue/" rel="permalink">Python 우선순위 큐 예제
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-31T20:45:57+09:00">2025-07-31</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/peg/" rel="permalink">PEG 비율 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-30T23:30:44+09:00">2025-07-30</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
