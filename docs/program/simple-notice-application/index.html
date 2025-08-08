@@ -1,0 +1,1436 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>간단한 notice 애플리케이션 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="간단한 notice 애플리케이션">
+<meta property="og:url" content="https://hvppycoding.github.io/program/simple-notice-application/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-08-08T16:26:30+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/program/simple-notice-application/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="간단한 notice 애플리케이션">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-08-08T16:26:30+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/program/simple-notice-application/" itemprop="url">간단한 notice 애플리케이션
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T16:26:30+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+데스크탑 환경에서 notice pop-up을 위한 조그많고 간단한 애플리케이션을 만들고 싶어. notice는 python mkdocs 패키지를 이용해서 local file 배포가 가능한 web으로 제작될거라서 가운데는 web viewer가 있어야해. 시작 커맨드는 simple_notice path/to/index.html 로 하면 될 것 같아. 애플리케이션이 열리면 가장 위에 떠야해. 그리고 제일 아래에는 “7일간 다시 열지 않음” 버튼과 닫기 버튼이 있어야해. “7일간 다시 열지 않음”을 선택했으면 유저 홈디렉토리의 .config 같은 곳에 해당 파일의 경로와 버튼을 누른 시간을 저장해서 실제로 7일간은 뜨지 않아야해
+
+</p>
+
+<p>좋아요—요구사항 깔끔하네요.<br />
+<strong>한 줄 요약:</strong> <code class="language-plaintext highlighter-rouge">simple_notice &lt;path/to/index.html&gt;</code>로 실행하면 항상 맨 위에 뜨는 작은 창에 로컬 HTML을 WebView로 띄우고, 아래에 <strong>“7일간 다시 열지 않음”</strong> / <strong>닫기</strong> 버튼. “7일간…”을 누르면 유저 설정 디렉토리에 해당 파일 경로와 시간을 저장해 <strong>7일 동안 자동으로 안 뜨도록</strong>.</p>
+
+<p>아래 순서대로 진행하면 됩니다.</p>
+
+<hr />
+
+<h1 id="1-전체-설계-step-by-step">1) 전체 설계 (step-by-step)</h1>
+
+<ol>
+  <li>
+    <p><strong>CLI 인자 파싱</strong> : <code class="language-plaintext highlighter-rouge">simple_notice path/to/index.html</code>.</p>
+  </li>
+  <li>
+    <p><strong>스누즈 체크</strong> : <code class="language-plaintext highlighter-rouge">~/.config/simple_notice/prefs.json</code>(플랫폼별 안전 경로는 <code class="language-plaintext highlighter-rouge">platformdirs</code>로 확보)에 <code class="language-plaintext highlighter-rouge">{ "absolute_html_path": "ISO시간" }</code> 형태 저장.</p>
+
+    <ul>
+      <li>실행 시 해당 경로의 저장 시간이 <strong>지금-저장 ≥ 7일</strong> 이면 표시, 아니면 즉시 종료.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>UI</strong> : PySide6(=Qt6) + QtWebEngine 사용</p>
+
+    <ul>
+      <li>
+        <p>중앙: <code class="language-plaintext highlighter-rouge">QWebEngineView</code>로 <code class="language-plaintext highlighter-rouge">file:///.../index.html</code> 로드</p>
+      </li>
+      <li>
+        <p>하단: 버튼 2개(“7일간 다시 열지 않음”, “닫기”)</p>
+      </li>
+      <li>
+        <p>창 옵션: 항상 위(<code class="language-plaintext highlighter-rouge">WindowStaysOnTopHint</code>), 적당한 기본 크기(예: 900×600), 리사이즈 가능</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>동작</strong> :</p>
+
+    <ul>
+      <li>
+        <p>“7일간 다시 열지 않음” 클릭 → 현재 시각 저장 후 창 닫기</p>
+      </li>
+      <li>
+        <p>“닫기” → 저장 없이 닫기</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>배포</strong> : <code class="language-plaintext highlighter-rouge">pyproject.toml</code>에 콘솔 스크립트 엔트리 <code class="language-plaintext highlighter-rouge">simple_notice</code> 등록(전역 실행용).</p>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="2-필요한-패키지">2) 필요한 패키지</h1>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">PySide6</code> (Qt 및 WebEngine 포함)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">platformdirs</code> (플랫폼별 설정 경로)</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>PySide6 platformdirs
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="3-최소-실행-가능한-코드">3) 최소 실행 가능한 코드</h1>
+
+<p>아래 두 파일만으로 동작합니다. (원하면 나중에 패키징 단계 참고)</p>
+
+<h2 id="simple_notice__main__py"><code class="language-plaintext highlighter-rouge">simple_notice/__main__.py</code></h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="n">platformdirs</span> <span class="kn">import</span> <span class="n">user_config_dir</span>
+
+<span class="kn">from</span> <span class="n">PySide6.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="n">PySide6.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="n">PySide6.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
+
+<span class="n">APP_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">simple_notice</span><span class="sh">"</span>
+<span class="n">ORG_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">local</span><span class="sh">"</span>  <span class="c1"># 원하면 회사/조직명으로 변경
+</span><span class="n">SNOOZE_DAYS</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="k">def</span> <span class="nf">config_file_path</span><span class="p">():</span>
+    <span class="n">cfg_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="nf">user_config_dir</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">ORG_NAME</span><span class="p">))</span>
+    <span class="n">cfg_dir</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg_dir</span> <span class="o">/</span> <span class="sh">"</span><span class="s">prefs.json</span><span class="sh">"</span>
+
+<span class="k">def</span> <span class="nf">load_prefs</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nf">config_file_path</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">))</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="c1"># 손상시 초기화
+</span>            <span class="k">return</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="p">{}</span>
+
+<span class="k">def</span> <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="nf">config_file_path</span><span class="p">().</span><span class="nf">write_text</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="nf">dumps</span><span class="p">(</span><span class="n">prefs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">should_skip</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+    <span class="n">iso</span> <span class="o">=</span> <span class="n">prefs</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">iso</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">saved</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">fromisoformat</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">saved</span> <span class="o">&lt;</span> <span class="nf">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">SNOOZE_DAYS</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">html_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">html_path</span> <span class="o">=</span> <span class="n">html_path</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowTitle</span><span class="p">(</span><span class="sh">"</span><span class="s">Notice</span><span class="sh">"</span><span class="p">)</span>
+        <span class="c1"># 항상 위
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowFlag</span><span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">resize</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="nc">QVBoxLayout</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+
+        <span class="c1"># Web view
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="nc">QWebEngineView</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="nf">setUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">.</span><span class="nf">fromLocalFile</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)))</span>
+        <span class="n">layout</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Buttons
+</span>        <span class="n">btn_row</span> <span class="o">=</span> <span class="nc">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_snooze</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">7일간 다시 열지 않음</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_close</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">닫기</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">btn_snooze</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">btn_close</span><span class="p">)</span>
+        <span class="n">layout</span><span class="p">.</span><span class="nf">addLayout</span><span class="p">(</span><span class="n">btn_row</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_snooze</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">snooze_and_close</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_close</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">close</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">snooze_and_close</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+        <span class="n">prefs</span><span class="p">[</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">).</span><span class="nf">isoformat</span><span class="p">()</span>
+        <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">argv</span> <span class="o">=</span> <span class="n">argv</span> <span class="ow">or</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Usage: simple_notice /absolute/or/relative/path/to/index.html</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">html_path</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="nf">expanduser</span><span class="p">().</span><span class="nf">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">html_path</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">HTML not found: </span><span class="si">{</span><span class="n">html_path</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># 스누즈 체크
+</span>    <span class="k">if</span> <span class="nf">should_skip</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">html_path</span><span class="p">)):</span>
+        <span class="c1"># 조용히 종료 (필요하면 메시지 출력 가능)
+</span>        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Qt 앱 실행
+</span>    <span class="n">app</span> <span class="o">=</span> <span class="nc">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">html_path</span><span class="p">)</span>
+    <span class="n">win</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="nf">exec</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="pyprojecttoml-선택-콘솔-명령으로-설치실행하고-싶을-때"><code class="language-plaintext highlighter-rouge">pyproject.toml</code> (선택: 콘솔 명령으로 설치/실행하고 싶을 때)</h2>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[project]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"simple-notice"</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"0.1.0"</span>
+<span class="py">description</span> <span class="p">=</span> <span class="s">"Tiny always-on-top notice popup that loads local HTML (MkDocs etc.)"</span>
+<span class="py">readme</span> <span class="p">=</span> <span class="s">"README.md"</span>
+<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.9</span><span class="s">"</span><span class="err">
+</span><span class="py">dependencies</span> <span class="p">=</span> <span class="py">["PySide6&gt;</span><span class="p">=</span><span class="mf">6.7</span><span class="s">", "</span><span class="py">platformdirs&gt;</span><span class="p">=</span><span class="mf">4.0</span><span class="s">"]</span><span class="err">
+</span>
+<span class="nn">[project.scripts]</span>
+<span class="py">simple_notice</span> <span class="p">=</span> <span class="s">"simple_notice.__main__:main"</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>폴더 구조 예시</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>markdown
+
+simple-notice/
+├─ pyproject.toml
+└─ simple_notice/
+   └─ __main__.py
+
+</code></pre></div>  </div>
+</blockquote>
+
+<hr />
+
+<h1 id="4-사용-방법">4) 사용 방법</h1>
+
+<ol>
+  <li>(선택) 패키지로 설치</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">-e</span> <span class="nb">.</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>전역으로 쓰려면 <code class="language-plaintext highlighter-rouge">pipx install .</code> 추천</p>
+</blockquote>
+
+<ol>
+  <li>실행</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>simple_notice path/to/index.html
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>창은 항상 최상단에 뜹니다.</p>
+  </li>
+  <li>
+    <p><strong>“7일간 다시 열지 않음”</strong>을 누르면 해당 HTML 경로 기준으로 7일 동안 자동 표시 차단됩니다.</p>
+
+    <ul>
+      <li>
+        <p>설정 저장 위치(예):</p>
+
+        <ul>
+          <li>
+            <p>Linux: <code class="language-plaintext highlighter-rouge">~/.config/simple_notice/prefs.json</code></p>
+          </li>
+          <li>
+            <p>macOS: <code class="language-plaintext highlighter-rouge">~/Library/Application Support/simple_notice/prefs.json</code></p>
+          </li>
+          <li>
+            <p>Windows: <code class="language-plaintext highlighter-rouge">%APPDATA%\simple_notice\prefs.json</code></p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="5-자잘한-옵션개선-아이디어-필요-시">5) 자잘한 옵션/개선 아이디어 (필요 시)</h1>
+
+<ul>
+  <li>
+    <p><strong>강제 표시 플래그</strong> : <code class="language-plaintext highlighter-rouge">--force</code> 추가해서 스누즈 무시하고 띄우기</p>
+  </li>
+  <li>
+    <p><strong>창 크기/제목 설정</strong> : 인자로 <code class="language-plaintext highlighter-rouge">--title</code>, <code class="language-plaintext highlighter-rouge">--width</code>, <code class="language-plaintext highlighter-rouge">--height</code></p>
+  </li>
+  <li>
+    <p><strong>여러 공지 관리</strong> : <code class="language-plaintext highlighter-rouge">--key some-id</code>로 같은 파일이라도 서로 다른 정책 적용</p>
+  </li>
+  <li>
+    <p><strong>종료 시각 표시</strong> : 버튼 클릭 시 “YYYY-MM-DD까지 표시 안 함” 토스트 안내</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하다면 위 코드에 원하는 옵션들 바로 얹어드릴게요. 먼저 이대로 만들어보고, OS 환경(Windows/macOS/Linux) 알려주시면 경로/배포 방식도 딱 맞게 손봐드리겠습니다.</p>
+
+<p class="chat--user">
+
+mkdocs로는 파이썬으로 만들고 최종적으로는 만들어진 _site 경로만 열면 돼서 이거 때문에 파이썬으로 할 필요는 없어. 그냥 내가 말한 스펙을 달성하기 위해 최선의 선택을 하면 돼. 이런 일을 하는 오픈소스나 잘 알려진 프로그램이 있나 알아봐줘. 바퀴를 두 번 발명할 필요는 없으니까
+
+</p>
+
+<p>“바퀴를 다시 발명”하는 대신, 최대한 간단히 원하는 기능을 제공하는 <strong>기존 오픈소스 도구</strong> 를 활용하는 방법을 정리해봤어요.</p>
+
+<hr />
+
+<h2 id="가능한-접근-방식-오픈소스준비된-솔루션">가능한 접근 방식 (오픈소스/준비된 솔루션)</h2>
+
+<h3 id="1-electron-기반으로-직접-구현하기">1. <strong>Electron</strong> 기반으로 직접 구현하기</h3>
+
+<ul>
+  <li>
+    <p>Electron은 Node.js + Chromium 기반의 데스크탑 앱 개발 플랫폼입니다.</p>
+  </li>
+  <li>
+    <p>로컬 HTML 파일을 띄우는 데 적합하며, 다음과 같은 사항 구현이 용이합니다:</p>
+
+    <ul>
+      <li>
+        <p><strong>항상 위에 띄우기</strong> (<code class="language-plaintext highlighter-rouge">alwaysOnTop: true</code> 옵션 활용)</p>
+      </li>
+      <li>
+        <p><strong>하단 버튼 영역 추가</strong> (HTML/CSS/JS로 자체 제작)</p>
+      </li>
+      <li>
+        <p><strong>7일간 다시 열지 않기</strong> 기능 (로컬 스토리지나 파일 저장을 통해 가능)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>즉, 직접 개발하되 이미 갖춰진 GUI 프레임워크를 활용해서 구현 부담을 크게 줄일 수 있어요.</p>
+  </li>
+</ul>
+
+<h3 id="2-go-to-sleep-팝업-스크립트-macos-기반-스크립트">2. <strong>"Go-to-Sleep" 팝업 스크립트</strong> (macOS 기반 스크립트)</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">eieio.games</code> 블로그에 나온 macOS용 알림 스크립트 예시: 시스템 스케줄 기반으로 always-on-top 팝업 띄우고 snooze 기능을 구현한 스크립트가 있어요 <a href="https://groups.google.com/a/chromium.org/g/chromium-bugs/c/UBKZY-PyJZ4?utm_source=chatgpt.com">Google Groups</a><a href="https://javascript.plainenglish.io/say-goodbye-to-window-open-df6056343797?utm_source=chatgpt.com">JavaScript in Plain English+6</a><a href="https://eieio.games/blog/my-computer-tells-me-to-go-to-bed/?utm_source=chatgpt.com">eieio.games</a>.</p>
+  </li>
+  <li>
+    <p>브라우저 기반은 아니지만, UI 방식과 snooze 로직에서 영감을 얻을 수 있습니다.</p>
+  </li>
+</ul>
+
+<h3 id="3-파워토이즈-powertoys의-always-on-top-기능">3. <strong>파워토이즈 (PowerToys)의 Always on Top 기능</strong></h3>
+
+<ul>
+  <li>
+    <p>Windows에서는 <strong>Microsoft PowerToys</strong> 에 <code class="language-plaintext highlighter-rouge">Always on top</code> 기능만 실행하면, 선택한 창을 단축키로 최상단에 고정할 수 있어요 <a href="https://www.reddit.com/r/software/comments/vy4oxu/i_want_to_set_some_program_windows_to_always_stay/?utm_source=chatgpt.com">Reddit</a>.</p>
+  </li>
+  <li>
+    <p>웹뷰 + snooze 로직만 따로 구현해서 이 기능과 조합할 수도 있습니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="요약--추천-접근법">요약 &amp; 추천 접근법</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>접근 방식</th>
+      <th>장점</th>
+      <th>확인 필요/제약 사항</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Electron 활용</strong></td>
+      <td>GUI/Vue/HTML 자유도 높음, always-on-top 가능</td>
+      <td>초기 Electron 설정 필요, 다소 무거움</td>
+    </tr>
+    <tr>
+      <td><strong>macOS 스크립트 활용</strong></td>
+      <td>snooze 로직 기초 확보 가능</td>
+      <td>플랫폼 고정 / HTML 통합 별도 구현 필요</td>
+    </tr>
+    <tr>
+      <td><strong>PowerToys 조합</strong></td>
+      <td>이미 윈도 전용 상단 고정 기능 간편 제공</td>
+      <td>HTML 로딩 + snooze 로직은 별도 구현 필요</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="추천-툴--제안">추천 툴 &amp; 제안</h2>
+
+<ul>
+  <li>
+    <p><strong>Electron</strong> 이 가장 빠르고 깔끔하게 요구사항을 만족시킬 수 있어요.</p>
+
+    <ul>
+      <li>
+        <p>HTML 파일 로드, 항상 위 띄우기, 하단 버튼, snooze 기능 모두 구현 가능.</p>
+      </li>
+      <li>
+        <p>필요 시 UI 버튼도 쉽게 커스터마이징 가능해요.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>macOS 스크립트 예시</strong> 는 snooze 로직 디자인 참고용으로 좋고,<br />
+<strong>PowerToys</strong> 는 윈도 환경에서 항상 위 기능만 활용하고 나머지는 구현해서 결합하는 구조로 활용 가능해요.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>추후 Electron 템플릿이나 기본 코드 샘플이 궁금하시면 언제든지 말씀해주세요.<br />
+특정 OS (macOS, Windows, Linux 등) 환경이 있다면, 그에 맞춰 간단 템플릿도 바로 만들어드릴 수 있어요!</p>
+
+<p class="chat--user">
+
+내 말은 이 목적으로 개발/배포되어 있는 프로그램이 있냐는 뜻이었어
+
+</p>
+
+<p>알겠습니다! “이 목적(로컬 HTML 파일을 always‑on‑top 팝업으로 띄우고, snooze 기능이 있는 앱)에 맞춰 이미 개발·배포된 오픈소스 혹은 잘 알려진 프로그램이 있는지” 찾아봤는데요, <strong>정확히 동일한 기능을 갖춘</strong> 일반 공개된 솔루션은 현재 찾기 어려웠습니다. 아래는 비슷하거나 참고 가능한 몇 가지 접근 방식을 정리한 내용입니다.</p>
+
+<hr />
+
+<h2 id="관련된-도구-및-접근-방식">관련된 도구 및 접근 방식</h2>
+
+<ul>
+  <li>
+    <p><strong>Toast Notification 스크립트 (Windows)</strong><br />
+Windows 환경에서 일정 조건(예: 재부팅 예정, OS 업그레이드 등)에 따라 토스트 알림을 띄우는 PowerShell 스크립트는 존재하지만,</p>
+
+    <ul>
+      <li>
+        <p>HTML 로드 인터페이스를 제공하지 않으며,</p>
+      </li>
+      <li>
+        <p>“7일간 다시 열지 않기”처럼 UI 버튼 기반의 snooze 기능도 직접 제공되진 않아요.<br />
+<a href="https://stackoverflow.com/questions/55213207/javascript-always-on-top-window-without-focus/55213227?utm_source=chatgpt.com">Stack Overflow</a><a href="https://www.imab.dk/windows-10-toast-notification-script/?utm_source=chatgpt.com">Imab</a></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Calalarm (macOS 일정/알림 앱)</strong><br />
+macOS에서 알림을 snooze하거나 반복 알림, overdue 알림 등을 관리해주는 앱입니다.<br />
+기능적으로 유사하지만, 웹뷰 기반 로컬 HTML 표시 방식은 아니에요.<br />
+<a href="https://www.devart.nl/calalarm/index.html?utm_source=chatgpt.com">devart.nl</a></p>
+  </li>
+  <li>
+    <p><strong>일반 생산성 팝업 스크립트 참고자료</strong><br />
+Windows Task Scheduler를 이용해 특정 시간에 브라우저를 실행하는 방법, 또는 PowerShell 스크립트로 토스트 알림을 띄우는 사례는 있지만,</p>
+
+    <ul>
+      <li>always-on-top 팝업 + 버튼 인터페이스 + snooze 로직을 한 번에 제공하는 기능은 없습니다.<br />
+<a href="https://superuser.com/questions/251963/how-to-make-outlook-calendar-reminders-stay-on-top-in-windows-7?utm_source=chatgpt.com">superuser.com+1</a><a href="https://stackoverflow.com/questions/26101435/how-to-make-popup-window-always-on-top?utm_source=chatgpt.com">Stack Overflow+2</a></li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="요약-결론">요약 결론</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>조건</th>
+      <th>존재 여부</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>로컬 HTML 파일을 팝업으로 띄움</td>
+      <td>부분적으로 가능 (Electron 등으로 자체 구현 필요)</td>
+    </tr>
+    <tr>
+      <td>항상 위에 표시</td>
+      <td>일부 툴/스크립트에서 가능 (예: PowerToys의 always-on-top 기능 등)</td>
+    </tr>
+    <tr>
+      <td>“7일간 다시 열지 않기” UI 버튼</td>
+      <td>아쉽지만, 발견된 솔루션에는 없음</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>현재까지는 <strong>이 모든 요구사항을 만족하는 단일 오픈소스/상업용 프로그램은 없는 것으로 보입니다</strong>. 즉, 바퀴를 완전히 새로 만드는 것보다는 Electron이나 Qt 기반으로 <strong>간단히 직접 구현하는</strong> 것이 가장 현실적인 접근입니다.</p>
+
+<hr />
+
+<p>필요하시면</p>
+
+<ul>
+  <li>
+    <p>Electron 템플릿 구축,</p>
+  </li>
+  <li>
+    <p>Windows/macOS 별 always-on-top 구현 방법,</p>
+  </li>
+  <li>
+    <p>또는 이 기능들을 묶은 작은 유틸 제작 방법</p>
+  </li>
+</ul>
+
+<p>모두 도와드릴 수 있으니 언제든 말씀해주세요!</p>
+
+<p class="chat--user">
+
+모든 플랫폼에서 동작했으면 좋겠어. 사용하려는 환경은 리눅스 환경이야
+
+</p>
+
+<p>그렇다면 상황이 조금 더 명확해졌네요.<br />
+<strong>결론부터 말씀드리면</strong> , 말씀하신 기능을 “그대로” 제공하는 크로스플랫폼(Windows/macOS/Linux) 완성품은 없고, 비슷한 건 있어도 HTML 표시 + always-on-top + 7일 snooze를 다 만족하진 않습니다.<br />
+그래서 현실적으로는 <strong>가벼운 크로스플랫폼 프레임워크로 직접 제작하는 게 최선</strong> 입니다.</p>
+
+<hr />
+
+<h2 id="왜-기존-완제품이-없는가">왜 기존 완제품이 없는가?</h2>
+
+<ul>
+  <li>
+    <p>알림/팝업 앱은 많지만, 대부분 <strong>OS 알림 API</strong> 를 이용하기 때문에 HTML 뷰어/버튼 UI를 내장하지 않음.</p>
+  </li>
+  <li>
+    <p>로컬 HTML을 직접 보여주는 기능이 있는 앱은 브라우저/뷰어 계열인데, snooze 같은 사용자별 일정 로직을 제공하진 않음.</p>
+  </li>
+  <li>
+    <p>always-on-top 기능은 일부 있지만, 환경별로 구현이 다르기 때문에 범용 제품에서 통합 제공 사례가 거의 없음.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="크로스플랫폼linux-포함-최적-접근">크로스플랫폼(Linux 포함) 최적 접근</h2>
+
+<h3 id="1-electron">1. <strong>Electron</strong></h3>
+
+<ul>
+  <li>
+    <p>Node.js + Chromium 기반 → HTML 그대로 띄울 수 있음.</p>
+  </li>
+  <li>
+    <p>모든 주요 OS 지원.</p>
+  </li>
+  <li>
+    <p>always-on-top 윈도 속성(<code class="language-plaintext highlighter-rouge">alwaysOnTop: true</code>) 제공.</p>
+  </li>
+  <li>
+    <p>snooze 로직은 <code class="language-plaintext highlighter-rouge">~/.config/simple_notice</code> 같은 경로에 JSON 저장으로 구현 가능.</p>
+  </li>
+  <li>
+    <p>단점: 앱 용량이 커짐(수십 MB), Node.js 필요.</p>
+  </li>
+</ul>
+
+<h3 id="2-tauri">2. <strong>Tauri</strong></h3>
+
+<ul>
+  <li>
+    <p>Rust + WebView 기반 → Electron보다 훨씬 가벼움(수 MB).</p>
+  </li>
+  <li>
+    <p>모든 주요 OS 지원.</p>
+  </li>
+  <li>
+    <p>로컬 HTML 로드, always-on-top 지원.</p>
+  </li>
+  <li>
+    <p>snooze 로직도 가능.</p>
+  </li>
+  <li>
+    <p>단점: Rust toolchain 설치 필요.</p>
+  </li>
+</ul>
+
+<h3 id="3-pyside6--pyqt6--qtwebengine">3. <strong>PySide6 / PyQt6 + QtWebEngine</strong></h3>
+
+<ul>
+  <li>
+    <p>Python 기반, HTML WebView 내장 가능.</p>
+  </li>
+  <li>
+    <p>Qt에서 always-on-top 속성 제공.</p>
+  </li>
+  <li>
+    <p>Linux 배포 시 PyInstaller로 하나의 실행 파일로 패키징 가능.</p>
+  </li>
+  <li>
+    <p>단점: 배포 파일 크기 Electron보단 작지만 여전히 수십 MB 수준.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="추천-조합">추천 조합</h2>
+
+<p>리눅스 환경에서 <strong>모든 플랫폼 호환</strong> 을 원하면:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>우선순위</th>
+      <th>선택지</th>
+      <th>장점</th>
+      <th>단점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong>Tauri</strong></td>
+      <td>매우 가벼움, HTML 로드/버튼/UI 자유, snooze 가능</td>
+      <td>Rust 필요, 초기 세팅 조금 복잡</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Electron</td>
+      <td>자료 풍부, 구현 쉬움</td>
+      <td>무거움</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>PySide6</td>
+      <td>Python 친화적, 크로스플랫폼</td>
+      <td>용량 큼, HTML 로딩 성능 Electron보다 떨어짐</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="제-생각">제 생각</h2>
+
+<ul>
+  <li>
+    <p>완성품은 없으니, <strong>Tauri</strong> 로 구현하면 용량·속도·호환성 다 챙길 수 있습니다.</p>
+  </li>
+  <li>
+    <p>리눅스에서 배포할 땐 <code class="language-plaintext highlighter-rouge">.AppImage</code>나 <code class="language-plaintext highlighter-rouge">.deb</code>로 패키징 가능해서 설치도 간단해집니다.</p>
+  </li>
+  <li>
+    <p>“7일간 다시 열지 않음”은 로컬 설정 파일(<code class="language-plaintext highlighter-rouge">platform-dirs</code> Rust crate나 단순 <code class="language-plaintext highlighter-rouge">$HOME/.config/</code>)로 저장하면 OS 관계없이 동일하게 동작합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>원하시면 제가 <strong>Tauri 기반의 최소 동작 샘플</strong> 을 바로 만들어서</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">simple_notice path/to/index.html</code></p>
+  </li>
+  <li>
+    <p>always-on-top 창</p>
+  </li>
+  <li>
+    <p>하단 버튼 2개</p>
+  </li>
+  <li>
+    <p>7일 snooze 기능</p>
+  </li>
+</ul>
+
+<p>이렇게 돌아가는 예제까지 만들어드릴 수 있습니다.<br />
+그렇게 하면 Linux뿐 아니라 Windows/macOS에서도 그대로 동작합니다.</p>
+
+<p>저 이대로 Tauri 예제 만들어 드릴까요?</p>
+
+<p class="chat--user">
+
+알림이라기보다는 유저 가이드를 띄우려는거야
+
+</p>
+
+<p>오케이, “알림”이 아니라 <strong>유저 가이드(로컬 HTML)</strong> 를 띄우는 용도군요.<br />
+<strong>결론:</strong> 딱 이 목적에 맞춰 이미 배포된 “완제품”은 거의 없고, <strong>리눅스에선 YAD</strong> , 크로스플랫폼까지 보려면 <strong>Nativefier</strong> 가 제일 현실적입니다. 둘 다 설치만 하면 바로 써먹을 수 있어서 바퀴를 다시 만들 필요가 거의 없어요.</p>
+
+<hr />
+
+<h1 id="리눅스에서-바로-쓰는-최단경로-yad">리눅스에서 바로 쓰는 최단경로: <strong>YAD</strong></h1>
+
+<p>YAD는 GTK 기반 대화상자 툴인데, <strong>HTML을 WebKit으로 렌더링</strong> 하고, <strong>버튼을 하단에 붙이고</strong> , <strong>창을 “항상 위”로</strong> 띄우는 옵션을 다 갖고 있어요.</p>
+
+<ul>
+  <li>
+    <p>HTML 렌더링/브라우저 모드: <code class="language-plaintext highlighter-rouge">--html --browser</code> <a href="https://yad-guide.ingk.se/html/yad-html.html?utm_source=chatgpt.com">yad-guide.ingk.se</a></p>
+  </li>
+  <li>
+    <p>하단 버튼 추가: <code class="language-plaintext highlighter-rouge">--button=</code> 옵션 (레이블/아이콘/툴팁/커맨드 지정 가능) <a href="https://yad-guide.ingk.se/general-options/general-options.html?utm_source=chatgpt.com">yad-guide.ingk.se</a></p>
+  </li>
+  <li>
+    <p>항상 위: <code class="language-plaintext highlighter-rouge">--on-top</code> 옵션 지원 <a href="https://man.archlinux.org/man/extra/yad/yad.1.en">man.archlinux.org</a></p>
+  </li>
+</ul>
+
+<h3 id="예시-당장-실행">예시 (당장 실행)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yad <span class="nt">--html</span> <span class="nt">--browser</span> <span class="se">\</span>
+    <span class="nt">--uri</span><span class="o">=</span><span class="s2">"file:///absolute/path/to/_site/index.html"</span> <span class="se">\</span>
+    <span class="nt">--width</span><span class="o">=</span>900 <span class="nt">--height</span><span class="o">=</span>600 <span class="nt">--on-top</span> <span class="se">\</span>
+    <span class="nt">--buttons-layout</span><span class="o">=</span>end <span class="se">\</span>
+    <span class="nt">--button</span><span class="o">=</span><span class="s2">"7일간 다시 열지 않음:snooze"</span> <span class="se">\</span>
+    <span class="nt">--button</span><span class="o">=</span><span class="s2">"닫기:1"</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">--button="라벨:ID"</code>에서 <code class="language-plaintext highlighter-rouge">ID</code>에 <strong>숫자</strong> 를 넣으면 종료 코드가 되고, <strong>문자열</strong> 을 넣으면 그 문자열 커맨드를 실행(닫히지 않음)하게 만들 수 있어요. 그래서 <code class="language-plaintext highlighter-rouge">snooze</code> 같은 커맨드명과 함께 간단한 래퍼 스크립트로 <strong>7일 스누즈</strong> 를 구현하면 됩니다. <a href="https://yad-guide.ingk.se/general-options/general-options.html?utm_source=chatgpt.com">yad-guide.ingk.se</a></p>
+</blockquote>
+
+<h3 id="7일-스누즈경량-래퍼">7일 스누즈(경량 래퍼)</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">~/.config/simple_notice/prefs.json</code>에 <strong>HTML 경로 → 저장시각</strong> 을 기록하고,</p>
+  </li>
+  <li>
+    <p>실행 시 “지금−저장시각 &lt; 7일”이면 <strong>그냥 종료</strong> , 아니면 <code class="language-plaintext highlighter-rouge">yad</code> 실행.</p>
+  </li>
+  <li>
+    <p>YAD 버튼의 <code class="language-plaintext highlighter-rouge">snooze</code> 커맨드는 “현재 시각 저장 후 창 닫기”만 하면 끝.</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>YAD는 배포판에 따라 HTML 옵션이 WebKit 빌드 여부에 의존합니다. 일반적인 배포판에선 <code class="language-plaintext highlighter-rouge">--html</code>이 포함된 YAD 패키지를 제공합니다(미포함이면 WebKit 빌드가 필요). 매뉴얼/가이드 참고. <a href="https://manpages.ubuntu.com/manpages/jammy/man1/yad.1.html">manpages.ubuntu.com</a><a href="https://man.archlinux.org/man/extra/yad/yad.1.en?utm_source=chatgpt.com">man.archlinux.org</a><a href="https://bugs.launchpad.net/bugs/1478386?utm_source=chatgpt.com">Launchpad</a></p>
+</blockquote>
+
+<hr />
+
+<h1 id="크로스플랫폼winmacoslinux까지-nativefier">크로스플랫폼(Win/macOS/Linux)까지: <strong>Nativefier</strong></h1>
+
+<p>Nativefier는 <strong>아무 웹페이지든 데스크탑 앱으로 포장</strong> 해주는 툴입니다. Electron 기반이라 <strong>항상 위(<code class="language-plaintext highlighter-rouge">--always-on-top</code>)</strong>도 지원하고, Linux/Windows/macOS 다 됩니다. <a href="https://github.com/nativefier/nativefier?utm_source=chatgpt.com">GitHub+1</a></p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">file:///path/to/_site/index.html</code> 같은 <strong>로컬 파일</strong> 도 포장 가능(이슈/사례 다수). <a href="https://github.com/jiahaog/nativefier/issues/45?utm_source=chatgpt.com">GitHub</a></p>
+  </li>
+  <li>명령 예:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nativefier <span class="s2">"file:///absolute/path/to/_site/index.html"</span> <span class="se">\</span>
+  <span class="nt">--name</span> <span class="s2">"SimpleNotice"</span> <span class="nt">--always-on-top</span> <span class="nt">--width</span> 900 <span class="nt">--height</span> 600
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>7일 스누즈</strong> 는 Nativefier 자체 기능은 없으니,</p>
+
+    <ul>
+      <li>
+        <p>(간단) 런처 스크립트에서 <strong>시간 체크 후 앱 실행</strong></p>
+      </li>
+      <li>
+        <p>(고급) <code class="language-plaintext highlighter-rouge">--inject</code>로 JS/CSS를 주입해 <strong>하단 버튼 UI</strong> 를 덧입히고, 스누즈 버튼 클릭 시 <strong>로컬 설정(파일)</strong>을 갱신 → 다음 실행 때 런처가 체크<br />
+이런 식으로 쉽게 붙일 수 있어요. <a href="https://www.todesktop.com/guides/nativefier?utm_source=chatgpt.com">todesktop.com</a></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="어떤-걸-고르면-좋나-요구사항-매칭">어떤 걸 고르면 좋나? (요구사항 매칭)</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>요구사항</th>
+      <th>YAD(리눅스)</th>
+      <th>Nativefier(크로스플랫폼)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>로컬 HTML 표시</td>
+      <td>✅ <code class="language-plaintext highlighter-rouge">--html --browser</code></td>
+      <td>✅ <code class="language-plaintext highlighter-rouge">file:///...</code>로 포장 <a href="https://yad-guide.ingk.se/html/yad-html.html?utm_source=chatgpt.com">yad-guide.ingk.se</a><a href="https://github.com/jiahaog/nativefier/issues/45?utm_source=chatgpt.com">GitHub</a></td>
+    </tr>
+    <tr>
+      <td>항상 위</td>
+      <td>✅ <code class="language-plaintext highlighter-rouge">--on-top</code></td>
+      <td>✅ <code class="language-plaintext highlighter-rouge">--always-on-top</code> <a href="https://man.archlinux.org/man/extra/yad/yad.1.en">man.archlinux.org</a><a href="https://github.com/nativefier/nativefier/blob/master/API.md?utm_source=chatgpt.com">GitHub</a></td>
+    </tr>
+    <tr>
+      <td>하단 버튼(“7일간…”, “닫기”)</td>
+      <td>✅ <code class="language-plaintext highlighter-rouge">--button=</code></td>
+      <td>⭕ 페이지에 직접 있거나 <code class="language-plaintext highlighter-rouge">--inject</code>로 오버레이</td>
+    </tr>
+    <tr>
+      <td>7일 스누즈</td>
+      <td>⭕ 래퍼 스크립트로 간단</td>
+      <td>⭕ 런처+주입 스크립트로 구현</td>
+    </tr>
+    <tr>
+      <td>배포/설치</td>
+      <td>매우 가벼움, 의존성 작음</td>
+      <td>패키징 결과물은 큼(일반 Electron 수준)</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>
+    <p><strong>리눅스만</strong> 이면: <strong>YAD</strong> 가 제일 간편합니다(실행 커맨드 한 줄+래퍼로 스누즈).</p>
+  </li>
+  <li>
+    <p><strong>크로스플랫폼</strong> 이면: <strong>Nativefier</strong> 로 패키징하고, OS별 작은 런처를 곁들이는 게 유지보수에 유리합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>원하시면 제가:</p>
+
+<ol>
+  <li>
+    <p><strong>YAD 버전</strong> : 스누즈 래퍼 포함한 실행 스크립트, 바로 돌려보는 데모</p>
+  </li>
+  <li>
+    <p><strong>Nativefier 버전</strong> : <code class="language-plaintext highlighter-rouge">--inject</code>로 하단 버튼 오버레이 + 스누즈 런처<br />
+둘 중 하나를 골라 <strong>즉시 사용 가능한 템플릿</strong> 으로 정리해 드릴게요. 어떤 환경부터 갈까요?</p>
+  </li>
+</ol>
+
+<p class="chat--user">
+
+그냥 처음 했던 python 구현이 젤 낫지 않아?
+
+</p>
+
+<p>짧게 결론부터: <strong>네, 지금 요구(리눅스 중심, 크로스플랫폼, 로컬 HTML 뷰 + 항상 위 + 7일 스누즈)에는 처음 제안했던 Python(+QtWebEngine) 방식이 제일 현실적</strong> 입니다.</p>
+
+<p>왜냐면—step-by-step로 따져보면:</p>
+
+<ol>
+  <li>
+    <p><strong>기능 적합성</strong></p>
+
+    <ul>
+      <li>
+        <p>로컬 <code class="language-plaintext highlighter-rouge">_site/index.html</code> 그대로 <code class="language-plaintext highlighter-rouge">file:///</code>로 로드 ✅</p>
+      </li>
+      <li>
+        <p>창 <strong>항상 위</strong> 옵션 ✅</p>
+      </li>
+      <li>
+        <p>하단 버튼(“7일간…”, “닫기”) UI를 코드 몇 줄로 배치 ✅</p>
+      </li>
+      <li>
+        <p>“7일간 다시 열지 않음” 로직을 <strong>파일 하나(JSON)</strong> 로 안전하게 저장/조회 ✅</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>복잡도/생산성</strong></p>
+
+    <ul>
+      <li>
+        <p>Electron/Nativefier는 “가볍게 시작”은 쉽지만, 스누즈/버튼/런처 조합으로 결국 커스텀 작업이 필요해져요.</p>
+      </li>
+      <li>
+        <p>Tauri는 산뜻하지만 Rust 툴체인 세팅·학습이 약간 부담.</p>
+      </li>
+      <li>
+        <p>Python + PySide6은 <strong>코드가 가장 직관적</strong> 이고, 이미 초안이 완성돼 있음.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>배포/유지보수</strong></p>
+
+    <ul>
+      <li>
+        <p>리눅스에서 <strong>PyInstaller</strong> 한 방으로 단일 바이너리/폴더 배포 가능.</p>
+      </li>
+      <li>
+        <p>설정 파일은 <code class="language-plaintext highlighter-rouge">platformdirs</code>로 표준 위치에 저장 → OS 바뀌어도 코드 변경 최소.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>단점(현실 체크)</strong></p>
+
+    <ul>
+      <li>
+        <p>실행 파일 크기(수십 MB)는 Tauri보다 큼(대신 Electron보단 비슷하거나 더 작음).</p>
+      </li>
+      <li>
+        <p>QtWebEngine 자원 복사(PyInstaller 시 리소스 폴더 동봉)가 필요 → 아래 “배포 팁” 참고로 해결 가능.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="바로-배포하려면-리눅스-기준-step-by-step">바로 배포하려면 (리눅스 기준, step-by-step)</h2>
+
+<ol>
+  <li>의존성</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>PySide6 platformdirs pyinstaller
+</code></pre></div></div>
+
+<ol>
+  <li>(이전에 드린 코드로) 로컬에서 동작 확인</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> simple_notice /abs/path/to/_site/index.html
+</code></pre></div></div>
+
+<ol>
+  <li>PyInstaller로 패키징</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyinstaller <span class="nt">-F</span> <span class="nt">-n</span> simple_notice simple_notice/__main__.py
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>QtWebEngine 리소스가 누락되면 <code class="language-plaintext highlighter-rouge">-F</code> 대신 <code class="language-plaintext highlighter-rouge">--onedir</code>로 먼저 시도하거나, hook을 써서 <code class="language-plaintext highlighter-rouge">PySide6/Qt/resources</code>와 <code class="language-plaintext highlighter-rouge">QtWebEngineProcess</code>가 함께 들어가게 해주세요.</p>
+  </li>
+  <li>
+    <p>문제가 생기면 알려주세요. 배포 스펙 맞춰 <strong>동작 확인된 spec 파일</strong> 만들어드립니다.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>(선택) .desktop 파일 만들어 런처 등록</li>
+</ol>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Exec=simple_notice /path/to/_site/index.html</code></p>
+  </li>
+  <li>
+    <p>자동시작이 필요하면 <code class="language-plaintext highlighter-rouge">~/.config/autostart/</code>에 .desktop 배치.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="작은-개선-아이디어필요-시만">작은 개선 아이디어(필요 시만)</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--force</code>, <code class="language-plaintext highlighter-rouge">--width/--height</code>, <code class="language-plaintext highlighter-rouge">--title</code> 같은 <strong>CLI 옵션 추가</strong></p>
+  </li>
+  <li>
+    <p>여러 가이드를 구분하고 싶으면 <code class="language-plaintext highlighter-rouge">--key</code>로 스누즈 키를 파일 경로와 별개로 운영</p>
+  </li>
+  <li>
+    <p>버튼 누를 때 “YYYY-MM-DD까지 표시 안 함” 같은 짧은 안내 토스트</p>
+  </li>
+</ul>
+
+<hr />
+
+<p><strong>요약</strong> : 구현 난이도·안정성·유지보수의 균형에서 <strong>Python(+PySide6/QtWebEngine)</strong> 이 가장 낫습니다. 이미 코드 초안이 준비돼 있으니, 그대로 가는 게 시간 대비 효율 최고예요.<br />
+원하시면 제가 <strong>PyInstaller spec 파일까지 포함된 배포용 템플릿</strong> 으로 정리해서 드릴게요—리눅스 배포 타깃(예: Ubuntu 22.04?)만 알려주세요.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#program" class="page__taxonomy-item p-category" rel="tag">program</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-08T16:26:30+09:00">2025-08-08</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/verilog/pyverilog-top-module-extract-instance/" class="pagination--pager" title="Pyverilog 인스턴스 CSV 생성">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/verilog/pyverilog-top-module-extract-instance/" rel="permalink">Pyverilog 인스턴스 CSV 생성
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T14:52:41+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/etf-backtesting/" rel="permalink">ETF backtesting model - o3pro
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-06T00:07:20+09:00">2025-08-06</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-loguru/" rel="permalink">Loguru 패키지 설명
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-31T22:43:26+09:00">2025-07-31</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/python/python-priority-queue/" rel="permalink">Python 우선순위 큐 예제
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-07-31T20:45:57+09:00">2025-07-31</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
