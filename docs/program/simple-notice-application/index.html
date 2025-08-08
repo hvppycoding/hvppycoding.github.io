@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-08-08T16:26:30+09:00">
+  <meta property="article:published_time" content="2025-08-08T18:51:26+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="간단한 notice 애플리케이션">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-08-08T16:26:30+09:00">
+    <meta itemprop="datePublished" content="2025-08-08T18:51:26+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-08-08T16:26:30+09:00">2025-08-08</time>
+        <time datetime="2025-08-08T18:51:26+09:00">2025-08-08</time>
       </span>
     
 
@@ -1136,6 +1136,401 @@ Windows Task Scheduler를 이용해 특정 시간에 브라우저를 실행하�
 <p><strong>요약</strong> : 구현 난이도·안정성·유지보수의 균형에서 <strong>Python(+PySide6/QtWebEngine)</strong> 이 가장 낫습니다. 이미 코드 초안이 준비돼 있으니, 그대로 가는 게 시간 대비 효율 최고예요.<br />
 원하시면 제가 <strong>PyInstaller spec 파일까지 포함된 배포용 템플릿</strong> 으로 정리해서 드릴게요—리눅스 배포 타깃(예: Ubuntu 22.04?)만 알려주세요.</p>
 
+<p class="chat--user">
+
+qt.qpa.plugin: From 6.5.0, xcb-cursor0 or libxcb-cursor0 is needed to load the Qt xcb platform plugin
+
+</p>
+
+<p>이건 Qt 6.5+에서 <strong>X11 백엔드(xcb)</strong> 를 쓸 때 필요한 런타임 라이브러리가 빠져서 나는 오류예요.<br />
+핵심 해결책: 해당 배포판의 <strong>xcb-cursor</strong> 패키지를 설치하세요.</p>
+
+<h2 id="바로-해결-배포판별">바로 해결 (배포판별)</h2>
+
+<ul>
+  <li><strong>Ubuntu / Debian</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> libxcb-cursor0
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>(최소 환경이면 함께 필요한 경우가 많음)
+    <code class="language-plaintext highlighter-rouge">bash
+    sudo apt-get install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 \
+        libxcb-keysyms1 libxcb-render-util0
+   </code></p>
+
+<ul>
+  <li><strong>Fedora / RHEL / CentOS (dnf)</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>dnf <span class="nb">install</span> <span class="nt">-y</span> xcb-util-cursor
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Arch / Manjaro</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>pacman <span class="nt">-S</span> xcb-util-cursor
+</code></pre></div>    </div>
+  </li>
+  <li><strong>openSUSE</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>zypper <span class="nb">install </span>xcb-util-cursor
+</code></pre></div>    </div>
+  </li>
+  <li><strong>NixOS</strong> (예시)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nix
+    
+environment.systemPackages = with pkgs; [ xorg.xcbutilcursor ];
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>끝나면 앱을 다시 실행해보세요.</p>
+
+<hr />
+
+<h2 id="그래도-안-뜨면-체크리스트">그래도 안 뜨면 (체크리스트)</h2>
+
+<ol>
+  <li><strong>플러그인 의존성 로그 보기</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">QT_DEBUG_PLUGINS</span><span class="o">=</span>1 simple_notice /path/to/_site/index.html
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>→ 어떤 so가 없다고 나오는지 확인.</p>
+
+<ol>
+  <li>
+    <p><strong>Wayland 세션이라면</strong></p>
+
+    <ul>
+      <li>의존성 설치가 곤란하면 임시로 <strong>Wayland 백엔드</strong> 를 강제로 써볼 수 있어요:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">QT_QPA_PLATFORM</span><span class="o">=</span>wayland simple_notice /path/to/_site/index.html
+</code></pre></div>        </div>
+      </li>
+      <li>(배포 환경에선 <code class="language-plaintext highlighter-rouge">qt6-wayland</code> 패키지도 함께 설치 권장)</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>PyInstaller로 묶었을 때</strong></p>
+
+    <ul>
+      <li>
+        <p>QtWebEngine/플러그인 리소스가 누락되면 실행 위치 기준의<br />
+<code class="language-plaintext highlighter-rouge">PySide6/Qt/plugins/platforms/libqxcb.so</code> 가 정상 포함됐는지,<br />
+<code class="language-plaintext highlighter-rouge">QtWebEngineProcess</code> 동봉됐는지 확인하세요.</p>
+      </li>
+      <li>
+        <p>문제가 계속되면 <code class="language-plaintext highlighter-rouge">--onedir</code>로 먼저 패키징해서 동작 확인 후 <code class="language-plaintext highlighter-rouge">-F</code>로 전환하는 게 덜 고생합니다.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<p>원하시면 쓰시는 배포판/버전 알려주세요. 필요한 패키지 묶어서 한 번에 설치하는 스크립트(그리고 PyInstaller spec)까지 맞춤으로 드릴게요.</p>
+
+<p class="chat--user">
+
+해당 라이브러리 찾는법
+
+</p>
+
+<p>리눅스에서 <strong>필요한 라이브러리 이름과 패키지</strong> 를 찾는 방법**을 단계별로 정리해드릴게요.<br />
+이렇게 하면 <code class="language-plaintext highlighter-rouge">xcb-cursor0</code>처럼 Qt가 요구하는 라이브러리가 어떤 패키지에 들어있는지 바로 찾을 수 있습니다.</p>
+
+<hr />
+
+<h2 id="1-오류-메시지로-추정-패키지명-후보">1. 오류 메시지로 추정 (패키지명 후보)</h2>
+
+<ul>
+  <li>메시지:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vbnet
+    
+From 6.5.0, xcb-cursor0 or libxcb-cursor0 is needed...
+</code></pre></div>    </div>
+  </li>
+  <li>여기서 핵심은 <code class="language-plaintext highlighter-rouge">libxcb-cursor</code> → 보통 <strong><code class="language-plaintext highlighter-rouge">libxcb-cursor0</code></strong> (Debian 계열), <strong><code class="language-plaintext highlighter-rouge">xcb-util-cursor</code></strong> (Fedora/Arch 계열)로 패키징됩니다.</li>
+</ul>
+
+<hr />
+
+<h2 id="2-apt-file로-검색-debianubuntu">2. <code class="language-plaintext highlighter-rouge">apt-file</code>로 검색 (Debian/Ubuntu)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> apt-file
+<span class="nb">sudo </span>apt-file update
+
+<span class="c"># 라이브러리 이름으로 검색</span>
+apt-file search libxcb-cursor.so
+</code></pre></div></div>
+
+<p>예시 결과:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>libxcb-cursor0: /usr/lib/x86_64-linux-gnu/libxcb-cursor.so.0
+libxcb-cursor-dev: /usr/lib/x86_64-linux-gnu/libxcb-cursor.so
+</code></pre></div></div>
+
+<p>→ 런타임용은 <code class="language-plaintext highlighter-rouge">libxcb-cursor0</code>.</p>
+
+<hr />
+
+<h2 id="3-dnf로-검색-fedorarhel">3. <code class="language-plaintext highlighter-rouge">dnf</code>로 검색 (Fedora/RHEL)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dnf provides <span class="k">*</span>/libxcb-cursor.so<span class="k">*</span>
+</code></pre></div></div>
+
+<p>결과 예시:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arduino
+
+xcb-util-cursor-0.1.3-4.fc38.x86_64 : Utility for managing cursors in XCB applications
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-pacman으로-검색-archmanjaro">4. <code class="language-plaintext highlighter-rouge">pacman</code>으로 검색 (Arch/Manjaro)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pacman <span class="nt">-F</span> libxcb-cursor.so
+</code></pre></div></div>
+
+<p>결과:</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">extra</span><span class="o">/</span><span class="nt">xcb-util-cursor</span> <span class="err">0</span><span class="o">.</span><span class="err">1</span><span class="o">.</span><span class="err">3</span><span class="nt">-4</span> <span class="o">[</span><span class="nt">installed</span><span class="o">]</span>
+    <span class="nt">usr</span><span class="o">/</span><span class="nt">lib</span><span class="o">/</span><span class="nt">libxcb-cursor</span><span class="nc">.so</span><span class="o">.</span><span class="err">0</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="5-qt-의존성-전체-검사">5. Qt 의존성 전체 검사</h2>
+
+<p>PySide6(PyQt) 앱 실행파일이 요구하는 모든 so를 확인하려면:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ldd <span class="si">$(</span>which python<span class="si">)</span> | <span class="nb">grep </span>xcb
+</code></pre></div></div>
+
+<p>또는 PyInstaller 빌드 결과물에서:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ldd dist/simple_notice/simple_notice | <span class="nb">grep </span>xcb
+</code></pre></div></div>
+
+<p>→ 누락된 so가 있으면 apt/dnf/pacman으로 같은 방식으로 찾습니다.</p>
+
+<hr />
+
+<p>📌 <strong>정리</strong></p>
+
+<ul>
+  <li>
+    <p>Debian/Ubuntu: <code class="language-plaintext highlighter-rouge">libxcb-cursor0</code></p>
+  </li>
+  <li>
+    <p>Fedora/RHEL: <code class="language-plaintext highlighter-rouge">xcb-util-cursor</code></p>
+  </li>
+  <li>
+    <p>Arch: <code class="language-plaintext highlighter-rouge">xcb-util-cursor</code></p>
+  </li>
+  <li>
+    <p>openSUSE: <code class="language-plaintext highlighter-rouge">xcb-util-cursor</code></p>
+  </li>
+</ul>
+
+<hr />
+
+<p>원하시면 제가 <strong>“리눅스 전 배포판 공통”</strong>으로 Qt 6.5+가 요구하는 xcb 관련 필수 라이브러리 설치 스크립트를 만들어 드릴 수 있습니다.<br />
+이 스크립트면 의존성 오류 없이 바로 실행 가능하게 세팅할 수 있어요. 만들까요?</p>
+
+<p class="chat--user">
+
+그냥 Qt5대로 작성해줘
+
+</p>
+
+<p>좋죠—Qt6 말고 <strong>Qt5 기준</strong> 으로 깔끔하게 다시 써드릴게요.<br />
+(PyQt5 우선, 없으면 PySide2로 폴백. QtWebEngine 기반이라 로컬 HTML 그대로 띄웁니다.)</p>
+
+<hr />
+
+<h1 id="1-설치">1) 설치</h1>
+
+<h2 id="a-pyqt5-기준">(A) PyQt5 기준</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>PyQt5 PyQtWebEngine platformdirs
+</code></pre></div></div>
+
+<h2 id="b-pyside2-기준원하면">(B) PySide2 기준(원하면)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>PySide2 platformdirs
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="2-실행-스크립트-qt5-전용">2) 실행 스크립트 (Qt5 전용)</h1>
+
+<p><code class="language-plaintext highlighter-rouge">simple_notice_qt5.py</code> — 바로 실행해도 되고, 패키징도 쉬운 구조입니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+</span>
+<span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># ---- Qt5 바인딩: PyQt5 우선, 없으면 PySide2 폴백 ----
+</span><span class="n">qt_api</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
+    <span class="kn">from</span> <span class="n">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
+    <span class="kn">from</span> <span class="n">PyQt5.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
+    <span class="n">qt_api</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PyQt5</span><span class="sh">"</span>
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="n">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
+        <span class="kn">from</span> <span class="n">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
+        <span class="kn">from</span> <span class="n">PySide2.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
+        <span class="n">qt_api</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PySide2</span><span class="sh">"</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">PyQt5(PyQtWebEngine) 또는 PySide2가 필요합니다.</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+<span class="kn">from</span> <span class="n">platformdirs</span> <span class="kn">import</span> <span class="n">user_config_dir</span>
+
+<span class="n">APP_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">simple_notice</span><span class="sh">"</span>
+<span class="n">ORG_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">local</span><span class="sh">"</span>
+<span class="n">SNOOZE_DAYS</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="k">def</span> <span class="nf">config_file_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="n">cfg_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="nf">user_config_dir</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">ORG_NAME</span><span class="p">))</span>
+    <span class="n">cfg_dir</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg_dir</span> <span class="o">/</span> <span class="sh">"</span><span class="s">prefs.json</span><span class="sh">"</span>
+
+<span class="k">def</span> <span class="nf">load_prefs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nf">config_file_path</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">))</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="p">{}</span>
+
+<span class="k">def</span> <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="nf">config_file_path</span><span class="p">().</span><span class="nf">write_text</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="nf">dumps</span><span class="p">(</span><span class="n">prefs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">should_skip</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+    <span class="n">iso</span> <span class="o">=</span> <span class="n">prefs</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">iso</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">saved</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">fromisoformat</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">saved</span> <span class="o">&lt;</span> <span class="nf">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">SNOOZE_DAYS</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">html_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sh">"</span><span class="s">User Guide</span><span class="sh">"</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">html_path</span> <span class="o">=</span> <span class="n">html_path</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowTitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowFlag</span><span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>  <span class="c1"># 항상 위
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">resize</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="n">root</span> <span class="o">=</span> <span class="nc">QVBoxLayout</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+
+        <span class="c1"># 중앙 WebView
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="nc">QWebEngineView</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="nf">setUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">.</span><span class="nf">fromLocalFile</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)))</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># 하단 버튼
+</span>        <span class="n">row</span> <span class="o">=</span> <span class="nc">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">btn_snooze</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">7일간 다시 열지 않음</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_close</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">닫기</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">.</span><span class="nf">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_snooze</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_close</span><span class="p">)</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addLayout</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="n">btn_snooze</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">snooze_and_close</span><span class="p">)</span>
+        <span class="n">btn_close</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">close</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">snooze_and_close</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+        <span class="n">prefs</span><span class="p">[</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">).</span><span class="nf">isoformat</span><span class="p">()</span>
+        <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">argv</span> <span class="o">=</span> <span class="n">argv</span> <span class="ow">or</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Usage: simple_notice_qt5 /absolute/or/relative/path/to/index.html</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">html_path</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="nf">expanduser</span><span class="p">().</span><span class="nf">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">html_path</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">HTML not found: </span><span class="si">{</span><span class="n">html_path</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nf">should_skip</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">html_path</span><span class="p">)):</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="nc">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">html_path</span><span class="p">)</span>
+    <span class="n">win</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="nf">exec_</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>사용:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python simple_notice_qt5.py /path/to/_site/index.html
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>창은 항상 최상단.</p>
+  </li>
+  <li>
+    <p>하단에 <strong>“7일간 다시 열지 않음”</strong> / <strong>닫기</strong> 버튼.</p>
+  </li>
+  <li>
+    <p>스누즈 정보는 표준 사용자 설정 경로에 저장:</p>
+
+    <ul>
+      <li>
+        <p>Linux: <code class="language-plaintext highlighter-rouge">~/.config/simple_notice/prefs.json</code></p>
+      </li>
+      <li>
+        <p>macOS: <code class="language-plaintext highlighter-rouge">~/Library/Application Support/simple_notice/prefs.json</code></p>
+      </li>
+      <li>
+        <p>Windows: <code class="language-plaintext highlighter-rouge">%APPDATA%\simple_notice\prefs.json</code></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="3-선택-단일-실행-파일로-빌드">3) (선택) 단일 실행 파일로 빌드</h1>
+
+<p>리눅스:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>pyinstaller
+pyinstaller <span class="nt">-F</span> <span class="nt">-n</span> simple_notice_qt5 simple_notice_qt5.py
+<span class="c"># dist/simple_notice_qt5 로 생성</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>팁</strong> : QtWebEngine 리소스가 누락되면 <code class="language-plaintext highlighter-rouge">-F</code> 대신 <code class="language-plaintext highlighter-rouge">--onedir</code>로 먼저 테스트해보세요.<br />
+ Qt5는 Qt6보다 xcb 관련 의존성이 수월한 편입니다.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="4-옵션-확장원하면">4) 옵션 확장(원하면)</h1>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--title</code>, <code class="language-plaintext highlighter-rouge">--width</code>, <code class="language-plaintext highlighter-rouge">--height</code>, <code class="language-plaintext highlighter-rouge">--force</code>(스누즈 무시) 같은 CLI 옵션 추가</p>
+  </li>
+  <li>
+    <p>여러 가이드를 별도 스누즈로 관리하고 싶으면 <code class="language-plaintext highlighter-rouge">--key some-id</code>를 추가하여 key 기반 저장</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하면 위 코드에 옵션/아이콘/런처(.desktop)까지 얹어서 <strong>바로 배포 가능한 세트</strong> 로 정리해드릴게요.</p>
+
         
       </section>
 
@@ -1161,7 +1556,7 @@ Windows Task Scheduler를 이용해 특정 시간에 브라우저를 실행하�
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-08T16:26:30+09:00">2025-08-08</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-08T18:51:26+09:00">2025-08-08</time></p>
 
       </footer>
 
@@ -1170,10 +1565,10 @@ Windows Task Scheduler를 이용해 특정 시간에 브라우저를 실행하�
       
   <nav class="pagination">
     
-      <a href="/verilog/pyverilog-top-module-extract-instance/" class="pagination--pager" title="Pyverilog 인스턴스 CSV 생성">Previous</a>
+      <a href="/program/deploying-customized-chrome/" class="pagination--pager" title="커스터마이즈된 크롬 배포 방법">Previous</a>
     
     
-      <a href="/program/deploying-customized-chrome/" class="pagination--pager" title="커스터마이즈된 크롬 배포 방법">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
