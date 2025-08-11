@@ -1,0 +1,910 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>간단한 웹 브라우저 만들기 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="간단한 웹 브라우저 만들기">
+<meta property="og:url" content="https://hvppycoding.github.io/program/simple-web-browser/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-08-11T09:48:48+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/program/simple-web-browser/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="간단한 웹 브라우저 만들기">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-08-11T09:48:48+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/program/simple-web-browser/" itemprop="url">간단한 웹 브라우저 만들기
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-11T09:48:48+09:00">2025-08-11</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+PySide2 기반으로 가장 간단한 기능만 있는 가벼운 웹 브라우저를 만들고 싶어. 주요 기능은 앞/뒤 이동, 탭 관리, 주소창, 새 탭으로 열기, 탭 간 이동 단축키 등등 기초적인 기능만 있으면 돼. 각 기능은 다른 브라우저랑 유사한 단축키가 있으면 좋겠어
+
+</p>
+
+<p>GPT-5 pro 요청</p>
+
+<p>Reasoned for 4m 48s</p>
+
+<p>좋아요. <strong>PySide2 + QtWebEngine</strong> 로 “아주 가벼운 기본 웹 브라우저”를 단계별로 만들어보죠.<br />
+아래 예시는 다음 기능을 갖습니다:</p>
+
+<ul>
+  <li>
+    <p><strong>앞/뒤로 이동</strong> , <strong>새로고침</strong></p>
+  </li>
+  <li>
+    <p><strong>탭 관리</strong> : 새 탭/닫기/이동(키보드 단축키 포함), 탭 드래그로 순서 변경</p>
+  </li>
+  <li>
+    <p><strong>주소창(omnibox)</strong> : Enter로 이동, <strong>Alt+Enter</strong> 로 “주소창의 주소를 새 탭으로 열기”</p>
+  </li>
+  <li>
+    <p><strong>링크의<code class="language-plaintext highlighter-rouge">target=_blank</code> / <code class="language-plaintext highlighter-rouge">window.open()</code> → 자동 “새 탭으로 열기”</strong> 처리</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="1-준비">1) 준비</h2>
+
+<ol>
+  <li>
+    <p>Python 3.8+ 권장</p>
+  </li>
+  <li>
+    <p>패키지 설치:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>PySide2
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<blockquote>
+  <p><em>PySide2</em> 에는 <code class="language-plaintext highlighter-rouge">QtWebEngine</code>이 포함되어 있습니다(일부 OS에서는 시스템 라이브러리 필요할 수 있음).</p>
+</blockquote>
+
+<hr />
+
+<h2 id="2-전체-코드-복사-실행-가능">2) 전체 코드 (복사-실행 가능)</h2>
+
+<blockquote>
+  <p>파일명 예: <code class="language-plaintext highlighter-rouge">mini_browser.py</code>
+```python
+import sys
+from PySide2.QtCore import QUrl, Qt
+from PySide2.QtGui import QIcon, QKeySequence
+from PySide2.QtWidgets import (
+    QApplication, QMainWindow, QTabWidget, QToolBar, QAction,
+    QLineEdit, QShortcut
+)
+from PySide2.QtWebEngineWidgets import QWebEngineView</p>
+</blockquote>
+
+<p>HOME_URL = "https://www.duckduckgo.com"  # 원하면 다른 기본 페이지로 교체</p>
+
+<p>def to_url(text: str) -&gt; QUrl:
+    # 사용자가 'example.com'만 입력해도 자동으로 http(s) 붙여줌
+    return QUrl.fromUserInput(text.strip())</p>
+
+<p>class BrowserWebView(QWebEngineView):
+    """새 창 요청(=새 탭 열기)을 메인윈도우에 위임"""
+    def <strong>init</strong>(self, main_window):
+        super().<strong>init</strong>(parent=main_window)
+        self.main_window = main_window</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def createWindow(self, _type):
+    # target=_blank / window.open() → 새 탭으로 열기
+    return self.main_window.add_blank_tab(switch_to=True)
+</code></pre></div></div>
+
+<p>class MainWindow(QMainWindow):
+    def <strong>init</strong>(self):
+        super().<strong>init</strong>()
+        self.setWindowTitle("Mini Browser (PySide2)")
+        self.resize(1200, 800)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    # ---- 탭 위젯 ----
+    self.tabs = QTabWidget()
+    self.tabs.setDocumentMode(True)
+    self.tabs.setMovable(True)          # 드래그로 탭 순서 변경
+    self.tabs.setTabsClosable(True)     # 탭 닫기 X 버튼
+    self.tabs.tabCloseRequested.connect(self.close_tab)
+    self.tabs.currentChanged.connect(self.on_current_tab_changed)
+    self.setCentralWidget(self.tabs)
+
+    # ---- 툴바 &amp; 주소창 ----
+    nav = QToolBar("Navigation")
+    nav.setMovable(False)
+    self.addToolBar(nav)
+
+    self.act_back = QAction("←", self)
+    self.act_back.setStatusTip("뒤로 (Alt+Left)")
+    self.act_back.triggered.connect(lambda: self.current_view().back())
+    nav.addAction(self.act_back)
+
+    self.act_forward = QAction("→", self)
+    self.act_forward.setStatusTip("앞으로 (Alt+Right)")
+    self.act_forward.triggered.connect(lambda: self.current_view().forward())
+    nav.addAction(self.act_forward)
+
+    self.act_reload = QAction("↻", self)
+    self.act_reload.setStatusTip("새로고침 (Ctrl+R)")
+    self.act_reload.triggered.connect(lambda: self.current_view().reload())
+    nav.addAction(self.act_reload)
+
+    nav.addSeparator()
+
+    self.address_bar = QLineEdit(self)
+    self.address_bar.setPlaceholderText("주소 또는 검색어 입력 후 Enter")
+    self.address_bar.returnPressed.connect(self.load_from_address_bar)
+    nav.addWidget(self.address_bar)
+
+    self.act_new_tab = QAction("＋ 새 탭", self)
+    self.act_new_tab.triggered.connect(lambda: self.add_new_tab(HOME_URL, switch_to=True))
+    nav.addAction(self.act_new_tab)
+
+    # ---- 단축키 ----
+    self._setup_shortcuts()
+
+    # ---- 첫 탭 ----
+    self.add_new_tab(HOME_URL, switch_to=True)
+
+# ========= 탭 생성/연결 =========
+def add_blank_tab(self, switch_to: bool = True) -&gt; BrowserWebView:
+    view = BrowserWebView(self)
+    idx = self.tabs.addTab(view, "새 탭")
+    if switch_to:
+        self.tabs.setCurrentIndex(idx)
+
+    # 신호 연결: URL/제목/아이콘 변화 → UI 반영
+    view.urlChanged.connect(lambda url, v=view: self._on_url_changed(v, url))
+    view.titleChanged.connect(lambda title, v=view: self._on_title_changed(v, title))
+    view.iconChanged.connect(lambda icon, v=view: self._on_icon_changed(v, icon))
+    return view
+
+def add_new_tab(self, url_or_str=None, switch_to: bool = True) -&gt; BrowserWebView:
+    view = self.add_blank_tab(switch_to=switch_to)
+    qurl = to_url(url_or_str) if isinstance(url_or_str, str) else (url_or_str or QUrl(HOME_URL))
+    view.load(qurl)
+    return view
+
+def current_view(self) -&gt; BrowserWebView:
+    return self.tabs.currentWidget()
+
+# ========= 신호 핸들러 =========
+def _on_url_changed(self, view: BrowserWebView, qurl: QUrl):
+    if view is self.current_view():
+        self.address_bar.setText(qurl.toDisplayString())
+
+def _on_title_changed(self, view: BrowserWebView, title: str):
+    i = self.tabs.indexOf(view)
+    if i != -1:
+        self.tabs.setTabText(i, title if title else "새 탭")
+    if view is self.current_view():
+        self.setWindowTitle(f"{title} - Mini Browser" if title else "Mini Browser")
+
+def _on_icon_changed(self, view: BrowserWebView, icon: QIcon):
+    i = self.tabs.indexOf(view)
+    if i != -1:
+        self.tabs.setTabIcon(i, icon)
+
+def on_current_tab_changed(self, index: int):
+    view = self.current_view()
+    if view:
+        self.address_bar.setText(view.url().toDisplayString())
+        self.setWindowTitle(f"{view.title()} - Mini Browser" if view.title() else "Mini Browser")
+    # 뒤/앞 이동 가능 여부 업데이트(선택사항)
+    self.act_back.setEnabled(view and view.history().canGoBack())
+    self.act_forward.setEnabled(view and view.history().canGoForward())
+
+# ========= 동작 =========
+def load_from_address_bar(self):
+    text = self.address_bar.text()
+    if not text:
+        return
+    self.current_view().load(to_url(text))
+
+def load_from_address_bar_in_new_tab(self):
+    text = self.address_bar.text()
+    if not text:
+        return
+    self.add_new_tab(text, switch_to=True)
+
+def close_tab(self, index: int = None):
+    if index is None:
+        index = self.tabs.currentIndex()
+    if self.tabs.count() &gt; 1:
+        w = self.tabs.widget(index)
+        self.tabs.removeTab(index)
+        w.deleteLater()
+    else:
+        # 마지막 탭은 비우기만
+        self.current_view().setUrl(QUrl("about:blank"))
+
+def switch_relative(self, delta: int):
+    n = self.tabs.count()
+    if n == 0:
+        return
+    self.tabs.setCurrentIndex((self.tabs.currentIndex() + delta) % n)
+
+def switch_to_index(self, index: int):
+    if 0 &lt;= index &lt; self.tabs.count():
+        self.tabs.setCurrentIndex(index)
+
+# ========= 단축키 =========
+def _setup_shortcuts(self):
+    # 새 탭 / 닫기 / 새로고침 / 주소창 포커스
+    QShortcut(QKeySequence("Ctrl+T"), self, activated=lambda: self.add_new_tab(HOME_URL, switch_to=True))
+    QShortcut(QKeySequence("Ctrl+W"), self, activated=lambda: self.close_tab())
+    QShortcut(QKeySequence("Ctrl+R"), self, activated=lambda: self.current_view().reload())
+    QShortcut(QKeySequence("Ctrl+L"), self, activated=self._focus_address_bar)
+
+    # 앞/뒤로 (브라우저 유사)
+    QShortcut(QKeySequence("Alt+Left"), self, activated=lambda: self.current_view().back())
+    QShortcut(QKeySequence("Alt+Right"), self, activated=lambda: self.current_view().forward())
+
+    # 탭 전환
+    QShortcut(QKeySequence("Ctrl+Tab"), self, activated=lambda: self.switch_relative(+1))
+    QShortcut(QKeySequence("Ctrl+Shift+Tab"), self, activated=lambda: self.switch_relative(-1))
+
+    # 번호로 탭 이동 (Ctrl+1..8), Ctrl+9=마지막 탭
+    for i in range(1, 9):
+        QShortcut(QKeySequence(f"Ctrl+{i}"), self, activated=lambda i=i: self.switch_to_index(i - 1))
+    QShortcut(QKeySequence("Ctrl+9"), self, activated=lambda: self.switch_to_index(self.tabs.count() - 1))
+
+    # 주소창의 입력을 "새 탭으로 열기" (Chrome의 Alt+Enter 유사)
+    QShortcut(QKeySequence("Alt+Return"), self.address_bar, activated=self.load_from_address_bar_in_new_tab)
+
+def _focus_address_bar(self):
+    self.address_bar.setFocus(Qt.ShortcutFocusReason)
+    self.address_bar.selectAll()
+</code></pre></div></div>
+
+<p>if <strong>name</strong> == "<strong>main</strong>":
+    app = QApplication(sys.argv)
+    app.setApplicationName("Mini Browser")
+    win = MainWindow()
+    win.show()
+    sys.exit(app.exec_())</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* * *
+
+## 3) 단축키(다른 브라우저와 유사)
+
+  * **Ctrl+L** : 주소창 포커스
+
+  * **Enter** : 현재 탭에서 이동
+
+  * **Alt+Enter** : 주소창의 주소를 **새 탭** 으로 열기
+
+  * **Ctrl+T** : 새 탭
+
+  * **Ctrl+W** : 탭 닫기
+
+  * **Ctrl+R** : 새로고침
+
+  * **Alt+← / Alt+→** : 뒤로 / 앞으로
+
+  * **Ctrl+Tab / Ctrl+Shift+Tab** : 다음/이전 탭으로 이동
+
+  * **Ctrl+1..Ctrl+8** : N번째 탭으로 이동
+
+  * **Ctrl+9** : 마지막 탭으로 이동
+
+&gt; macOS에서 **Command(⌘)** 조합을 원하면 문자열을 `"Meta+T"`처럼 바꾸면 됩니다.
+
+* * *
+
+## 4) 동작 포인트 (중요)
+
+  1. **`createWindow()` 오버라이드**로 `target="_blank"`나 `window.open()`을 **새 탭으로** 받도록 했습니다.
+
+  2. 주소창은 `QUrl.fromUserInput()`을 써서 **스킴 생략**(`example.com`)도 잘 처리합니다.
+
+  3. 탭의 **제목/아이콘/URL** 변화는 각각의 시그널을 연결해 **탭 제목/아이콘, 주소창, 창 제목** 을 실시간 업데이트합니다.
+
+  4. **마지막 탭을 닫을 때** 앱이 종료되지 않도록, 탭을 지우지 않고 `about:blank`로 비웁니다(원한다면 종료로 바꿀 수 있음).
+
+* * *
+
+## 5) 확장 아이디어(필요 시)
+
+  * **다운로드 매니저** , **즐겨찾기(북마크)** , **탭 복원(Ctrl+Shift+T)** , **줌 인/아웃(Ctrl+±/0)**
+
+  * 주소창에 **검색엔진 단축키**(예: `g 키워드` → 구글 검색)
+
+  * **개발자도구**(QtWebEngine은 기본 devtools URL 제공) 열기
+
+* * *
+
+원하는 키 조합/동작이 더 있거나, “링크 컨텍스트 메뉴에서 _새 탭으로 열기_ ” 같은 추가 UX가 필요하면 알려주세요. 위 코드에 최소 수정으로 바로 추가해 드릴게요.
+
+&lt;p class="chat--user" markdown="1"&gt;
+
+Ctrl+링크 클릭 시 새탭으로 열고 아니면 현재 탭에서 여는 기능도 추가해줘. 지금 되어있는건지 모르겠어
+
+&lt;/p&gt;
+
+GPT-5 pro 요청
+
+Reasoned for 3m 25s
+
+좋은 포인트예요. **지금 제공했던 코드만으로는 “Ctrl+클릭 → 새 탭, 일반 클릭 → 현재 탭”이 보장되진 않습니다.**  
+(기본 `createWindow()`는 `target=_blank`/`window.open()`엔 반응하지만 “Ctrl+클릭”을 명시적으로 다루진 않았어요.)
+
+아래처럼 “키보드 수정자(modifier)”를 확인해 **Ctrl(Win/Linux) 또는 ⌘(macOS) 클릭 시에는 백그라운드 새 탭으로** , 그 외엔 **현재 탭에서 이동** 하도록 딱 박아두면 됩니다.
+
+* * *
+
+## 단계별로 무엇을 바꾸는지
+
+  1. **`QWebEnginePage` 서브클래스**를 만들어 링크 클릭을 가로채고,
+
+     * `Ctrl`/`Cmd`가 눌린 상태라면 **새 탭(백그라운드)**으로 열고 **현재 탭 이동은 막기**
+
+     * 아니면 **현재 탭에서 그대로 이동**
+
+  2. **`QWebEngineView.createWindow()`**(새 창/새 탭 요청)에서도 동일한 정책 적용
+
+     * `Ctrl`/`Cmd` 눌림 → **백그라운드 탭**
+
+     * 아니면 **해당 탭으로 바로 전환**
+
+  3. 새 탭을 만들 때 **우리`BrowserPage`를 쓰도록** 연결
+
+* * *
+
+## 변경/추가 코드 (필요한 부분만 발췌)
+
+&gt; 아래 조각만 기존 코드에 추가/치환하시면 됩니다.
+
+### 1) import에 `QWebEnginePage`와 `QApplication`이 필요합니다
+```python
+from PySide2.QtWidgets import QApplication  # 이미 있으면 생략
+from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
+</code></pre></div></div>
+
+<h3 id="2-링크-클릭-정책을-담당하는-page-클래스-추가">2) 링크 클릭 정책을 담당하는 Page 클래스 추가</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BrowserPage</span><span class="p">(</span><span class="n">QWebEnginePage</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
+
+    <span class="k">def</span> <span class="nf">acceptNavigationRequest</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">nav_type</span><span class="p">,</span> <span class="n">isMainFrame</span><span class="p">):</span>
+        <span class="c1"># 페이지 안에서 실제로 사용자가 링크를 클릭했을 때만 관여
+</span>        <span class="k">if</span> <span class="n">nav_type</span> <span class="o">==</span> <span class="n">QWebEnginePage</span><span class="p">.</span><span class="n">NavigationTypeLinkClicked</span><span class="p">:</span>
+            <span class="n">mods</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">.</span><span class="nf">keyboardModifiers</span><span class="p">()</span>
+            <span class="c1"># Ctrl(Win/Linux) 또는 Cmd(macOS) 눌린 상태면 "새 탭(백그라운드)"로 열기
+</span>            <span class="k">if</span> <span class="n">mods</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">ControlModifier</span> <span class="o">|</span> <span class="n">Qt</span><span class="p">.</span><span class="n">MetaModifier</span><span class="p">):</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">.</span><span class="nf">add_new_tab</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">switch_to</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>  <span class="c1"># 백그라운드
+</span>                <span class="k">return</span> <span class="bp">False</span>  <span class="c1"># 현재 탭 내비게이션은 막음
+</span>        <span class="k">return</span> <span class="nf">super</span><span class="p">().</span><span class="nf">acceptNavigationRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">nav_type</span><span class="p">,</span> <span class="n">isMainFrame</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="3-webview에-우리-page를-붙이고-createwindow-정책도-맞추기">3) WebView에 우리 Page를 붙이고, createWindow 정책도 맞추기</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BrowserWebView</span><span class="p">(</span><span class="n">QWebEngineView</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">새 창 요청(=새 탭 열기)과 Ctrl/Cmd 클릭 정책을 처리</span><span class="sh">"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">main_window</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
+        <span class="c1"># 이 뷰는 항상 우리가 정의한 Page를 사용
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">setPage</span><span class="p">(</span><span class="nc">BrowserPage</span><span class="p">(</span><span class="n">main_window</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">createWindow</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">):</span>
+        <span class="c1"># target=_blank, window.open(), (환경에 따라) Ctrl/Cmd+클릭 등으로 새 창 요청이 올 때
+</span>        <span class="n">mods</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">.</span><span class="nf">keyboardModifiers</span><span class="p">()</span>
+        <span class="c1"># Ctrl/Cmd가 눌리면 백그라운드, 아니면 포그라운드로 전환
+</span>        <span class="n">switch_to</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">mods</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">ControlModifier</span> <span class="o">|</span> <span class="n">Qt</span><span class="p">.</span><span class="n">MetaModifier</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">.</span><span class="nf">add_blank_tab</span><span class="p">(</span><span class="n">switch_to</span><span class="o">=</span><span class="n">switch_to</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="4-새-탭을-만들-때-page-시그널은-기존대로-연결하면-됩니다">4) 새 탭을 만들 때 Page 시그널은 기존대로 연결하면 됩니다</h3>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">add_blank_tab()</code>는 그대로 두셔도 되고, 현재처럼 <code class="language-plaintext highlighter-rouge">BrowserWebView(self)</code>로 만들면 자동으로 우리 <code class="language-plaintext highlighter-rouge">BrowserPage</code>가 붙습니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="동작-체크리스트">동작 체크리스트</h2>
+
+<ul>
+  <li>
+    <p>일반 클릭: <strong>현재 탭에서 이동</strong></p>
+  </li>
+  <li>
+    <p><strong>Ctrl+클릭(또는 macOS는 Cmd+클릭)</strong> : <strong>백그라운드 새 탭</strong> 으로 열림 (포커스는 현재 탭 유지)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">target="_blank"</code> / <code class="language-plaintext highlighter-rouge">window.open()</code>:</p>
+
+    <ul>
+      <li>
+        <p><strong>Ctrl/Cmd 눌림</strong> : 백그라운드 탭</p>
+      </li>
+      <li>
+        <p><strong>미눌림</strong> : 새 탭으로 열고 <strong>바로 전환</strong></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>macOS에서도 “Ctrl” 대신 “Cmd+클릭”을 선호하시면 위 코드처럼 <code class="language-plaintext highlighter-rouge">Qt.MetaModifier</code>를 함께 체크하면 됩니다.<br />
+ 오직 “Ctrl”만 허용하고 싶다면 <code class="language-plaintext highlighter-rouge">| Qt.MetaModifier</code> 부분을 빼세요.</p>
+</blockquote>
+
+<hr />
+
+<p>필요하시다면 이 변경 사항을 반영한 <strong>전체 파일</strong> 도 통째로 드릴게요.<br />
+또, “<strong>중클릭(마우스 휠 클릭) → 새 탭</strong> ” 동작도 원하시면 추가 방법 안내해 드릴 수 있습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#program" class="page__taxonomy-item p-category" rel="tag">program</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-11T09:48:48+09:00">2025-08-11</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/program/simple-notice-application/" class="pagination--pager" title="간단한 notice 애플리케이션">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/program/simple-notice-application/" rel="permalink">간단한 notice 애플리케이션
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T18:51:26+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/program/deploying-customized-chrome/" rel="permalink">커스터마이즈된 크롬 배포 방법
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T17:08:52+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/verilog/pyverilog-top-module-extract-instance/" rel="permalink">Pyverilog 인스턴스 CSV 생성
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T14:52:41+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/investing/etf-backtesting/" rel="permalink">ETF backtesting model - o3pro
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-06T00:07:20+09:00">2025-08-06</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
