@@ -1,0 +1,1178 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Yosys submodule refactor - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Yosys submodule refactor">
+<meta property="og:url" content="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-08-18T11:33:48+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Yosys submodule refactor">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-08-18T11:33:48+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/" itemprop="url">Yosys submodule refactor
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-18T11:33:48+09:00">2025-08-18</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+Verilog Netlist가 주어지고, 이 중 하나의 모듈 내의 인스턴스들을 묶어서 새로운 하나의 내부 모듈로 만드는 것을 자동화하고 싶어. 일반적인 프로그래밍에서는 함수의 일부분을 묶어서 새로운 함수로 정의하고 이걸 사용하는 식으로 refactoring 하는 것과 유사할 것 같아. 어떻게 하는게 좋을까?
+
+</p>
+
+<p>GPT-5 Pro 요청</p>
+
+<p>Reasoned for 6m 20s</p>
+
+<p>좋은 아이디어예요. 이건 소프트웨어에서 “Extract Function(함수 추출)” 리팩토링에 해당하는 <strong>“Extract Submodule(서브모듈 추출)”</strong> 작업이고, 자동화 관점에서 보면 다음 두 가지 경로가 현실적입니다.</p>
+
+<ul>
+  <li>
+    <p><strong>현존 도구 활용(추천):</strong> Yosys의 <code class="language-plaintext highlighter-rouge">submod</code> 패스를 이용해 선택한 인스턴스 묶음을 자동으로 새 내부 모듈로 뽑아내고, 원래 모듈 안에는 그 새 모듈의 인스턴스 1개만 남기는 방법. <code class="language-plaintext highlighter-rouge">submod</code>는 경계 포트(입출력/인아웃)를 자동으로 만들어 줍니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
+  </li>
+  <li>
+    <p><strong>직접 스크립팅:</strong> PyVerilog/SpyDrNet 같은 파서·넷리스트 라이브러리로 경계 신호를 계산해서 새 모듈 선언/인스턴스 치환을 생성하는 파이프라인을 짜는 방법. <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a><a href="https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=10455&amp;context=etd&amp;utm_source=chatgpt.com">BYU ScholarsArchive</a></p>
+  </li>
+</ul>
+
+<p>아래에 <strong>단계별로</strong> 정리해 드릴게요.</p>
+
+<hr />
+
+<h2 id="a안-yosys로-서브모듈-추출-자동화-가장-빠르고-안정적">A안: Yosys로 “서브모듈 추출” 자동화 (가장 빠르고 안정적)</h2>
+
+<h3 id="0-전제">0) 전제</h3>
+
+<ul>
+  <li>입력은 <strong>넷리스트(구조적 Verilog)</strong> 혹은 <code class="language-plaintext highlighter-rouge">always</code>/<code class="language-plaintext highlighter-rouge">assign</code>이 섞인 RTL이어도 됨. 다만 <code class="language-plaintext highlighter-rouge">submod</code>는 <strong>프로세스나 메모리(미변환 상태)</strong> 가 남아있는 모듈에선 동작하지 않으므로, 먼저 이를 셀로 변환합니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></li>
+</ul>
+
+<h3 id="1-설계-적재--전처리">1) 설계 적재 &amp; 전처리</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# extract.ys
+read_verilog -sv your_design.sv
+hierarchy -check -top TOP            # TOP은 최상위 모듈
+# 프로세스/메모리를 넷리스트 셀로 변환 (submod 요구사항)
+proc; memory; opt                    # 필요시 memory_map 등 추가
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">proc</code>, <code class="language-plaintext highlighter-rouge">memory</code> 변환은 <code class="language-plaintext highlighter-rouge">submod</code>가 요구하는 “프로세스/메모리 없음” 조건을 만족시키기 위한 필수 단계입니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io+1</a></li>
+</ul>
+
+<h3 id="2-묶을-인스턴스-선택selection">2) 묶을 인스턴스 선택(Selection)</h3>
+
+<p>Yosys의 <strong>selection 프레임워크</strong> 로 원하는 인스턴스만 골라 집합을 만듭니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# 대상 모듈 컨텍스트로 진입
+cd TARGET_MODULE                      # = select -module TARGET_MODULE 와 동일 :contentReference[oaicite:4]{index=4}
+
+# 선택 집합 만들기 (예: 이름으로 3개를 고르는 간단 예)
+select -set grp c:U_ALU0 c:U_ALU1 c:U_ALU2
+
+# 또는 패턴/타입·전후방 콘 확장으로 자동 수집도 가능
+# 예: 어떤 결과 신호 out_bus의 조합논리 입력 콘을 모두 포함
+# select -set grp o:out_bus %ci.*:+
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">select -set &lt;name&gt;</code>로 **이름 붙인 선택(@ <name>)** 을 저장할 수 있어 이후 명령에서 재사용이 쉽습니다. `c:`(셀 이름), `t:`(셀 타입), `i:/o:/x:`(포트), `%ci/%co/%x`(입출력 콘/연결 확장) 등 강력한 문법을 제공합니다. [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.47/cmd/select.html)</name></li>
+</ul>
+
+<h3 id="3-submod-실행으로-새-내부-모듈-만들기">3) <code class="language-plaintext highlighter-rouge">submod</code> 실행으로 새 내부 모듈 만들기</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# 선택한 셀 묶음을 새 모듈 'ALU_blk'로 추출
+submod -name ALU_blk @grp
+
+# 잔여 청소 및 출력
+clean
+write_verilog -noattr refactored.sv
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">submod -name</code>는 <strong>선택(selection) 그 자체</strong> 를 묶어 새 모듈을 만들고, 원래 모듈의 해당 부분을 <strong>그 새 모듈 인스턴스 1개로 치환</strong> 합니다.</p>
+  </li>
+  <li>
+    <p>경계에 걸린 신호는 자동으로 <strong>입력/출력/인아웃 포트</strong> 가 생성되며, 내부만 쓰는 배선은 새 모듈 내부로 들어갑니다.</p>
+  </li>
+  <li>
+    <p>옵션 팁:</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">-copy</code>: 원본 모듈을 수정하지 않고 <strong>복사본만 생성</strong> 합니다.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">-hidden</code>: 생성 포트에 프라이빗 이름을 써서 이후 <code class="language-plaintext highlighter-rouge">flatten; clean</code>으로 <strong>원상복귀가 쉬운</strong> 구조를 만듭니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>필요하면 <code class="language-plaintext highlighter-rouge">rename</code>/<code class="language-plaintext highlighter-rouge">autoname</code>으로 생성된 포트/셀 이름을 정리할 수 있습니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/rename.html?utm_source=chatgpt.com">yosyshq.readthedocs.io+1</a></p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>참고: <code class="language-plaintext highlighter-rouge">submod</code>는 셀에 <code class="language-plaintext highlighter-rouge">(* submod="블록명" *)</code> 속성을 미리 달아두고 한 번에 실행하는 방식도 지원합니다. (여러 그룹을 서로 다른 속성값으로 지정 가능) <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
+</blockquote>
+
+<h3 id="4-등가성-검증선택">4) 등가성 검증(선택)</h3>
+
+<p>변환 전후가 동작 동일한지 <strong>Yosys 등가검증</strong> 으로 체크하면 안전합니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# 모듈 이름 충돌 방지를 위해 원본 top을 top_gold로 바꿔 읽고,
+# 리팩토링된 파일을 함께 읽은 후 등가검증
+read_verilog -sv original.sv
+rename TOP TOP_gold
+read_verilog -sv refactored.sv
+
+equiv_make TOP_gold TOP equiv_top
+hierarchy -top equiv_top
+equiv_simple
+equiv_status -assert
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">equiv_make / equiv_simple / equiv_status</code> 조합으로 빠르게 동작 등가를 확인합니다. 리셋 시나리오가 중요하면 SAT 기반 옵션을 더 줄 수 있습니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.37/cmd/equiv_make.html?utm_source=chatgpt.com">yosyshq.readthedocs.io+1</a><a href="https://stackoverflow.com/questions/47745223/reset-behavior-with-miter-equivalence-checking?utm_source=chatgpt.com">Stack Overflow</a></li>
+</ul>
+
+<blockquote>
+  <p><strong>요약:</strong> Yosys <code class="language-plaintext highlighter-rouge">submod</code>는 “선택→추출→치환”까지 한 방에 처리하며, 전처리(<code class="language-plaintext highlighter-rouge">proc; memory</code> 등)만 지키면 매우 강력하게 동작합니다. 공식 문서에 동작 조건/옵션이 잘 정리되어 있습니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
+</blockquote>
+
+<hr />
+
+<h2 id="b안-파서넷리스트-라이브러리로-직접-구현-세밀-제어가-필요할-때">B안: 파서/넷리스트 라이브러리로 직접 구현 (세밀 제어가 필요할 때)</h2>
+
+<p>Yosys로 충분하지 않거나 <strong>포트 네이밍/파라미터/슬라이스 결합</strong> 등을 더 세밀하게 통제하려면 Python으로 파이프라인을 짤 수 있습니다.</p>
+
+<h3 id="큰-흐름알고리즘">큰 흐름(알고리즘)</h3>
+
+<ol>
+  <li>
+    <p><strong>파싱 &amp; 전개</strong></p>
+
+    <ul>
+      <li>
+        <p>Verilog 파싱(AST 또는 엘라보레이션된 넷리스트).</p>
+      </li>
+      <li>
+        <p>후보: <strong>PyVerilog</strong>(AST/코드생성 포함), <strong>SpyDrNet</strong>(구조적 넷리스트 그래프), 혹은 <strong>Verilator+Netlist Paths</strong>(XML 경로 질의) 등. <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a><a href="https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=10455&amp;context=etd&amp;utm_source=chatgpt.com">BYU ScholarsArchive</a><a href="https://netlist-paths.readthedocs.io/?utm_source=chatgpt.com">netlist-paths.readthedocs.io</a></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>선택 집합 정의</strong></p>
+
+    <ul>
+      <li>이름 패턴/타입/그래프 탐색(입력·출력 콘)으로 <strong>인스턴스 묶음 S</strong> 결정.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>경계 계산</strong></p>
+
+    <ul>
+      <li>
+        <p>각 인스턴스 포트 연결을 스캔하여 <strong>내부 전용 배선</strong> vs <strong>경계 배선</strong> 분리.</p>
+      </li>
+      <li>
+        <p>경계 배선은 <strong>드라이버 방향</strong> 을 분석해 포트 방향 결정:</p>
+
+        <ul>
+          <li>
+            <p>내부→외부로 구동: <strong>output</strong></p>
+          </li>
+          <li>
+            <p>외부→내부로 구동: <strong>input</strong></p>
+          </li>
+          <li>
+            <p>양방향/트라이스테이트/다중 드라이버: <strong>inout</strong> (필요 시 구조 변경)</p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>비트 슬라이스</strong> /부분접속이 섞이면 동일 넷의 비트들을 모아 <strong>일관된 포트 폭</strong> 으로 리패키징.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>새 모듈 생성</strong></p>
+
+    <ul>
+      <li>
+        <p>포트 목록(이름/방향/폭)과 내부 인스턴스/배선을 구성.</p>
+      </li>
+      <li>
+        <p>인스턴스 파라미터를 어떻게 가져갈지 결정(모듈 파라미터화 vs 인스턴스 고정값).</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>원래 모듈 치환</strong></p>
+
+    <ul>
+      <li>
+        <p>선택한 인스턴스를 제거하고 <strong>새 모듈의 단일 인스턴스</strong> 로 치환.</p>
+      </li>
+      <li>
+        <p>경계 배선을 새 인스턴스 포트에 연결.</p>
+      </li>
+      <li>
+        <p><strong>미사용 배선/인스턴스 청소</strong>.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>코드 생성 &amp; 검증</strong></p>
+
+    <ul>
+      <li>AST→Verilog 코드 생성(PV: <code class="language-plaintext highlighter-rouge">ast_code_generator</code>) 후 시뮬레이션/등가성 확인.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="주의-포인트현실-이슈">주의 포인트(현실 이슈)</h3>
+
+<ul>
+  <li>
+    <p><strong>generate 블록/매크로/인터페이스/모드포트</strong> 등 SystemVerilog 기능은 파싱 난이도가 높습니다. 이 경우 <strong>UHDM(Surelog)→Yosys 프런트엔드</strong> 로 먼저 전개해 구조적으로 만든 뒤 처리하는 것이 수월합니다. <a href="https://opensource.antmicro.com/projects/uhdm-integration/?utm_source=chatgpt.com">opensource.antmicro.com</a></p>
+  </li>
+  <li>
+    <p><strong>다중 드라이버/인아웃</strong> 이 경계에 걸리면 포트 모델링을 신중히 해야 합니다(특히 패드/버스 홀드).</p>
+  </li>
+  <li>
+    <p><strong>이름 안정성</strong>(디버깅/LEC 대비)이 중요하면 자동 이름 부여 규칙을 정하고 충돌 방지를 체계화하세요. (필요 시 Yosys <code class="language-plaintext highlighter-rouge">rename</code>/<code class="language-plaintext highlighter-rouge">autoname</code>을 보조로 활용) <a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/rename.html?utm_source=chatgpt.com">yosyshq.readthedocs.io+1</a></p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="실제로-써먹는-스크립트-예시yosys">실제로 써먹는 스크립트 예시(Yosys)</h2>
+
+<blockquote>
+  <p>아래는 <strong>한 모듈(TARGET_MODULE)</strong> 안에서 <code class="language-plaintext highlighter-rouge">U_ALU0/1/2</code> 세 인스턴스를 <code class="language-plaintext highlighter-rouge">ALU_blk</code>로 추출하는 최소 예시입니다.
+```
+tcl</p>
+</blockquote>
+
+<h1 id="extractys">extract.ys</h1>
+<p>read_verilog -sv your_design.sv
+hierarchy -check -top TOP
+proc; memory; opt</p>
+
+<p>cd TARGET_MODULE
+select -set grp c:U_ALU0 c:U_ALU1 c:U_ALU2
+submod -name ALU_blk @grp</p>
+
+<p>clean
+write_verilog -noattr refactored.sv</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  * `submod` 사용법/제약/옵션은 공식 문서 참고(선택·속성 기반 두 가지 모드, -copy/-hidden 등). [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html)
+
+  * 선택 문법(`select`)은 저장·패턴·콘 확장 등 실전 기능을 꼭 익히세요. [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.47/cmd/select.html)
+
+* * *
+
+## 선택 기준(언제 어떤 방법을?)
+
+  * **바로 써먹는 게 목표** : Yosys `submod` (가볍고 빠름, 경계 자동 생성). [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html)
+
+  * **경계·네이밍·파라미터 정책을 강하게 커스터마이즈** : Python으로 직접(시간은 더 들지만 자유도 최고). [PyPI](https://pypi.org/project/pyverilog/?utm_source=chatgpt.com)[BYU ScholarsArchive](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=10455&amp;context=etd&amp;utm_source=chatgpt.com)
+
+* * *
+
+## 체크리스트(요약)
+
+  1. **(Yosys)** `proc; memory; opt` → `select`로 집합 지정 → `submod -name` → `clean`/`write_verilog`. [yosyshq.readthedocs.io+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html)
+
+  2. **(검증)** `equiv_make` → `equiv_simple` → `equiv_status -assert`로 등가 확인. [yosyshq.readthedocs.io+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.37/cmd/equiv_make.html?utm_source=chatgpt.com)
+
+  3. **(이슈 대응)** inout/다중 드라이버, 슬라이스 병합, 이름 정책, SV 프런트엔드(UHDM) 고려. [opensource.antmicro.com](https://opensource.antmicro.com/projects/uhdm-integration/?utm_source=chatgpt.com)
+
+* * *
+
+원하시면, **당신의 넷리스트 예시(모듈/인스턴스 이름 몇 개)** 를 알려주셨다고 가정하고, 위 스크립트를 그에 맞춰 **즉시 실행 가능한 형태** 로 작성해 드릴 수 있어요.
+
+&lt;p class="chat--user" markdown="1"&gt;
+
+만약에 define과 include가 있다면 어디서 정의해줘야해?
+
+&lt;/p&gt;
+
+GPT-5 Pro 요청
+
+Reasoned for 6m 25s
+
+좋은 질문이에요. **`define`/`include`는 Verilog “전처리(preprocess)” 단계**에서 처리되므로, Yosys 같은 도구를 쓸 때는 **소스를 읽기(`read_verilog`) 전에** “어디서 헤더를 찾을지(-I)”와 “어떤 매크로를 켤지(-D)”를 지정해 두는 게 핵심입니다. 아래를 **순서대로** 설정하면 됩니다.
+
+* * *
+
+## 1) `include` 파일은 어디서 찾게 하나요? → `-I` 옵션/디폴트 경로
+
+  * Yosys는 기본적으로 **현재 작업 디렉터리** 와 **`include`를 적은 파일이 있는 디렉터리**에서 헤더를 찾습니다. 필요하면 `-I`로 검색 경로를 추가하세요. [Stack Overflow](https://stackoverflow.com/questions/33380477/yosys-cant-open-include-file)
+
+  * `read_verilog`에는 `-I &lt;dir&gt;` 옵션이 있습니다. 여러 개를 줄 수 있어요. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
+
+&gt; 예시
+</code></pre></div></div>
+<p>tcl</p>
+
+<h1 id="공통적으로-systemverilog인클루드-경로를-기본-옵션으로-등록">공통적으로 SystemVerilog+인클루드 경로를 기본 옵션으로 등록</h1>
+<p>verilog_defaults -add -sv -I rtl/include -I third_party/ip/include</p>
+
+<h1 id="이후-read_verilog는-위-옵션을-자동-승계">이후 read_verilog는 위 옵션을 자동 승계</h1>
+<p>read_verilog rtl/top.sv rtl/core/*.sv</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  * 위에서 쓴 `verilog_defaults`는 **이후의 모든`read_verilog` 호출에 기본 옵션을 붙여주는** 명령입니다. 흐트러지기 쉬운 스크립트에 특히 유용합니다. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.32/cmd/verilog_defaults.html?utm_source=chatgpt.com)
+
+* * *
+
+## 2) `define`은 어디서 정의하나요? → 헤더 or 도구 옵션(빌드타임 제어)
+
+선택지는 두 가지입니다.
+
+**A. 소스 안에서 헤더로 관리 (`.vh`/`.svh`)**
+```verilog
+// rtl/include/defs.svh
+`define USE_FOO 1
+`define DATA_W  32
+</code></pre></div></div>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 각 파일 상단에서</span>
+<span class="cp">`include</span> <span class="s">"defs.svh"</span>
+</code></pre></div></div>
+
+<ul>
+  <li>헤더를 쓴다면 1) 위의 <code class="language-plaintext highlighter-rouge">-I</code>로 경로만 잡아주면 됩니다. 디폴트 경로 동작도 참고하세요. <a href="https://stackoverflow.com/questions/33380477/yosys-cant-open-include-file">Stack Overflow</a></li>
+</ul>
+
+<p><strong>B. 빌드/합성 스크립트에서 정의(추천: 변형 관리 쉬움)</strong></p>
+
+<ul>
+  <li>
+    <p>1회성: <code class="language-plaintext highlighter-rouge">read_verilog -D NAME[=VALUE]</code> 로 <strong>그 호출에만</strong> 매크로를 건 겁니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html">YosysHQ Docs</a></p>
+  </li>
+  <li>
+    <p>여러 파일/여러 번 읽을 때 공통 적용:</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">verilog_defines -D NAME=VALUE</code>로 <strong>글로벌 매크로 테이블</strong> 에 추가 → 이후 <code class="language-plaintext highlighter-rouge">read_verilog</code> 호출에 반영됩니다. <code class="language-plaintext highlighter-rouge">-U</code>, <code class="language-plaintext highlighter-rouge">-reset</code>, <code class="language-plaintext highlighter-rouge">-list</code>로 해제/초기화/조회도 가능. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.33/cmd/verilog_defines.html?utm_source=chatgpt.com">YosysHQ Docs</a></p>
+      </li>
+      <li>
+        <p>또는 <code class="language-plaintext highlighter-rouge">verilog_defaults -add -D NAME=VALUE</code>로 <strong>기본 옵션</strong> 에 실어주기. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.32/cmd/verilog_defaults.html?utm_source=chatgpt.com">YosysHQ Docs</a></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>예시
+```
+tcl</p>
+</blockquote>
+
+<h1 id="1-전처리-기본-옵션-sv--include-경로">(1) 전처리 기본 옵션: SV + include 경로</h1>
+<p>verilog_defaults -add -sv -I rtl/include -I third_party/ip/include</p>
+
+<h1 id="2-매크로-전역-테이블-세팅">(2) 매크로 전역 테이블 세팅</h1>
+<p>verilog_defines -reset
+verilog_defines -D ASIC=1 -D DATA_W=32</p>
+
+<h1 id="3-소스-읽기">(3) 소스 읽기</h1>
+<p>read_verilog rtl/top.sv rtl/core/*.sv</p>
+
+<h1 id="4-필요시-테스트벤치만-따로-sim-매크로-켬">(4) (필요시) 테스트벤치만 따로 SIM 매크로 켬</h1>
+<p>verilog_defines -D SIM=1
+read_verilog tb/tb_top.sv
+verilog_defines -U SIM</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* * *
+
+## 3) 디버깅 팁 (전처리 문제 추적)
+
+  * `read_verilog -ppdump`로 **전처리 결과물** 을 덤프해 보면 `include`/`define`이 제대로 먹었는지 즉시 확인할 수 있습니다. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
+
+  * 현재 등록된 매크로는 `verilog_defines -list`로 확인합니다. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.33/cmd/verilog_defines.html?utm_source=chatgpt.com)
+
+* * *
+
+## 4) 알아두면 좋은 기본 매크로
+
+  * `read_verilog`는 모드에 따라 **`SYNTHESIS` 또는 `FORMAL`**을 자동 정의하고, 항상 **`YOSYS`** 매크로도 정의합니다. 의도치 않은 `ifdef` 분기 유발 여부를 체크하세요. (필요하면 `-nosynthesis`로 억제) [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
+
+* * *
+
+## 5) 한눈에 정리
+
+  * 헤더 파일을 코드에서 `include`할 거면: **경로만`-I`로 보강** (필요시 `verilog_defaults`로 고정). [YosysHQ Docs+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
+
+  * 빌드별로 기능 스위치를 켜고 끄려면: **매크로를 스크립트에서`-D`로 관리** (`verilog_defines`/`verilog_defaults` 활용). [YosysHQ Docs+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.33/cmd/verilog_defines.html?utm_source=chatgpt.com)
+
+  * 기본 탐색 경로: **현재 디렉터리 + 포함하는 소스의 디렉터리**. 모자라면 `-I` 추가. [Stack Overflow](https://stackoverflow.com/questions/33380477/yosys-cant-open-include-file)
+
+원하시면, 현재 프로젝트의 디렉터리 구조(예: `rtl/`, `include/`, `tb/`)와 켜고 싶은 매크로 이름을 알려주시면, **바로 실행 가능한`.ys` 스크립트**를 만들어 드릴게요.
+
+&lt;p class="chat--user" markdown="1"&gt;
+
+yosys script를 미리 작성해두고 실행하는 방법 알려줘
+
+&lt;/p&gt;
+
+Yosys 스크립트는 보통 `.ys` 확장자를 가진 **Tcl-스타일 명령어 모음 파일** 입니다. 미리 작성해두고 실행하는 방법은 다음 단계로 진행하면 됩니다.
+
+* * *
+
+## 1\. 스크립트 파일 작성
+
+예를 들어 `extract.ys`라는 파일을 만들고 다음과 같이 작성합니다:
+</code></pre></div></div>
+<p>tcl</p>
+
+<h1 id="extractys-1">extract.ys</h1>
+<h1 id="1-소스-읽기">1) 소스 읽기</h1>
+<p>verilog_defaults -add -sv -I rtl/include -D ASIC=1
+read_verilog rtl/top.sv rtl/core/*.sv</p>
+
+<h1 id="2-계층-정리">2) 계층 정리</h1>
+<p>hierarchy -check -top TOP</p>
+
+<h1 id="3-전처리-submod-실행-조건-만족">3) 전처리 (submod 실행 조건 만족)</h1>
+<p>proc; memory; opt</p>
+
+<h1 id="4-묶을-인스턴스-선택--submod">4) 묶을 인스턴스 선택 + submod</h1>
+<p>cd TARGET_MODULE
+select -set grp c:U_ALU0 c:U_ALU1 c:U_ALU2
+submod -name ALU_blk @grp</p>
+
+<h1 id="5-마무리-및-출력">5) 마무리 및 출력</h1>
+<p>clean
+write_verilog -noattr refactored.sv</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* * *
+
+## 2\. Yosys에서 실행하기
+
+터미널에서 다음 명령으로 실행할 수 있습니다:
+```bash
+yosys -s extract.ys
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-s</code> 옵션은 <strong>스크립트 파일을 읽어서 그대로 실행</strong> 한다는 뜻입니다.</p>
+  </li>
+  <li>
+    <p>실행이 끝나면 같은 디렉터리에 <code class="language-plaintext highlighter-rouge">refactored.sv</code>가 생깁니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="3-대화형-모드에서-실행하기-대안">3. 대화형 모드에서 실행하기 (대안)</h2>
+
+<p>만약 중간에 결과를 확인하거나 명령을 추가로 입력하고 싶다면:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yosys
+</code></pre></div></div>
+
+<p>으로 들어간 뒤, 프롬프트에서:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+script extract.ys
+</code></pre></div></div>
+
+<p>라고 치면 스크립트를 실행합니다. 실행 중간에도 추가 명령을 계속 입력할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="4-팁">4. 팁</h2>
+
+<ul>
+  <li>
+    <p>스크립트를 여러 개 만들어두고 <code class="language-plaintext highlighter-rouge">yosys -s</code>로 원하는 것만 실행하면, 합성·리팩토링·검증 단계를 각각 독립적으로 관리할 수 있습니다.</p>
+  </li>
+  <li>
+    <p>로그를 저장하고 싶으면:</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yosys <span class="nt">-s</span> extract.ys | <span class="nb">tee </span>yosys.log
+</code></pre></div></div>
+
+<p>처럼 하면 됩니다.</p>
+
+<hr />
+
+<p>👉 혹시 지금 프로젝트 디렉터리 구조(예: <code class="language-plaintext highlighter-rouge">rtl/</code>, <code class="language-plaintext highlighter-rouge">include/</code>, <code class="language-plaintext highlighter-rouge">tb/</code>)와 Top 모듈 이름을 알려주시면, 그에 맞는 <strong>실행 가능한<code class="language-plaintext highlighter-rouge">extract.ys</code> 예시</strong>를 만들어 드릴까요?</p>
+
+<p class="chat--user">
+
+tranif, mos 레벨이 있으니 yosys가 못 읽네
+
+</p>
+
+<p>아 네—<code class="language-plaintext highlighter-rouge">tranif*</code>, <code class="language-plaintext highlighter-rouge">nmos/pmos</code> 같은 <strong>스위치/트랜지스터 레벨 primitive</strong> 는 Yosys가 정식 지원하지 않아서 그대로는 못 읽습니다. 보통은 <strong>두 가지 우회</strong> 로 처리합니다. 아래를 “차근차근” 따라가면 됩니다.</p>
+
+<hr />
+
+<h1 id="1-가장-안전한-방법-스위치-쓰는-모듈을-블랙박스로-만들기">1) 가장 안전한 방법: “스위치 쓰는 모듈을 블랙박스”로 만들기</h1>
+
+<p>스위치/트랜지스터가 들어있는 모듈(대개 PAD, ESD, 전력게이팅 블록 등)을 <strong>검출해서 I/O만 동일한 빈 껍데기 모듈</strong> 로 치환하고, 나머지 디지털 부분만 Yosys에 넘깁니다.</p>
+
+<h3 id="1-블랙박스-대체-모듈-만들기">(1) 블랙박스 대체 모듈 만들기</h3>
+
+<p>예: <code class="language-plaintext highlighter-rouge">io_pad.sv</code> 안에 <code class="language-plaintext highlighter-rouge">tranif1</code> 등이 있다면, Yosys용으로는 다음처럼 빈 정의를 준비합니다.</p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// tools/yosys_blackboxes/io_pad__bb.sv</span>
+<span class="cp">`ifdef</span> <span class="n">YOSYS</span>
+<span class="k">module</span> <span class="n">io_pad</span> <span class="p">(</span>
+  <span class="kt">inout</span>  <span class="kt">wire</span> <span class="n">PAD</span><span class="p">,</span>
+  <span class="kt">input</span>  <span class="kt">wire</span> <span class="n">dout</span><span class="p">,</span>
+  <span class="kt">input</span>  <span class="kt">wire</span> <span class="n">oe_n</span><span class="p">,</span>
+  <span class="kt">output</span> <span class="kt">wire</span> <span class="n">din</span>
+<span class="p">);</span>
+  <span class="c1">// 내용 없음: Yosys에서는 인터페이스만 유지</span>
+<span class="k">endmodule</span>
+<span class="cp">`endif</span>
+</code></pre></div></div>
+
+<h3 id="2-yosys-스크립트에서-블랙박스-우선-로드">(2) Yosys 스크립트에서 블랙박스 우선 로드</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# extract.ys
+verilog_defaults -add -sv -D YOSYS -I rtl/include -I tools/yosys_blackboxes
+
+# 1) 블랙박스 먼저 (라이브러리 모드로 인터페이스만 인지)
+read_verilog -lib tools/yosys_blackboxes/io_pad__bb.sv
+
+# 2) 나머지 RTL/넷리스트 읽기
+read_verilog rtl/top.sv rtl/**/*.sv
+
+hierarchy -check -top TOP
+proc; memory; opt
+
+# 이후 당신이 하려던 submod 등 처리...
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-lib</code>로 읽으면 <strong>본문은 무시</strong> 하고 <strong>포트만 있는 셀</strong> 로 취급합니다.</p>
+  </li>
+  <li>
+    <p>이렇게 하면 스위치가 들어있는 모듈은 “그냥 셀”이고, 내부 디지털은 그대로 작업 가능합니다.</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>팁: 스위치가 들어있는 모듈들이 여러 개라면, 동일 패턴으로 <strong>여러 개의 블랙박스 파일</strong> 을 준비해 <code class="language-plaintext highlighter-rouge">read_verilog -lib</code>로 한 번에 읽어두세요.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="2-가벼운-근사치shim로-합성-가능한-형태로-바꾸기">2) 가벼운 근사치(shim)로 “합성 가능한 형태”로 바꾸기</h1>
+
+<p>만약 그 모듈 내부를 <strong>Yosys로도 통째로 리팩토링</strong> 하고 싶다면, 스위치 primitive를 <strong>합성 가능한 삼상버퍼/할당</strong> 으로 “근사치” 치환합니다. (스위치가 진짜 양방향을 엄격히 요구하면 부정확해질 수 있으니 주의!)</p>
+
+<h3 id="1-shim-헤더-작성">(1) shim 헤더 작성</h3>
+
+<p>아래처럼 매크로로 <strong>primitive 토큰을 대체</strong> 합니다. Yosys에서는 텍스트 전처리(<code class="language-plaintext highlighter-rouge">-D YOSYS</code>)를 켜 두고 이 헤더를 <code class="language-plaintext highlighter-rouge">include</code>시키면, 원본의 <code class="language-plaintext highlighter-rouge">tranif1 (...)</code> 같은 구문이 자동으로 <strong><code class="language-plaintext highlighter-rouge">bufif*</code>나 <code class="language-plaintext highlighter-rouge">assign</code>으로 바뀝니다.</strong></p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// tools/yosys_shims/switch_shims.svh</span>
+<span class="cp">`ifndef</span> <span class="mi">__</span><span class="n">YOSYS_SWITCH_SHIMS_SVH__</span>
+<span class="cp">`define</span> __YOSYS_SWITCH_SHIMS_SVH__<span class="cp">
+</span>
+<span class="cp">`ifdef</span> <span class="n">YOSYS</span>
+  <span class="c1">// 단방향으로 근사 (많은 패드/패스게이트는 한쪽만 읽도록 설계됨)</span>
+  <span class="c1">// tranif1(out, in, en) : en=1일 때 전도</span>
+  <span class="cp">`define</span> tranif1<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span>  bufif1 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
+</span>  <span class="c1">// tranif0(out, in, en) : en=0일 때 전도</span>
+  <span class="cp">`define</span> tranif0<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span>  bufif0 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
+</span>
+  <span class="c1">// rtranif*는 저항성 전도지만, 합성엔 의미가 없으니 동일 근사</span>
+  <span class="cp">`define</span> rtranif1<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span> bufif1 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
+</span>  <span class="cp">`define</span> rtranif0<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span> bufif0 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
+</span>
+  <span class="c1">// nmos/pmos도 enable 조건만 남긴 근사치</span>
+  <span class="cp">`define</span> nmos<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>g<span class="err">)</span>      bufif1 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> g<span class="err">)</span>     <span class="err">//</span> g<span class="o">=</span>1<span class="err">일</span> <span class="err">때</span> <span class="err">전도</span><span class="cp">
+</span>  <span class="cp">`define</span> pmos<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>g<span class="err">)</span>      bufif0 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> g<span class="err">)</span>     <span class="err">//</span> g<span class="o">=</span>0<span class="err">일</span> <span class="err">때</span> <span class="err">전도</span><span class="cp">
+</span>
+  <span class="c1">// 순수 전달소자(tran/rtran)는 합성 의미가 모호하므로 금지/경고 처리</span>
+  <span class="cp">`define</span> tran<span class="err">(</span>a<span class="err">,</span>b<span class="err">)</span>           <span class="err">$</span>error<span class="err">("</span>tran not supported in Yosys shim<span class="err">")</span><span class="cp">
+</span>  <span class="cp">`define</span> rtran<span class="err">(</span>a<span class="err">,</span>b<span class="err">)</span>          <span class="err">$</span>error<span class="err">("</span>rtran not supported in Yosys shim<span class="err">")</span><span class="cp">
+`endif</span>
+
+<span class="cp">`endif</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>왜 가능한가요?<br />
+ 전처리는 “토큰 대체”이기 때문에, 소스가 <code class="language-plaintext highlighter-rouge">tranif1 (A,B,EN);</code>라고 써 있어도 <code class="language-plaintext highlighter-rouge">-D YOSYS</code>가 켜진 상태에서 위처럼 <code class="language-plaintext highlighter-rouge">define tranif1(...)</code>가 있으면 <strong>텍스트가 <code class="language-plaintext highlighter-rouge">bufif1 (A,B,EN)</code></strong>으로 치환됩니다.</p>
+</blockquote>
+
+<h3 id="2-소스에-한-줄-추가">(2) 소스에 한 줄 추가</h3>
+
+<p>스위치 primitive를 쓰는 파일 상단에 다음을 넣습니다.</p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">`include</span> <span class="s">"switch_shims.svh"</span>  <span class="c1">// Yosys에서만 실질 치환됨</span>
+</code></pre></div></div>
+
+<h3 id="3-yosys-스크립트에서-전처리-활성화">(3) Yosys 스크립트에서 전처리 활성화</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# extract.ys
+verilog_defaults -add -sv -D YOSYS -I tools/yosys_shims -I rtl/include
+read_verilog rtl/top.sv rtl/**/*.sv
+hierarchy -check -top TOP
+proc; memory; opt
+# ... submod 등 작업
+</code></pre></div></div>
+
+<blockquote>
+  <p>한계: <code class="language-plaintext highlighter-rouge">tranif*</code>는 <strong>본래 양방향 전도</strong> 입니다. 위 근사는 <strong>한쪽 방향만 살아있다</strong> 고 가정합니다. 내부에서 진짜로 양방향로직이 필요하면(드문 케이스) 이 방법은 <strong>정확성이 떨어집니다</strong>. 그런 모듈은 1번 방식(블랙박스)이 더 낫습니다.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="3-어느-방법을-고를까-결정-가이드">3) 어느 방법을 고를까? (결정 가이드)</h1>
+
+<ul>
+  <li>
+    <p><strong>PAD, 아날로그 믹스드, 전력스위치</strong> 처럼 스위치가 “물리 레벨 의미”를 가지는 블록 → <strong>블랙박스(방법 1)</strong> 권장.</p>
+  </li>
+  <li>
+    <p><strong>단순 패스게이트 MUX</strong> 처럼 <strong>기능이 명확</strong> 하고, 내부를 Yosys로도 만지고 싶다 → <strong>shim 근사(방법 2)</strong> 후 등가성/시뮬 확인.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="4-검증-루틴권장">4) 검증 루틴(권장)</h1>
+
+<ul>
+  <li>
+    <p><strong>시뮬레이터(iverilog 등)</strong>로 원본 vs shim/블랙박스 버전을 동일 테스트벤치로 돌려 파형 비교.</p>
+  </li>
+  <li>
+    <p>또는 Yosys의 <strong>등가검증(equiv_*)</strong>으로 핵심 디지털 경로가 보존됐는지 확인.</p>
+  </li>
+  <li>
+    <p>블랙박스 경계의 포트 동작은 <strong>계약(Contract) 테스트</strong> 로 체크(예: PAD OE/IN/OUT 동작).</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="5-바로-가져다-쓸-수-있는-최소-예시">5) 바로 가져다 쓸 수 있는 최소 예시</h1>
+
+<h2 id="a-블랙박스-방식">(A) 블랙박스 방식</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tools/yosys_blackboxes/io_pad__bb.sv
+extract.ys
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# extract.ys
+verilog_defaults -add -sv -D YOSYS -I rtl/include -I tools/yosys_blackboxes
+read_verilog -lib tools/yosys_blackboxes/io_pad__bb.sv
+read_verilog rtl/top.sv rtl/**/*.sv
+hierarchy -check -top TOP
+proc; memory; opt
+# cd/ select/ submod ...
+write_verilog -noattr out/refactored.sv
+</code></pre></div></div>
+
+<h2 id="b-shim-치환-방식">(B) shim 치환 방식</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tools/yosys_shims/switch_shims.svh
+extract.ys
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
+
+# extract.ys
+verilog_defaults -add -sv -D YOSYS -I tools/yosys_shims -I rtl/include
+read_verilog rtl/top.sv rtl/**/*.sv
+hierarchy -check -top TOP
+proc; memory; opt
+# cd/ select/ submod ...
+write_verilog -noattr out/refactored.sv
+</code></pre></div></div>
+
+<p>그리고 스위치 쓰는 소스에:</p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">`include</span> <span class="s">"switch_shims.svh"</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>필요하시면, <strong>당신 프로젝트의 파일/모듈 이름</strong> 을 알려주지 않아도 됩니다—위 두 템플릿을 그대로 놓고 경로만 맞추면 동작합니다.<br />
+그래도 더 깔끔히 하고 싶다면, 스위치가 들어간 “모듈 목록”만 알려주세요. 그 목록을 기준으로 <strong>블랙박스 세트</strong> 나 <strong>맞춤 shim</strong> 을 바로 만들어 드릴게요.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#verilog" class="page__taxonomy-item p-category" rel="tag">verilog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-18T11:33:48+09:00">2025-08-18</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux/redhat-screen-record/" class="pagination--pager" title="Red Hat 화면 녹화 방법">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux/redhat-screen-record/" rel="permalink">Red Hat 화면 녹화 방법
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-11T15:40:01+09:00">2025-08-11</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/program/simple-web-browser/" rel="permalink">간단한 웹 브라우저 만들기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-11T09:48:48+09:00">2025-08-11</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/program/simple-notice-application/" rel="permalink">간단한 notice 애플리케이션
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T18:51:26+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/program/deploying-customized-chrome/" rel="permalink">커스터마이즈된 크롬 배포 방법
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-08T17:08:52+09:00">2025-08-08</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
