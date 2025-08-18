@@ -1,4 +1,300 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-18T11:33:55+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Yosys submodule refactor</title><link href="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/" rel="alternate" type="text/html" title="Yosys submodule refactor" /><published>2025-08-18T11:33:48+09:00</published><updated>2025-08-18T11:33:48+09:00</updated><id>https://hvppycoding.github.io/verilog/yosys-submodule-refactor</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-18T17:38:54+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">PyVerilog prune_top_and_stub_children</title><link href="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/" rel="alternate" type="text/html" title="PyVerilog prune_top_and_stub_children" /><published>2025-08-18T17:38:51+09:00</published><updated>2025-08-18T17:38:51+09:00</updated><id>https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/"><![CDATA[<p class="chat--user">
+
+PyVerilog에서 TOP과 TOP의 바로 아래 하위 모듈만 남기고 다 지우고 싶어. 그리고 TOP의 바로 아래 하위 모듈들에 대해서는 signature 정보만 남기고 내용은 지우고 싶어.
+
+</p>
+
+<p>GPT-5 Pro 요청</p>
+
+<p>Reasoned for 4m 15s</p>
+
+<p>좋아요. <strong>PyVerilog</strong> 로 “TOP만 그대로 두고, TOP의 <em>직접</em> 하위 모듈들은 시그니처만 남긴 빈 껍데기(stub)로 만들며, 나머지 모든 모듈은 제거”하는 스크립트를 바로 쓸 수 있게 정리해 드릴게요.</p>
+
+<hr />
+
+<h2 id="목표-정리-stepbystep">목표 정리 (step‑by‑step)</h2>
+
+<ol>
+  <li>
+    <p>Verilog 소스를 파싱해 AST를 만든다.<br />
+<em>PyVerilog의<code class="language-plaintext highlighter-rouge">ModuleDef</code>는 <code class="language-plaintext highlighter-rouge">paramlist</code>, <code class="language-plaintext highlighter-rouge">portlist</code>, <code class="language-plaintext highlighter-rouge">items</code>로 구성됩니다.</em> <a href="https://github.com/PyHDI/Pyverilog/blob/develop/pyverilog/vparser/parser.py?utm_source=chatgpt.com">GitHub</a></p>
+  </li>
+  <li>
+    <p>TOP 모듈에서 <strong>직접 인스턴스화한 모듈 이름들</strong> 만 수집한다.<br />
+<em>인스턴스는<code class="language-plaintext highlighter-rouge">InstanceList</code>에 담기며, 인스턴스화된 모듈 이름은 <code class="language-plaintext highlighter-rouge">InstanceList.module</code> 속성에 있습니다.</em> <a href="https://repositum.tuwien.at/bitstream/20.500.12708/2051/2/Temmel%20Lukas%20-%202019%20-%20Evaluation%20of%20fault%20tolerance%20in%20network%20on%20chip%20fault...pdf?utm_source=chatgpt.com">repositum.tuwien.at</a></p>
+  </li>
+  <li>
+    <p>출력 설계에서</p>
+
+    <ul>
+      <li>
+        <p>TOP 모듈은 <strong>그대로 유지</strong>.</p>
+      </li>
+      <li>
+        <p>TOP의 <strong>직접 자식 모듈</strong> 은 <strong>시그니처만 남기고</strong>(파라미터·포트 선언) 나머지 <code class="language-plaintext highlighter-rouge">items</code>는 모두 제거.</p>
+      </li>
+      <li>
+        <p>그 외 모든 모듈은 <strong>버림</strong>.<br />
+<em>시그니처는 ANSI 포트(Ioport) 혹은 비‑ANSI 포트 선언(Input/Output/Inout),<code class="language-plaintext highlighter-rouge">parameter/localparam</code> 선언만 의미합니다.</em> <a href="https://github.com/hoangt/Pyverilog-1?utm_source=chatgpt.com">GitHub</a><a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>수정된 AST를 Verilog로 다시 코드 생성한다. <em><code class="language-plaintext highlighter-rouge">ASTCodeGenerator</code> 사용.</em> <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a></p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="바로-실행-가능한-스크립트">바로 실행 가능한 스크립트</h2>
+
+<blockquote>
+  <p>파일명 예: <code class="language-plaintext highlighter-rouge">prune_top_and_stub_children.py</code>
+```python
+#!/usr/bin/env python3</p>
+  <h1 id="---coding-utf-8---">-<em>- coding: utf-8 -</em>-</h1>
+  <p>"""
+PyVerilog로 다음을 수행:</p>
+  <ul>
+    <li>TOP 모듈은 그대로 유지</li>
+    <li>TOP이 직접 인스턴스화한 하위 모듈들은 시그니처(파라미터, 포트)만 남기고 본문 제거</li>
+    <li>나머지 모듈은 전부 제거
+"""</li>
+  </ul>
+</blockquote>
+
+<p>import argparse
+from pyverilog.vparser.parser import parse
+from pyverilog.vparser.ast import (
+    NodeVisitor, ModuleDef, Decl, Input, Output, Inout,
+    Parameter, Localparam, InstanceList
+)
+from pyverilog.ast_code_generator.codegen import ASTCodeGenerator</p>
+
+<h1 id="-1-top의-직접-자식-모듈-수집기-">— 1) TOP의 직접 자식 모듈 수집기 —————————————–</h1>
+<p>class InstModuleCollector(NodeVisitor):
+    def <strong>init</strong>(self):
+        self.children = set()</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def visit_InstanceList(self, node: InstanceList):
+    # InstanceList.module: 인스턴스화된 모듈의 이름 (str)
+    if hasattr(node, 'module'):
+        self.children.add(node.module)
+    self.generic_visit(node)
+</code></pre></div></div>
+
+<h1 id="-2-top-추정명시가-없을-때-">— 2) TOP 추정(명시가 없을 때) ———————————————</h1>
+<p>def autodetect_top(ast_root, explicit_top=None):
+    if explicit_top:
+        return explicit_top</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modules = set()
+instantiated = set()
+for d in getattr(ast_root.description, 'definitions', []):
+    if isinstance(d, ModuleDef):
+        modules.add(d.name)
+        col = InstModuleCollector()
+        col.visit(d)
+        instantiated |= col.children
+
+# 인스턴스되지 않은 정의를 TOP 후보로 보고 첫 번째를 선택
+candidates = [m for m in modules if m not in instantiated]
+return candidates[0] if candidates else None
+</code></pre></div></div>
+
+<h1 id="-3-시그니처포트파라미터만-남기기-">— 3) 시그니처(포트/파라미터)만 남기기 ————————————–</h1>
+<p>def keep_signature_only(items):
+    kept = []
+    for item in items or []:
+        if isinstance(item, Decl):
+            # Decl 내부 요소 중 포트/파라미터 선언만 유지
+            allowed_kinds = (Input, Output, Inout, Parameter, Localparam)
+            filtered = [decl for decl in item.list if isinstance(decl, allowed_kinds)]
+            if filtered:
+                kept.append(Decl(filtered))
+        # 그 외(Always, Assign, InstanceList, Generate 등)는 버림
+    return kept</p>
+
+<h1 id="-4-메인-">— 4) 메인 —————————————————————</h1>
+<p>def main():
+    ap = argparse.ArgumentParser(description="Keep TOP, stub its direct children, drop others (PyVerilog).")
+    ap.add_argument('sources', nargs='+', help='Verilog sources (*.v)')
+    ap.add_argument('-t', '–top', help='Top module name (if omitted, auto-detect)')
+    ap.add_argument('-I', '–incdir', action='append', default=[], help='include search dir')
+    ap.add_argument('-D', '–define', action='append', default=[], help='macro define (e.g. FOO=1)')
+    ap.add_argument('-o', '–out', default='pruned.v', help='output verilog file')
+    args = ap.parse_args()</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># PyVerilog 전처리 define 형식 맞추기
+defines = []
+for d in args.define:
+    if '=' in d:
+        k, v = d.split('=', 1)
+        defines.append((k, v))
+    else:
+        defines.append((d, None))
+
+ast, _ = parse(
+    args.sources,
+    preprocess_include=args.incdir,
+    preprocess_define=defines
+)
+
+top_name = autodetect_top(ast, args.top)
+if not top_name:
+    raise SystemExit("ERROR: TOP을 찾지 못했습니다. --top 으로 지정하세요.")
+
+# TOP 정의 찾기
+top_def = None
+for d in ast.description.definitions:
+    if isinstance(d, ModuleDef) and d.name == top_name:
+        top_def = d
+        break
+if top_def is None:
+    raise SystemExit(f"ERROR: 지정한 TOP '{top_name}' 모듈 정의를 찾을 수 없습니다.")
+
+# TOP의 직접 하위 모듈 수집
+col = InstModuleCollector()
+col.visit(top_def)
+direct_children = col.children
+
+# 정의 목록 재구성
+new_defs = []
+for d in ast.description.definitions:
+    if not isinstance(d, ModuleDef):
+        # 모듈 외 정의는 모두 삭제
+        continue
+
+    if d.name == top_name:
+        # TOP은 그대로 유지
+        new_defs.append(d)
+    elif d.name in direct_children:
+        # 자식 모듈은 시그니처만 남김
+        d.items = keep_signature_only(d.items)
+        new_defs.append(d)
+    else:
+        # 그 외 모듈은 버림
+        pass
+
+# 결과를 AST에 반영하고 코드 생성
+ast.description.definitions = tuple(new_defs)
+codegen = ASTCodeGenerator()
+verilog_out = codegen.visit(ast)
+
+with open(args.out, 'w', encoding='utf-8') as f:
+    f.write(verilog_out)
+
+kept = [d.name for d in new_defs]
+print(f"[OK] Wrote {args.out}")
+print(f" Top      : {top_name}")
+print(f" Kept mods: {', '.join(kept)}")
+</code></pre></div></div>
+
+<p>if <strong>name</strong> == '<strong>main</strong>':
+    main()</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* * *
+
+## 사용법 예시 (step‑by‑step)
+```bash
+# 1) 기본: 파일 여러 개를 지정
+python3 prune_top_and_stub_children.py src/top.v src/a.v src/b.v -t TOP -o pruned.v
+
+# 2) 인클루드/매크로가 있을 때
+python3 prune_top_and_stub_children.py \
+  $(find rtl -name '*.v') \
+  -t TOP \
+  -I rtl/include -I third_party/ip/include \
+  -D SYNTHESIS=1 -D WIDTH=32 \
+  -o pruned.v
+
+# 3) --top을 생략하면 "인스턴스되지 않은 모듈"을 TOP으로 자동 추정
+python3 prune_top_and_stub_children.py rtl/*.v -o pruned.v
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="동작-설명--구현-포인트">동작 설명 &amp; 구현 포인트</h2>
+
+<ul>
+  <li>
+    <p><strong>시그니처만 유지하는 기준</strong></p>
+
+    <ul>
+      <li>모듈 헤더(파라미터/포트)는 PyVerilog AST에서 <code class="language-plaintext highlighter-rouge">ModuleDef.paramlist</code>, <code class="language-plaintext highlighter-rouge">ModuleDef.portlist</code>에 저장됩니다. 또한 비‑ANSI 스타일 포트의 경우 <code class="language-plaintext highlighter-rouge">items</code> 안의 <code class="language-plaintext highlighter-rouge">Decl(Input/Output/Inout)</code> 선언이 포트 방향 정보를 담고 있으므로 이것만 남기고 다른 <code class="language-plaintext highlighter-rouge">items</code>는 삭제합니다. 이렇게 하면 ANSI/비‑ANSI 모두 안전하게 “시그니처만” 남길 수 있습니다. <a href="https://github.com/PyHDI/Pyverilog/blob/develop/pyverilog/vparser/parser.py?utm_source=chatgpt.com">GitHub+1</a></li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>직접 하위 모듈만 추출</strong></p>
+
+    <ul>
+      <li>TOP 내부를 순회하며 <code class="language-plaintext highlighter-rouge">InstanceList</code>를 만나면 그 <strong>모듈명</strong>(<code class="language-plaintext highlighter-rouge">InstanceList.module</code>)을 수집합니다. 이 집합이 바로 TOP의 “직접” 자식 목록입니다. (generate 블록 내부도 방문합니다.) <a href="https://repositum.tuwien.at/bitstream/20.500.12708/2051/2/Temmel%20Lukas%20-%202019%20-%20Evaluation%20of%20fault%20tolerance%20in%20network%20on%20chip%20fault...pdf?utm_source=chatgpt.com">repositum.tuwien.at</a></li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>코드 재생성</strong></p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">pyverilog.ast_code_generator.codegen.ASTCodeGenerator</code>로 수정된 AST를 Verilog 텍스트로 다시 생성합니다. <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a></li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="체크리스트--흔한-이슈">체크리스트 &amp; 흔한 이슈</h2>
+
+<ul>
+  <li>
+    <p><strong>SystemVerilog(.sv) 사용 중인가요?</strong><br />
+PyVerilog는 Verilog‑2001 중심이라 최신 SV 구문에 한계가 있을 수 있습니다. 필요하면 사전 변환(sv→v) 도구를 거치세요. (예: sv2v류) <a href="https://github.com/merledu/Pyverilog-sv2v?utm_source=chatgpt.com">GitHub</a></p>
+  </li>
+  <li>
+    <p><strong>generate/genvar 복잡한 케이스</strong><br />
+대부분의 인스턴스는 <code class="language-plaintext highlighter-rouge">InstanceList</code>로 잡히지만, 특정 SV 문법은 제약이 있을 수 있습니다. 문제가 생기면, 소스에서 해당 블록을 간단하게 정리한 뒤 본 스크립트를 적용하는 것을 권장합니다. 관련 이슈가 과거에 논의된 바 있습니다. <a href="https://github.com/PyHDI/Pyverilog/issues/43?utm_source=chatgpt.com">GitHub</a></p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="원하는-결과-예-개념">원하는 결과 예 (개념)</h2>
+
+<ul>
+  <li>
+    <p><strong>입력:</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">TOP</code> (내용 유지)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">child_a</code>, <code class="language-plaintext highlighter-rouge">child_b</code> (TOP이 직접 인스턴스화)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">grandchild_x</code> (child_a 내부에서만 인스턴스화)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>출력:</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">TOP</code> : 원본 그대로</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">child_a</code>, <code class="language-plaintext highlighter-rouge">child_b</code> : 헤더(파라미터/포트)만 남고 본문 없음</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">grandchild_x</code> : <strong>제거</strong></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면 <strong>특정 규칙(예: 일부 내부 신호 선언만 보존, 특정 모듈만 예외적으로 유지 등)</strong>을 추가한 변형도 바로 만들어 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Yosys submodule refactor</title><link href="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/" rel="alternate" type="text/html" title="Yosys submodule refactor" /><published>2025-08-18T11:33:48+09:00</published><updated>2025-08-18T11:33:48+09:00</updated><id>https://hvppycoding.github.io/verilog/yosys-submodule-refactor</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/"><![CDATA[<p class="chat--user">
 
 Verilog Netlist가 주어지고, 이 중 하나의 모듈 내의 인스턴스들을 묶어서 새로운 하나의 내부 모듈로 만드는 것을 자동화하고 싶어. 일반적인 프로그래밍에서는 함수의 일부분을 묶어서 새로운 함수로 정의하고 이걸 사용하는 식으로 refactoring 하는 것과 유사할 것 같아. 어떻게 하는게 좋을까?
 
@@ -7852,103 +8148,4 @@ python priority queue 예제 만들어줘
 
 <hr />
 
-<p>원하신다면 <code class="language-plaintext highlighter-rouge">heapq</code> vs <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 성능 비교 실험 코드도 만들어드릴 수 있어요. 원하세요?</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">PEG 비율 설명</title><link href="https://hvppycoding.github.io/investing/peg/" rel="alternate" type="text/html" title="PEG 비율 설명" /><published>2025-07-30T23:30:44+09:00</published><updated>2025-07-30T23:30:44+09:00</updated><id>https://hvppycoding.github.io/investing/peg</id><content type="html" xml:base="https://hvppycoding.github.io/investing/peg/"><![CDATA[<p class="chat--user">
-
-주식에서 PEG가 뭐야?
-
-</p>
-
-<p>주식 투자에서 <strong>PEG</strong> 는 <code class="language-plaintext highlighter-rouge">Price/Earnings to Growth</code>의 약자로, <strong>주가수익성장비율</strong> 이라고도 합니다. 주가가
-기업의 <strong>수익 성장률을 반영하여 적정한지를 평가하기 위한 지표</strong> 입니다.</p>
-
-<hr />
-
-<h2 id="-peg-비율-공식">📌 PEG 비율 공식</h2>
-
-<p>PEG=PEREPS 성장률 (%)\text{PEG} = \frac{\text{PER}}{\text{EPS 성장률 (\%)}}PEG=EPS
-성장률 (%)PER​</p>
-
-<ul>
-  <li>
-    <p><strong>PER (Price to Earnings Ratio)</strong> : 주가를 주당순이익(EPS)으로 나눈 값. 즉, 주가가 이익의 몇 배인가.</p>
-  </li>
-  <li>
-    <p><strong>EPS 성장률</strong> : 향후 몇 년간 예상되는 연간 EPS 성장률 (보통은 3~5년 예측 사용).</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-peg의-해석">📈 PEG의 해석</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>PEG 비율</th>
-      <th>해석</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>&lt; 1</strong></td>
-      <td>성장률 대비 주가가 저평가됨 → <strong>매수 신호로 간주될 수 있음</strong></td>
-    </tr>
-    <tr>
-      <td><strong>≈ 1</strong></td>
-      <td>적정 가치에 근접</td>
-    </tr>
-    <tr>
-      <td><strong>&gt; 1</strong></td>
-      <td>주가가 성장률 대비 고평가됨 → 주의 필요</td>
-    </tr>
-  </tbody>
-</table>
-
-<blockquote>
-  <p>예시:</p>
-
-  <ul>
-    <li>어떤 기업의 PER이 20이고, 연평균 EPS 성장률이 25%라면,</li>
-  </ul>
-
-  <p>PEG=2025=0.8⇒저평가일수있음\text{PEG} = \frac{20}{25} = 0.8 \Rightarrow 저평가일 수
-있음PEG=2520​=0.8⇒저평가일수있음</p>
-
-</blockquote>
-
-<hr />
-
-<h2 id="-peg-사용-시-주의사항">📋 PEG 사용 시 주의사항</h2>
-
-<ol>
-  <li>
-    <p><strong>성장률 예측의 불확실성</strong> : 미래 성장률(EPS 추정)은 변동성이 커서 오차가 있을 수 있음.</p>
-  </li>
-  <li>
-    <p><strong>업종에 따라 PEG 해석이 다름</strong> : 안정적인 업종(예: 유틸리티)과 고성장 업종(예: 테크, 바이오)의 적정 PEG 기준은 다를 수 있음.</p>
-  </li>
-  <li>
-    <p><strong>음의 성장률</strong> : EPS 성장률이 음수이면 PEG 해석이 무의미함.</p>
-  </li>
-  <li>
-    <p><strong>PER이 마이너스인 경우</strong> : 이익이 적자인 기업은 PEG 계산이 성립하지 않음.</p>
-  </li>
-</ol>
-
-<hr />
-
-<h2 id="-요약">📚 요약</h2>
-
-<ul>
-  <li>
-    <p><strong>PEG는 PER을 성장률로 보정한 지표</strong> 로, 주가의 상대적 가치를 판단할 때 유용합니다.</p>
-  </li>
-  <li>
-    <p><strong>PEG &lt; 1</strong>이면 잠재적으로 저평가, <strong>&gt; 1</strong>이면 고평가 가능성을 시사합니다.</p>
-  </li>
-  <li>
-    <p>하지만 <strong>단독 지표로 투자 판단하면 안 되며</strong> , PER, PBR, ROE 등 다른 지표들과 함께 분석하는 것이 중요합니다.</p>
-  </li>
-</ul>
-
-<p>필요하시면 PEG를 적용한 기업 분석 예제도 보여드릴 수 있어요.</p>]]></content><author><name>hvppycoding</name></author><category term="investing" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>원하신다면 <code class="language-plaintext highlighter-rouge">heapq</code> vs <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 성능 비교 실험 코드도 만들어드릴 수 있어요. 원하세요?</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
