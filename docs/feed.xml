@@ -1,4 +1,313 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-18T17:38:54+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">PyVerilog prune_top_and_stub_children</title><link href="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/" rel="alternate" type="text/html" title="PyVerilog prune_top_and_stub_children" /><published>2025-08-18T17:38:51+09:00</published><updated>2025-08-18T17:38:51+09:00</updated><id>https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-19T14:36:13+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Pyverilog 서브모듈 구현</title><link href="https://hvppycoding.github.io/verilog/pyverilog-submod-implementation/" rel="alternate" type="text/html" title="Pyverilog 서브모듈 구현" /><published>2025-08-19T14:36:09+09:00</published><updated>2025-08-19T14:36:09+09:00</updated><id>https://hvppycoding.github.io/verilog/pyverilog-submod-implementation</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/pyverilog-submod-implementation/"><![CDATA[<p class="chat--user">
+
+You are professional expert of pyverilog and verilog. 아래는 yosys 툴의 submod 기능에 대한 documentation이야. 이와 유사한 기능을 pyverilog로 만들고 싶어. bit width(MSB, LSB)가 있는 포트/넷도 잘 처리해야해. 원하는 입력 커맨드: submod -f instance.list(파일 안에 submodule화 하고자하는 instance 명들 포함) -t <target_module> netlist1.v netlist2.v submod - moving part of a module to a new submodule yosys&gt; help submod submod [options] [selection] This pass identifies all cells with the 'submod' attribute and moves them to a newly created module. The value of the attribute is used as name for the cell that replaces the group of cells with the same attribute value. This pass can be used to create a design hierarchy in flat design. This can be useful for analyzing or reverse-engineering a design. This pass only operates on completely selected modules with no processes or memories. -name <name> don't use the 'submod' attribute but instead use the selection. only objects from one module might be selected. the value of the -name option is used as the value of the 'submod' attribute instead. 
+
+</name></target_module></p>
+
+<p>좋아요—Yosys <code class="language-plaintext highlighter-rouge">submod</code>와 유사한 “인스턴스 묶음을 새 서브모듈로 추출” 기능을 Pyverilog로 만들 수 있게 전체 스크립트를 준비했어요. 코드 전체는 옆의 캔버스에 올려두었습니다: <strong>pyverilog_submod.py</strong>. 아래는 동작 원리와 사용법, 그리고 비트폭(MSB/LSB) 처리 포인트를 단계별로 정리해둘게요.</p>
+
+<h1 id="구현-개요-step-by-step">구현 개요 (step-by-step)</h1>
+
+<ol>
+  <li>
+    <p><strong>입력 파싱</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">-f instance.list</code>: 서브모듈로 옮길 인스턴스 이름 목록(줄당 1개, <code class="language-plaintext highlighter-rouge">#</code> 주석 허용).</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">-t &lt;target_module&gt;</code>: 변환 대상 모듈.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">netlist*.v</code>: Verilog 파일들.<br />
+→ Pyverilog <code class="language-plaintext highlighter-rouge">parse()</code>로 전체 AST를 구성.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>타깃 모듈/인스턴스 수집</strong></p>
+
+    <ul>
+      <li>
+        <p>타깃 모듈 안의 <code class="language-plaintext highlighter-rouge">InstanceList/Instance</code>를 전부 나열.</p>
+      </li>
+      <li>
+        <p>이름이 리스트에 포함된 인스턴스만 <strong>선택 집합</strong> 으로 분류.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>경계(net) 판정용 사용 집합 계산</strong></p>
+
+    <ul>
+      <li>
+        <p>선택된 인스턴스들이 참조하는 식(expression)에서 <strong>식별자 집합(Identifier names)</strong>을 수집 → <code class="language-plaintext highlighter-rouge">sel_ids</code>.</p>
+      </li>
+      <li>
+        <p>나머지(선택되지 않은) 인스턴스들이 참조하는 식별자 집합 → <code class="language-plaintext highlighter-rouge">other_ids</code>.</p>
+      </li>
+      <li>
+        <p>타깃 모듈의 <strong>탑 포트명</strong> 집합도 확보.</p>
+      </li>
+      <li>
+        <p><strong>외부 식별자</strong> = <code class="language-plaintext highlighter-rouge">(sel_ids ∩ other_ids) ∪ {모듈 포트들}</code><br />
+→ 선택 영역과 외부 양쪽에서 모두 쓰이는 신호(혹은 최상위 포트)는 “경계”로 간주.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>셀 포트 방향 추론</strong></p>
+
+    <ul>
+      <li>
+        <p>인스턴스가 가리키는 셀/모듈 정의에서 각 포트의 <code class="language-plaintext highlighter-rouge">input/output/inout</code> 방향을 AST로 조회.</p>
+      </li>
+      <li>
+        <p>셀 정의를 찾을 수 없으면 보수적으로 <code class="language-plaintext highlighter-rouge">inout</code> 처리.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>경계식 → 새 서브모듈 포트로 승격 (표현식 단위)</strong></p>
+
+    <ul>
+      <li>
+        <p>선택된 인스턴스의 각 포트 연결식에 대해 순회하면서,</p>
+
+        <ul>
+          <li>
+            <p><strong>식 서브트리</strong> 가 “외부 식별자만으로 구성된 순수 외부식”이면 그 <strong>서브트리 전체</strong> 를 새 포트로 치환.</p>
+
+            <ul>
+              <li>예: <code class="language-plaintext highlighter-rouge">bus[7:4]</code>, <code class="language-plaintext highlighter-rouge">ext_sig</code>, <code class="language-plaintext highlighter-rouge">{a[3:0], b}</code> 등(전부 외부일 때).</li>
+            </ul>
+          </li>
+          <li>
+            <p>내부/외부가 섞인 경우엔 <strong>외부 부분만</strong> 개별 포트로 치환하고 나머지는 그대로 유지.</p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>동일한 외부식은 문자열로 직렬화해 <strong>중복 없이 하나의 새 포트</strong> 로 합침.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>새 포트의 방향·폭 결정</strong></p>
+
+    <ul>
+      <li>
+        <p>방향: 해당 외부식이 연결된 셀 포트들 방향을 모아</p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">output</code>만 → <code class="language-plaintext highlighter-rouge">output</code></p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">input</code>만 → <code class="language-plaintext highlighter-rouge">input</code></p>
+          </li>
+          <li>
+            <p>혼합/불명 → <code class="language-plaintext highlighter-rouge">inout</code></p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>폭(width): 아래 규칙으로 정확히 산출</p>
+
+        <ul>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">Identifier</code> → 선언 폭(원 모듈의 <code class="language-plaintext highlighter-rouge">Ioport/Decl</code>에서 <code class="language-plaintext highlighter-rouge">Width(msb, lsb)</code> 취득).</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">Pointer(x[i])</code> → 1비트.</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">Partselect(x[msb:lsb])</code> → <code class="language-plaintext highlighter-rouge">|msb-lsb|+1</code>.</p>
+          </li>
+          <li>
+            <p><code class="language-plaintext highlighter-rouge">Concat({a,b[3:0],...})</code> → 항목 폭 합.</p>
+          </li>
+          <li>
+            <p>상수 <code class="language-plaintext highlighter-rouge">8'hFF</code> 등 → 앞의 크기(여기선 8). 미사이즈 상수는 32비트 가정.</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>새 서브모듈 구성</strong></p>
+
+    <ul>
+      <li>
+        <p>포트 리스트(<code class="language-plaintext highlighter-rouge">Ioport</code>)를 선언(다비트일 경우 <code class="language-plaintext highlighter-rouge">[N-1:0]</code>, 1비트는 스칼라).</p>
+      </li>
+      <li>
+        <p>선택된 인스턴스들을 <strong>치환된 포트 연결식</strong> 으로 그대로 새 모듈 내부에 배치.</p>
+      </li>
+      <li>
+        <p>선택 영역에서만 사용되는 내부 신호 선언(<code class="language-plaintext highlighter-rouge">wire/reg</code>)을 원 모듈의 선언에서 <strong>복사하여</strong> 새 모듈에 포함.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>원 모듈 수정</strong></p>
+
+    <ul>
+      <li>
+        <p>선택된 인스턴스들을 원 모듈에서 제거.</p>
+      </li>
+      <li>
+        <p>경계 포트 맵으로 <strong>새 서브모듈 1개</strong> 를 인스턴스화하고,</p>
+
+        <ul>
+          <li>각 포트는 <strong>원래의 외부식(예: <code class="language-plaintext highlighter-rouge">bus[7:4]</code>, <code class="language-plaintext highlighter-rouge">{a,b}</code>)</strong>에 직접 연결 → 슬라이스/컨캣 그대로 유지되므로 폭/비트 매칭 보장.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Verilog 출력</strong></p>
+
+    <ul>
+      <li>AST를 <code class="language-plaintext highlighter-rouge">ASTCodeGenerator</code>로 코드 생성 → 표준출력(또는 <code class="language-plaintext highlighter-rouge">-o</code> 파일).</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="사용법">사용법</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python pyverilog_submod.py <span class="se">\</span>
+  <span class="nt">-f</span> instance.list <span class="se">\</span>
+  <span class="nt">-t</span> top_module <span class="se">\</span>
+  <span class="nt">-o</span> out.v <span class="se">\</span>
+  netlist1.v netlist2.v
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">instance.list</code> 예시:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx
+
+u_alu_0
+u_alu_1   # 주석 허용
+u_regfile
+</code></pre></div></div>
+
+<p>옵션:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-n my_sub</code> : 새 모듈 이름 지정(미지정시 <code class="language-plaintext highlighter-rouge">&lt;target_module&gt;_submod</code>).</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-o out.v</code> : 결과 Verilog 파일(미지정시 stdout).</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="비트폭슬라이스-처리-포인트">비트폭/슬라이스 처리 포인트</h1>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><code class="language-plaintext highlighter-rouge">bus[MSB:LSB]</code> → 서브모듈 포트명을 <code class="language-plaintext highlighter-rouge">bus_MSB_LSB</code> 형태로 생성, **폭 =</td>
+          <td>MSB-LSB</td>
+          <td>+1**.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">bus[i]</code>(포인터) → 1비트 포트 생성.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">{a, b[3:0]}</code> 같은 <strong>순수 외부 컨캣</strong> 은 한 포트로 올림(폭은 합계).<br />
+내부·외부 혼합 컨캣은 <strong>외부 부분만 포트화</strong> 하고 내부 부분은 유지.</li>
+</ul>
+
+<hr />
+
+<h1 id="간단-예시-전후">간단 예시 (전/후)</h1>
+
+<p><strong>Before (일부):</strong></p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="n">top</span><span class="p">(</span><span class="kt">input</span> <span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">A</span><span class="p">,</span> <span class="kt">input</span> <span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">B</span><span class="p">,</span> <span class="kt">output</span> <span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">Y</span><span class="p">);</span>
+  <span class="kt">wire</span> <span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">w0</span><span class="p">;</span>
+  <span class="kt">wire</span> <span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">mid</span><span class="p">;</span>
+
+  <span class="n">subcell_u</span> <span class="n">u0</span> <span class="p">(.</span><span class="n">in</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">4</span><span class="p">]),</span> <span class="p">.</span><span class="n">out</span><span class="p">(</span><span class="n">mid</span><span class="p">));</span>          <span class="c1">// &lt;- 선택</span>
+  <span class="n">subcell_v</span> <span class="n">u1</span> <span class="p">(.</span><span class="n">a</span><span class="p">(</span><span class="o">{</span><span class="n">B</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">],</span> <span class="n">A</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="o">}</span><span class="p">),</span> <span class="p">.</span><span class="n">y</span><span class="p">(</span><span class="n">w0</span><span class="p">));</span>    <span class="c1">// &lt;- 선택 아님</span>
+  <span class="n">subcell_w</span> <span class="n">u2</span> <span class="p">(.</span><span class="n">a</span><span class="p">(</span><span class="n">mid</span><span class="p">),</span> <span class="p">.</span><span class="n">b</span><span class="p">(</span><span class="n">w0</span><span class="p">),</span> <span class="p">.</span><span class="n">y</span><span class="p">(</span><span class="n">Y</span><span class="p">));</span>          <span class="c1">// &lt;- 선택</span>
+<span class="k">endmodule</span>
+</code></pre></div></div>
+
+<p><strong>After (개념):</strong></p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="n">top_submod</span><span class="p">(</span>
+  <span class="kt">input</span>  <span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">A_7_4</span><span class="p">,</span>
+  <span class="kt">input</span>  <span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">w0</span><span class="p">,</span>
+  <span class="kt">output</span> <span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span> <span class="n">mid</span>
+<span class="p">);</span>
+  <span class="n">subcell_u</span> <span class="n">u0</span> <span class="p">(.</span><span class="n">in</span><span class="p">(</span><span class="n">A_7_4</span><span class="p">),</span> <span class="p">.</span><span class="n">out</span><span class="p">(</span><span class="n">mid</span><span class="p">));</span>
+  <span class="n">subcell_w</span> <span class="n">u2</span> <span class="p">(.</span><span class="n">a</span><span class="p">(</span><span class="n">mid</span><span class="p">),</span> <span class="p">.</span><span class="n">b</span><span class="p">(</span><span class="n">w0</span><span class="p">),</span> <span class="p">.</span><span class="n">y</span><span class="p">(</span><span class="n">mid</span><span class="p">));</span> <span class="c1">// 예시용</span>
+<span class="k">endmodule</span>
+
+<span class="k">module</span> <span class="n">top</span><span class="p">(...);</span>
+  <span class="p">...</span>
+  <span class="n">top_submod</span> <span class="n">u_top_submod</span> <span class="p">(</span>
+    <span class="p">.</span><span class="n">A_7_4</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">4</span><span class="p">]),</span>
+    <span class="p">.</span><span class="n">w0</span><span class="p">(</span><span class="n">w0</span><span class="p">),</span>
+    <span class="p">.</span><span class="n">mid</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span>
+  <span class="p">);</span>
+  <span class="n">subcell_v</span> <span class="n">u1</span> <span class="p">(.</span><span class="n">a</span><span class="p">(</span><span class="o">{</span><span class="n">B</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">],</span> <span class="n">A</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="o">}</span><span class="p">),</span> <span class="p">.</span><span class="n">y</span><span class="p">(</span><span class="n">w0</span><span class="p">));</span>
+<span class="k">endmodule</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>포인트: <code class="language-plaintext highlighter-rouge">A[7:4]</code>와 <code class="language-plaintext highlighter-rouge">w0</code>처럼 외부와 교차되는 식은 <strong>그대로 상위에서 연결</strong> 되며, 새 모듈 안에선 <strong>순수 아이디(포트명)</strong>로 치환됩니다.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="제약가정-필요-시-확장-가능">제약/가정 (필요 시 확장 가능)</h1>
+
+<ul>
+  <li>
+    <p>대상은 <strong>구조적 netlist</strong>(인스턴스/선언 위주). <code class="language-plaintext highlighter-rouge">always</code>/process/memory는 Yosys <code class="language-plaintext highlighter-rouge">submod</code>와 마찬가지로 범위 밖으로 두었습니다.</p>
+  </li>
+  <li>
+    <p>외부로 넘어가는 <strong>연속 할당(assign)</strong>이 경계를 가르는 경우는 현재 기본 처리(경계 판정엔 반영 X). 필요하면 <code class="language-plaintext highlighter-rouge">Assign</code> 스캔을 추가해 드릴게요.</p>
+  </li>
+  <li>
+    <p>인스턴스가 가리키는 셀 정의가 없을 때 포트 방향은 <code class="language-plaintext highlighter-rouge">inout</code>으로 보수 처리합니다(대부분의 합성 netlist는 정의가 들어있습니다).</p>
+  </li>
+  <li>
+    <p>동일 외부식의 포트명 충돌은 자동으로 <code class="language-plaintext highlighter-rouge">_1, _2 ...</code>를 붙여 회피.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="다음-단계원하시면-추가해-드릴-수-있어요">다음 단계(원하시면 추가해 드릴 수 있어요)</h1>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Assign</code>/연산 노드까지 경계 판정 확대.</p>
+  </li>
+  <li>
+    <p>슬라이스 병합(예: <code class="language-plaintext highlighter-rouge">bus[7:4]</code>와 <code class="language-plaintext highlighter-rouge">bus[3:0]</code>을 하나의 8비트 포트로 자동 병합).</p>
+  </li>
+  <li>
+    <p>사용되지 않게 된 원 모듈의 선언(wire/reg) <strong>정리(제거)</strong>.</p>
+  </li>
+  <li>
+    <p>CLI에 Yosys 스타일 옵션 추가(<code class="language-plaintext highlighter-rouge">-name</code>, 선택 범위 기반 등).</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면 실제 여러분의 netlist 한 조각으로 바로 돌려본 <strong>전/후 결과</strong> 도 만들어 드릴게요. 캔버스의 <code class="language-plaintext highlighter-rouge">pyverilog_submod.py</code>를 그대로 저장해 실행하면 됩니다.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">PyVerilog prune_top_and_stub_children</title><link href="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/" rel="alternate" type="text/html" title="PyVerilog prune_top_and_stub_children" /><published>2025-08-18T17:38:51+09:00</published><updated>2025-08-18T17:38:51+09:00</updated><id>https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/"><![CDATA[<p class="chat--user">
 
 PyVerilog에서 TOP과 TOP의 바로 아래 하위 모듈만 남기고 다 지우고 싶어. 그리고 TOP의 바로 아래 하위 모듈들에 대해서는 signature 정보만 남기고 내용은 지우고 싶어.
 
@@ -7910,242 +8219,4 @@ stdout과 파일 각각 다른 레벨로 설정 가능?| ✅ 예. 핸들러는 �
 
 <hr />
 
-<p>필요하시면 여러 핸들러에 대해 레벨, 포맷, 필터 등을 다르게 적용하는 구성도 도와드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Python 우선순위 큐 예제</title><link href="https://hvppycoding.github.io/python/python-priority-queue/" rel="alternate" type="text/html" title="Python 우선순위 큐 예제" /><published>2025-07-31T20:45:57+09:00</published><updated>2025-07-31T20:45:57+09:00</updated><id>https://hvppycoding.github.io/python/python-priority-queue</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-priority-queue/"><![CDATA[<p class="chat--user">
-
-python priority queue 예제 만들어줘
-
-</p>
-
-<p>Python의 <code class="language-plaintext highlighter-rouge">priority queue</code>는 우선순위를 기준으로 항목을 정렬하여 꺼낼 수 있는 자료구조입니다. 일반적으로 <code class="language-plaintext highlighter-rouge">heapq</code>
-모듈을 이용해 구현합니다. 아래에 예제를 단계별로 설명드릴게요.</p>
-
-<hr />
-
-<h2 id="-step-by-step-예제-heapq로-우선순위-큐-만들기">🧱 Step-by-Step 예제: <code class="language-plaintext highlighter-rouge">heapq</code>로 우선순위 큐 만들기</h2>
-
-<h3 id="-1-heapq-모듈-소개">✅ 1. <code class="language-plaintext highlighter-rouge">heapq</code> 모듈 소개</h3>
-
-<p>Python의 <code class="language-plaintext highlighter-rouge">heapq</code>는 <strong>min-heap</strong> 을 기반으로 합니다. 즉, 우선순위가 낮은 항목이 가장 먼저 나옵니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-2-기본적인-우선순위-큐-예제-숫자">✅ 2. 기본적인 우선순위 큐 예제 (숫자)</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
-
-<span class="c1"># 빈 리스트를 힙으로 사용
-</span><span class="n">pq</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="c1"># 요소 추가 (heap push)
-</span><span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-
-<span class="c1"># 우선순위가 가장 높은(가장 작은) 요소 꺼내기
-</span><span class="k">while</span> <span class="n">pq</span><span class="p">:</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">pq</span><span class="p">))</span>
-</code></pre></div></div>
-
-<h4 id="출력">출력:</h4>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1
-3
-5
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-3-튜플을-활용한-우선순위-큐-우선순위-값">✅ 3. 튜플을 활용한 우선순위 큐 (우선순위, 값)</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
-
-<span class="n">pq</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="c1"># (우선순위, 값) 형태로 삽입
-</span><span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">))</span>
-<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">))</span>
-<span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">pq</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">))</span>
-
-<span class="k">while</span> <span class="n">pq</span><span class="p">:</span>
-    <span class="n">priority</span><span class="p">,</span> <span class="n">task</span> <span class="o">=</span> <span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">pq</span><span class="p">)</span>
-    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s"> (우선순위: </span><span class="si">{</span><span class="n">priority</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<h4 id="출력-1">출력:</h4>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scss
-
-공부 (우선순위: 1)
-청소 (우선순위: 2)
-게임 (우선순위: 3)
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-4-우선순위-큐-클래스로-추상화">✅ 4. 우선순위 큐 클래스로 추상화</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
-
-<span class="k">class</span> <span class="nc">PriorityQueue</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 동일 우선순위 처리용
-</span>
-    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">priority</span><span class="p">):</span>
-        <span class="c1"># 우선순위 같을 때는 순서대로 처리하기 위해 index 사용
-</span>        <span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_index</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="c1"># 사용 예시
-</span><span class="n">pq</span> <span class="o">=</span> <span class="nc">PriorityQueue</span><span class="p">()</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="nf">print</span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="nf">pop</span><span class="p">())</span>
-    <span class="k">except</span> <span class="nb">IndexError</span><span class="p">:</span>
-        <span class="k">break</span>
-</code></pre></div></div>
-
-<h4 id="출력-2">출력:</h4>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>공부
-청소
-게임
-</code></pre></div></div>
-
-<hr />
-
-<p>필요하다면 <strong>최대 힙</strong> , <strong>dict 기반 우선순위 큐</strong> , 혹은 <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 클래스를 이용한 스레드
-안전한 큐 예제도 제공해드릴 수 있어요. 원하시는 방향 있으신가요?</p>
-
-<p class="chat--user">
-
-응 둘 다 해줘. 근데 queue.PriorityQueue는 많이 느렸던 것 같은 기억이 있는데 맞아?
-
-</p>
-
-<p>좋은 질문이에요! 먼저 요청하신 두 가지 예제를 각각 설명드리고, 마지막에 <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>의 성능 이슈에 대해서도
-짚어드릴게요.</p>
-
-<hr />
-
-<h2 id="-1-최대-힙-max-heap-구현-방법">✅ 1. 최대 힙 (Max-Heap) 구현 방법</h2>
-
-<p>Python의 <code class="language-plaintext highlighter-rouge">heapq</code>는 <strong>min-heap</strong> 만 지원하므로, <strong>우선순위가 클수록 먼저 나오는</strong> 최대 힙을 만들려면 <strong>우선순위를
-음수로 변환</strong> 해야 합니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">heapq</span>
-
-<span class="k">class</span> <span class="nc">MaxHeap</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">priority</span><span class="p">):</span>
-        <span class="c1"># priority를 음수로 바꿔서 최대 힙처럼 동작
-</span>        <span class="n">heapq</span><span class="p">.</span><span class="nf">heappush</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">priority</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">heapq</span><span class="p">.</span><span class="nf">heappop</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_queue</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-
-<span class="c1"># 사용 예시
-</span><span class="n">pq</span> <span class="o">=</span> <span class="nc">MaxHeap</span><span class="p">()</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="k">while</span> <span class="n">pq</span><span class="p">.</span><span class="n">_queue</span><span class="p">:</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">pq</span><span class="p">.</span><span class="nf">pop</span><span class="p">())</span>
-</code></pre></div></div>
-
-<h4 id="출력-3">출력:</h4>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>게임
-청소
-공부
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-2-queuepriorityqueue를-이용한-예제-스레드-안전">✅ 2. <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>를 이용한 예제 (스레드 안전)</h2>
-
-<p><code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>는 <strong>스레드 안전(thread-safe)</strong> 한 큐입니다. <code class="language-plaintext highlighter-rouge">heapq</code>보다 상대적으로 느릴 수
-있는데, 이유는 아래에 설명드릴게요.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">queue</span> <span class="kn">import</span> <span class="n">PriorityQueue</span>
-
-<span class="n">pq</span> <span class="o">=</span> <span class="nc">PriorityQueue</span><span class="p">()</span>
-
-<span class="n">pq</span><span class="p">.</span><span class="nf">put</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="sh">"</span><span class="s">청소</span><span class="sh">"</span><span class="p">))</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">put</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="sh">"</span><span class="s">공부</span><span class="sh">"</span><span class="p">))</span>
-<span class="n">pq</span><span class="p">.</span><span class="nf">put</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="sh">"</span><span class="s">게임</span><span class="sh">"</span><span class="p">))</span>
-
-<span class="k">while</span> <span class="ow">not</span> <span class="n">pq</span><span class="p">.</span><span class="nf">empty</span><span class="p">():</span>
-    <span class="n">priority</span><span class="p">,</span> <span class="n">task</span> <span class="o">=</span> <span class="n">pq</span><span class="p">.</span><span class="nf">get</span><span class="p">()</span>
-    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s"> (우선순위: </span><span class="si">{</span><span class="n">priority</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<h4 id="출력-4">출력:</h4>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scss
-
-공부 (우선순위: 1)
-청소 (우선순위: 2)
-게임 (우선순위: 3)
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="️-queuepriorityqueue-성능-이슈에-대한-설명">⚠️ <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 성능 이슈에 대한 설명</h2>
-
-<p><code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code>가 <strong>느릴 수 있는 이유</strong> 는 다음과 같습니다:</p>
-
-<ol>
-  <li>
-    <p><strong>스레드 안전 구현</strong> :</p>
-
-    <ul>
-      <li>
-        <p>내부적으로 <code class="language-plaintext highlighter-rouge">threading.Lock</code>을 사용해 동시성 제어를 합니다.</p>
-      </li>
-      <li>
-        <p>단일 스레드 환경에서는 불필요한 락(lock) 오버헤드가 생깁니다.</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>유연성 부족</strong> :</p>
-
-    <ul>
-      <li>
-        <p>튜플 외에 커스텀 우선순위 로직을 넣기가 까다롭습니다.</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">heapq</code>는 더 자유롭고 가볍습니다.</p>
-      </li>
-    </ul>
-  </li>
-</ol>
-
-<h3 id="-결론">🟡 결론</h3>
-
-<ul>
-  <li>
-    <p><strong>단일 스레드 / 빠른 작업 필요</strong> : <code class="language-plaintext highlighter-rouge">heapq</code> 기반 구현 권장</p>
-  </li>
-  <li>
-    <p><strong>멀티스레드 환경 / 큐 안전성 필요</strong> : <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 사용</p>
-  </li>
-</ul>
-
-<hr />
-
-<p>원하신다면 <code class="language-plaintext highlighter-rouge">heapq</code> vs <code class="language-plaintext highlighter-rouge">queue.PriorityQueue</code> 성능 비교 실험 코드도 만들어드릴 수 있어요. 원하세요?</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>필요하시면 여러 핸들러에 대해 레벨, 포맷, 필터 등을 다르게 적용하는 구성도 도와드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
