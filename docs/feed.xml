@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-22T17:39:01+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Verilog 모듈 추출 코드</title><link href="https://hvppycoding.github.io/verilog/verilog-module-extraction/" rel="alternate" type="text/html" title="Verilog 모듈 추출 코드" /><published>2025-08-22T17:38:58+09:00</published><updated>2025-08-22T17:38:58+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-module-extraction</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-module-extraction/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-22T17:41:44+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Verilog 모듈 추출 코드</title><link href="https://hvppycoding.github.io/verilog/verilog-module-extraction/" rel="alternate" type="text/html" title="Verilog 모듈 추출 코드" /><published>2025-08-22T17:41:41+09:00</published><updated>2025-08-22T17:41:41+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-module-extraction</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-module-extraction/"><![CDATA[<p class="chat--user">
 
 Developer: # 목적 - Verilog netlist가 주어졌을 때, 특정 모듈만 파일로 추출하는 Python 코드를 작성한다. # 지침 - 외부 설치 패키지 없이 구현할 것. - <code class="language-plaintext highlighter-rouge">define</code> 등의 preprocessor 지시문이 존재할 수 있으므로 이를 고려해 코드 작성. # 참고 및 범위 - 입력: Verilog netlist 파일과 추출하려는 모듈명이 주어진다. - Netlist 구조는 일반적인 Verilog 문법을 따른다. - <code class="language-plaintext highlighter-rouge">define</code>, <code class="language-plaintext highlighter-rouge">ifdef</code>, 주석 등 다양한 preprocessor 지시문 혹은 주석이 포함될 수 있다. - 출력은 지정한 모듈만을 포함하는 Verilog 파일이어야 한다. # 작업 체크리스트 1. 입력 파일 및 추출 대상 모듈명 파악 2. 주어진 netlist에서 대상 모듈 정의와 관련 preprocessor 블록 추출 3. 추출 결과가 대상 모듈만 포함하는지 확인 4. 지정한 파일로 출력 # 추가 지침 - 코드 작성 전, 위 체크리스트에 따라 계획을 간단히 작성하고 진행한다. - 각 주요 단계(파싱, 추출, 저장) 이후, 결과가 요구 사항을 만족하는지 1-2줄로 간단히 검증한다. - reasoning_effort는 medium으로 하여, 복잡한 처리엔 추가 설명을 덧붙일 수 있다.
 
@@ -492,7 +492,391 @@ python extract_verilog_module.py top.v my_block <span class="nt">-I</span> ./rtl
 <p class="chat--user">
 
 전처리를 안하고 그냥 하도록 해줘. 최대한 원본을 유지하고 싶어. 모듈만 딱 떼와서 다시 붙이면 쓸 수 있게.
-</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Verilog instance deletion</title><link href="https://hvppycoding.github.io/verilog/verilog-instance-deletion/" rel="alternate" type="text/html" title="Verilog instance deletion" /><published>2025-08-22T17:23:27+09:00</published><updated>2025-08-22T17:23:27+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-instance-deletion</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-instance-deletion/"><![CDATA[<p class="chat--user">
+
+</p>
+
+<p>좋아요—요청대로 <strong>전처리 없이, 원본을 최대한 보존</strong> 해서 <code class="language-plaintext highlighter-rouge">module &lt;name&gt; ... endmodule</code> 블록만 정밀 추출하도록 바꿉니다. (주석/문자열은 그대로 유지, 조건부 컴파일도 <strong>평가하지 않음</strong>)</p>
+
+<h1 id="계획업데이트">계획(업데이트)</h1>
+
+<ol>
+  <li>
+    <p><strong>입력 파악</strong> : 파일 경로, 모듈명, 출력 경로(옵션).</p>
+  </li>
+  <li>
+    <p><strong>파싱(전처리 없음)</strong> :</p>
+
+    <ul>
+      <li>
+        <p>원본 텍스트에서 <strong>주석/문자열은 유지</strong> 하되, <strong>토큰 인식 시에만</strong> 주석/문자열 내부의 <code class="language-plaintext highlighter-rouge">module/endmodule</code>를 무시하는 <strong>스캐너</strong> 로 경계를 찾음.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">module</code> 뒤의 <strong>모듈명 토큰</strong>(일반/escape 식별자 <code class="language-plaintext highlighter-rouge">\...</code>)을 정확히 읽어 타겟과 일치 시 시작점 고정.</p>
+      </li>
+      <li>
+        <p>이후 <strong>동일 파일 내 첫<code class="language-plaintext highlighter-rouge">endmodule</code></strong>(필요 시 중첩 깊이 카운팅)까지의 <strong>원문 구간 그대로</strong> 슬라이스.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>추출</strong> : 찾은 바이트 범위를 그대로 출력(선택 플래그 없이 기본은 <strong>모듈 본문만</strong>).</p>
+  </li>
+  <li>
+    <p><strong>저장 &amp; 검증</strong>: 결과물에 <code class="language-plaintext highlighter-rouge">module</code> 1개, <code class="language-plaintext highlighter-rouge">endmodule</code> 1개가 존재하는지 확인 후 저장.</p>
+  </li>
+</ol>
+
+<blockquote>
+  <p>간단 검증은 각 단계에서 1~2줄 메시지로 출력하도록 <code class="language-plaintext highlighter-rouge">--verbose</code> 옵션 제공.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="python-스크립트-전처리치환-없음-원본-유지">Python 스크립트 (전처리/치환 없음, 원본 유지)</h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+</span><span class="sh">"""</span><span class="s">
+extract_verilog_module_raw.py
+- 전처리/치환 없이, 원본을 그대로 유지한 채 특정 모듈 블록만 정확히 잘라냄.
+- 주석/문자열은 파일에 남김. 다만 </span><span class="sh">'</span><span class="s">경계 탐지</span><span class="sh">'</span><span class="s"> 시에는 주석/문자열 내부 키워드는 무시.
+- 모듈명: 일반 식별자([A-Za-z_][A-Za-z0-9_$]*) 또는 escape 식별자(\...&lt;space&gt;) 모두 지원.
+
+사용:
+  python extract_verilog_module_raw.py &lt;input.v&gt; &lt;module_name&gt; [-o out.v] [--verbose]
+
+주의:
+- 매크로/조건부(`ifdef` 등)는 **평가나 이동을 하지 않음**. 모듈 블록 안에 있는 것은 그대로 따라옴.
+- 파일 상단의 `timescale`/`define` 등을 자동 포함하지 않음(요청이 </span><span class="sh">'</span><span class="s">모듈만</span><span class="sh">'</span><span class="s">이라 기본 보수적으로 동작).
+</span><span class="sh">"""</span>
+
+<span class="kn">import</span> <span class="n">argparse</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">sys</span>
+
+<span class="c1"># ---- 스캐너 유틸 (주석/문자열 상태 유지) ----
+</span><span class="k">def</span> <span class="nf">_is_ident_char</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">c</span><span class="p">.</span><span class="nf">isalnum</span><span class="p">()</span> <span class="ow">or</span> <span class="n">c</span> <span class="ow">in</span> <span class="sh">"</span><span class="s">_$</span><span class="sh">"</span>
+
+<span class="k">def</span> <span class="nf">_word_at</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">w</span><span class="p">]</span> <span class="o">!=</span> <span class="n">word</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="c1"># Verilog는 소문자 'module'만 키워드로 취급 (대소문자 구분)
+</span>    <span class="c1"># 토큰 경계 확인
+</span>    <span class="n">prev_ok</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="nf">_is_ident_char</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\\</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">next_ok</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">w</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="nf">_is_ident_char</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">w</span><span class="p">])</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">w</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\\</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prev_ok</span> <span class="ow">and</span> <span class="n">next_ok</span>
+
+<span class="k">def</span> <span class="nf">_read_module_name</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i_after_module</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
+    i_after_module: </span><span class="sh">'</span><span class="s">module</span><span class="sh">'</span><span class="s"> 키워드 직후 인덱스.
+    반환: (name, j)  where name은 비교용 정규화 이름(escape면 앞의 </span><span class="sh">'</span><span class="se">\'</span><span class="s"> 제거), j는 읽기 종료 인덱스.
+    </span><span class="sh">"""</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">i_after_module</span>
+    <span class="c1"># 공백 스킵
+</span>    <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="nf">isspace</span><span class="p">():</span>
+        <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># SystemVerilog 'automatic' 지원(있으면 스킵)
+</span>    <span class="k">if</span> <span class="n">s</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">automatic</span><span class="sh">"</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">_word_at</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="sh">"</span><span class="s">automatic</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">j</span> <span class="o">+=</span> <span class="nf">len</span><span class="p">(</span><span class="sh">"</span><span class="s">automatic</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="nf">isspace</span><span class="p">():</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># escape 식별자 (\name&lt;space&gt;)
+</span>    <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\\</span><span class="sh">'</span><span class="p">:</span>
+        <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="c1"># 공백 전까지가 이름
+</span>        <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="nf">isspace</span><span class="p">():</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">raw</span>  <span class="c1"># 비교용으로는 백슬래시 제거한 이름 사용
+</span>        <span class="nf">return </span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    <span class="c1"># 일반 식별자
+</span>    <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="nf">isalpha</span><span class="p">()</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">_</span><span class="sh">'</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="nf">_is_ident_char</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">j</span><span class="p">]</span>
+        <span class="nf">return </span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    <span class="c1"># 이름을 못 읽음
+</span>    <span class="nf">return </span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">find_module_span</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">target_name</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
+    text에서 target_name 모듈의 [start_idx, end_idx) 범위를 반환.
+    - 주석(/* */, //)과 문자열(</span><span class="sh">"</span><span class="s">...</span><span class="sh">"</span><span class="s">) 내부의 키워드는 무시.
+    - end_idx는 </span><span class="sh">'</span><span class="s">endmodule</span><span class="sh">'</span><span class="s">가 속한 줄의 끝(개행 포함)까지로 확장하여 원문 보존.
+    </span><span class="sh">"""</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">in_sl</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c1"># // ...
+</span>    <span class="n">in_ml</span> <span class="o">=</span> <span class="bp">False</span>  <span class="c1"># /* ... */
+</span>    <span class="n">in_str</span> <span class="o">=</span> <span class="bp">False</span> <span class="c1"># "..."
+</span>    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># 문자열 토글(escape 고려)
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_sl</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_ml</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'"'</span><span class="p">:</span>
+                <span class="c1"># 이전 백슬래시 연속 수로 escape 여부 판단
+</span>                <span class="n">backslashes</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">while</span> <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\\</span><span class="sh">'</span><span class="p">:</span>
+                    <span class="n">backslashes</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">k</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">backslashes</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">in_str</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">in_str</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+        <span class="c1"># 한줄 주석 시작
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_str</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_ml</span> <span class="ow">and</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">in_sl</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="k">continue</span>
+        <span class="c1"># 블록 주석 시작
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_str</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_sl</span> <span class="ow">and</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">in_ml</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="k">continue</span>
+        <span class="c1"># 한줄 주석 종료
+</span>        <span class="k">if</span> <span class="n">in_sl</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">in_sl</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="c1"># 블록 주석 종료
+</span>        <span class="k">if</span> <span class="n">in_ml</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">in_ml</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="c1"># 문자열 내부
+</span>        <span class="k">if</span> <span class="n">in_str</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># 주석/문자열 바깥: 'module' 탐지
+</span>        <span class="k">if</span> <span class="nf">_word_at</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">):</span>
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="c1"># 모듈명 읽기
+</span>            <span class="n">name</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="nf">_read_module_name</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="nf">len</span><span class="p">(</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c1"># escape 식별자 비교를 위해 target_name과 동일하게 비교
+</span>                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">target_name</span><span class="p">:</span>
+                    <span class="c1"># endmodule까지 스캔
+</span>                    <span class="n">k</span> <span class="o">=</span> <span class="n">j</span>
+                    <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">in_sl2</span> <span class="o">=</span> <span class="n">in_ml2</span> <span class="o">=</span> <span class="n">in_str2</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="k">while</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                        <span class="c1"># 문자열 토글
+</span>                        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_sl2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_ml2</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="sh">'"'</span><span class="p">:</span>
+                                <span class="n">backslashes</span> <span class="o">=</span> <span class="mi">0</span>
+                                <span class="n">t</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span>
+                                <span class="k">while</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\\</span><span class="sh">'</span><span class="p">:</span>
+                                    <span class="n">backslashes</span> <span class="o">+=</span> <span class="mi">1</span>
+                                    <span class="n">t</span> <span class="o">-=</span> <span class="mi">1</span>
+                                <span class="k">if</span> <span class="n">backslashes</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">in_str2</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">in_str2</span>
+                                <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+                                <span class="k">continue</span>
+                        <span class="c1"># // 시작
+</span>                        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_str2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_ml2</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">:</span>
+                            <span class="n">in_sl2</span> <span class="o">=</span> <span class="bp">True</span>
+                            <span class="n">k</span> <span class="o">+=</span> <span class="mi">2</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># /* 시작
+</span>                        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_str2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_sl2</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">:</span>
+                            <span class="n">in_ml2</span> <span class="o">=</span> <span class="bp">True</span>
+                            <span class="n">k</span> <span class="o">+=</span> <span class="mi">2</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># // 종료(개행)
+</span>                        <span class="k">if</span> <span class="n">in_sl2</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">:</span>
+                                <span class="n">in_sl2</span> <span class="o">=</span> <span class="bp">False</span>
+                            <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># /* 종료
+</span>                        <span class="k">if</span> <span class="n">in_ml2</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">:</span>
+                                <span class="n">in_ml2</span> <span class="o">=</span> <span class="bp">False</span>
+                                <span class="n">k</span> <span class="o">+=</span> <span class="mi">2</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># 문자열 내부
+</span>                        <span class="k">if</span> <span class="n">in_str2</span><span class="p">:</span>
+                            <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># 토큰 검사
+</span>                        <span class="k">if</span> <span class="nf">_word_at</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">):</span>
+                            <span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="n">k</span> <span class="o">+=</span> <span class="nf">len</span><span class="p">(</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">)</span>
+                            <span class="k">continue</span>
+                        <span class="k">if</span> <span class="nf">_word_at</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span><span class="p">):</span>
+                            <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span>
+                            <span class="n">k</span> <span class="o">+=</span> <span class="nf">len</span><span class="p">(</span><span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="c1"># 라인 끝까지 포함(레이블/코멘트 보존)
+</span>                                <span class="k">while</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">:</span>
+                                    <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+                                <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+                                    <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># 개행 포함
+</span>                                <span class="n">end_idx</span> <span class="o">=</span> <span class="n">k</span>
+                                <span class="nf">return </span><span class="p">(</span><span class="n">start_idx</span><span class="p">,</span> <span class="n">end_idx</span><span class="p">)</span>
+                            <span class="k">continue</span>
+                        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># 이름 불일치면 그냥 스킵
+</span>        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Module </span><span class="sh">'</span><span class="si">{</span><span class="n">target_name</span><span class="si">}</span><span class="sh">'</span><span class="s"> not found.</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">sanity_check</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">target_name</span><span class="p">):</span>
+    <span class="c1"># 모듈 한 개만 있어야 함
+</span>    <span class="n">count_module</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">in_sl</span> <span class="o">=</span> <span class="n">in_ml</span> <span class="o">=</span> <span class="n">in_str</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># 문자열/주석 토글(간단판)
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_sl</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_ml</span> <span class="ow">and</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'"'</span><span class="p">:</span>
+            <span class="n">in_str</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">in_str</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_str</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_ml</span> <span class="ow">and</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">in_sl</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">in_sl</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">in_sl</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_str</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">in_sl</span> <span class="ow">and</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">in_ml</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">in_ml</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">*</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="ow">and</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">in_ml</span> <span class="o">=</span> <span class="bp">False</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">continue</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">in_str</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="nf">_word_at</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">):</span>
+            <span class="n">count_module</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="nf">len</span><span class="p">(</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">count_module</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">extracted text contains </span><span class="si">{</span><span class="n">count_module</span><span class="si">}</span><span class="s"> module tokens (expected 1).</span><span class="sh">"</span><span class="p">)</span>
+    <span class="c1"># 시작/끝 키워드 존재
+</span>    <span class="k">if</span> <span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">AssertionError</span><span class="p">(</span><span class="sh">"</span><span class="s">no </span><span class="sh">'</span><span class="s">endmodule</span><span class="sh">'</span><span class="s"> in output.</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">.</span><span class="nf">lstrip</span><span class="p">().</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nc">AssertionError</span><span class="p">(</span><span class="sh">"</span><span class="s">output does not start with </span><span class="sh">'</span><span class="s">module</span><span class="sh">'</span><span class="s">.</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="sh">"</span><span class="s">Extract a Verilog module block without preprocessing (preserve original).</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">input</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Input Verilog file</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Target module name (escaped name: pass without leading backslash)</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-o</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--output</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Output file (default: &lt;module&gt;.v)</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--verbose</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">store_true</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Print step checks</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="nf">parse_args</span><span class="p">()</span>
+
+    <span class="n">in_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">abspath</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="nb">input</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">in_path</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[error] input not found: </span><span class="si">{</span><span class="n">in_path</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">abspath</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">output</span> <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">output</span> <span class="k">else</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">module</span><span class="si">}</span><span class="s">.v</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># 1) 입력 파악
+</span>    <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[check-1] input=</span><span class="sh">'</span><span class="si">{</span><span class="n">in_path</span><span class="si">}</span><span class="sh">'</span><span class="s">, target=</span><span class="sh">'</span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">module</span><span class="si">}</span><span class="sh">'</span><span class="s">, out=</span><span class="sh">'</span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="sh">'"</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">in_path</span><span class="p">,</span> <span class="sh">"</span><span class="s">r</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="sh">"</span><span class="s">ignore</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+
+    <span class="c1"># 2) 경계 탐지 (전처리/주석 제거 없음)
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="nf">find_module_span</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">module</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[error] cannot locate module: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[check-2] span=(</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s">) length=</span><span class="si">{</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="si">}</span><span class="s"> chars</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># 3) 추출
+</span>    <span class="n">out_text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+
+    <span class="c1"># 간단 검증
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="nf">sanity_check</span><span class="p">(</span><span class="n">out_text</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">module</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">[check-3] output has exactly one module block and ends with </span><span class="sh">'</span><span class="s">endmodule</span><span class="sh">'</span><span class="s">.</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[error] sanity check failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># 4) 저장
+</span>    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">out_text</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[check-4] wrote </span><span class="sh">'</span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="sh">'</span><span class="s"> (</span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">out_text</span><span class="p">)</span><span class="si">}</span><span class="s"> bytes)</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="사용-예-1">사용 예</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 모듈 블록만 그대로 추출하여 my_block.v 생성</span>
+python extract_verilog_module_raw.py chip_top_netlist.v my_block <span class="nt">--verbose</span>
+
+<span class="c"># 출력 파일명 지정</span>
+python extract_verilog_module_raw.py chip_top_netlist.v dma_core <span class="nt">-o</span> dma_core_only.v
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="간단-검증-포인트요약">간단 검증 포인트(요약)</h2>
+
+<ul>
+  <li>
+    <p><strong>[check-1]</strong> 인자 파싱: 경로/모듈명/출력명 확인 → <em>입력 파악 OK</em></p>
+  </li>
+  <li>
+    <p><strong>[check-2]</strong> 경계 좌표/길이 출력 → <em>정상적으로 경계 인식 여부 확인</em></p>
+  </li>
+  <li>
+    <p><strong>[check-3]</strong> 추출물 내 <code class="language-plaintext highlighter-rouge">module</code> 1개, <code class="language-plaintext highlighter-rouge">endmodule</code> 존재 → <em>“모듈만 포함” 확인</em></p>
+  </li>
+  <li>
+    <p><strong>[check-4]</strong> 파일 기록 바이트 수 → <em>저장 확인</em></p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="구현-메모">구현 메모</h3>
+
+<ul>
+  <li>
+    <p>전처리/치환 없음: 헤더의 ``define<code class="language-plaintext highlighter-rouge">,</code> <code class="language-plaintext highlighter-rouge">timescale</code> 등은 <strong>이동하지 않습니다</strong>. 모듈 내부에 있는 지시문은 그대로 따라붙습니다.</p>
+  </li>
+  <li>
+    <p>모듈명이 <strong>escape 식별자</strong>(예: <code class="language-plaintext highlighter-rouge">\foo.bar/baz </code>)인 경우, 호출 시 <code class="language-plaintext highlighter-rouge">foo.bar/baz</code>처럼 <strong>백슬래시 없이</strong> 전달하면 인식됩니다(코드에서 비교 시 백슬래시를 제거함).</p>
+  </li>
+  <li>
+    <p>드문 케이스로 <strong>중첩 module</strong> 키워드가 파일 내 등장할 수 있어 깊이 카운터를 두었지만, 일반 Verilog에서는 중첩 모듈 정의는 허용되지 않습니다(보수적 안전장치).</p>
+  </li>
+</ul>
+
+<p>필요하면, “모듈만”이 아닌 <strong>파일 상단 배너 주석/<code class="language-plaintext highlighter-rouge">timescale</code>/<code class="language-plaintext highlighter-rouge">default_nettype</code> 같은 라인도 함께 복사</strong>하는 옵션을 추가해 드릴 수 있어요.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Verilog instance deletion</title><link href="https://hvppycoding.github.io/verilog/verilog-instance-deletion/" rel="alternate" type="text/html" title="Verilog instance deletion" /><published>2025-08-22T17:23:27+09:00</published><updated>2025-08-22T17:23:27+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-instance-deletion</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-instance-deletion/"><![CDATA[<p class="chat--user">
 
 Developer: - 목표: Verilog module netlist가 제공되었을 때, 파이썬을 사용하여 해당 module 내부에서 특정 이름을 가진 instance들을 삭제하는 기능을 구현합니다. - 작업 절차: 1. 입력 파일로 Verilog module netlist를 파싱합니다. 2. 지정된 이름(리스트 또는 패턴 가능)을 가진 instance들을 module 내에서 찾아 삭제합니다. 3. 삭제 후, 수정된 netlist를 파일 또는 문자열로 출력합니다. - 요구사항 및 한계: - instance 삭제 로직만 구현합니다(삽입/수정 없음). - netlist의 기본 파싱, instance 탐색, 문자열 또는 파일 입출력까지 지원합니다. - 복잡한 netlist 구조(첨단 macro, conditional include)는 지원하지 않습니다. - 출력: - 예시 코드 및 간단한 사용 방법(주석 포함) - 삭제 전후 netlist 예시(선택 사항) - 문서화: - 주요 함수와 삭제 로직에 설명 주석을 추가합니다. Begin with a concise checklist (3-7 bullets) of what you will do; keep items conceptual, not implementation-level. After each substantive action (e.g. parsing, deletion), validate the result in 1-2 lines and either proceed or self-correct if validation fails. Set reasoning_effort=medium; keep tool/process steps terse, but ensure output and examples are clear and reviewable.
 
