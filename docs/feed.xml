@@ -1,4 +1,503 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-19T14:36:13+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Pyverilog 서브모듈 구현</title><link href="https://hvppycoding.github.io/verilog/pyverilog-submod-implementation/" rel="alternate" type="text/html" title="Pyverilog 서브모듈 구현" /><published>2025-08-19T14:36:09+09:00</published><updated>2025-08-19T14:36:09+09:00</updated><id>https://hvppycoding.github.io/verilog/pyverilog-submod-implementation</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/pyverilog-submod-implementation/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-22T17:23:31+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Verilog instance deletion</title><link href="https://hvppycoding.github.io/verilog/verilog-instance-deletion/" rel="alternate" type="text/html" title="Verilog instance deletion" /><published>2025-08-22T17:23:27+09:00</published><updated>2025-08-22T17:23:27+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-instance-deletion</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-instance-deletion/"><![CDATA[<p class="chat--user">
+
+Developer: - 목표: Verilog module netlist가 제공되었을 때, 파이썬을 사용하여 해당 module 내부에서 특정 이름을 가진 instance들을 삭제하는 기능을 구현합니다. - 작업 절차: 1. 입력 파일로 Verilog module netlist를 파싱합니다. 2. 지정된 이름(리스트 또는 패턴 가능)을 가진 instance들을 module 내에서 찾아 삭제합니다. 3. 삭제 후, 수정된 netlist를 파일 또는 문자열로 출력합니다. - 요구사항 및 한계: - instance 삭제 로직만 구현합니다(삽입/수정 없음). - netlist의 기본 파싱, instance 탐색, 문자열 또는 파일 입출력까지 지원합니다. - 복잡한 netlist 구조(첨단 macro, conditional include)는 지원하지 않습니다. - 출력: - 예시 코드 및 간단한 사용 방법(주석 포함) - 삭제 전후 netlist 예시(선택 사항) - 문서화: - 주요 함수와 삭제 로직에 설명 주석을 추가합니다. Begin with a concise checklist (3-7 bullets) of what you will do; keep items conceptual, not implementation-level. After each substantive action (e.g. parsing, deletion), validate the result in 1-2 lines and either proceed or self-correct if validation fails. Set reasoning_effort=medium; keep tool/process steps terse, but ensure output and examples are clear and reviewable.
+
+</p>
+
+<p>Here’s the plan 👇</p>
+
+<ul>
+  <li>
+    <p>Clarify the scope: delete instances by exact names or regex patterns, inside selected modules or all modules.</p>
+  </li>
+  <li>
+    <p>Parse a Verilog netlist into module blocks (basic, comment-safe), keeping headers/footers intact.</p>
+  </li>
+  <li>
+    <p>Detect instantiation statements (supports optional <code class="language-plaintext highlighter-rouge">#(...)</code> params and multi-instance forms).</p>
+  </li>
+  <li>
+    <p>Remove matched instances (drop whole statement if all instances removed; otherwise rebuild it).</p>
+  </li>
+  <li>
+    <p>Output the modified netlist and a small report (what was deleted / left).</p>
+  </li>
+</ul>
+
+<p>Validation after key steps:</p>
+
+<ul>
+  <li>
+    <p>Parsing → confirm we found modules; if none, stop and report.</p>
+  </li>
+  <li>
+    <p>Deletion → confirm target instance names/patterns no longer appear textually in the affected modules (basic string/regex check).</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-minimal-well-commented-python-utility">✅ Minimal, well-commented Python utility</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Pattern</span>
+
+<span class="n">VERILOG_KEYWORDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">input</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">inout</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">wire</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">tri</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">supply0</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">supply1</span><span class="sh">"</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">reg</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">logic</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">assign</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">always</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">initial</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">generate</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endgenerate</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">begin</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">end</span><span class="sh">"</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">parameter</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">localparam</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">typedef</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">function</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endfunction</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">task</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endtask</span><span class="sh">"</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">strip_comments</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Remove // line-comments and /* block-comments */.
+    Note: string literals are ignored for simplicity (OK for basic netlists).
+    </span><span class="sh">"""</span>
+    <span class="c1"># Remove block comments
+</span>    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">/\*.*?\*/</span><span class="sh">"</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="p">.</span><span class="n">S</span><span class="p">)</span>
+    <span class="c1"># Remove line comments
+</span>    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">//.*?$</span><span class="sh">"</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="p">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+
+<span class="k">def</span> <span class="nf">find_module_blocks</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="sh">"""</span><span class="s">
+    Return a list of (module_name, start_index, end_index) covering </span><span class="sh">'</span><span class="s">module ... endmodule</span><span class="sh">'</span><span class="s">.
+    </span><span class="sh">"""</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="p">.</span><span class="nf">finditer</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">\bmodule\b.*?\bendmodule\b</span><span class="sh">"</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="p">.</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">name_m</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">\s*module\s+([A-Za-z_]\w*)</span><span class="sh">"</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name_m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">name_m</span> <span class="k">else</span> <span class="sh">"</span><span class="s">&lt;unknown&gt;</span><span class="sh">"</span>
+        <span class="n">blocks</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">m</span><span class="p">.</span><span class="nf">start</span><span class="p">(),</span> <span class="n">m</span><span class="p">.</span><span class="nf">end</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">blocks</span>
+
+<span class="k">def</span> <span class="nf">split_module_parts</span><span class="p">(</span><span class="n">block_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">
+    Split a single module block into (header_including_semicolon, body, </span><span class="sh">'</span><span class="s">endmodule</span><span class="sh">'</span><span class="s">).
+    We locate the first </span><span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="s"> after </span><span class="sh">'</span><span class="s">module</span><span class="sh">'</span><span class="s"> as the end of the header.
+    </span><span class="sh">"""</span>
+    <span class="n">end_idx</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">end_idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">block_text</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="sh">""</span>  <span class="c1"># malformed, but fail gracefully
+</span>    <span class="n">header_end</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="sh">"</span><span class="s">;</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">header_end</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># No header semicolon (unlikely). Treat all as header.
+</span>        <span class="k">return</span> <span class="n">block_text</span><span class="p">[:</span><span class="n">end_idx</span><span class="p">],</span> <span class="sh">""</span><span class="p">,</span> <span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">[:</span><span class="n">header_end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">[</span><span class="n">header_end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span>
+
+<span class="k">def</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">isspace</span><span class="p">():</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">i</span>
+
+<span class="k">def</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">open_ch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">close_ch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Given s[i] == open_ch, consume until the matching close_ch and return the index AFTER it.
+    Raise ValueError on mismatch.
+    </span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">open_ch</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">Expected %r at position %d</span><span class="sh">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">open_ch</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+    <span class="n">depth</span><span class="p">,</span> <span class="n">i0</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">open_ch</span><span class="p">:</span>
+            <span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="n">close_ch</span><span class="p">:</span>
+            <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">Unbalanced %r/%r starting at %d</span><span class="sh">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">open_ch</span><span class="p">,</span> <span class="n">close_ch</span><span class="p">,</span> <span class="n">i0</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">strip_leading_attribute</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Remove leading synthesis attributes like: (* keep = </span><span class="sh">"</span><span class="s">true</span><span class="sh">"</span><span class="s"> *).
+    </span><span class="sh">"""</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">stmt</span><span class="p">.</span><span class="nf">lstrip</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">s</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">(*</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="sh">"</span><span class="s">*)</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:].</span><span class="nf">lstrip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="k">def</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">[A-Za-z_]\w*</span><span class="sh">"</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">:])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="n">i</span>
+    <span class="n">tok</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tok</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="nf">len</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">looks_like_instantiation</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Heuristic check: first token must be a non-keyword identifier, and the shape must
+    allow optional </span><span class="sh">'</span><span class="s">#(...)</span><span class="sh">'</span><span class="s"> then an identifier followed by </span><span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="s"> ... </span><span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="s">.
+    </span><span class="sh">"""</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nf">strip_leading_attribute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">tok</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tok</span> <span class="ow">or</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">VERILOG_KEYWORDS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="c1"># Optional parameterization: #( ... )
+</span>    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">#</span><span class="sh">'</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="c1"># Next must look like an instance name '('
+</span>    <span class="n">name</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    <span class="c1"># Optional array range [..]
+</span>    <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    <span class="nf">return </span><span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">parse_instance_statement</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">
+    Parse a (possibly multi-instance) instantiation statement into its pieces.
+
+    Returns:
+        {
+          </span><span class="sh">"</span><span class="s">cell</span><span class="sh">"</span><span class="s">: str,
+          </span><span class="sh">"</span><span class="s">param_text</span><span class="sh">"</span><span class="s">: str (</span><span class="sh">''</span><span class="s"> or like </span><span class="sh">'</span><span class="s">#(...)</span><span class="sh">'</span><span class="s">),
+          </span><span class="sh">"</span><span class="s">instances</span><span class="sh">"</span><span class="s">: List[{</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="s">: str, </span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="s">: str}],
+        }
+    or None if parsing fails / not an instantiation.
+    </span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nf">looks_like_instantiation</span><span class="p">(</span><span class="n">stmt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="n">original</span> <span class="o">=</span> <span class="n">stmt</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nf">strip_leading_attribute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">cell</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Optional '#(...)'
+</span>    <span class="n">param_text</span> <span class="o">=</span> <span class="sh">""</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">#</span><span class="sh">'</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">param_text</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Collect instances until ';'
+</span>    <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Find the trailing ';' to bound scanning
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">end_stmt</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+        <span class="n">end_stmt</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end_stmt</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># Optional array range
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># Port list
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">:</span>
+            <span class="c1"># Not a valid instance group -&gt; give up
+</span>            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">inst_start</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="nf">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># include the instance name start
+</span>        <span class="n">end_ports</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">end_ports</span>
+        <span class="c1"># Capture the raw text from name through the end of ')'
+</span>        <span class="n">inst_text</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">inst_start</span><span class="p">:</span><span class="n">end_ports</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># If there's a comma, this statement has more instances
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">,</span><span class="sh">'</span><span class="p">:</span>
+            <span class="c1"># Include any following whitespace when we advance
+</span>            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">instances</span><span class="p">.</span><span class="nf">append</span><span class="p">({</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">:</span> <span class="n">inst_text</span><span class="p">})</span>
+
+        <span class="c1"># Move on
+</span>        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">instances</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">cell</span><span class="sh">"</span><span class="p">:</span> <span class="n">cell</span><span class="p">,</span> <span class="sh">"</span><span class="s">param_text</span><span class="sh">"</span><span class="p">:</span> <span class="n">param_text</span><span class="p">,</span> <span class="sh">"</span><span class="s">instances</span><span class="sh">"</span><span class="p">:</span> <span class="n">instances</span><span class="p">,</span> <span class="sh">"</span><span class="s">original</span><span class="sh">"</span><span class="p">:</span> <span class="n">original</span><span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">delete_instances_in_stmt</span><span class="p">(</span><span class="n">parsed</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                             <span class="n">names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                             <span class="n">patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pattern</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="sh">"""</span><span class="s">
+    From a parsed instantiation, drop matching instances.
+    Returns: (changed?, new_stmt_text, deleted_names)
+    </span><span class="sh">"""</span>
+    <span class="n">to_delete</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="k">if</span> <span class="n">names</span> <span class="k">else</span> <span class="nf">set</span><span class="p">()</span>
+    <span class="n">deleted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kept_texts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">instances</span><span class="sh">"</span><span class="p">]:</span>
+        <span class="n">hit</span> <span class="o">=</span> <span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">]</span> <span class="ow">in</span> <span class="n">to_delete</span> <span class="ow">or</span> <span class="nf">any</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">hit</span><span class="p">:</span>
+            <span class="n">deleted</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kept_texts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">deleted</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">original</span><span class="sh">"</span><span class="p">],</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">kept_texts</span><span class="p">:</span>
+        <span class="c1"># Whole statement removed
+</span>        <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="n">deleted</span>
+
+    <span class="c1"># Rebuild: &lt;cell&gt;&lt;param?&gt; &lt;instA(...)&gt;, &lt;instB(...&gt;) ;
+</span>    <span class="n">rebuilt</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">cell</span><span class="sh">"</span><span class="p">]</span><span class="si">}{</span><span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">param_text</span><span class="sh">"</span><span class="p">]</span><span class="si">}</span><span class="s"> </span><span class="sh">'</span> <span class="o">+</span> <span class="sh">"</span><span class="s">, </span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">kept_texts</span><span class="p">)</span> <span class="o">+</span> <span class="sh">"</span><span class="s">;</span><span class="sh">"</span>
+    <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">rebuilt</span><span class="p">,</span> <span class="n">deleted</span>
+
+<span class="k">def</span> <span class="nf">remove_instances_from_verilog</span><span class="p">(</span>
+    <span class="n">verilog_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">instance_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">instance_patterns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">limit_to_modules</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">
+    Delete instances by name/pattern from selected modules (or all modules if None).
+
+    Args:
+        verilog_text: Entire netlist text.
+        instance_names: Exact instance names to remove.
+        instance_patterns: Regex patterns (python re) for names to remove.
+        limit_to_modules: Only mutate these module names (others preserved verbatim).
+
+    Returns: (modified_text, report_dict)
+        report_dict = {
+            </span><span class="sh">"</span><span class="s">modules_parsed</span><span class="sh">"</span><span class="s">: [names...],
+            </span><span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="s">: [names...],
+            </span><span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="s">: {module_name: [inst_names...]},
+            </span><span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="s">: [requested_name that was not matched],
+        }
+    </span><span class="sh">"""</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">instance_names</span> <span class="ow">or</span> <span class="p">[])</span>
+    <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="p">.</span><span class="nf">compile</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">instance_patterns</span> <span class="ow">or</span> <span class="p">[])]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="nf">strip_comments</span><span class="p">(</span><span class="n">verilog_text</span><span class="p">)</span>
+
+    <span class="n">blocks</span> <span class="o">=</span> <span class="nf">find_module_blocks</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="sh">"</span><span class="s">modules_parsed</span><span class="sh">"</span><span class="p">:</span> <span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">],</span>
+        <span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">verilog_text</span><span class="p">,</span> <span class="n">report</span>  <span class="c1"># nothing to do
+</span>
+    <span class="n">out_parts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">global_deleted</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">mod_name</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="c1"># copy pre-module region unchanged
+</span>        <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">verilog_text</span><span class="p">[</span><span class="n">cursor</span><span class="p">:</span><span class="n">s</span><span class="p">])</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="n">verilog_text</span><span class="p">[</span><span class="n">s</span><span class="p">:</span><span class="n">e</span><span class="p">]</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">end_kw</span> <span class="o">=</span> <span class="nf">split_module_parts</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">limit_to_modules</span> <span class="ow">and</span> <span class="n">mod_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nf">set</span><span class="p">(</span><span class="n">limit_to_modules</span><span class="p">):</span>
+            <span class="c1"># Leave this module as-is
+</span>            <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Work on 'body'
+</span>        <span class="n">changed</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">deleted_here</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Split body into semi-colon terminated units but keep them for safe rebuild.
+</span>        <span class="n">units</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
+            <span class="n">buf</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">depth</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">units</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">buf</span><span class="p">))</span>
+                <span class="n">buf</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Remainder (blocks without ';', e.g., 'always' ... 'end') stays as-is
+</span>        <span class="n">tail</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+
+        <span class="n">rebuilt_units</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">units</span><span class="p">:</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="nf">parse_instance_statement</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parsed</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">rebuilt_units</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>  <span class="c1"># untouched
+</span>                <span class="k">continue</span>
+            <span class="n">did_change</span><span class="p">,</span> <span class="n">new_u</span><span class="p">,</span> <span class="n">deleted</span> <span class="o">=</span> <span class="nf">delete_instances_in_stmt</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">patterns</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">did_change</span><span class="p">:</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">deleted_here</span><span class="p">.</span><span class="nf">extend</span><span class="p">(</span><span class="n">deleted</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_u</span><span class="p">:</span>
+                <span class="n">rebuilt_units</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">new_u</span><span class="p">)</span>
+
+        <span class="c1"># Reassemble
+</span>        <span class="n">new_body</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">rebuilt_units</span><span class="p">)</span> <span class="o">+</span> <span class="n">tail</span>
+        <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
+            <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="p">].</span><span class="nf">append</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
+            <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="p">][</span><span class="n">mod_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">deleted_here</span>
+            <span class="n">global_deleted</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">deleted_here</span><span class="p">)</span>
+            <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="n">new_body</span> <span class="o">+</span> <span class="n">end_kw</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">e</span>
+
+    <span class="c1"># Copy trailing text after last module
+</span>    <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">verilog_text</span><span class="p">[</span><span class="n">cursor</span><span class="p">:])</span>
+    <span class="n">modified</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">out_parts</span><span class="p">)</span>
+
+    <span class="c1"># Populate not_found (exact names only, patterns are not enumerable)
+</span>    <span class="k">if</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">requested</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+        <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">requested</span> <span class="o">-</span> <span class="n">global_deleted</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">modified</span><span class="p">,</span> <span class="n">report</span>
+
+<span class="c1"># ---------- Example usage ----------
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">demo</span> <span class="o">=</span> <span class="sa">r</span><span class="sh">'''</span><span class="s">
+module foo (input a,b, output y);
+  wire n1, n2;
+  MYCELL #(.WIDTH(8)) u0 (.A(a), .B(b), .Y(n1)),
+                      inst_del (.A(a), .B(n1), .Y(n2));
+  INV u_keep (.A(n2), .Y(y));
+  INV u_del  (.A(n1), .Y(n2));
+endmodule
+</span><span class="sh">'''</span>
+    <span class="n">keep</span><span class="p">,</span> <span class="n">rep</span> <span class="o">=</span> <span class="nf">remove_instances_from_verilog</span><span class="p">(</span>
+        <span class="n">demo</span><span class="p">,</span>
+        <span class="n">instance_names</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">u_del</span><span class="sh">"</span><span class="p">],</span>
+        <span class="n">instance_patterns</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="sh">"</span><span class="s">^inst_del$</span><span class="sh">"</span><span class="p">],</span>  <span class="c1"># regex
+</span>        <span class="n">limit_to_modules</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>              <span class="c1"># or ["foo"]
+</span>    <span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">=== Report ===</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="s">=== After ===</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">keep</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-quick-delete-beforeafter-demo-from-__main__-above">🧪 Quick “delete-before/after” demo (from <code class="language-plaintext highlighter-rouge">__main__</code> above)</h3>
+
+<p><strong>Before</strong></p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="n">foo</span> <span class="p">(</span><span class="kt">input</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="kt">output</span> <span class="n">y</span><span class="p">);</span>
+  <span class="kt">wire</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">;</span>
+  <span class="n">MYCELL</span> <span class="p">#(.</span><span class="n">WIDTH</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span> <span class="n">u0</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="p">.</span><span class="n">B</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n1</span><span class="p">)),</span>
+                      <span class="n">inst_del</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="p">.</span><span class="n">B</span><span class="p">(</span><span class="n">n1</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n2</span><span class="p">));</span>
+  <span class="n">INV</span> <span class="n">u_keep</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">n2</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">y</span><span class="p">));</span>
+  <span class="n">INV</span> <span class="n">u_del</span>  <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">n1</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n2</span><span class="p">));</span>
+<span class="k">endmodule</span>
+</code></pre></div></div>
+
+<p><strong>Run</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python remove_verilog_instances.py
+</code></pre></div></div>
+
+<p><strong>Validation (Parsing)</strong></p>
+
+<ul>
+  <li>Found modules: <code class="language-plaintext highlighter-rouge">['foo']</code>. Proceed.</li>
+</ul>
+
+<p><strong>Validation (Deletion)</strong></p>
+
+<ul>
+  <li>
+    <p>Deleted in <code class="language-plaintext highlighter-rouge">foo</code>: <code class="language-plaintext highlighter-rouge">['inst_del', 'u_del']</code>.</p>
+  </li>
+  <li>
+    <p>Text search check: <code class="language-plaintext highlighter-rouge">inst_del</code>, <code class="language-plaintext highlighter-rouge">u_del</code> no longer present. Proceed.</p>
+  </li>
+</ul>
+
+<p><strong>After</strong></p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="n">foo</span> <span class="p">(</span><span class="kt">input</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="kt">output</span> <span class="n">y</span><span class="p">);</span>
+  <span class="kt">wire</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">;</span>
+  <span class="n">MYCELL</span> <span class="p">#(.</span><span class="n">WIDTH</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span> <span class="n">u0</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="p">.</span><span class="n">B</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n1</span><span class="p">));</span>
+  <span class="n">INV</span> <span class="n">u_keep</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">n2</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">y</span><span class="p">));</span>
+<span class="k">endmodule</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="how-to-use-in-your-project">How to use in your project</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">remove_verilog_instances</span> <span class="kn">import</span> <span class="n">remove_instances_from_verilog</span>
+
+<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">design_netlist.v</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">r</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+
+<span class="n">modified</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="nf">remove_instances_from_verilog</span><span class="p">(</span>
+    <span class="n">net</span><span class="p">,</span>
+    <span class="n">instance_names</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">U1234</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">spare_inv_0</span><span class="sh">"</span><span class="p">],</span>
+    <span class="n">instance_patterns</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="sh">"</span><span class="s">^spare_.*$</span><span class="sh">"</span><span class="p">,</span> <span class="sa">r</span><span class="sh">"</span><span class="s">^DBG_</span><span class="sh">"</span><span class="p">],</span>  <span class="c1"># regex patterns
+</span>    <span class="n">limit_to_modules</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">top</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">cpu_core</span><span class="sh">"</span><span class="p">]</span>          <span class="c1"># or None for all modules
+</span><span class="p">)</span>
+
+<span class="c1"># Validation (recommended)
+</span><span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">modules_parsed</span><span class="sh">"</span><span class="p">]:</span>
+    <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span><span class="sh">"</span><span class="s">No modules parsed; check input.</span><span class="sh">"</span><span class="p">)</span>
+<span class="c1"># Optional: verify that requested names are gone
+</span><span class="k">for</span> <span class="n">nm</span> <span class="ow">in</span> <span class="p">[</span><span class="sh">"</span><span class="s">U1234</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">spare_inv_0</span><span class="sh">"</span><span class="p">]:</span>
+    <span class="k">assert</span> <span class="n">nm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">modified</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">nm</span><span class="si">}</span><span class="s"> still present after deletion!</span><span class="sh">"</span>
+
+<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">design_netlist.cleaned.v</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">modified</span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Edited modules:</span><span class="sh">"</span><span class="p">,</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Deleted instances:</span><span class="sh">"</span><span class="p">,</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Not found:</span><span class="sh">"</span><span class="p">,</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="p">])</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="notes--limitations-documented">Notes &amp; limitations (documented)</h3>
+
+<ul>
+  <li>
+    <p>Targets <em>instance deletion only</em> (no insert/modify).</p>
+  </li>
+  <li>
+    <p>Handles common forms: <code class="language-plaintext highlighter-rouge">CELL #(params) instA(...), instB(...);</code> and single-instance statements.</p>
+  </li>
+  <li>
+    <p>Basic parser (regex + small state machine). No preprocessor/<code class="language-plaintext highlighter-rouge">include</code>, <code class="language-plaintext highlighter-rouge">generate</code>-conditionals, UDP, or exotic syntax support.</p>
+  </li>
+  <li>
+    <p>Comment stripping is simple; string-literal corner cases are not exhaustively handled (rare in flat netlists).</p>
+  </li>
+</ul>
+
+<p>If you want, I can adapt the matcher for fnmatch-style globs (<code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">?</code>) or add a tiny CLI (<code class="language-plaintext highlighter-rouge">argparse</code>) to run this from the command line with <code class="language-plaintext highlighter-rouge">--names</code>/<code class="language-plaintext highlighter-rouge">--patterns</code>/<code class="language-plaintext highlighter-rouge">--modules</code>.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Pyverilog 서브모듈 구현</title><link href="https://hvppycoding.github.io/verilog/pyverilog-submod-implementation/" rel="alternate" type="text/html" title="Pyverilog 서브모듈 구현" /><published>2025-08-19T14:36:09+09:00</published><updated>2025-08-19T14:36:09+09:00</updated><id>https://hvppycoding.github.io/verilog/pyverilog-submod-implementation</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/pyverilog-submod-implementation/"><![CDATA[<p class="chat--user">
 
 You are professional expert of pyverilog and verilog. 아래는 yosys 툴의 submod 기능에 대한 documentation이야. 이와 유사한 기능을 pyverilog로 만들고 싶어. bit width(MSB, LSB)가 있는 포트/넷도 잘 처리해야해. 원하는 입력 커맨드: submod -f instance.list(파일 안에 submodule화 하고자하는 instance 명들 포함) -t <target_module> netlist1.v netlist2.v submod - moving part of a module to a new submodule yosys&gt; help submod submod [options] [selection] This pass identifies all cells with the 'submod' attribute and moves them to a newly created module. The value of the attribute is used as name for the cell that replaces the group of cells with the same attribute value. This pass can be used to create a design hierarchy in flat design. This can be useful for analyzing or reverse-engineering a design. This pass only operates on completely selected modules with no processes or memories. -name <name> don't use the 'submod' attribute but instead use the selection. only objects from one module might be selected. the value of the -name option is used as the value of the 'submod' attribute instead. 
 
@@ -7565,658 +8064,4 @@ plt.legend(); plt.grid(True); plt.ylabel("Growth (start = 1)"); plt.tight_layout
 <p>detail_rl = pd.DataFrame({
     "NAV": nav_series.round(2)
 })
-detail_rl.to_csv("rl_nav_detail.csv", float_format="%.2f")</p>]]></content><author><name>hvppycoding</name></author><category term="investing" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Loguru 패키지 설명</title><link href="https://hvppycoding.github.io/python/python-loguru/" rel="alternate" type="text/html" title="Loguru 패키지 설명" /><published>2025-07-31T22:43:26+09:00</published><updated>2025-07-31T22:43:26+09:00</updated><id>https://hvppycoding.github.io/python/python-loguru</id><content type="html" xml:base="https://hvppycoding.github.io/python/python-loguru/"><![CDATA[<p class="chat--user">
-
-python에서 loguru를 쓰던데 이건 뭐하는 패키지야?
-
-</p>
-
-<p><code class="language-plaintext highlighter-rouge">loguru</code>는 Python에서 <strong>로깅(logging)</strong> 을 훨씬 더 간편하고 강력하게 해주는 서드파티 라이브러리입니다. 기본
-<code class="language-plaintext highlighter-rouge">logging</code> 모듈보다 사용하기 쉬우면서도, 실전에서 쓸 수 있는 여러 기능을 기본으로 제공합니다.</p>
-
-<p>아래에 핵심적으로 어떤 역할을 하는지 정리해드리겠습니다.</p>
-
-<hr />
-
-<h3 id="-왜-loguru를-쓰는가">✅ 왜 <code class="language-plaintext highlighter-rouge">loguru</code>를 쓰는가?</h3>
-
-<ol>
-  <li>
-    <p><strong>기본 설정 없이 바로 사용 가능</strong></p>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">from loguru import logger</code> 한 줄이면 바로 로그를 출력할 수 있습니다.</p>
-      </li>
-      <li>
-        <p>기본 <code class="language-plaintext highlighter-rouge">logging</code> 모듈처럼 설정이나 핸들러 붙이는 번거로운 작업이 필요 없습니다.</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>더 읽기 쉬운 로그 출력</strong></p>
-
-    <ul>
-      <li>로그 메시지에 시간, 파일명, 줄 번호, 레벨 등이 자동 포함되고, 컬러로 구분됩니다.</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>파일 로깅, 회전(Rotation), 압축(Compression) 기능 기본 내장</strong></p>
-
-    <ul>
-      <li>예: 로그 파일이 일정 크기를 넘으면 자동으로 새 파일로 분리하거나, 오래된 로그를 압축/삭제할 수 있습니다.</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>구체적인 예외 추적 제공</strong></p>
-
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">logger.exception()</code>은 traceback을 매우 보기 쉽게 출력해 줍니다.</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>함수 데코레이터로 자동 로깅</strong></p>
-
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">@logger.catch</code> 데코레이터를 쓰면, 예외가 발생했을 때 자동으로 로그가 남습니다.</li>
-    </ul>
-  </li>
-</ol>
-
-<hr />
-
-<h3 id="-간단한-예시">📌 간단한 예시</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">Debug message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Info message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="sh">"</span><span class="s">Warning message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">Error message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="sh">"</span><span class="s">Critical message</span><span class="sh">"</span><span class="p">)</span>
-
-<span class="c1"># 예외 자동 로깅
-</span><span class="nd">@logger.catch</span>
-<span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
-
-<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h3 id="-로그-파일-저장도-간단하게">🔧 로그 파일 저장도 간단하게</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">my_log.log</span><span class="sh">"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="sh">"</span><span class="s">500 MB</span><span class="sh">"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="sh">"</span><span class="s">zip</span><span class="sh">"</span><span class="p">,</span> <span class="n">retention</span><span class="o">=</span><span class="sh">"</span><span class="s">10 days</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>위 코드는 로그를 <code class="language-plaintext highlighter-rouge">my_log.log</code> 파일에 저장하면서,</p>
-
-<ul>
-  <li>
-    <p>파일이 500MB를 넘으면 새 파일로 분리,</p>
-  </li>
-  <li>
-    <p>오래된 로그는 zip으로 압축,</p>
-  </li>
-  <li>
-    <p>10일 지난 로그는 삭제합니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h3 id="결론">결론</h3>
-
-<p>기존 <code class="language-plaintext highlighter-rouge">logging</code> 모듈보다 훨씬 덜 귀찮고, 바로 실전에서 쓸 수 있게 설계된 로그 도구입니다. 특히 CLI 도구나 백엔드 서비스 개발
-시 아주 유용합니다. 다만, 너무 많은 기능을 자동으로 처리하기 때문에 내부 동작을 잘 이해하지 않고 쓰면 디버깅이 어려워질 수 있습니다.
-쓰기 쉽지만, 무조건 좋은 건 아닙니다 — 설정의 명시성이 부족해서 프로젝트 규모가 커지면 팀 단위로는 오히려 관리가 복잡해질 수도
-있습니다.</p>
-
-<p>필요하다면 <code class="language-plaintext highlighter-rouge">loguru</code>와 <code class="language-plaintext highlighter-rouge">logging</code>의 내부 차이점도 비교해드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-@logger.catch가 뭐하는건지 저것만 봐서는 잘 모르겠어. 파일 로깅은 자동으로 해주는거야?
-
-</p>
-
-<p>좋은 질문입니다. 겉으로는 간단해 보이지만, <code class="language-plaintext highlighter-rouge">@logger.catch</code>나 파일 로깅에 대한 오해가 생기기 쉬운 부분입니다. 아래에 정확하게
-짚어드리겠습니다.</p>
-
-<hr />
-
-<h2 id="-loggercatch-정확히-뭐하는가">🔍 <code class="language-plaintext highlighter-rouge">@logger.catch</code> 정확히 뭐하는가?</h2>
-
-<p><code class="language-plaintext highlighter-rouge">@logger.catch</code>는 <strong>함수나 코드 블록에서 발생하는 예외를 자동으로 잡아서 로그로 남기는 데코레이터</strong> 입니다.</p>
-
-<p>즉, try-except 없이도 <strong>예외가 터지면 자동으로 traceback과 함께 예쁘게 출력</strong> 해 줍니다.</p>
-
-<h3 id="-예시">📌 예시:</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="nd">@logger.catch</span>
-<span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
-
-<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># 예외 발생
-</span></code></pre></div></div>
-
-<h4 id="결과-터미널-출력">결과 (터미널 출력):</h4>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vbnet
-
-2025-07-25 12:34:56.789 | ERROR    | __main__:divide:5 - An error has occurred
-Traceback (most recent call last):
-  File "script.py", line 7, in &lt;module&gt;
-    divide(1, 0)
-  File "script.py", line 5, in divide
-    return x / y
-ZeroDivisionError: division by zero
-</code></pre></div></div>
-
-<p>✔️ 이건 <code class="language-plaintext highlighter-rouge">try: ... except:</code> 없이도 예외를 자동으로 잡아주는 것<br />
-✔️ 로그에 함수명, 줄 번호, 전체 traceback까지 아주 정리된 형태로 찍히는 것</p>
-
-<hr />
-
-<h2 id="-단점-및-주의사항">⛔ 단점 및 주의사항</h2>
-
-<ul>
-  <li>
-    <p><strong>예외를 무조건 삼켜버립니다</strong>. 즉, <code class="language-plaintext highlighter-rouge">@logger.catch</code>는 예외를 처리한 후 <strong>재발생시키지 않기 때문에</strong> , 프로그램이 조용히 계속 진행될 수 있습니다.</p>
-
-    <ul>
-      <li>원래는 죽었어야 할 프로그램이 안 죽고 뭔가 이상하게 흘러갈 수 있다는 뜻입니다.</li>
-    </ul>
-  </li>
-  <li>
-    <p>예외를 다시 올리게 하려면 <code class="language-plaintext highlighter-rouge">reraise=True</code>를 명시해야 합니다:</p>
-  </li>
-</ul>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@logger.catch</span><span class="p">(</span><span class="n">reraise</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">buggy</span><span class="p">():</span>
-    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">bad!</span><span class="sh">"</span><span class="p">)</span>
-
-<span class="nf">buggy</span><span class="p">()</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-그럼-파일-로깅은-자동으로-되냐">📁 그럼 파일 로깅은 자동으로 되냐?</h2>
-
-<p><strong>절대 자동으로 안 됩니다.</strong> <code class="language-plaintext highlighter-rouge">logger.add()</code>로 명시적으로 파일을 지정해줘야 합니다.</p>
-
-<h3 id="예시">예시:</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">debug.log</span><span class="sh">"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="sh">"</span><span class="s">1 MB</span><span class="sh">"</span><span class="p">)</span>
-
-<span class="nd">@logger.catch</span>
-<span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
-
-<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>✔️ 이래야 <code class="language-plaintext highlighter-rouge">debug.log</code> 파일에 로그가 저장됩니다.<br />
-❌ 아무것도 안 하면 콘솔 출력만 나가고, 파일은 생성되지 않습니다.</p>
-
-<hr />
-
-<h2 id="요약-정리">요약 정리</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>기능</th>
-      <th>자동 여부</th>
-      <th>설명</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">@logger.catch</code></td>
-      <td>✅</td>
-      <td>예외를 자동으로 잡고 로그로 남김 (단, 예외는 기본적으로 무시됨)</td>
-    </tr>
-    <tr>
-      <td>파일 로깅</td>
-      <td>❌</td>
-      <td><code class="language-plaintext highlighter-rouge">logger.add()</code>로 직접 설정해야 저장됨</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">logger.add()</code>의 다른 기능 (필터링, 포맷, 로그 레벨 별 분리 저장 등)도 알려드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-cli entry에서 logger에 add 해주면 전체 패키지에서 다 공유되는거야?
-
-</p>
-
-<p>네, <strong>기본적으로는 그렇습니다.</strong></p>
-
-<p><code class="language-plaintext highlighter-rouge">loguru</code>의 <code class="language-plaintext highlighter-rouge">logger</code>는 <strong>싱글톤 객체</strong> 입니다. 즉, <code class="language-plaintext highlighter-rouge">logger.add()</code>로 설정한 로그 핸들러는 <strong>해당 프로세스
-내에서 전역(global)으로 공유</strong> 되며, 다른 모듈이나 서브패키지에서 임포트해서 써도 동일하게 적용됩니다.</p>
-
-<p>하지만, 여기엔 몇 가지 조건과 오해하기 쉬운 함정이 있습니다.</p>
-
-<hr />
-
-<h2 id="-기본-동작-cli-entry에서-loggeradd-하면-전체에서-공유됨">✅ 기본 동작: CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()</code> 하면 전체에서 공유됨</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">app.log</span><span class="sh">"</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Starting the app</span><span class="sh">"</span><span class="p">)</span>
-
-<span class="c1"># utils.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="k">def</span> <span class="nf">helper</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Inside helper</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># main.py 실행</span>
-python main.py
-</code></pre></div></div>
-
-<p>→ <code class="language-plaintext highlighter-rouge">app.log</code>에는 <code class="language-plaintext highlighter-rouge">main()</code>과 <code class="language-plaintext highlighter-rouge">helper()</code> 양쪽 로그가 다 들어갑니다.<br />
-→ 이건 <code class="language-plaintext highlighter-rouge">logger</code> 객체가 <strong>싱글톤이기 때문</strong> 입니다. <code class="language-plaintext highlighter-rouge">from loguru import logger</code>는 항상 같은 인스턴스를
-가져옵니다.</p>
-
-<hr />
-
-<h2 id="️-조심해야-할-점">⚠️ 조심해야 할 점</h2>
-
-<h3 id="1-loggeradd-호출-타이밍-중요">1. <code class="language-plaintext highlighter-rouge">logger.add()</code> 호출 타이밍 중요</h3>
-
-<p>만약 <code class="language-plaintext highlighter-rouge">logger.add()</code>가 실행되기 전에 다른 모듈이 먼저 로그를 찍으면?</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># utils.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello from utils</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># add() 호출 전이므로 안 찍힐 수도 있음
-</span>
-<span class="c1"># main.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">import</span> <span class="n">utils</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>→ <code class="language-plaintext highlighter-rouge">utils</code>가 먼저 로딩되면서 로그를 찍고, <code class="language-plaintext highlighter-rouge">add()</code>는 그 후에 호출되므로 <strong>처음 로그는 안 남을 수 있음</strong>.</p>
-
-<p><strong>💡 해결책:</strong> 가능한 한 <strong>초기화 로직은 entry point에서 가장 먼저 실행</strong> 해야 함.</p>
-
-<hr />
-
-<h3 id="2-로그-핸들러가-중복되면-로그도-중복됨">2. 로그 핸들러가 중복되면 로그도 중복됨</h3>
-
-<p>다른 곳에서 또 <code class="language-plaintext highlighter-rouge">logger.add()</code>를 하면 핸들러가 추가로 붙기 때문에, <strong>같은 로그가 여러 번 출력될 수 있음</strong>.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log1.txt</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log2.txt</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>→ 하나의 로그 메시지가 두 파일에 동시에 저장됨.<br />
-→ 불필요하게 많이 찍히는 상황도 생길 수 있음.</p>
-
-<hr />
-
-<h3 id="3-loggerremove-안-하면-핸들러-계속-남음">3. <code class="language-plaintext highlighter-rouge">logger.remove()</code> 안 하면 핸들러 계속 남음</h3>
-
-<p><code class="language-plaintext highlighter-rouge">logger.add()</code>는 핸들러 ID를 반환합니다. 이를 저장해뒀다가 필요할 때 <code class="language-plaintext highlighter-rouge">logger.remove(handler_id)</code>로
-제거해줘야 합니다. 안 그러면 계속 누적됩니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log_id</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="-결론-정리">✅ 결론 정리</h2>
-
-<p>질문| 답변<br />
-—|—<br />
-CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()</code> 하면 다른 모듈에서도 로그 저장되나?| ✅ 예, <code class="language-plaintext highlighter-rouge">loguru.logger</code>는 싱글톤이므로
-전체 패키지에서 공유됩니다.<br />
-설정 타이밍 중요하지 않나?| ⚠️ 중요합니다. 너무 늦게 <code class="language-plaintext highlighter-rouge">add()</code> 하면 초기 로그가 안 찍힐 수 있습니다.<br />
-중복 <code class="language-plaintext highlighter-rouge">add()</code> 문제 없나?| ⚠️ 중복 출력될 수 있으니 주의해야 합니다.<br />
-핸들러 제거하려면?| <code class="language-plaintext highlighter-rouge">logger.remove(handler_id)</code>로 수동 제거 필요합니다.</p>
-
-<hr />
-
-<p>필요하시다면, <code class="language-plaintext highlighter-rouge">logger.configure()</code>를 써서 모듈 단위 설정 분리하는 방법도 안내해드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-표준 출력은 자동으로 돼?
-
-</p>
-
-<p>기본적으로 <strong>네,<code class="language-plaintext highlighter-rouge">loguru</code>는 표준 출력(stdout)으로 로그를 자동 출력합니다.</strong><br />
-다만, <em>언제 어떻게 출력되는지는</em> 내부에 미리 등록된 <strong>기본 핸들러(default sink)</strong> 덕분이고, 그 동작 방식에 대해 정확히
-이해해야 합니다.</p>
-
-<hr />
-
-<h2 id="-기본-상태-자동으로-stdout-출력됨">✅ 기본 상태: 자동으로 stdout 출력됨</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello world</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>위 코드는 아무런 설정도 없지만 <code class="language-plaintext highlighter-rouge">stdout</code>으로 다음과 같이 컬러풀한 로그를 출력합니다:</p>
-
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2025</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">25</span> <span class="mi">14</span><span class="o">:</span><span class="mi">12</span><span class="o">:</span><span class="mf">30.123</span> <span class="o">|</span> <span class="n">INFO</span>     <span class="o">|</span> <span class="n">__main__</span><span class="o">:&lt;</span><span class="k">module</span><span class="o">&gt;:</span><span class="mi">3</span> <span class="o">-</span> <span class="n">hello</span> <span class="n">world</span>
-</code></pre></div></div>
-
-<p>이건 <code class="language-plaintext highlighter-rouge">loguru</code>가 <strong>프로그램 시작 시 내부적으로 다음과 같은 핸들러를 자동 등록</strong> 해두기 때문입니다:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="p">...,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">DEBUG</span><span class="sh">"</span><span class="p">,</span> <span class="n">colorize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>✔️ 즉, <strong>자동으로 stderr (터미널 출력)으로 로그를 내보냅니다.</strong><br />
-✔️ <code class="language-plaintext highlighter-rouge">stderr</code>이긴 하지만, 일반적으로 터미널 화면에 보이므로 사실상 <code class="language-plaintext highlighter-rouge">stdout</code>처럼 동작한다고 봐도 무방합니다.</p>
-
-<hr />
-
-<h2 id="-명시적으로-파일-로깅을-추가하면-어떻게-되나">❗ 명시적으로 파일 로깅을 추가하면 어떻게 되나?</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">mylog.log</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">only in file?</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>➡ <strong>아닙니다.</strong> 기본 stdout 출력도 여전히 유지됩니다.<br />
-즉, 로그는 <strong>콘솔에도 찍히고</strong> , <code class="language-plaintext highlighter-rouge">mylog.log</code> 파일에도 저장됩니다.<br />
-기존 핸들러는 유지되며 새로운 핸들러가 추가되는 구조이기 때문입니다.</p>
-
-<hr />
-
-<h2 id="-표준-출력을-끄고-싶다면">⛔ 표준 출력을 끄고 싶다면?</h2>
-
-<p>기존의 기본 핸들러를 <strong>명시적으로 제거</strong> 해야 합니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>  <span class="c1"># 기존 stdout 핸들러 제거
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>이러면 stdout에는 아무 것도 출력되지 않고, 파일에만 저장됩니다.</p>
-
-<hr />
-
-<h2 id="-요약">💡 요약</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>질문</th>
-      <th>답변</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>아무 설정 없이 logger를 쓰면 어디로 로그가 나가나?</td>
-      <td>기본적으로 <code class="language-plaintext highlighter-rouge">stderr</code> (즉, 콘솔)로 나갑니다.</td>
-    </tr>
-    <tr>
-      <td>따로 add 안 해도 표준 출력이 된다?</td>
-      <td>✅ 네, 내부 기본 핸들러가 등록되어 있습니다.</td>
-    </tr>
-    <tr>
-      <td>파일로 로깅을 추가하면 표준 출력은 사라지나?</td>
-      <td>❌ 아니요, 둘 다 동작합니다.</td>
-    </tr>
-    <tr>
-      <td>stdout 출력을 끄려면?</td>
-      <td><code class="language-plaintext highlighter-rouge">logger.remove()</code>로 기존 핸들러를 제거해야 합니다.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>필요하시면 <code class="language-plaintext highlighter-rouge">stdout</code>, <code class="language-plaintext highlighter-rouge">stderr</code>, 파일 등 <strong>출력 경로별로 레벨이나 포맷을 다르게 설정</strong> 하는 방법도 설명해드릴 수
-있습니다.</p>
-
-<p class="chat--user">
-
-원래는 logging.getLogger(<strong>name</strong>) 이렇게 해줬잖아. 이런건 필요없어?
-
-</p>
-
-<p>좋은 지적입니다. <code class="language-plaintext highlighter-rouge">loguru</code>를 쓸 때는 <code class="language-plaintext highlighter-rouge">logging.getLogger(__name__)</code> 같은 <strong>모듈별 Logger 생성</strong> 을
-더 이상 <strong>직접 할 필요가 없습니다.</strong></p>
-
-<p>하지만 그게 정말 "문제가 없느냐"는 건 얘기해볼 가치가 있습니다. 아래에 하나씩 설명드릴게요.</p>
-
-<hr />
-
-<h2 id="-loguru는-싱글톤-logger만-제공합니다">✅ loguru는 싱글톤 logger만 제공합니다</h2>
-
-<p>기존 표준 <code class="language-plaintext highlighter-rouge">logging</code> 모듈에서는 이렇게 모듈별로 logger를 만들었습니다:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">logging</span>
-
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>이렇게 하면 모듈마다 이름이 붙은 logger가 생기고, 나중에 어떤 모듈에서 로그를 찍었는지 추적이 쉬웠죠.</p>
-
-<hr />
-
-<h2 id="-하지만-loguru는-이렇게-안-씁니다">🟦 하지만 loguru는 이렇게 안 씁니다</h2>
-
-<p><code class="language-plaintext highlighter-rouge">loguru</code>는 <code class="language-plaintext highlighter-rouge">from loguru import logger</code> 하면 <strong>무조건 전역 공유 싱글톤 인스턴스를 씁니다.</strong></p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 어떤 모듈에서든
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>모듈명, 줄 번호, 함수명 같은 메타데이터는 자동으로 로그에 포함되기 때문에<br />
-<code class="language-plaintext highlighter-rouge">__name__</code> 기반의 이름붙은 logger를 직접 쓸 이유가 없습니다.</p>
-
-<p>예시 출력:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
-
-2025-07-25 15:00:01.123 | INFO     | utils.db:get_user:42 - fetching user
-</code></pre></div></div>
-
-<p>→ <code class="language-plaintext highlighter-rouge">utils.db</code> 모듈, <code class="language-plaintext highlighter-rouge">get_user</code> 함수, 42번째 줄이 자동으로 찍힘.</p>
-
-<hr />
-
-<h2 id="-진짜-다-필요-없을까">❗ 진짜 다 필요 없을까?</h2>
-
-<p>기술적으로는 <code class="language-plaintext highlighter-rouge">loguru</code>가 모듈명 등을 로그 메시지에 자동으로 포함하니 <code class="language-plaintext highlighter-rouge">__name__</code> 기반 logger가 필요 없어 보이지만,
-아래와 같은 <strong>상황에선 표준 방식이 더 나을 수도 있습니다</strong> :</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>상황</th>
-      <th><code class="language-plaintext highlighter-rouge">loguru</code> 단점</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>라이브러리 개발</strong></td>
-      <td>전역 싱글톤 logger는 외부 앱에서 핸들링이 어렵고, 사용자 설정을 침범할 수 있음</td>
-    </tr>
-    <tr>
-      <td><strong>로거 이름 기반 필터링</strong></td>
-      <td><code class="language-plaintext highlighter-rouge">loguru</code>는 기본적으로 <code class="language-plaintext highlighter-rouge">logger.name</code>이 없으므로 이름 기반 레벨 제어가 불편함</td>
-    </tr>
-    <tr>
-      <td><strong>기존<code class="language-plaintext highlighter-rouge">logging</code> 기반 시스템과 통합</strong></td>
-      <td><code class="language-plaintext highlighter-rouge">loguru</code>와 <code class="language-plaintext highlighter-rouge">logging</code>은 전혀 다른 시스템이라 브리징이 필요함</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h2 id="-타협안-loguru를-logging처럼-쓰고-싶다면">🔄 타협안: <code class="language-plaintext highlighter-rouge">loguru</code>를 <code class="language-plaintext highlighter-rouge">logging</code>처럼 쓰고 싶다면?</h2>
-
-<p><code class="language-plaintext highlighter-rouge">loguru</code>는 <code class="language-plaintext highlighter-rouge">logger.bind()</code>를 제공해서 일부 유사한 기능을 흉내낼 수 있습니다:</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="sh">"</span><span class="s">my.module</span><span class="sh">"</span><span class="p">)</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 로그에 module="my.module" 붙음
-</span></code></pre></div></div>
-
-<p>또는 <code class="language-plaintext highlighter-rouge">enqueue=True</code>와 <code class="language-plaintext highlighter-rouge">filter=</code> 같은 옵션으로 조건부 로깅도 구현 가능합니다. 하지만 <strong>모듈별 logger 관리가
-깔끔하지는 않습니다.</strong></p>
-
-<hr />
-
-<h2 id="-결론">✅ 결론</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>질문</th>
-      <th>답변</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">loguru</code>에서는 <code class="language-plaintext highlighter-rouge">getLogger(__name__)</code>이 필요 없나?</td>
-      <td>✅ 네, 자동 메타정보 덕분에 필요 없습니다.</td>
-    </tr>
-    <tr>
-      <td>그럼 완전히 대체되나?</td>
-      <td>❌ 아니요. 모듈별 로거 이름이 중요한 상황 (예: 필터링, 레벨 분리 등)에서는 부족할 수 있습니다.</td>
-    </tr>
-    <tr>
-      <td>표준 방식처럼 쓸 방법은 없나?</td>
-      <td>일부는 <code class="language-plaintext highlighter-rouge">bind()</code>, <code class="language-plaintext highlighter-rouge">filter</code> 등으로 흉내낼 수 있지만 완전히 동일하진 않습니다.</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<p>결론적으로, <strong>작은 앱이나 스크립트에는<code class="language-plaintext highlighter-rouge">loguru</code>가 매우 편하지만</strong>,<br />
-<strong>라이브러리나 대규모 프로젝트에서는 신중하게 선택할 필요가 있습니다.</strong></p>
-
-<p>필요하시다면 <code class="language-plaintext highlighter-rouge">loguru</code>와 <code class="language-plaintext highlighter-rouge">logging</code>을 혼용하거나 브리징하는 방법도 안내해드릴 수 있습니다.</p>
-
-<p class="chat--user">
-
-기본 표준출력의 로그 수준을 바꾸고 싶으면?
-
-</p>
-
-<p>좋은 질문입니다. <strong>loguru에서 기본 표준 출력(stdout)의 로그 레벨을 바꾸려면</strong> — <code class="language-plaintext highlighter-rouge">logger.remove()</code>로 기존
-핸들러를 지우고, 원하는 수준으로 다시 등록해야 합니다.</p>
-
-<p>loguru는 초기화 시 <strong>기본 stderr 핸들러를 DEBUG 레벨로 등록</strong> 합니다. 하지만 이 핸들러는 직접 제어할 수 없습니다.
-<strong>따라서 표준 출력 로그 수준을 바꾸려면 다음 순서로 작업해야 합니다.</strong></p>
-
-<hr />
-
-<h2 id="-로그-수준-변경-방법-표준-출력">✅ 로그 수준 변경 방법 (표준 출력)</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">import</span> <span class="n">sys</span>
-
-<span class="c1"># 기존 핸들러 제거 (stdout 출력 포함됨)
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>
-
-<span class="c1"># 새 핸들러 추가: INFO 이상만 출력하도록
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>이렇게 하면, <code class="language-plaintext highlighter-rouge">DEBUG</code> 로그는 출력되지 않고 <code class="language-plaintext highlighter-rouge">INFO</code>, <code class="language-plaintext highlighter-rouge">WARNING</code>, <code class="language-plaintext highlighter-rouge">ERROR</code>, <code class="language-plaintext highlighter-rouge">CRITICAL</code>만 출력됩니다.</p>
-
-<hr />
-
-<h2 id="-예시-코드">🧪 예시 코드</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">import</span> <span class="n">sys</span>
-
-<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>  <span class="c1"># 기본 stderr 핸들러 제거
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">WARNING</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># WARNING 이상만 출력
-</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">This is DEBUG</span><span class="sh">"</span><span class="p">)</span>     <span class="c1"># 출력 안 됨
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">This is INFO</span><span class="sh">"</span><span class="p">)</span>       <span class="c1"># 출력 안 됨
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="sh">"</span><span class="s">This is WARNING</span><span class="sh">"</span><span class="p">)</span> <span class="c1"># 출력됨
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">This is ERROR</span><span class="sh">"</span><span class="p">)</span>     <span class="c1"># 출력됨
-</span></code></pre></div></div>
-
-<hr />
-
-<h2 id="-참고-레벨-이름">📌 참고: 레벨 이름</h2>
-
-<p>loguru에서 사용할 수 있는 로그 레벨은 다음과 같습니다:</p>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"TRACE"</code> – 가장 상세한 로그</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"DEBUG"</code></p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"INFO"</code></p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"SUCCESS"</code> – loguru 전용 커스텀 레벨 (기본 INFO보다 약간 위)</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"WARNING"</code></p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"ERROR"</code></p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">"CRITICAL"</code></p>
-  </li>
-</ul>
-
-<p>필요하다면 커스텀 레벨도 추가할 수 있습니다.</p>
-
-<hr />
-
-<h2 id="️-주의사항">⚠️ 주의사항</h2>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">logger.remove()</code>를 하지 않고 <code class="language-plaintext highlighter-rouge">logger.add(sys.stdout, level="INFO")</code>만 하면, 기존 핸들러는 그대로 남아서 <strong>여전히 DEBUG까지 출력</strong> 됩니다. 즉, 중복 로그가 생깁니다.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">sys.stdout</code> 대신 <code class="language-plaintext highlighter-rouge">sys.stderr</code>으로도 출력할 수는 있으나, 대부분의 경우는 <code class="language-plaintext highlighter-rouge">sys.stdout</code>이 더 직관적입니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="-요약-1">✅ 요약</h2>
-
-<p>하고 싶은 일| 해야 할 일<br />
-—|—<br />
-표준 출력 로그 레벨 바꾸기| <code class="language-plaintext highlighter-rouge">logger.remove()</code> 후 <code class="language-plaintext highlighter-rouge">logger.add(sys.stdout, level="INFO")</code>
-식으로 재등록<br />
-그냥 <code class="language-plaintext highlighter-rouge">logger.add()</code>만 하면 되나?| ❌ 안 됩니다. 기본 핸들러도 계속 남아있어 로그가 중복되거나 DEBUG까지 찍힙니다<br />
-stdout과 파일 각각 다른 레벨로 설정 가능?| ✅ 예. 핸들러는 여러 개 등록 가능하고 각각 다른 레벨을 가질 수 있습니다</p>
-
-<hr />
-
-<p>필요하시면 여러 핸들러에 대해 레벨, 포맷, 필터 등을 다르게 적용하는 구성도 도와드릴 수 있습니다.</p>]]></content><author><name>hvppycoding</name></author><category term="python" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+detail_rl.to_csv("rl_nav_detail.csv", float_format="%.2f")</p>]]></content><author><name>hvppycoding</name></author><category term="investing" /><summary type="html"><![CDATA[]]></summary></entry></feed>

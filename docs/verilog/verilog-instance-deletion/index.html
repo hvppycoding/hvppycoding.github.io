@@ -1,0 +1,988 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Verilog instance deletion - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Verilog instance deletion">
+<meta property="og:url" content="https://hvppycoding.github.io/verilog/verilog-instance-deletion/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-08-22T17:23:27+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/verilog/verilog-instance-deletion/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Verilog instance deletion">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-08-22T17:23:27+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/verilog/verilog-instance-deletion/" itemprop="url">Verilog instance deletion
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-22T17:23:27+09:00">2025-08-22</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+Developer: - 목표: Verilog module netlist가 제공되었을 때, 파이썬을 사용하여 해당 module 내부에서 특정 이름을 가진 instance들을 삭제하는 기능을 구현합니다. - 작업 절차: 1. 입력 파일로 Verilog module netlist를 파싱합니다. 2. 지정된 이름(리스트 또는 패턴 가능)을 가진 instance들을 module 내에서 찾아 삭제합니다. 3. 삭제 후, 수정된 netlist를 파일 또는 문자열로 출력합니다. - 요구사항 및 한계: - instance 삭제 로직만 구현합니다(삽입/수정 없음). - netlist의 기본 파싱, instance 탐색, 문자열 또는 파일 입출력까지 지원합니다. - 복잡한 netlist 구조(첨단 macro, conditional include)는 지원하지 않습니다. - 출력: - 예시 코드 및 간단한 사용 방법(주석 포함) - 삭제 전후 netlist 예시(선택 사항) - 문서화: - 주요 함수와 삭제 로직에 설명 주석을 추가합니다. Begin with a concise checklist (3-7 bullets) of what you will do; keep items conceptual, not implementation-level. After each substantive action (e.g. parsing, deletion), validate the result in 1-2 lines and either proceed or self-correct if validation fails. Set reasoning_effort=medium; keep tool/process steps terse, but ensure output and examples are clear and reviewable.
+
+</p>
+
+<p>Here’s the plan 👇</p>
+
+<ul>
+  <li>
+    <p>Clarify the scope: delete instances by exact names or regex patterns, inside selected modules or all modules.</p>
+  </li>
+  <li>
+    <p>Parse a Verilog netlist into module blocks (basic, comment-safe), keeping headers/footers intact.</p>
+  </li>
+  <li>
+    <p>Detect instantiation statements (supports optional <code class="language-plaintext highlighter-rouge">#(...)</code> params and multi-instance forms).</p>
+  </li>
+  <li>
+    <p>Remove matched instances (drop whole statement if all instances removed; otherwise rebuild it).</p>
+  </li>
+  <li>
+    <p>Output the modified netlist and a small report (what was deleted / left).</p>
+  </li>
+</ul>
+
+<p>Validation after key steps:</p>
+
+<ul>
+  <li>
+    <p>Parsing → confirm we found modules; if none, stop and report.</p>
+  </li>
+  <li>
+    <p>Deletion → confirm target instance names/patterns no longer appear textually in the affected modules (basic string/regex check).</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-minimal-well-commented-python-utility">✅ Minimal, well-commented Python utility</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Pattern</span>
+
+<span class="n">VERILOG_KEYWORDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">input</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">inout</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">wire</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">tri</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">supply0</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">supply1</span><span class="sh">"</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">reg</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">logic</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">assign</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">always</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">initial</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">generate</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endgenerate</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">begin</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">end</span><span class="sh">"</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">parameter</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">localparam</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">typedef</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">function</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endfunction</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">task</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">endtask</span><span class="sh">"</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">strip_comments</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Remove // line-comments and /* block-comments */.
+    Note: string literals are ignored for simplicity (OK for basic netlists).
+    </span><span class="sh">"""</span>
+    <span class="c1"># Remove block comments
+</span>    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">/\*.*?\*/</span><span class="sh">"</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="p">.</span><span class="n">S</span><span class="p">)</span>
+    <span class="c1"># Remove line comments
+</span>    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">//.*?$</span><span class="sh">"</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="p">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+
+<span class="k">def</span> <span class="nf">find_module_blocks</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="sh">"""</span><span class="s">
+    Return a list of (module_name, start_index, end_index) covering </span><span class="sh">'</span><span class="s">module ... endmodule</span><span class="sh">'</span><span class="s">.
+    </span><span class="sh">"""</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="p">.</span><span class="nf">finditer</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">\bmodule\b.*?\bendmodule\b</span><span class="sh">"</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="p">.</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">name_m</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">\s*module\s+([A-Za-z_]\w*)</span><span class="sh">"</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name_m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">name_m</span> <span class="k">else</span> <span class="sh">"</span><span class="s">&lt;unknown&gt;</span><span class="sh">"</span>
+        <span class="n">blocks</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">m</span><span class="p">.</span><span class="nf">start</span><span class="p">(),</span> <span class="n">m</span><span class="p">.</span><span class="nf">end</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">blocks</span>
+
+<span class="k">def</span> <span class="nf">split_module_parts</span><span class="p">(</span><span class="n">block_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">
+    Split a single module block into (header_including_semicolon, body, </span><span class="sh">'</span><span class="s">endmodule</span><span class="sh">'</span><span class="s">).
+    We locate the first </span><span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="s"> after </span><span class="sh">'</span><span class="s">module</span><span class="sh">'</span><span class="s"> as the end of the header.
+    </span><span class="sh">"""</span>
+    <span class="n">end_idx</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">end_idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">block_text</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="sh">""</span>  <span class="c1"># malformed, but fail gracefully
+</span>    <span class="n">header_end</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="sh">"</span><span class="s">;</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">header_end</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># No header semicolon (unlikely). Treat all as header.
+</span>        <span class="k">return</span> <span class="n">block_text</span><span class="p">[:</span><span class="n">end_idx</span><span class="p">],</span> <span class="sh">""</span><span class="p">,</span> <span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">[:</span><span class="n">header_end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">block_text</span><span class="p">[</span><span class="n">header_end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="sh">"</span><span class="s">endmodule</span><span class="sh">"</span>
+
+<span class="k">def</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">isspace</span><span class="p">():</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">i</span>
+
+<span class="k">def</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">open_ch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">close_ch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Given s[i] == open_ch, consume until the matching close_ch and return the index AFTER it.
+    Raise ValueError on mismatch.
+    </span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">open_ch</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">Expected %r at position %d</span><span class="sh">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">open_ch</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+    <span class="n">depth</span><span class="p">,</span> <span class="n">i0</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">open_ch</span><span class="p">:</span>
+            <span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="n">close_ch</span><span class="p">:</span>
+            <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">Unbalanced %r/%r starting at %d</span><span class="sh">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">open_ch</span><span class="p">,</span> <span class="n">close_ch</span><span class="p">,</span> <span class="n">i0</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">strip_leading_attribute</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Remove leading synthesis attributes like: (* keep = </span><span class="sh">"</span><span class="s">true</span><span class="sh">"</span><span class="s"> *).
+    </span><span class="sh">"""</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">stmt</span><span class="p">.</span><span class="nf">lstrip</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">s</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">(*</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="sh">"</span><span class="s">*)</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:].</span><span class="nf">lstrip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="k">def</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">[A-Za-z_]\w*</span><span class="sh">"</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">:])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="n">i</span>
+    <span class="n">tok</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tok</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="nf">len</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">looks_like_instantiation</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    Heuristic check: first token must be a non-keyword identifier, and the shape must
+    allow optional </span><span class="sh">'</span><span class="s">#(...)</span><span class="sh">'</span><span class="s"> then an identifier followed by </span><span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="s"> ... </span><span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="s">.
+    </span><span class="sh">"""</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nf">strip_leading_attribute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">tok</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tok</span> <span class="ow">or</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">VERILOG_KEYWORDS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="c1"># Optional parameterization: #( ... )
+</span>    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">#</span><span class="sh">'</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="c1"># Next must look like an instance name '('
+</span>    <span class="n">name</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    <span class="c1"># Optional array range [..]
+</span>    <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    <span class="nf">return </span><span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">parse_instance_statement</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">
+    Parse a (possibly multi-instance) instantiation statement into its pieces.
+
+    Returns:
+        {
+          </span><span class="sh">"</span><span class="s">cell</span><span class="sh">"</span><span class="s">: str,
+          </span><span class="sh">"</span><span class="s">param_text</span><span class="sh">"</span><span class="s">: str (</span><span class="sh">''</span><span class="s"> or like </span><span class="sh">'</span><span class="s">#(...)</span><span class="sh">'</span><span class="s">),
+          </span><span class="sh">"</span><span class="s">instances</span><span class="sh">"</span><span class="s">: List[{</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="s">: str, </span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="s">: str}],
+        }
+    or None if parsing fails / not an instantiation.
+    </span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nf">looks_like_instantiation</span><span class="p">(</span><span class="n">stmt</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="n">original</span> <span class="o">=</span> <span class="n">stmt</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nf">strip_leading_attribute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">cell</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Optional '#(...)'
+</span>    <span class="n">param_text</span> <span class="o">=</span> <span class="sh">""</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">#</span><span class="sh">'</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">param_text</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># Collect instances until ';'
+</span>    <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Find the trailing ';' to bound scanning
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">end_stmt</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+        <span class="n">end_stmt</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end_stmt</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="nf">first_token</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">j</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># Optional array range
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">[</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">]</span><span class="sh">'</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># Port list
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">:</span>
+            <span class="c1"># Not a valid instance group -&gt; give up
+</span>            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">inst_start</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="nf">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># include the instance name start
+</span>        <span class="n">end_ports</span> <span class="o">=</span> <span class="nf">parse_balanced</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">end_ports</span>
+        <span class="c1"># Capture the raw text from name through the end of ')'
+</span>        <span class="n">inst_text</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">inst_start</span><span class="p">:</span><span class="n">end_ports</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># If there's a comma, this statement has more instances
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">,</span><span class="sh">'</span><span class="p">:</span>
+            <span class="c1"># Include any following whitespace when we advance
+</span>            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">instances</span><span class="p">.</span><span class="nf">append</span><span class="p">({</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">:</span> <span class="n">inst_text</span><span class="p">})</span>
+
+        <span class="c1"># Move on
+</span>        <span class="n">i</span> <span class="o">=</span> <span class="nf">skip_ws</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">instances</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">cell</span><span class="sh">"</span><span class="p">:</span> <span class="n">cell</span><span class="p">,</span> <span class="sh">"</span><span class="s">param_text</span><span class="sh">"</span><span class="p">:</span> <span class="n">param_text</span><span class="p">,</span> <span class="sh">"</span><span class="s">instances</span><span class="sh">"</span><span class="p">:</span> <span class="n">instances</span><span class="p">,</span> <span class="sh">"</span><span class="s">original</span><span class="sh">"</span><span class="p">:</span> <span class="n">original</span><span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">delete_instances_in_stmt</span><span class="p">(</span><span class="n">parsed</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                             <span class="n">names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                             <span class="n">patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Pattern</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    <span class="sh">"""</span><span class="s">
+    From a parsed instantiation, drop matching instances.
+    Returns: (changed?, new_stmt_text, deleted_names)
+    </span><span class="sh">"""</span>
+    <span class="n">to_delete</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="k">if</span> <span class="n">names</span> <span class="k">else</span> <span class="nf">set</span><span class="p">()</span>
+    <span class="n">deleted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kept_texts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">instances</span><span class="sh">"</span><span class="p">]:</span>
+        <span class="n">hit</span> <span class="o">=</span> <span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">]</span> <span class="ow">in</span> <span class="n">to_delete</span> <span class="ow">or</span> <span class="nf">any</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">hit</span><span class="p">:</span>
+            <span class="n">deleted</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kept_texts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">deleted</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">original</span><span class="sh">"</span><span class="p">],</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">kept_texts</span><span class="p">:</span>
+        <span class="c1"># Whole statement removed
+</span>        <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="sh">""</span><span class="p">,</span> <span class="n">deleted</span>
+
+    <span class="c1"># Rebuild: &lt;cell&gt;&lt;param?&gt; &lt;instA(...)&gt;, &lt;instB(...&gt;) ;
+</span>    <span class="n">rebuilt</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">cell</span><span class="sh">"</span><span class="p">]</span><span class="si">}{</span><span class="n">parsed</span><span class="p">[</span><span class="sh">"</span><span class="s">param_text</span><span class="sh">"</span><span class="p">]</span><span class="si">}</span><span class="s"> </span><span class="sh">'</span> <span class="o">+</span> <span class="sh">"</span><span class="s">, </span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">kept_texts</span><span class="p">)</span> <span class="o">+</span> <span class="sh">"</span><span class="s">;</span><span class="sh">"</span>
+    <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">rebuilt</span><span class="p">,</span> <span class="n">deleted</span>
+
+<span class="k">def</span> <span class="nf">remove_instances_from_verilog</span><span class="p">(</span>
+    <span class="n">verilog_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">instance_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">instance_patterns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">limit_to_modules</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+    <span class="sh">"""</span><span class="s">
+    Delete instances by name/pattern from selected modules (or all modules if None).
+
+    Args:
+        verilog_text: Entire netlist text.
+        instance_names: Exact instance names to remove.
+        instance_patterns: Regex patterns (python re) for names to remove.
+        limit_to_modules: Only mutate these module names (others preserved verbatim).
+
+    Returns: (modified_text, report_dict)
+        report_dict = {
+            </span><span class="sh">"</span><span class="s">modules_parsed</span><span class="sh">"</span><span class="s">: [names...],
+            </span><span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="s">: [names...],
+            </span><span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="s">: {module_name: [inst_names...]},
+            </span><span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="s">: [requested_name that was not matched],
+        }
+    </span><span class="sh">"""</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">instance_names</span> <span class="ow">or</span> <span class="p">[])</span>
+    <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="p">.</span><span class="nf">compile</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">instance_patterns</span> <span class="ow">or</span> <span class="p">[])]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="nf">strip_comments</span><span class="p">(</span><span class="n">verilog_text</span><span class="p">)</span>
+
+    <span class="n">blocks</span> <span class="o">=</span> <span class="nf">find_module_blocks</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="sh">"</span><span class="s">modules_parsed</span><span class="sh">"</span><span class="p">:</span> <span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">],</span>
+        <span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">verilog_text</span><span class="p">,</span> <span class="n">report</span>  <span class="c1"># nothing to do
+</span>
+    <span class="n">out_parts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">global_deleted</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">mod_name</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="c1"># copy pre-module region unchanged
+</span>        <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">verilog_text</span><span class="p">[</span><span class="n">cursor</span><span class="p">:</span><span class="n">s</span><span class="p">])</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="n">verilog_text</span><span class="p">[</span><span class="n">s</span><span class="p">:</span><span class="n">e</span><span class="p">]</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">end_kw</span> <span class="o">=</span> <span class="nf">split_module_parts</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">limit_to_modules</span> <span class="ow">and</span> <span class="n">mod_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nf">set</span><span class="p">(</span><span class="n">limit_to_modules</span><span class="p">):</span>
+            <span class="c1"># Leave this module as-is
+</span>            <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Work on 'body'
+</span>        <span class="n">changed</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">deleted_here</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Split body into semi-colon terminated units but keep them for safe rebuild.
+</span>        <span class="n">units</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">body</span><span class="p">:</span>
+            <span class="n">buf</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">(</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">depth</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">)</span><span class="sh">'</span><span class="p">:</span>
+                <span class="n">depth</span> <span class="o">-=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">depth</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="k">elif</span> <span class="n">ch</span> <span class="o">==</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span> <span class="ow">and</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">units</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">buf</span><span class="p">))</span>
+                <span class="n">buf</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Remainder (blocks without ';', e.g., 'always' ... 'end') stays as-is
+</span>        <span class="n">tail</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+
+        <span class="n">rebuilt_units</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">units</span><span class="p">:</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="nf">parse_instance_statement</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parsed</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">rebuilt_units</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>  <span class="c1"># untouched
+</span>                <span class="k">continue</span>
+            <span class="n">did_change</span><span class="p">,</span> <span class="n">new_u</span><span class="p">,</span> <span class="n">deleted</span> <span class="o">=</span> <span class="nf">delete_instances_in_stmt</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">patterns</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">did_change</span><span class="p">:</span>
+                <span class="n">changed</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">deleted_here</span><span class="p">.</span><span class="nf">extend</span><span class="p">(</span><span class="n">deleted</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_u</span><span class="p">:</span>
+                <span class="n">rebuilt_units</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">new_u</span><span class="p">)</span>
+
+        <span class="c1"># Reassemble
+</span>        <span class="n">new_body</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">rebuilt_units</span><span class="p">)</span> <span class="o">+</span> <span class="n">tail</span>
+        <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
+            <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="p">].</span><span class="nf">append</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span>
+            <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="p">][</span><span class="n">mod_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">deleted_here</span>
+            <span class="n">global_deleted</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">deleted_here</span><span class="p">)</span>
+            <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="n">new_body</span> <span class="o">+</span> <span class="n">end_kw</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">e</span>
+
+    <span class="c1"># Copy trailing text after last module
+</span>    <span class="n">out_parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">verilog_text</span><span class="p">[</span><span class="n">cursor</span><span class="p">:])</span>
+    <span class="n">modified</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">out_parts</span><span class="p">)</span>
+
+    <span class="c1"># Populate not_found (exact names only, patterns are not enumerable)
+</span>    <span class="k">if</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">requested</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+        <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">requested</span> <span class="o">-</span> <span class="n">global_deleted</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">modified</span><span class="p">,</span> <span class="n">report</span>
+
+<span class="c1"># ---------- Example usage ----------
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">demo</span> <span class="o">=</span> <span class="sa">r</span><span class="sh">'''</span><span class="s">
+module foo (input a,b, output y);
+  wire n1, n2;
+  MYCELL #(.WIDTH(8)) u0 (.A(a), .B(b), .Y(n1)),
+                      inst_del (.A(a), .B(n1), .Y(n2));
+  INV u_keep (.A(n2), .Y(y));
+  INV u_del  (.A(n1), .Y(n2));
+endmodule
+</span><span class="sh">'''</span>
+    <span class="n">keep</span><span class="p">,</span> <span class="n">rep</span> <span class="o">=</span> <span class="nf">remove_instances_from_verilog</span><span class="p">(</span>
+        <span class="n">demo</span><span class="p">,</span>
+        <span class="n">instance_names</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">u_del</span><span class="sh">"</span><span class="p">],</span>
+        <span class="n">instance_patterns</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="sh">"</span><span class="s">^inst_del$</span><span class="sh">"</span><span class="p">],</span>  <span class="c1"># regex
+</span>        <span class="n">limit_to_modules</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>              <span class="c1"># or ["foo"]
+</span>    <span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">=== Report ===</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="s">=== After ===</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">keep</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="-quick-delete-beforeafter-demo-from-__main__-above">🧪 Quick “delete-before/after” demo (from <code class="language-plaintext highlighter-rouge">__main__</code> above)</h3>
+
+<p><strong>Before</strong></p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="n">foo</span> <span class="p">(</span><span class="kt">input</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="kt">output</span> <span class="n">y</span><span class="p">);</span>
+  <span class="kt">wire</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">;</span>
+  <span class="n">MYCELL</span> <span class="p">#(.</span><span class="n">WIDTH</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span> <span class="n">u0</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="p">.</span><span class="n">B</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n1</span><span class="p">)),</span>
+                      <span class="n">inst_del</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="p">.</span><span class="n">B</span><span class="p">(</span><span class="n">n1</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n2</span><span class="p">));</span>
+  <span class="n">INV</span> <span class="n">u_keep</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">n2</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">y</span><span class="p">));</span>
+  <span class="n">INV</span> <span class="n">u_del</span>  <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">n1</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n2</span><span class="p">));</span>
+<span class="k">endmodule</span>
+</code></pre></div></div>
+
+<p><strong>Run</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python remove_verilog_instances.py
+</code></pre></div></div>
+
+<p><strong>Validation (Parsing)</strong></p>
+
+<ul>
+  <li>Found modules: <code class="language-plaintext highlighter-rouge">['foo']</code>. Proceed.</li>
+</ul>
+
+<p><strong>Validation (Deletion)</strong></p>
+
+<ul>
+  <li>
+    <p>Deleted in <code class="language-plaintext highlighter-rouge">foo</code>: <code class="language-plaintext highlighter-rouge">['inst_del', 'u_del']</code>.</p>
+  </li>
+  <li>
+    <p>Text search check: <code class="language-plaintext highlighter-rouge">inst_del</code>, <code class="language-plaintext highlighter-rouge">u_del</code> no longer present. Proceed.</p>
+  </li>
+</ul>
+
+<p><strong>After</strong></p>
+<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="n">foo</span> <span class="p">(</span><span class="kt">input</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span> <span class="kt">output</span> <span class="n">y</span><span class="p">);</span>
+  <span class="kt">wire</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">;</span>
+  <span class="n">MYCELL</span> <span class="p">#(.</span><span class="n">WIDTH</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span> <span class="n">u0</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="p">.</span><span class="n">B</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">n1</span><span class="p">));</span>
+  <span class="n">INV</span> <span class="n">u_keep</span> <span class="p">(.</span><span class="n">A</span><span class="p">(</span><span class="n">n2</span><span class="p">),</span> <span class="p">.</span><span class="n">Y</span><span class="p">(</span><span class="n">y</span><span class="p">));</span>
+<span class="k">endmodule</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="how-to-use-in-your-project">How to use in your project</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">remove_verilog_instances</span> <span class="kn">import</span> <span class="n">remove_instances_from_verilog</span>
+
+<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">design_netlist.v</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">r</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+
+<span class="n">modified</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="nf">remove_instances_from_verilog</span><span class="p">(</span>
+    <span class="n">net</span><span class="p">,</span>
+    <span class="n">instance_names</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">U1234</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">spare_inv_0</span><span class="sh">"</span><span class="p">],</span>
+    <span class="n">instance_patterns</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="sh">"</span><span class="s">^spare_.*$</span><span class="sh">"</span><span class="p">,</span> <span class="sa">r</span><span class="sh">"</span><span class="s">^DBG_</span><span class="sh">"</span><span class="p">],</span>  <span class="c1"># regex patterns
+</span>    <span class="n">limit_to_modules</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">top</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">cpu_core</span><span class="sh">"</span><span class="p">]</span>          <span class="c1"># or None for all modules
+</span><span class="p">)</span>
+
+<span class="c1"># Validation (recommended)
+</span><span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">modules_parsed</span><span class="sh">"</span><span class="p">]:</span>
+    <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span><span class="sh">"</span><span class="s">No modules parsed; check input.</span><span class="sh">"</span><span class="p">)</span>
+<span class="c1"># Optional: verify that requested names are gone
+</span><span class="k">for</span> <span class="n">nm</span> <span class="ow">in</span> <span class="p">[</span><span class="sh">"</span><span class="s">U1234</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">spare_inv_0</span><span class="sh">"</span><span class="p">]:</span>
+    <span class="k">assert</span> <span class="n">nm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">modified</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">nm</span><span class="si">}</span><span class="s"> still present after deletion!</span><span class="sh">"</span>
+
+<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">design_netlist.cleaned.v</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">modified</span><span class="p">)</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Edited modules:</span><span class="sh">"</span><span class="p">,</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">modules_edited</span><span class="sh">"</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Deleted instances:</span><span class="sh">"</span><span class="p">,</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">deleted_instances</span><span class="sh">"</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Not found:</span><span class="sh">"</span><span class="p">,</span> <span class="n">report</span><span class="p">[</span><span class="sh">"</span><span class="s">not_found</span><span class="sh">"</span><span class="p">])</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="notes--limitations-documented">Notes &amp; limitations (documented)</h3>
+
+<ul>
+  <li>
+    <p>Targets <em>instance deletion only</em> (no insert/modify).</p>
+  </li>
+  <li>
+    <p>Handles common forms: <code class="language-plaintext highlighter-rouge">CELL #(params) instA(...), instB(...);</code> and single-instance statements.</p>
+  </li>
+  <li>
+    <p>Basic parser (regex + small state machine). No preprocessor/<code class="language-plaintext highlighter-rouge">include</code>, <code class="language-plaintext highlighter-rouge">generate</code>-conditionals, UDP, or exotic syntax support.</p>
+  </li>
+  <li>
+    <p>Comment stripping is simple; string-literal corner cases are not exhaustively handled (rare in flat netlists).</p>
+  </li>
+</ul>
+
+<p>If you want, I can adapt the matcher for fnmatch-style globs (<code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">?</code>) or add a tiny CLI (<code class="language-plaintext highlighter-rouge">argparse</code>) to run this from the command line with <code class="language-plaintext highlighter-rouge">--names</code>/<code class="language-plaintext highlighter-rouge">--patterns</code>/<code class="language-plaintext highlighter-rouge">--modules</code>.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#verilog" class="page__taxonomy-item p-category" rel="tag">verilog</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-22T17:23:27+09:00">2025-08-22</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/verilog/pyverilog-submod-implementation/" class="pagination--pager" title="Pyverilog 서브모듈 구현">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/verilog/pyverilog-submod-implementation/" rel="permalink">Pyverilog 서브모듈 구현
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-19T14:36:09+09:00">2025-08-19</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/verilog/pyverilog-prune-top-and-stub-children/" rel="permalink">PyVerilog  prune_top_and_stub_children
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-18T17:38:51+09:00">2025-08-18</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/verilog/yosys-submodule-refactor/" rel="permalink">Yosys submodule refactor
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-18T11:33:48+09:00">2025-08-18</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux/redhat-screen-record/" rel="permalink">Red Hat 화면 녹화 방법
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-11T15:40:01+09:00">2025-08-11</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
