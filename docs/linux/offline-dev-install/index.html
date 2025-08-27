@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-08-27T15:26:31+09:00">
+  <meta property="article:published_time" content="2025-08-27T16:42:06+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="오프라인 환경 개발 세팅">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-08-27T15:26:31+09:00">
+    <meta itemprop="datePublished" content="2025-08-27T16:42:06+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-08-27T15:26:31+09:00">2025-08-27</time>
+        <time datetime="2025-08-27T16:42:06+09:00">2025-08-27</time>
       </span>
     
 
@@ -1471,6 +1471,138 @@ rehash
 
 <p>이렇게 하면 경로 변수 최소화/고정 경로로 헷갈릴 일 없고, SQLite 옵션도 모두 켠 상태로 Python이 <code class="language-plaintext highlighter-rouge">_sqlite3</code>를 제대로 쓰게 돼.</p>
 
+<p class="chat--user">
+
+난 다 toolchains에 넣으려고 했는데 gcc만 왜 toolchain이야?
+
+</p>
+
+<p>당연하지! <strong>이름만의 문제</strong> 라서 전부 <code class="language-plaintext highlighter-rouge">toolchains</code> 아래로 통일해도 좋아.<br />
+아래는 <strong>RELEASE =<code class="language-plaintext highlighter-rouge">/path/to/release</code></strong> 고정, <code class="language-plaintext highlighter-rouge">installers/build/…</code>에서 빌드, <strong>로그 없이 필수 커맨드만</strong> 입니다. (tcsh)</p>
+
+<hr />
+
+<h1 id="0-디렉토리-준비">0) 디렉토리 준비</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+mkdir -p /path/to/release/installers/build
+mkdir -p /path/to/release/toolchains
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="1-gcc-1340--pathtoreleasetoolchainsgcc1340">1) GCC 13.4.0 → <code class="language-plaintext highlighter-rouge">/path/to/release/toolchains/gcc/13.4.0</code></h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd /path/to/release/installers
+tar -xf gcc-13.4.0.tar.xz
+tar -xf gmp-6.3.0.tar.xz
+tar -xf mpfr-4.2.1.tar.xz
+tar -xf mpc-1.3.1.tar.gz
+mv gmp-6.3.0  gcc-13.4.0/gmp
+mv mpfr-4.2.1 gcc-13.4.0/mpfr
+mv mpc-1.3.1  gcc-13.4.0/mpc
+
+mkdir -p /path/to/release/installers/build/gcc-13.4.0
+cd       /path/to/release/installers/build/gcc-13.4.0
+
+/path/to/release/installers/gcc-13.4.0/configure \
+  --prefix=/path/to/release/toolchains/gcc/13.4.0 \
+  --disable-multilib \
+  --enable-languages=c,c++ \
+  --enable-bootstrap
+
+make -j4
+make install
+rehash
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="2-sqlite-3504--pathtoreleasetoolchainssqlite3504">2) SQLite 3.50.4 → <code class="language-plaintext highlighter-rouge">/path/to/release/toolchains/sqlite/3.50.4</code></h1>
+
+<p>(FTS5/JSON1/RTREE/ColumnMetadata/Threadsafe 켬, PIC+rpath, <strong>내 GCC</strong> 사용)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd /path/to/release/installers
+tar -xf sqlite-autoconf-3500400.tar.gz
+
+mkdir -p /path/to/release/installers/build/sqlite-3.50.4
+cd       /path/to/release/installers/build/sqlite-3.50.4
+
+setenv CC      "/path/to/release/toolchains/gcc/13.4.0/bin/gcc"
+setenv CFLAGS  "-O2 -fPIC \
+-DSQLITE_ENABLE_FTS5 \
+-DSQLITE_ENABLE_JSON1 \
+-DSQLITE_ENABLE_COLUMN_METADATA \
+-DSQLITE_ENABLE_RTREE \
+-DSQLITE_THREADSAFE=1"
+setenv LDFLAGS "-Wl,-rpath,/path/to/release/toolchains/sqlite/3.50.4/lib"
+
+/path/to/release/installers/sqlite-autoconf-3500400/configure \
+  --prefix=/path/to/release/toolchains/sqlite/3.50.4 \
+  --enable-shared
+
+make -j4
+make install
+rehash
+</code></pre></div></div>
+
+<p>(확인)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+/path/to/release/toolchains/sqlite/3.50.4/bin/sqlite3 -version
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="3-python-31113--pathtoreleasetoolchainspython31113">3) Python 3.11.13 → <code class="language-plaintext highlighter-rouge">/path/to/release/toolchains/python/3.11.13</code></h1>
+
+<p>(내 GCC 사용, SQLite에 링크, rpath에 <strong>sqlite + python lib</strong> 둘 다 포함)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd /path/to/release/installers
+tar -xf Python-3.11.13.tar.xz
+
+mkdir -p /path/to/release/installers/build/python-3.11.13
+cd       /path/to/release/installers/build/python-3.11.13
+
+setenv CC       "/path/to/release/toolchains/gcc/13.4.0/bin/gcc"
+setenv CXX      "/path/to/release/toolchains/gcc/13.4.0/bin/g++"
+setenv CPPFLAGS "-I/path/to/release/toolchains/sqlite/3.50.4/include"
+setenv LDFLAGS  "-L/path/to/release/toolchains/sqlite/3.50.4/lib \
+-Wl,-rpath,/path/to/release/toolchains/sqlite/3.50.4/lib \
+-Wl,-rpath,/path/to/release/toolchains/python/3.11.13/lib"
+
+/path/to/release/installers/Python-3.11.13/configure \
+  --prefix=/path/to/release/toolchains/python/3.11.13 \
+  --enable-shared \
+  --with-ensurepip=install
+
+make -j4
+make install
+rehash
+</code></pre></div></div>
+
+<p>(확인)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+/path/to/release/toolchains/python/3.11.13/bin/python3.11 -c 'import sys,sqlite3; print(sys.version); print("sqlite:", sqlite3.sqlite_version)'
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="4-런타임-최소-경로-원하면-셸에-추가">4) 런타임 최소 경로 (원하면 셸에 추가)</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv PATH            /path/to/release/toolchains/python/3.11.13/bin:/path/to/release/toolchains/sqlite/3.50.4/bin:${PATH}
+setenv LD_LIBRARY_PATH /path/to/release/toolchains/python/3.11.13/lib:/path/to/release/toolchains/sqlite/3.50.4/lib:${LD_LIBRARY_PATH}
+rehash
+</code></pre></div></div>
+
+<p>이제 <strong>GCC / SQLite / Python 모두<code class="language-plaintext highlighter-rouge">toolchains/</code> 아래</strong>로 정리됐고,<br />
+SQLite는 요청한 기능을 켠 상태로 Python에서 바로 사용할 수 있어.</p>
+
         
       </section>
 
@@ -1496,7 +1628,7 @@ rehash
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-27T15:26:31+09:00">2025-08-27</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-27T16:42:06+09:00">2025-08-27</time></p>
 
       </footer>
 

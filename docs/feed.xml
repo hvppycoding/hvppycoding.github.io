@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-27T15:26:37+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">오프라인 환경 개발 세팅</title><link href="https://hvppycoding.github.io/linux/offline-dev-install/" rel="alternate" type="text/html" title="오프라인 환경 개발 세팅" /><published>2025-08-27T15:26:31+09:00</published><updated>2025-08-27T15:26:31+09:00</updated><id>https://hvppycoding.github.io/linux/offline-dev-install</id><content type="html" xml:base="https://hvppycoding.github.io/linux/offline-dev-install/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-08-27T16:42:11+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">오프라인 환경 개발 세팅</title><link href="https://hvppycoding.github.io/linux/offline-dev-install/" rel="alternate" type="text/html" title="오프라인 환경 개발 세팅" /><published>2025-08-27T16:42:06+09:00</published><updated>2025-08-27T16:42:06+09:00</updated><id>https://hvppycoding.github.io/linux/offline-dev-install</id><content type="html" xml:base="https://hvppycoding.github.io/linux/offline-dev-install/"><![CDATA[<p class="chat--user">
 
 redhat 8.x os에 개발 환경 세팅하고자 해. - sudo 권한 없음 - 오프라인 환경(파일 받아서 옮기는 것은 가능) - 쉘: tcsh 1. gcc 빌드(이 후 빌드에서 이 gcc 설치) 2. 최신 sqlite3 빌드 3. python 3.11 빌드(2에서 설치한 sqlite3에 대한 빌드) 설치 디렉토리: $RELEASE 라고 가정 설치용 소스코드 위치: ${RELEASE}/installers 에 저장할 것 설치위치 예시: ${RELEASE}/toolchains/gcc/13.4.0 
 
@@ -1280,7 +1280,139 @@ setenv LD_LIBRARY_PATH /path/to/release/packages/python/3.11.13/lib:/path/to/rel
 rehash
 </code></pre></div></div>
 
-<p>이렇게 하면 경로 변수 최소화/고정 경로로 헷갈릴 일 없고, SQLite 옵션도 모두 켠 상태로 Python이 <code class="language-plaintext highlighter-rouge">_sqlite3</code>를 제대로 쓰게 돼.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Verilog 모듈 추출 코드</title><link href="https://hvppycoding.github.io/verilog/verilog-module-extraction/" rel="alternate" type="text/html" title="Verilog 모듈 추출 코드" /><published>2025-08-22T17:41:41+09:00</published><updated>2025-08-22T17:41:41+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-module-extraction</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-module-extraction/"><![CDATA[<p class="chat--user">
+<p>이렇게 하면 경로 변수 최소화/고정 경로로 헷갈릴 일 없고, SQLite 옵션도 모두 켠 상태로 Python이 <code class="language-plaintext highlighter-rouge">_sqlite3</code>를 제대로 쓰게 돼.</p>
+
+<p class="chat--user">
+
+난 다 toolchains에 넣으려고 했는데 gcc만 왜 toolchain이야?
+
+</p>
+
+<p>당연하지! <strong>이름만의 문제</strong> 라서 전부 <code class="language-plaintext highlighter-rouge">toolchains</code> 아래로 통일해도 좋아.<br />
+아래는 <strong>RELEASE =<code class="language-plaintext highlighter-rouge">/path/to/release</code></strong> 고정, <code class="language-plaintext highlighter-rouge">installers/build/…</code>에서 빌드, <strong>로그 없이 필수 커맨드만</strong> 입니다. (tcsh)</p>
+
+<hr />
+
+<h1 id="0-디렉토리-준비">0) 디렉토리 준비</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+mkdir -p /path/to/release/installers/build
+mkdir -p /path/to/release/toolchains
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="1-gcc-1340--pathtoreleasetoolchainsgcc1340">1) GCC 13.4.0 → <code class="language-plaintext highlighter-rouge">/path/to/release/toolchains/gcc/13.4.0</code></h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd /path/to/release/installers
+tar -xf gcc-13.4.0.tar.xz
+tar -xf gmp-6.3.0.tar.xz
+tar -xf mpfr-4.2.1.tar.xz
+tar -xf mpc-1.3.1.tar.gz
+mv gmp-6.3.0  gcc-13.4.0/gmp
+mv mpfr-4.2.1 gcc-13.4.0/mpfr
+mv mpc-1.3.1  gcc-13.4.0/mpc
+
+mkdir -p /path/to/release/installers/build/gcc-13.4.0
+cd       /path/to/release/installers/build/gcc-13.4.0
+
+/path/to/release/installers/gcc-13.4.0/configure \
+  --prefix=/path/to/release/toolchains/gcc/13.4.0 \
+  --disable-multilib \
+  --enable-languages=c,c++ \
+  --enable-bootstrap
+
+make -j4
+make install
+rehash
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="2-sqlite-3504--pathtoreleasetoolchainssqlite3504">2) SQLite 3.50.4 → <code class="language-plaintext highlighter-rouge">/path/to/release/toolchains/sqlite/3.50.4</code></h1>
+
+<p>(FTS5/JSON1/RTREE/ColumnMetadata/Threadsafe 켬, PIC+rpath, <strong>내 GCC</strong> 사용)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd /path/to/release/installers
+tar -xf sqlite-autoconf-3500400.tar.gz
+
+mkdir -p /path/to/release/installers/build/sqlite-3.50.4
+cd       /path/to/release/installers/build/sqlite-3.50.4
+
+setenv CC      "/path/to/release/toolchains/gcc/13.4.0/bin/gcc"
+setenv CFLAGS  "-O2 -fPIC \
+-DSQLITE_ENABLE_FTS5 \
+-DSQLITE_ENABLE_JSON1 \
+-DSQLITE_ENABLE_COLUMN_METADATA \
+-DSQLITE_ENABLE_RTREE \
+-DSQLITE_THREADSAFE=1"
+setenv LDFLAGS "-Wl,-rpath,/path/to/release/toolchains/sqlite/3.50.4/lib"
+
+/path/to/release/installers/sqlite-autoconf-3500400/configure \
+  --prefix=/path/to/release/toolchains/sqlite/3.50.4 \
+  --enable-shared
+
+make -j4
+make install
+rehash
+</code></pre></div></div>
+
+<p>(확인)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+/path/to/release/toolchains/sqlite/3.50.4/bin/sqlite3 -version
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="3-python-31113--pathtoreleasetoolchainspython31113">3) Python 3.11.13 → <code class="language-plaintext highlighter-rouge">/path/to/release/toolchains/python/3.11.13</code></h1>
+
+<p>(내 GCC 사용, SQLite에 링크, rpath에 <strong>sqlite + python lib</strong> 둘 다 포함)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd /path/to/release/installers
+tar -xf Python-3.11.13.tar.xz
+
+mkdir -p /path/to/release/installers/build/python-3.11.13
+cd       /path/to/release/installers/build/python-3.11.13
+
+setenv CC       "/path/to/release/toolchains/gcc/13.4.0/bin/gcc"
+setenv CXX      "/path/to/release/toolchains/gcc/13.4.0/bin/g++"
+setenv CPPFLAGS "-I/path/to/release/toolchains/sqlite/3.50.4/include"
+setenv LDFLAGS  "-L/path/to/release/toolchains/sqlite/3.50.4/lib \
+-Wl,-rpath,/path/to/release/toolchains/sqlite/3.50.4/lib \
+-Wl,-rpath,/path/to/release/toolchains/python/3.11.13/lib"
+
+/path/to/release/installers/Python-3.11.13/configure \
+  --prefix=/path/to/release/toolchains/python/3.11.13 \
+  --enable-shared \
+  --with-ensurepip=install
+
+make -j4
+make install
+rehash
+</code></pre></div></div>
+
+<p>(확인)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+/path/to/release/toolchains/python/3.11.13/bin/python3.11 -c 'import sys,sqlite3; print(sys.version); print("sqlite:", sqlite3.sqlite_version)'
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="4-런타임-최소-경로-원하면-셸에-추가">4) 런타임 최소 경로 (원하면 셸에 추가)</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+setenv PATH            /path/to/release/toolchains/python/3.11.13/bin:/path/to/release/toolchains/sqlite/3.50.4/bin:${PATH}
+setenv LD_LIBRARY_PATH /path/to/release/toolchains/python/3.11.13/lib:/path/to/release/toolchains/sqlite/3.50.4/lib:${LD_LIBRARY_PATH}
+rehash
+</code></pre></div></div>
+
+<p>이제 <strong>GCC / SQLite / Python 모두<code class="language-plaintext highlighter-rouge">toolchains/</code> 아래</strong>로 정리됐고,<br />
+SQLite는 요청한 기능을 켠 상태로 Python에서 바로 사용할 수 있어.</p>]]></content><author><name>hvppycoding</name></author><category term="linux" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Verilog 모듈 추출 코드</title><link href="https://hvppycoding.github.io/verilog/verilog-module-extraction/" rel="alternate" type="text/html" title="Verilog 모듈 추출 코드" /><published>2025-08-22T17:41:41+09:00</published><updated>2025-08-22T17:41:41+09:00</updated><id>https://hvppycoding.github.io/verilog/verilog-module-extraction</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/verilog-module-extraction/"><![CDATA[<p class="chat--user">
 
 Developer: # 목적 - Verilog netlist가 주어졌을 때, 특정 모듈만 파일로 추출하는 Python 코드를 작성한다. # 지침 - 외부 설치 패키지 없이 구현할 것. - <code class="language-plaintext highlighter-rouge">define</code> 등의 preprocessor 지시문이 존재할 수 있으므로 이를 고려해 코드 작성. # 참고 및 범위 - 입력: Verilog netlist 파일과 추출하려는 모듈명이 주어진다. - Netlist 구조는 일반적인 Verilog 문법을 따른다. - <code class="language-plaintext highlighter-rouge">define</code>, <code class="language-plaintext highlighter-rouge">ifdef</code>, 주석 등 다양한 preprocessor 지시문 혹은 주석이 포함될 수 있다. - 출력은 지정한 모듈만을 포함하는 Verilog 파일이어야 한다. # 작업 체크리스트 1. 입력 파일 및 추출 대상 모듈명 파악 2. 주어진 netlist에서 대상 모듈 정의와 관련 preprocessor 블록 추출 3. 추출 결과가 대상 모듈만 포함하는지 확인 4. 지정한 파일로 출력 # 추가 지침 - 코드 작성 전, 위 체크리스트에 따라 계획을 간단히 작성하고 진행한다. - 각 주요 단계(파싱, 추출, 저장) 이후, 결과가 요구 사항을 만족하는지 1-2줄로 간단히 검증한다. - reasoning_effort는 medium으로 하여, 복잡한 처리엔 추가 설명을 덧붙일 수 있다.
 
