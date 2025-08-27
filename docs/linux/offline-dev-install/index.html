@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-08-27T14:32:33+09:00">
+  <meta property="article:published_time" content="2025-08-27T14:55:52+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="오프라인 환경 개발 세팅">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-08-27T14:32:33+09:00">
+    <meta itemprop="datePublished" content="2025-08-27T14:55:52+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-08-27T14:32:33+09:00">2025-08-27</time>
+        <time datetime="2025-08-27T14:55:52+09:00">2025-08-27</time>
       </span>
     
 
@@ -577,21 +577,423 @@ setenv LDFLAGS  "-L${OPENSSL_PREFIX}/lib -Wl,-rpath,${OPENSSL_PREFIX}/lib ${LDFL
 </code></pre></div></div>
 <p>tcsh</p>
 
-<p>${PY_PREFIX}/bin/python3.11 -c "import ssl; print(ssl.OPENSSL_VERSION)"
-```</p>
+<p>${PY_PREFIX}/bin/python3.11 -c "import ssl; print(ssl.OPENSSL_VERSION)"</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+**정리**
 
-<p><strong>정리</strong></p>
+  * “그냥 되는가?” → **된다**(버전 요건 충족). [Python documentation](https://docs.python.org/3/library/ssl.html?utm_source=chatgpt.com)
+
+  * “권장 경로는?” → **OpenSSL 3.0 LTS를 사용자 경로에 설치 후 Python을 그걸로 빌드**(보안·유지보수 유리). [openssl-library.org](https://openssl-library.org/roadmap/index.html?utm_source=chatgpt.com)
+
+원하시면 OpenSSL 포함해서 이전 절차에 딱 맞는 tcsh 자동화 스크립트까지 바로 만들어 드릴게요.
+
+&lt;p class="chat--user" markdown="1"&gt;
+
+근데 꼭 build directory를 밖에 만들어야해? installers 안에서 하면 안되나
+
+&lt;/p&gt;
+
+요지는 이거예요:
+
+  * **GCC만큼은 “소스 디렉터리 안(in-source)”에서 빌드하면 안 됩니다.** GCC 공식 문서가 **소스 트리 밖(out-of-source)** 빌드를 강력 권장하고, _objdir == srcdir_ (소스 디렉터리에서 곧장 빌드)은 **미지원(unsupported)** 이라고 못박아요. 다만 _srcdir의 하위에 별도 빌드 디렉터리(objdir)_ 를 두는 건 “동작하긴 한다(should work)”고 되어 있어요. [gcc.gnu.org](https://gcc.gnu.org/install/configure.html)
+
+  * **SQLite, Python은** (일반적인 Autoconf 프로젝트처럼) **out-of-source 빌드가 잘 됩니다.** 관례적으로 VPATH(자동메이크의 out-of-tree) 빌드가 지원돼요. 소스 트리를 더럽히지 않으니 유지보수에 유리합니다. [GNU](https://www.gnu.org/s/automake/manual/html_node/VPATH-Builds.html?utm_source=chatgpt.com)
+
+  * 결론적으로, **`${RELEASE}/installers` 안에 빌드 디렉터리를 만들어도 됩니다.** 핵심은 _소스 디렉터리와는 다른 디렉터리_ 에서 `configure`/`make`를 돌리는 거예요. (예: `${RELEASE}/installers/build/gcc-13.4.0` → 소스는 `${RELEASE}/installers/gcc-13.4.0`)
+
+    * Python도 out-of-tree가 가능하고 실제로 그렇게들 씁니다(관련 이슈·논의도 있어요). [GitHub](https://github.com/python/cpython/issues/54069?utm_source=chatgpt.com)
+
+아래처럼 하면 깔끔합니다.
+
+* * *
+
+# 디렉터리 배치(예)
+```bash
+${RELEASE}/installers/
+  gcc-13.4.0/           # [소스]
+  sqlite-autoconf-3500400/   # [소스]
+  Python-3.11.13/       # [소스]
+  build/                # [빌드 산출물 전용 루트]
+    gcc-13.4.0/         # [GCC 빌드 디렉터리]
+    sqlite-3.50.4/      # [SQLite 빌드 디렉터리]
+    python-3.11.13/     # [Python 빌드 디렉터리]
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="어떻게-치면-되나-step-by-step">어떻게 치면 되나 (step-by-step)</h1>
+
+<h2 id="1-gcc-반드시-out-of-source">1) GCC (반드시 out-of-source)</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+# 소스: ${RELEASE}/installers/gcc-13.4.0
+# 빌드: ${RELEASE}/installers/build/gcc-13.4.0  ← 소스 바깥이면 installers 안이어도 OK
+mkdir -p ${RELEASE}/installers/build/gcc-13.4.0
+cd ${RELEASE}/installers/build/gcc-13.4.0
+
+# configure는 "소스 경로/configure"를 실행
+${RELEASE}/installers/gcc-13.4.0/configure \
+  --prefix=${RELEASE}/toolchains/gcc/13.4.0 \
+  --disable-multilib --enable-languages=c,c++ --enable-bootstrap
+
+make -j${njobs}
+make install
+rehash
+</code></pre></div></div>
+
+<blockquote>
+  <p>근거: <strong>GCC는 소스 디렉터리 안에서의 빌드를 미지원</strong>(objdir == srcdir unsupported). srcdir 하위의 별도 objdir은 “동작하긴 함”. 그래서 위처럼 <em>소스 옆의 별도 빌드 디렉터리</em> 를 잡는 게 정석입니다. <a href="https://gcc.gnu.org/install/configure.html">gcc.gnu.org</a></p>
+</blockquote>
+
+<h2 id="2-sqlite-in-source도-되지만-out-of-source-권장">2) SQLite (in-source도 되지만, out-of-source 권장)</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+mkdir -p ${RELEASE}/installers/build/sqlite-3.50.4
+cd ${RELEASE}/installers/build/sqlite-3.50.4
+
+setenv CC gcc
+${RELEASE}/installers/sqlite-autoconf-3500400/configure \
+  --prefix=${RELEASE}/packages/sqlite/3.50.4 \
+  --enable-shared
+make -j${njobs}
+make install
+rehash
+</code></pre></div></div>
+
+<blockquote>
+  <p>Autoconf/Automake의 <strong>VPATH(out-of-tree) 빌드</strong> 가 표준적으로 지원됩니다. 소스 폴더를 깔끔히 유지하려면 이 방식이 좋아요. <a href="https://www.gnu.org/s/automake/manual/html_node/VPATH-Builds.html?utm_source=chatgpt.com">GNU</a></p>
+</blockquote>
+
+<h2 id="3-python-311-in-source-가능-out-of-source-권장">3) Python 3.11 (in-source 가능, out-of-source 권장)</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+mkdir -p ${RELEASE}/installers/build/python-3.11.13
+cd ${RELEASE}/installers/build/python-3.11.13
+
+setenv CC gcc
+setenv CXX g++
+# (SQLite와 링크하려면 include/lib 경로 지정)
+setenv CPPFLAGS "-I${RELEASE}/packages/sqlite/3.50.4/include"
+setenv LDFLAGS  "-L${RELEASE}/packages/sqlite/3.50.4/lib -Wl,-rpath,${RELEASE}/packages/sqlite/3.50.4/lib"
+
+${RELEASE}/installers/Python-3.11.13/configure \
+  --prefix=${RELEASE}/packages/python/3.11.13 \
+  --enable-shared --with-ensurepip=install
+make -j${njobs}
+make install
+rehash
+</code></pre></div></div>
+
+<blockquote>
+  <p>Python은 전통적으로 <strong>소스 디렉터리에서 바로 빌드하는 예시</strong> 가 문서에 많지만, <strong>Autoconf 기반이라 out-of-tree도 가능</strong> 합니다(옛 이슈에서도 out-of-tree 전제를 두고 논의). 유지보수 측면에서 out-of-tree가 유리합니다. <a href="https://docs.python.org/3/using/configure.html?utm_source=chatgpt.com">Python documentation</a><a href="https://github.com/python/cpython/issues/54069?utm_source=chatgpt.com">GitHub</a></p>
+</blockquote>
+
+<hr />
+
+<h2 id="요약">요약</h2>
 
 <ul>
   <li>
-    <p>“그냥 되는가?” → <strong>된다</strong>(버전 요건 충족). <a href="https://docs.python.org/3/library/ssl.html?utm_source=chatgpt.com">Python documentation</a></p>
+    <p><strong>가능</strong> : <code class="language-plaintext highlighter-rouge">${RELEASE}/installers</code> 안에 <em>별도 build 하위 폴더</em> 를 만들어 그 안에서 빌드하기.</p>
   </li>
   <li>
-    <p>“권장 경로는?” → <strong>OpenSSL 3.0 LTS를 사용자 경로에 설치 후 Python을 그걸로 빌드</strong>(보안·유지보수 유리). <a href="https://openssl-library.org/roadmap/index.html?utm_source=chatgpt.com">openssl-library.org</a></p>
+    <p><strong>주의</strong> : <strong>GCC는 소스 디렉터리 자체에서 빌드 금지</strong>(unsupported). 소스 옆의 <code class="language-plaintext highlighter-rouge">build/gcc-...</code>처럼 <strong>분리 디렉터리</strong> 를 쓰세요. <a href="https://gcc.gnu.org/install/configure.html">gcc.gnu.org</a></p>
+  </li>
+  <li>
+    <p><strong>왜 권장?</strong> 소스/산출물 분리 → 청소·재빌드·멀티 설정(디버그/릴리즈) 관리가 쉬워집니다. Autoconf/Automake가 이를 정식 지원(VPATH). <a href="https://www.gnu.org/s/automake/manual/html_node/VPATH-Builds.html?utm_source=chatgpt.com">GNU</a></p>
   </li>
 </ul>
 
-<p>원하시면 OpenSSL 포함해서 이전 절차에 딱 맞는 tcsh 자동화 스크립트까지 바로 만들어 드릴게요.</p>
+<p>원하시면, 위 구조(installers 안의 build/*)로 맞춘 <strong>tcsh 자동화 스크립트</strong> 를 바로 만들어 드릴게요.</p>
+
+<p class="chat--user">
+
+그러면 installer/build/gcc-…/ 에서 빌드할게. 다시 다 작성해줘. 그리고 빌드 커맨드를 나중에 참고하기 위해 저장해두고 싶은데 어디에 하는게 좋을까?
+
+</p>
+
+<p>좋아—<code class="language-plaintext highlighter-rouge">installers/build/...</code> 안에서 빌드하도록 전 과정을 <strong>다시</strong> 정리했고,<br />
+“나중에 참고할 빌드 커맨드/로그”를 <strong>표준 위치에 자동 저장</strong> 하도록 구성했어.<br />
+(셸은 <code class="language-plaintext highlighter-rouge">tcsh</code>, sudo 불가/오프라인 가정)</p>
+
+<hr />
+
+<h1 id="0-공통-레이아웃--환경-변수-한-번만">0) 공통 레이아웃 &amp; 환경 변수 (한 번만)</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+# 0-1) 설치 루트 지정
+setenv RELEASE /path/to/release
+
+# 0-2) 표준 디렉터리
+mkdir -p ${RELEASE}/installers/build
+mkdir -p ${RELEASE}/toolchains
+mkdir -p ${RELEASE}/packages
+mkdir -p ${RELEASE}/env
+# 빌드 커맨드 보관/로그 보관 위치
+mkdir -p ${RELEASE}/recipes ${RELEASE}/logs
+
+# 0-3) 병렬 빌드 스레드 수
+if ( -x /usr/bin/nproc ) then
+  set njobs=`/usr/bin/nproc`
+else
+  set njobs=2
+endif
+</code></pre></div></div>
+
+<h2 id="소스-아카이브오프라인으로-준비해서-releaseinstallers에-두기">소스 아카이브(오프라인으로 준비해서 <code class="language-plaintext highlighter-rouge">${RELEASE}/installers</code>에 두기)</h2>
+
+<ul>
+  <li>
+    <p>GCC 13.4.0: <code class="language-plaintext highlighter-rouge">gcc-13.4.0.tar.xz</code></p>
+
+    <ul>
+      <li>(함께) <code class="language-plaintext highlighter-rouge">gmp-6.3.0.tar.xz</code>, <code class="language-plaintext highlighter-rouge">mpfr-4.2.1.tar.xz</code>, <code class="language-plaintext highlighter-rouge">mpc-1.3.1.tar.gz</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>SQLite 3.50.4: <code class="language-plaintext highlighter-rouge">sqlite-autoconf-3500400.tar.gz</code></p>
+  </li>
+  <li>
+    <p>Python 3.11.13: <code class="language-plaintext highlighter-rouge">Python-3.11.13.tar.xz</code></p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>구조(예):</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash
+
+${RELEASE}/installers/
+  gcc-13.4.0/                  # [압축 해제 후 소스]
+  sqlite-autoconf-3500400/
+  Python-3.11.13/
+  build/
+    gcc-13.4.0/                # [빌드 디렉터리]
+    sqlite-3.50.4/
+    python-3.11.13/
+
+</code></pre></div>  </div>
+</blockquote>
+
+<hr />
+
+<h1 id="1-gcc-1340-빌드-objdir--releaseinstallersbuildgcc-1340">1) GCC 13.4.0 빌드 (objdir = <code class="language-plaintext highlighter-rouge">${RELEASE}/installers/build/gcc-13.4.0</code>)</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+# 1-0) 소스/부속 라이브러리 배치
+cd ${RELEASE}/installers
+tar -xf gcc-13.4.0.tar.xz
+tar -xf gmp-6.3.0.tar.xz
+tar -xf mpfr-4.2.1.tar.xz
+tar -xf mpc-1.3.1.tar.gz
+
+mv gmp-6.3.0  gcc-13.4.0/gmp
+mv mpfr-4.2.1 gcc-13.4.0/mpfr
+mv mpc-1.3.1  gcc-13.4.0/mpc
+
+# 1-1) 빌드 디렉터리
+mkdir -p ${RELEASE}/installers/build/gcc-13.4.0
+cd       ${RELEASE}/installers/build/gcc-13.4.0
+
+# 1-2) prefix 등 공통 경로
+setenv GCC_PREFIX ${RELEASE}/toolchains/gcc/13.4.0
+mkdir -p ${GCC_PREFIX}
+
+# 1-3) "빌드 커맨드/로그 보관" 준비
+mkdir -p ${RELEASE}/recipes/gcc-13.4.0
+mkdir -p ${RELEASE}/logs/gcc-13.4.0
+
+# 1-4) configure (커맨드 저장+로그 저장)
+set cfg="${RELEASE}/installers/gcc-13.4.0/configure \
+  --prefix=${GCC_PREFIX} \
+  --disable-multilib \
+  --enable-languages=c,c++ \
+  --enable-bootstrap"
+echo $cfg &gt; ${RELEASE}/recipes/gcc-13.4.0/configure.cmd
+eval $cfg |&amp; tee ${RELEASE}/logs/gcc-13.4.0/configure.log
+
+# 1-5) 빌드/설치 (커맨드+로그 저장)
+set mk="make -j${njobs}"
+echo $mk &gt; ${RELEASE}/recipes/gcc-13.4.0/make.cmd
+eval $mk |&amp; tee ${RELEASE}/logs/gcc-13.4.0/make.log
+
+set inst="make install"
+echo $inst &gt; ${RELEASE}/recipes/gcc-13.4.0/install.cmd
+eval $inst |&amp; tee ${RELEASE}/logs/gcc-13.4.0/install.log
+
+# 1-6) 신규 gcc 사용
+setenv PATH ${GCC_PREFIX}/bin:${PATH}
+setenv LD_LIBRARY_PATH ${GCC_PREFIX}/lib64:${GCC_PREFIX}/lib:${LD_LIBRARY_PATH}
+rehash
+gcc --version
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>중요</strong> : GCC는 반드시 <strong>소스 밖(out-of-source)</strong> 빌드. 위처럼 <code class="language-plaintext highlighter-rouge">installers/build/gcc-13.4.0</code>을 objdir로 사용하면 안전해.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="2-sqlite-3504-빌드-objdir--installersbuildsqlite-3504">2) SQLite 3.50.4 빌드 (objdir = <code class="language-plaintext highlighter-rouge">installers/build/sqlite-3.50.4</code>)</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd ${RELEASE}/installers
+tar -xf sqlite-autoconf-3500400.tar.gz
+
+mkdir -p ${RELEASE}/installers/build/sqlite-3.50.4
+cd       ${RELEASE}/installers/build/sqlite-3.50.4
+
+setenv SQLITE_PREFIX ${RELEASE}/packages/sqlite/3.50.4
+mkdir -p ${SQLITE_PREFIX}
+mkdir -p ${RELEASE}/recipes/sqlite-3.50.4
+mkdir -p ${RELEASE}/logs/sqlite-3.50.4
+
+setenv CC gcc
+setenv CFLAGS "-O2 -fPIC"
+# rpath를 심어두면 런타임에 LD_LIBRARY_PATH가 없어도 찾기 쉬움
+setenv LDFLAGS "-Wl,-rpath,${SQLITE_PREFIX}/lib"
+
+set cfg="${RELEASE}/installers/sqlite-autoconf-3500400/configure \
+  --prefix=${SQLITE_PREFIX} \
+  --enable-shared"
+echo $cfg &gt; ${RELEASE}/recipes/sqlite-3.50.4/configure.cmd
+eval $cfg |&amp; tee ${RELEASE}/logs/sqlite-3.50.4/configure.log
+
+set mk="make -j${njobs}"
+echo $mk &gt; ${RELEASE}/recipes/sqlite-3.50.4/make.cmd
+eval $mk |&amp; tee ${RELEASE}/logs/sqlite-3.50.4/make.log
+
+set inst="make install"
+echo $inst &gt; ${RELEASE}/recipes/sqlite-3.50.4/install.cmd
+eval $inst |&amp; tee ${RELEASE}/logs/sqlite-3.50.4/install.log
+
+rehash
+${SQLITE_PREFIX}/bin/sqlite3 -version
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="3-python-31113-빌드-objdir--installersbuildpython-31113">3) Python 3.11.13 빌드 (objdir = <code class="language-plaintext highlighter-rouge">installers/build/python-3.11.13</code>)</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cd ${RELEASE}/installers
+tar -xf Python-3.11.13.tar.xz
+
+mkdir -p ${RELEASE}/installers/build/python-3.11.13
+cd       ${RELEASE}/installers/build/python-3.11.13
+
+setenv PY_PREFIX ${RELEASE}/packages/python/3.11.13
+mkdir -p ${PY_PREFIX}
+mkdir -p ${RELEASE}/recipes/python-3.11.13
+mkdir -p ${RELEASE}/logs/python-3.11.13
+
+# 새 gcc 및 sqlite에 링크
+setenv CC gcc
+setenv CXX g++
+setenv CPPFLAGS "-I${SQLITE_PREFIX}/include"
+setenv LDFLAGS  "-L${SQLITE_PREFIX}/lib -Wl,-rpath,${SQLITE_PREFIX}/lib"
+
+set cfg="${RELEASE}/installers/Python-3.11.13/configure \
+  --prefix=${PY_PREFIX} \
+  --enable-shared \
+  --with-ensurepip=install"
+echo $cfg &gt; ${RELEASE}/recipes/python-3.11.13/configure.cmd
+eval $cfg |&amp; tee ${RELEASE}/logs/python-3.11.13/configure.log
+
+set mk="make -j${njobs}"
+echo $mk &gt; ${RELEASE}/recipes/python-3.11.13/make.cmd
+eval $mk |&amp; tee ${RELEASE}/logs/python-3.11.13/make.log
+
+set inst="make install"
+echo $inst &gt; ${RELEASE}/recipes/python-3.11.13/install.cmd
+eval $inst |&amp; tee ${RELEASE}/logs/python-3.11.13/install.log
+
+rehash
+${PY_PREFIX}/bin/python3.11 -c 'import sys,sqlite3; print(sys.version); print("sqlite:", sqlite3.sqlite_version)'
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="4-매번-쓰기-편한-활성화-스크립트envactivatecsh">4) 매번 쓰기 편한 활성화 스크립트(<code class="language-plaintext highlighter-rouge">env/activate.csh</code>)</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cat &gt; ${RELEASE}/env/activate.csh &lt;&lt; 'EOF'
+# 사용법:
+#   setenv RELEASE /path/to/release
+#   source ${RELEASE}/env/activate.csh
+
+setenv GCC_PREFIX    ${RELEASE}/toolchains/gcc/13.4.0
+setenv SQLITE_PREFIX ${RELEASE}/packages/sqlite/3.50.4
+setenv PY_PREFIX     ${RELEASE}/packages/python/3.11.13
+
+setenv PATH            ${PY_PREFIX}/bin:${SQLITE_PREFIX}/bin:${GCC_PREFIX}/bin:${PATH}
+setenv LD_LIBRARY_PATH ${PY_PREFIX}/lib:${SQLITE_PREFIX}/lib:${GCC_PREFIX}/lib64:${GCC_PREFIX}/lib:${LD_LIBRARY_PATH}
+setenv PKG_CONFIG_PATH ${SQLITE_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}
+
+rehash
+echo "[env] GCC:     `gcc --version | head -1`"
+echo "[env] SQLite:  `sqlite3 -version | head -1`"
+echo "[env] Python:  `python3.11 --version`"
+EOF
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="빌드-커맨드를-나중에-보기-좋게-저장하려면-어디가-좋을까">빌드 커맨드를 “나중에 보기 좋게” 저장하려면 어디가 좋을까?</h2>
+
+<ul>
+  <li>
+    <p><strong>정답:<code class="language-plaintext highlighter-rouge">${RELEASE}/recipes/&lt;패키지&gt;/</code></strong></p>
+
+    <ul>
+      <li>
+        <p>예) <code class="language-plaintext highlighter-rouge">recipes/gcc-13.4.0/{configure.cmd,make.cmd,install.cmd}</code></p>
+      </li>
+      <li>
+        <p>예) <code class="language-plaintext highlighter-rouge">recipes/python-3.11.13/configure.cmd</code></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>빌드/설치 로그는<code class="language-plaintext highlighter-rouge">${RELEASE}/logs/&lt;패키지&gt;/</code></strong></p>
+
+    <ul>
+      <li>예) <code class="language-plaintext highlighter-rouge">logs/sqlite-3.50.4/configure.log</code>, <code class="language-plaintext highlighter-rouge">make.log</code>, <code class="language-plaintext highlighter-rouge">install.log</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>위 절차는 이미 각 단계에서 <code class="language-plaintext highlighter-rouge">echo … &gt; recipes/...</code>와 <code class="language-plaintext highlighter-rouge">|&amp; tee logs/...</code>로 <strong>자동 저장</strong> 하고 있어.</p>
+  </li>
+  <li>
+    <p>추가로 버전/경로 메타데이터를 한 파일에 모으고 싶다면:</p>
+  </li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcsh
+
+cat &gt; ${RELEASE}/recipes/MANIFEST.txt &lt;&lt; EOF
+GCC:    13.4.0 -&gt; ${RELEASE}/toolchains/gcc/13.4.0
+SQLite: 3.50.4 -&gt; ${RELEASE}/packages/sqlite/3.50.4
+Python: 3.11.13 -&gt; ${RELEASE}/packages/python/3.11.13
+EOF
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="트러블슈팅요약">트러블슈팅(요약)</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">gcc</code> 런타임 라이브러리 못 찾음 → <code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>에 <code class="language-plaintext highlighter-rouge">${GCC_PREFIX}/lib64:${GCC_PREFIX}/lib</code>.</p>
+  </li>
+  <li>
+    <p>Python에서 <code class="language-plaintext highlighter-rouge">_sqlite3</code> 미로딩 → <code class="language-plaintext highlighter-rouge">CPPFLAGS/LDFLAGS</code> 누락 또는 런타임에 <code class="language-plaintext highlighter-rouge">libsqlite3.so</code> 탐색 실패(rpath/LD_LIBRARY_PATH 확인).</p>
+  </li>
+  <li>
+    <p>문서(Info) 생성 실패 경고 → GCC 빌드 자체엔 영향 거의 없음.</p>
+  </li>
+</ul>
+
+<p>필요하면 OpenSSL(예: 3.0 LTS)도 같은 패턴으로 <code class="language-plaintext highlighter-rouge">recipes</code>/<code class="language-plaintext highlighter-rouge">logs</code>에 커맨드와 로그를 남기면서 사용자 경로에 빌드하도록 추가해줄게.</p>
 
         
       </section>
@@ -618,7 +1020,7 @@ setenv LDFLAGS  "-L${OPENSSL_PREFIX}/lib -Wl,-rpath,${OPENSSL_PREFIX}/lib ${LDFL
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-27T14:32:33+09:00">2025-08-27</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-27T14:55:52+09:00">2025-08-27</time></p>
 
       </footer>
 
