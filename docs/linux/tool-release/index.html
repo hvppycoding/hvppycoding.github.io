@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-08-28T14:24:08+09:00">
+  <meta property="article:published_time" content="2025-08-28T14:27:51+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="배포 구조 추천">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-08-28T14:24:08+09:00">
+    <meta itemprop="datePublished" content="2025-08-28T14:27:51+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-08-28T14:24:08+09:00">2025-08-28</time>
+        <time datetime="2025-08-28T14:27:51+09:00">2025-08-28</time>
       </span>
     
 
@@ -3208,6 +3208,129 @@ mytool -L
 
 <p>필요하면 <code class="language-plaintext highlighter-rouge">TOOL</code>을 파일명에서 자동 추론하고(<code class="language-plaintext highlighter-rouge">mytool</code>, <code class="language-plaintext highlighter-rouge">otherapp</code> 등), 공통 런처 하나로 여러 앱을 다루는 버전도 바로 만들어 드릴게요.</p>
 
+<p class="chat--user">
+
+파이썬을 내가 설치한 기본 깨끗한 가상환경을 하나 잡고 그걸 wrapper가 사용하게 하고 싶어. 가상환경 이름 추천해줘. RELEASE 폴더 밑에 venv/ 밑에 가상환경들을 모아놓을까 생각중이야
+
+</p>
+
+<p>좋은 생각이에요 👍<br />
+앱별로 <code class="language-plaintext highlighter-rouge">apps/&lt;tool&gt;/releases/.../venv</code> 안에 <strong>버전 종속 venv</strong> 를 두는 것도 필요하지만, 말씀하신 “<strong>공용 깨끗한 기본 venv</strong> ”는 또 다른 용도가 있습니다.</p>
+
+<hr />
+
+<h1 id="1-왜-공용-venv가-유용할까">1. 왜 공용 venv가 유용할까?</h1>
+
+<ul>
+  <li>
+    <p><strong>wrapper 실행 환경 표준화</strong> : 각 앱의 wrapper 스크립트가 돌아가는 최소 파이썬 환경을 항상 깨끗한 venv에 두면, 시스템 Python에 영향 안 받습니다.</p>
+  </li>
+  <li>
+    <p><strong>관리 단순화</strong> : pip, build, 배포용 유틸, 공통 관리 스크립트만 설치해두고, 나머지는 각 앱 버전 venv에서 처리.</p>
+  </li>
+  <li>
+    <p><strong>빠른 복원</strong> : 문제가 생기면 공용 venv만 날리고 다시 생성 → 앱 venv와 분리되어 안정적.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="2-위치-구조-추천">2. 위치 구조 추천</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pgsql
+
+/user/myteam/RELEASE/
+└─ venv/
+   ├─ base/           # wrapper용 공용 깨끗한 환경
+   ├─ build/          # (선택) 빌드/배포 전용 환경
+   └─ test/           # (선택) 통합테스트용 환경
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">base/</code> : wrapper와 공통 관리 스크립트 실행에 사용</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">build/</code> : (필요 시) wheel 빌드/검증용</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">test/</code> : (필요 시) 통합 테스트 파이프라인에서만 사용하는 환경</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="3-이름-추천">3. 이름 추천</h1>
+
+<ul>
+  <li>단순·명확하게, 어떤 역할인지 바로 알 수 있게 짓는 게 좋아요.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>이름</th>
+      <th>용도</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">base</code></td>
+      <td>wrapper, 관리 스크립트 실행 기본 환경</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">mgmt</code></td>
+      <td>(management) 팀 관리/배포 스크립트 실행 전용</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">build</code></td>
+      <td>wheel 빌드 전용</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">test</code></td>
+      <td>테스트 전용</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>→ 제안: <strong><code class="language-plaintext highlighter-rouge">venv/base</code></strong> 로 시작해서 필요해지면 <code class="language-plaintext highlighter-rouge">venv/build</code>, <code class="language-plaintext highlighter-rouge">venv/test</code> 추가.</p>
+
+<hr />
+
+<h1 id="4-wrapper에서-사용하기">4. wrapper에서 사용하기</h1>
+
+<p>Python wrapper (앞서 만든 스크립트) 상단에서 <code class="language-plaintext highlighter-rouge">venv/base/bin/python</code> 을 강제 지정하면 됩니다.</p>
+
+<p>예:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BASE</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/user/myteam/RELEASE</span><span class="sh">"</span>
+<span class="n">PY_BASE</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="sh">"</span><span class="s">venv</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">base</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">bin</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">python3</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># wrapper가 다른 앱 실행 전에 항상 base venv에서 동작
+</span><span class="k">if</span> <span class="n">sys</span><span class="p">.</span><span class="n">executable</span> <span class="o">!=</span> <span class="n">PY_BASE</span><span class="p">:</span>
+    <span class="n">os</span><span class="p">.</span><span class="nf">execv</span><span class="p">(</span><span class="n">PY_BASE</span><span class="p">,</span> <span class="p">[</span><span class="n">PY_BASE</span><span class="p">]</span> <span class="o">+</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>→ 이렇게 하면 어떤 셸에서 실행해도 항상 같은 깨끗한 Python을 wrapper가 사용.</p>
+
+<hr />
+
+<h1 id="-정리">✅ 정리</h1>
+
+<ul>
+  <li>
+    <p>공용 venv를 <code class="language-plaintext highlighter-rouge">RELEASE/venv/base</code> 로 두는 게 가장 깔끔합니다.</p>
+  </li>
+  <li>
+    <p>필요하다면 <code class="language-plaintext highlighter-rouge">build</code>, <code class="language-plaintext highlighter-rouge">test</code> 같은 용도로 확장.</p>
+  </li>
+  <li>
+    <p>wrapper는 <code class="language-plaintext highlighter-rouge">venv/base/bin/python</code>을 고정 사용 → 시스템 Python이나 유저별 환경에 의존하지 않음.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>원하시면 제가 바로 <strong><code class="language-plaintext highlighter-rouge">venv/base</code>를 자동 생성 + pip 기본 패키지 설치(build, wheel, twine 등)까지 하는 bootstrap 스크립트</strong>를 작성해 드릴까요?</p>
+
         
       </section>
 
@@ -3233,7 +3356,7 @@ mytool -L
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-28T14:24:08+09:00">2025-08-28</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-08-28T14:27:51+09:00">2025-08-28</time></p>
 
       </footer>
 
