@@ -1,0 +1,744 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>ComfyUI custom node 추가(glob) - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="ComfyUI custom node 추가(glob)">
+<meta property="og:url" content="https://hvppycoding.github.io/comfyui/comfyui-glob-node/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-09-13T16:53:36+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/comfyui/comfyui-glob-node/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="ComfyUI custom node 추가(glob)">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-09-13T16:53:36+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/comfyui/comfyui-glob-node/" itemprop="url">ComfyUI custom node 추가(glob)
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-13T16:53:36+09:00">2025-09-13</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+ComfyUI에 새로운 Custom node를 추가하고 싶어. python의 glob와 비슷한 역할을 하는 노드를 만들고 싶어. custom_nodes/hyperflow-core 내부에 추가할 거야. - Node name: HFFindPathnames - Category: HyperFlow - Node Display Name: HF - Find Pathnames(glob) Inputs: - pathname(str) - 검색 패턴 - root_dir(str, Optional) - 주어지지 않는다면 현재 디렉토리를 사용 - recursive(bool, default: False) - “<strong>” 패턴이 모든 디렉터리/파일과 매칭됨(하위 포함) - include_hidden(bool, default: False) - “</strong>” 패턴이 숨겨진 파일도 매칭됨 outputs: - match된 path name list
+
+</p>
+
+<p>좋아! 요청하신 사양으로 ComfyUI 커스텀 노드를 깔끔하게 만들어드릴게요.<br />
+(아래 코드는 그대로 저장하면 바로 동작합니다.)</p>
+
+<hr />
+
+<h1 id="1-설계-요약-step-by-step">1) 설계 요약 (step-by-step)</h1>
+
+<ol>
+  <li>
+    <p><strong>입력 위젯</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">pathname: STRING</code> (필수) – <code class="language-plaintext highlighter-rouge">**/*.png</code> 같은 glob 패턴</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">root_dir: STRING</code> (옵션) – 비우면 현재 작업 디렉터리 사용</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">recursive: BOOLEAN</code> (기본 False)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">include_hidden: BOOLEAN</code> (기본 False)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>출력</strong></p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">STRING</code> <strong>리스트</strong> 한 개(매칭된 경로들).<br />
+Comfy가 이 리스트를 “여러 아이템”으로 다루도록 <code class="language-plaintext highlighter-rouge">OUTPUT_IS_LIST = (True,)</code>를 사용합니다. <a href="https://docs.comfy.org/custom-nodes/backend/lists">docs.comfy.org</a></li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>동작</strong></p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">glob.iglob()</code>을 기본 사용.</p>
+      </li>
+      <li>
+        <p>Python 3.11+ 환경이면 <code class="language-plaintext highlighter-rouge">include_hidden</code> 파라미터를 <strong>그대로</strong> 활용.</p>
+      </li>
+      <li>
+        <p>3.11 미만일 때도 <code class="language-plaintext highlighter-rouge">**</code>가 들어간 패턴에 대해 숨김 포함을 최대한 보완(패턴 변형)해서 수집.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">root_dir</code>가 주어지면 상대 패턴은 해당 루트 기준으로 탐색.</p>
+      </li>
+      <li>
+        <p>경로/환경변수(<code class="language-plaintext highlighter-rouge">~</code>, <code class="language-plaintext highlighter-rouge">%VAR%</code>) 확장 지원.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>타입 정의</strong></p>
+
+    <ul>
+      <li>입력 타입: <code class="language-plaintext highlighter-rouge">STRING</code>, <code class="language-plaintext highlighter-rouge">BOOLEAN</code> (공식 문서의 기본 타입 표준을 따름). <a href="https://docs.comfy.org/custom-nodes/backend/datatypes">docs.comfy.org</a></li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="2-설치-위치">2) 설치 위치</h1>
+
+<p>다음 파일로 저장하세요:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>custom_nodes/hyperflow-core/hf_find_pathnames.py
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="3-코드">3) 코드</h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># custom_nodes/hyperflow-core/hf_find_pathnames.py
+</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="n">inspect</span>
+<span class="kn">from</span> <span class="n">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+
+<span class="k">class</span> <span class="nc">HFFindPathnames</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">
+    HF - Find Pathnames(glob)
+    - Python glob과 유사한 패턴 매칭
+    - include_hidden(True)일 때: Python 3.11+이면 glob의 include_hidden을 사용.
+      3.11 미만이면 </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s"> 패턴에 한해 숨김 포함 변형 패턴을 추가로 탐색(최대한의 호환).
+    </span><span class="sh">"""</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">INPUT_TYPES</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="sh">"</span><span class="s">required</span><span class="sh">"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">"</span><span class="s">pathname</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="sh">""</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">placeholder</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">예: **/*.png</span><span class="sh">"</span>
+                <span class="p">}),</span>
+            <span class="p">},</span>
+            <span class="sh">"</span><span class="s">optional</span><span class="sh">"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">"</span><span class="s">root_dir</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="sh">""</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">placeholder</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">비우면 현재 디렉토리</span><span class="sh">"</span>
+                <span class="p">}),</span>
+                <span class="sh">"</span><span class="s">recursive</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">BOOLEAN</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_on</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">recursive</span><span class="sh">"</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_off</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">not recursive</span><span class="sh">"</span>
+                <span class="p">}),</span>
+                <span class="sh">"</span><span class="s">include_hidden</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">BOOLEAN</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_on</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">include .dot files</span><span class="sh">"</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_off</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">exclude .dot files</span><span class="sh">"</span>
+                <span class="p">}),</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+    <span class="n">RETURN_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,)</span>
+    <span class="n">RETURN_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="sh">"</span><span class="s">pathnames</span><span class="sh">"</span><span class="p">,)</span>
+    <span class="c1"># 리스트 출력임을 명시 (다음 노드가 리스트를 순차 처리하도록)
+</span>    <span class="n">OUTPUT_IS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="bp">True</span><span class="p">,)</span>
+    <span class="n">FUNCTION</span> <span class="o">=</span> <span class="sh">"</span><span class="s">find</span><span class="sh">"</span>
+    <span class="n">CATEGORY</span> <span class="o">=</span> <span class="sh">"</span><span class="s">HyperFlow</span><span class="sh">"</span>
+
+    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># 환경변수/홈(~) 확장 + 정규화
+</span>        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expandvars</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">_effective_pattern</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">pathname</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_expand</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isabs</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pathname</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_expand</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">root_dir</span> <span class="k">else</span> <span class="n">os</span><span class="p">.</span><span class="nf">getcwd</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">pathname</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_iglob</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">Python 3.11+이면 include_hidden 사용, 아니면 호환 경로.</span><span class="sh">"""</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="nf">signature</span><span class="p">(</span><span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">parameters</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">include_hidden</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Python 3.11+
+</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="nf">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">),</span> <span class="n">include_hidden</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">include_hidden</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># 3.11 미만: 기본 동작(숨김 제외)만 제공
+</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="nf">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">
+        3.11 미만 환경에서 include_hidden=True + </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s"> 패턴일 때,
+        </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s">를 </span><span class="sh">'</span><span class="s">**/.*</span><span class="sh">'</span><span class="s">로 치환한 변형을 추가 생성해 숨김 파일/폴더를 최대한 포괄.
+        (첫 limit개 </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s">에 대해서만 조합 생성하여 폭발 방지)
+        </span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">n_use</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">prefix_parts</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[:</span><span class="n">n_use</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">n_use</span><span class="p">:])</span> <span class="k">if</span> <span class="n">n_use</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">variants</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="nf">product</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_use</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_hidden</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">combo</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="sh">"</span><span class="s">**/.*</span><span class="sh">"</span> <span class="k">if</span> <span class="n">use_hidden</span> <span class="k">else</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">)</span> <span class="o">+</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">variants</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">variants</span>
+
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">""</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pathname</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="o">==</span> <span class="sh">""</span><span class="p">:</span>
+            <span class="nf">return </span><span class="p">([],)</span>
+
+        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">None</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_effective_pattern</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+
+        <span class="n">matches</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+
+        <span class="c1"># 1) 기본 패턴
+</span>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">):</span>
+            <span class="n">matches</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+
+        <span class="c1"># 2) (레거시 호환) include_hidden=True + '**'일 때 변형 패턴도 검색
+</span>        <span class="k">if</span> <span class="n">include_hidden</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="p">(</span><span class="sh">"</span><span class="s">**</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">pathname</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_iglob</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                    <span class="n">matches</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+
+        <span class="c1"># 정렬(Windows는 대소문자 무시 정렬)
+</span>        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="sh">"</span><span class="s">nt</span><span class="sh">"</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="nf">lower</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+
+        <span class="nf">return </span><span class="p">(</span><span class="n">result</span><span class="p">,)</span>
+
+<span class="n">NODE_CLASS_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">"</span><span class="s">HFFindPathnames</span><span class="sh">"</span><span class="p">:</span> <span class="n">HFFindPathnames</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">NODE_DISPLAY_NAME_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">"</span><span class="s">HFFindPathnames</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">HF - Find Pathnames(glob)</span><span class="sh">"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="4-사용-방법">4) 사용 방법</h1>
+
+<ol>
+  <li>
+    <p>ComfyUI 재시작 → <code class="language-plaintext highlighter-rouge">HyperFlow</code> 카테고리에서 <strong>“HF - Find Pathnames(glob)”</strong> 검색.</p>
+  </li>
+  <li>
+    <p>예시</p>
+
+    <ul>
+      <li>
+        <p>현재 작업 폴더에서 PNG 모두:<br />
+<code class="language-plaintext highlighter-rouge">pathname="**/*.png"</code>, <code class="language-plaintext highlighter-rouge">recursive=True</code></p>
+      </li>
+      <li>
+        <p>특정 루트 기준으로 <code class="language-plaintext highlighter-rouge">.txt</code> 전부(숨김 포함):<br />
+<code class="language-plaintext highlighter-rouge">pathname="**/*.txt"</code>, <code class="language-plaintext highlighter-rouge">root_dir="/data/project"</code>, <code class="language-plaintext highlighter-rouge">recursive=True</code>, <code class="language-plaintext highlighter-rouge">include_hidden=True</code></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>출력은 <strong>문자열 리스트</strong> 이므로, 그 다음 노드가 리스트를 “순차 처리”할 수 있습니다(<code class="language-plaintext highlighter-rouge">OUTPUT_IS_LIST</code> 설정 덕분). <a href="https://docs.comfy.org/custom-nodes/backend/lists">docs.comfy.org</a></p>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="참고공식-문서">참고(공식 문서)</h2>
+
+<ul>
+  <li>
+    <p>리스트 출력 처리(<code class="language-plaintext highlighter-rouge">OUTPUT_IS_LIST</code>) – ComfyUI 개발 문서 “Data lists” 섹션. <a href="https://docs.comfy.org/custom-nodes/backend/lists">docs.comfy.org</a></p>
+  </li>
+  <li>
+    <p>입력 타입(STRING/BOOLEAN 등) 정의 – “Datatypes” 섹션. <a href="https://docs.comfy.org/custom-nodes/backend/datatypes">docs.comfy.org</a></p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하면 <code class="language-plaintext highlighter-rouge">RETURN_NAMES</code> 변경(예: <code class="language-plaintext highlighter-rouge">"matches"</code>)이나, UI placeholder/라벨 문구를 더 다듬어드릴게요.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#comfyui" class="page__taxonomy-item p-category" rel="tag">comfyui</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-09-13T16:53:36+09:00">2025-09-13</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux/wsl-docker/" class="pagination--pager" title="WSL Docker 설치 방법">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux/wsl-docker/" rel="permalink">WSL Docker 설치 방법
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-11T11:13:29+09:00">2025-09-11</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/program/qt-build-and-udocker/" rel="permalink">오프라인 Qt 라이브러리 설치 &amp; 배포
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-04T13:26:09+09:00">2025-09-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux/tool-release/" rel="permalink">배포 구조 추천
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-28T14:27:51+09:00">2025-08-28</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux/offline-dev-install/" rel="permalink">오프라인 환경 개발 세팅
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-08-27T16:42:06+09:00">2025-08-27</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
