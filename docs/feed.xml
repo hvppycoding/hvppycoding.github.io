@@ -1,4 +1,568 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-09-13T17:23:33+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">ComfyUI custom node 추가(glob)</title><link href="https://hvppycoding.github.io/comfyui/comfyui-glob-node/" rel="alternate" type="text/html" title="ComfyUI custom node 추가(glob)" /><published>2025-09-13T17:23:29+09:00</published><updated>2025-09-13T17:23:29+09:00</updated><id>https://hvppycoding.github.io/comfyui/comfyui-glob-node</id><content type="html" xml:base="https://hvppycoding.github.io/comfyui/comfyui-glob-node/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-09-15T17:29:22+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">LSF 매니저 애플리케이션 생성</title><link href="https://hvppycoding.github.io/comfyui/hyperflow-manager/" rel="alternate" type="text/html" title="LSF 매니저 애플리케이션 생성" /><published>2025-09-15T17:29:17+09:00</published><updated>2025-09-15T17:29:17+09:00</updated><id>https://hvppycoding.github.io/comfyui/hyperflow-manager</id><content type="html" xml:base="https://hvppycoding.github.io/comfyui/hyperflow-manager/"><![CDATA[<p class="chat--user">
+
+LSF Server에서 작동할 작은 매니저 애플리케이션을 만들어줘. PySide2 나 PySide6로 만들면 될 것 같아. 처음에 시작하면 해야하는 동작은 다음과 같아. 1. Available port를 찾는다. 2. 하나의 subprocess를 띄워서 venv 소스하고, 해당 포트에서 ComfyUI를 실행한다. 3. 띄운 ComfyUI에 접속하는 Chrome을 실행한다(경로는 내가 줄 것). UI 필요 사항 1. ComfyUI 서버 재시작 하는 버튼(ComfyUI지만 내부 이름은 HyperFlow이므로 그렇게 불러줘) 2. Chrome 시작 버튼 3. 종료 버튼(ComfyUI, Chrome 모두 꺼짐) 4. ComfyUI의 로그를 띄울 Text Browser 나 shell. csh을 여기 PySide widget 안에 넣을 수 있나? 궁금하네. 5. 창 아이콘을 내가 정하고 싶어.(이미지 파일 있음) 추가 필요 사항 1. 창의 x 버튼이나 최소화 누를 시 tray로 들어가게한다.(그 때 경고 아이콘을 가진 알람이 트레이 메시지로 뜬다). 트레이에는 내가 지정한 아이콘이 뜬다. 2. 트레이를 우클릭할 시 UI와 동일하게 (ComfyUI 재시작, Chrome 띄우기, 종료) 선택지가 나오면 좋겠어.
+
+</p>
+
+<p class="chat--user">
+
+LSF Server에서 작동할 작은 매니저 애플리케이션을 만들어줘. PySide2 나 PySide6로 만들면 될 것 같아. 처음에 시작하면 해야하는 동작은 다음과 같아. 1. Available port를 찾는다. 2. 하나의 subprocess를 띄워서 venv 소스하고, 해당 포트에서 ComfyUI를 실행한다. 3. 띄운 ComfyUI에 접속하는 Chrome을 실행한다(경로는 내가 줄 것). UI 필요 사항 1. ComfyUI 서버 재시작 하는 버튼(ComfyUI지만 내부 이름은 HyperFlow이므로 그렇게 불러줘) 2. Chrome 시작 버튼 3. 종료 버튼(ComfyUI, Chrome 모두 꺼짐) 4. ComfyUI의 로그를 띄울 Text Browser 나 shell. csh을 여기 PySide widget 안에 넣을 수 있나? 궁금하네. 5. 창 아이콘을 내가 정하고 싶어.(이미지 파일 있음) 추가 필요 사항 1. 창의 x 버튼이나 최소화 누를 시 tray로 들어가게한다.(그 때 경고 아이콘을 가진 알람이 트레이 메시지로 뜬다). 트레이에는 내가 지정한 아이콘이 뜬다. 2. 트레이를 우클릭할 시 UI와 동일하게 (ComfyUI 재시작, Chrome 띄우기, 종료) 선택지가 나오면 좋겠어.
+
+</p>
+
+<p>좋아요! 아래는 <strong>PySide2/PySide6 겸용</strong> 으로 돌아가는 “HyperFlow(=ComfyUI) 매니저” 예시입니다.<br />
+요구하신 동작(포트 찾기 → venv로 ComfyUI 실행 → Chrome 접속), UI 버튼(재시작/Chrome/종료), 트레이(닫기/최소화 시 트레이로, 경고 아이콘 메시지, 우클릭 메뉴 동일), 로그 뷰어까지 한 파일에 담았습니다.</p>
+
+<blockquote>
+  <p>🔧 셸을 <code class="language-plaintext highlighter-rouge">source venv/bin/activate</code>로 활성화하는 대신, <strong>venv의 파이썬(예:<code class="language-plaintext highlighter-rouge">venv/bin/python</code>)을 직접 호출</strong>하는 방식이 훨씬 견고합니다(같은 효과). 아래 코드는 이 방법을 사용합니다.<br />
+ 🖼 창/트레이 아이콘은 <code class="language-plaintext highlighter-rouge">--icon</code> 인자로 주거나, 코드 상단 <code class="language-plaintext highlighter-rouge">ICON_PATH</code>에 경로를 적어 주세요.</p>
+</blockquote>
+
+<hr />
+
+<h3 id="사용-방법-요약">사용 방법 (요약)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python hyperflow_manager.py <span class="se">\</span>
+  <span class="nt">--venv-python</span> /path/to/venv/bin/python <span class="se">\</span>
+  <span class="nt">--comfy-dir</span>   /path/to/ComfyUI <span class="se">\</span>
+  <span class="nt">--chrome</span>      /path/to/google-chrome <span class="se">\</span>
+  <span class="nt">--icon</span>        /path/to/icon.png <span class="se">\</span>
+  <span class="nt">--port</span>        8188
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--port</code>를 생략하면 자동으로 사용 가능한 포트를 찾습니다.</p>
+  </li>
+  <li>
+    <p>ComfyUI는 <code class="language-plaintext highlighter-rouge">python main.py --port &lt;PORT&gt;</code> 로 실행한다고 가정합니다(필요시 인자 수정 가능).</p>
+  </li>
+  <li>
+    <p>Chrome은 <code class="language-plaintext highlighter-rouge">http://127.0.0.1:&lt;PORT&gt;/</code> 로 뜹니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="코드-hyperflow_managerpy">코드: <code class="language-plaintext highlighter-rouge">hyperflow_manager.py</code></h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">import</span> <span class="n">socket</span>
+<span class="kn">import</span> <span class="n">argparse</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># ----- PySide6 우선, 실패 시 PySide2 -----
+</span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">PySide6.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QEvent</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">QProcess</span><span class="p">,</span> <span class="n">QSize</span>
+    <span class="kn">from</span> <span class="n">PySide6.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span>
+        <span class="n">QPlainTextEdit</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> <span class="n">QSystemTrayIcon</span><span class="p">,</span> <span class="n">QMenu</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="n">PySide6.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QAction</span>
+    <span class="n">PYSIDE_VER</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QEvent</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">QProcess</span><span class="p">,</span> <span class="n">QSize</span>
+    <span class="kn">from</span> <span class="n">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span>
+        <span class="n">QPlainTextEdit</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> <span class="n">QSystemTrayIcon</span><span class="p">,</span> <span class="n">QMenu</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="n">PySide2.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QAction</span>
+    <span class="n">PYSIDE_VER</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">APP_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">HyperFlow Manager</span><span class="sh">"</span>
+<span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="nf">home</span><span class="p">()</span> <span class="o">/</span> <span class="sh">"</span><span class="s">.hyperflow_manager.json</span><span class="sh">"</span>
+
+<span class="c1"># 기본값 (CLI/환경/설정파일로 덮어쓰기 가능)
+</span><span class="n">DEFAULT_PREFERRED_PORT</span> <span class="o">=</span> <span class="mi">8188</span>
+<span class="n">ICON_PATH</span> <span class="o">=</span> <span class="sh">""</span>  <span class="c1"># 기본 아이콘 경로 없으면 시스템 기본
+</span><span class="n">COMFY_DIR</span> <span class="o">=</span> <span class="sh">""</span>  <span class="c1"># ComfyUI 디렉토리 (main.py가 있는 곳)
+</span><span class="n">VENV_PY</span> <span class="o">=</span> <span class="sh">""</span>    <span class="c1"># venv/bin/python 경로
+</span><span class="n">CHROME_PATH</span> <span class="o">=</span> <span class="sh">""</span>  <span class="c1"># 크롬 실행 파일 경로 (사용자가 제공)
+</span>
+<span class="k">def</span> <span class="nf">load_config</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">CONFIG_PATH</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">CONFIG_PATH</span><span class="p">.</span><span class="nf">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">))</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="p">{}</span>
+
+<span class="k">def</span> <span class="nf">save_config</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">CONFIG_PATH</span><span class="p">.</span><span class="nf">write_text</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="nf">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">is_port_free</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="sh">"</span><span class="s">127.0.0.1</span><span class="sh">"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">socket</span><span class="p">.</span><span class="nf">socket</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="p">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">s</span><span class="p">.</span><span class="nf">settimeout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="nf">connect_ex</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">find_free_port</span><span class="p">(</span><span class="n">start_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PREFERRED_PORT</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="sh">"</span><span class="s">127.0.0.1</span><span class="sh">"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">start_port</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># 완전 자동: OS 한테 포트 받기
+</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">.</span><span class="nf">socket</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="p">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+        <span class="n">s</span><span class="p">.</span><span class="nf">bind</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">getsockname</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">s</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">port</span>
+    <span class="c1"># start_port부터 위로 스캔
+</span>    <span class="n">port</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">start_port</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nf">is_port_free</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">port</span>
+        <span class="n">port</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span><span class="sh">"</span><span class="s">사용 가능한 포트를 찾지 못했습니다.</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">HyperFlowManager</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">venv_py</span><span class="p">,</span> <span class="n">comfy_dir</span><span class="p">,</span> <span class="n">chrome_path</span><span class="p">,</span> <span class="n">icon_path</span><span class="p">,</span> <span class="n">preferred_port</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">venv_py</span> <span class="o">=</span> <span class="n">venv_py</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_dir</span> <span class="o">=</span> <span class="n">comfy_dir</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_path</span> <span class="o">=</span> <span class="n">chrome_path</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">icon_path</span> <span class="o">=</span> <span class="n">icon_path</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">preferred_port</span> <span class="o">=</span> <span class="n">preferred_port</span> <span class="ow">or</span> <span class="n">DEFAULT_PREFERRED_PORT</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># QProcess
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># QProcess
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">tray</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">tray_warned_once</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">init_ui</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">init_tray</span><span class="p">()</span>
+        <span class="n">QApplication</span><span class="p">.</span><span class="nf">setQuitOnLastWindowClosed</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="c1"># 시작 시: 포트 찾고 → ComfyUI 실행 → Chrome 실행
+</span>        <span class="n">QTimer</span><span class="p">.</span><span class="nf">singleShot</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">bootstrap_startup</span><span class="p">)</span>
+
+    <span class="c1"># ---------------- UI ----------------
+</span>    <span class="k">def</span> <span class="nf">init_ui</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowTitle</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">icon_path</span> <span class="ow">and</span> <span class="nc">Path</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">icon_path</span><span class="p">).</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">setWindowIcon</span><span class="p">(</span><span class="nc">QIcon</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">icon_path</span><span class="p">))</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">port_label</span> <span class="o">=</span> <span class="nc">QLabel</span><span class="p">(</span><span class="sh">"</span><span class="s">포트: -</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">status_label</span> <span class="o">=</span> <span class="nc">QLabel</span><span class="p">(</span><span class="sh">"</span><span class="s">상태: 초기화 대기</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">log_view</span> <span class="o">=</span> <span class="nc">QPlainTextEdit</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">log_view</span><span class="p">.</span><span class="nf">setReadOnly</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">log_view</span><span class="p">.</span><span class="nf">setMaximumBlockCount</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>  <span class="c1"># 로그 무한 증가 방지
+</span>
+        <span class="n">btn_restart</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">HyperFlow 재시작</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_chrome</span>  <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">Chrome 열기</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_exit</span>    <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">종료</span><span class="sh">"</span><span class="p">)</span>
+
+        <span class="n">btn_restart</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_restart_clicked</span><span class="p">)</span>
+        <span class="n">btn_chrome</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_chrome_clicked</span><span class="p">)</span>
+        <span class="n">btn_exit</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_exit_clicked</span><span class="p">)</span>
+
+        <span class="c1"># 파일 경로 확인용 작은 버튼들(선택사항)
+</span>        <span class="n">btn_pick_icon</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">아이콘 변경…</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_pick_icon</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pick_icon</span><span class="p">)</span>
+
+        <span class="n">btn_pick_chrome</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">Chrome 경로 변경…</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_pick_chrome</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pick_chrome</span><span class="p">)</span>
+
+        <span class="n">top_row</span> <span class="o">=</span> <span class="nc">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">top_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">port_label</span><span class="p">)</span>
+        <span class="n">top_row</span><span class="p">.</span><span class="nf">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">top_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">status_label</span><span class="p">)</span>
+
+        <span class="n">btn_row</span> <span class="o">=</span> <span class="nc">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_restart</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_chrome</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_exit</span><span class="p">)</span>
+
+        <span class="n">path_row</span> <span class="o">=</span> <span class="nc">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">path_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_pick_icon</span><span class="p">)</span>
+        <span class="n">path_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_pick_chrome</span><span class="p">)</span>
+        <span class="n">path_row</span><span class="p">.</span><span class="nf">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">root</span> <span class="o">=</span> <span class="nc">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addLayout</span><span class="p">(</span><span class="n">top_row</span><span class="p">)</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addLayout</span><span class="p">(</span><span class="n">btn_row</span><span class="p">)</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addLayout</span><span class="p">(</span><span class="n">path_row</span><span class="p">)</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">log_view</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">setLayout</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">resize</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_tray</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">tray</span> <span class="o">=</span> <span class="nc">QSystemTrayIcon</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">icon_path</span> <span class="ow">and</span> <span class="nc">Path</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">icon_path</span><span class="p">).</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">setIcon</span><span class="p">(</span><span class="nc">QIcon</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">icon_path</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">setIcon</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">style</span><span class="p">().</span><span class="nf">standardIcon</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">style</span><span class="p">().</span><span class="n">SP_ComputerIcon</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">setToolTip</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">)</span>
+
+        <span class="n">menu</span> <span class="o">=</span> <span class="nc">QMenu</span><span class="p">()</span>
+        <span class="n">act_show</span> <span class="o">=</span> <span class="nc">QAction</span><span class="p">(</span><span class="sh">"</span><span class="s">창 열기</span><span class="sh">"</span><span class="p">,</span> <span class="n">self</span><span class="p">)</span>
+        <span class="n">act_restart</span> <span class="o">=</span> <span class="nc">QAction</span><span class="p">(</span><span class="sh">"</span><span class="s">HyperFlow 재시작</span><span class="sh">"</span><span class="p">,</span> <span class="n">self</span><span class="p">)</span>
+        <span class="n">act_chrome</span>  <span class="o">=</span> <span class="nc">QAction</span><span class="p">(</span><span class="sh">"</span><span class="s">Chrome 열기</span><span class="sh">"</span><span class="p">,</span> <span class="n">self</span><span class="p">)</span>
+        <span class="n">act_exit</span>    <span class="o">=</span> <span class="nc">QAction</span><span class="p">(</span><span class="sh">"</span><span class="s">종료</span><span class="sh">"</span><span class="p">,</span> <span class="n">self</span><span class="p">)</span>
+
+        <span class="n">act_show</span><span class="p">.</span><span class="n">triggered</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">show_main_window</span><span class="p">)</span>
+        <span class="n">act_restart</span><span class="p">.</span><span class="n">triggered</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_restart_clicked</span><span class="p">)</span>
+        <span class="n">act_chrome</span><span class="p">.</span><span class="n">triggered</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_chrome_clicked</span><span class="p">)</span>
+        <span class="n">act_exit</span><span class="p">.</span><span class="n">triggered</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_exit_clicked</span><span class="p">)</span>
+
+        <span class="n">menu</span><span class="p">.</span><span class="nf">addAction</span><span class="p">(</span><span class="n">act_show</span><span class="p">)</span>
+        <span class="n">menu</span><span class="p">.</span><span class="nf">addSeparator</span><span class="p">()</span>
+        <span class="n">menu</span><span class="p">.</span><span class="nf">addAction</span><span class="p">(</span><span class="n">act_restart</span><span class="p">)</span>
+        <span class="n">menu</span><span class="p">.</span><span class="nf">addAction</span><span class="p">(</span><span class="n">act_chrome</span><span class="p">)</span>
+        <span class="n">menu</span><span class="p">.</span><span class="nf">addSeparator</span><span class="p">()</span>
+        <span class="n">menu</span><span class="p">.</span><span class="nf">addAction</span><span class="p">(</span><span class="n">act_exit</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">setContextMenu</span><span class="p">(</span><span class="n">menu</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+
+    <span class="c1"># ------------- 창/트레이 동작 -------------
+</span>    <span class="k">def</span> <span class="nf">changeEvent</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="c1"># 최소화 시 트레이로
+</span>        <span class="k">if</span> <span class="n">event</span><span class="p">.</span><span class="nf">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="p">.</span><span class="n">WindowStateChange</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="nf">isMinimized</span><span class="p">():</span>
+                <span class="n">QTimer</span><span class="p">.</span><span class="nf">singleShot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">hide</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">tray_warn</span><span class="p">(</span><span class="sh">"</span><span class="s">앱이 트레이로 이동했습니다.</span><span class="sh">"</span><span class="p">)</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">changeEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="c1"># X버튼 눌러도 종료 대신 트레이로
+</span>        <span class="n">event</span><span class="p">.</span><span class="nf">ignore</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">hide</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">tray_warn</span><span class="p">(</span><span class="sh">"</span><span class="s">앱이 트레이로 이동했습니다.</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">show_main_window</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="nf">windowState</span><span class="p">()</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">Qt</span><span class="p">.</span><span class="n">WindowMinimized</span> <span class="o">|</span> <span class="n">Qt</span><span class="p">.</span><span class="n">WindowActive</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">activateWindow</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">tray_warn</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># 경고 아이콘으로 트레이 메시지
+</span>        <span class="n">icon</span> <span class="o">=</span> <span class="n">QSystemTrayIcon</span><span class="p">.</span><span class="n">MessageIcon</span><span class="p">.</span><span class="nb">Warning</span>
+        <span class="c1"># 너무 자주 울리지 않게 기본 1회는 꼭 표시, 이후는 살짝 간격 제한 가능
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">tray_warned_once</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">tray_warned_once</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">showMessage</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">icon</span><span class="p">,</span> <span class="mi">3500</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">showMessage</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">icon</span><span class="p">,</span> <span class="mi">2500</span><span class="p">)</span>
+
+    <span class="c1"># ------------- 초기 부팅 루틴 -------------
+</span>    <span class="k">def</span> <span class="nf">bootstrap_startup</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="nf">find_free_port</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">preferred_port</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">port_label</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">포트: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[INFO] 선택된 포트: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+            <span class="n">self</span><span class="p">.</span><span class="nf">start_comfyui</span><span class="p">()</span>
+            <span class="c1"># ComfyUI가 뜨는데 약간의 시간이 필요할 수 있음 → 크롬은 약간 지연 후 실행
+</span>            <span class="n">QTimer</span><span class="p">.</span><span class="nf">singleShot</span><span class="p">(</span><span class="mi">1200</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">on_chrome_clicked</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[ERROR] 초기화 실패: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">QMessageBox</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="s">초기화 실패: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># ------------- 프로세스 제어 -------------
+</span>    <span class="k">def</span> <span class="nf">start_comfyui</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">venv_py</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nc">Path</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">venv_py</span><span class="p">).</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="n">QMessageBox</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="sh">"</span><span class="s">venv 파이썬 경로가 올바르지 않습니다.</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">comfy_dir</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nc">Path</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">comfy_dir</span><span class="p">).</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="n">QMessageBox</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="sh">"</span><span class="s">ComfyUI 디렉토리 경로가 올바르지 않습니다.</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">stop_comfyui</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span> <span class="o">=</span> <span class="nc">QProcess</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">setProgram</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">venv_py</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">setWorkingDirectory</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">comfy_dir</span><span class="p">)</span>
+
+        <span class="c1"># 필요시 main.py 대신 특정 진입점으로 바꾸세요.
+</span>        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="sh">"</span><span class="s">main.py</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--port</span><span class="sh">"</span><span class="p">,</span> <span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="p">)]</span>
+        <span class="c1"># 외부 접속이 필요하면 다음 줄 주석 해제:
+</span>        <span class="c1"># args += ["--listen", "0.0.0.0"]
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">setArguments</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="c1"># 표준 출력/에러 합치기
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">setProcessChannelMode</span><span class="p">(</span><span class="n">QProcess</span><span class="p">.</span><span class="n">MergedChannels</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="n">readyReadStandardOutput</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_comfy_output</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="n">finished</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_comfy_finished</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[INFO] HyperFlow(ComfyUI) 실행: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">venv_py</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="sh">'</span><span class="s"> </span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">waitForStarted</span><span class="p">(</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[ERROR] HyperFlow 시작 실패 (시간 초과)</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">QMessageBox</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="sh">"</span><span class="s">HyperFlow 시작 실패</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="n">status_label</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">상태: HyperFlow 실행 중</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop_comfyui</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[INFO] HyperFlow 종료 중…</span><span class="sh">"</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">terminate</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">waitForFinished</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span> <span class="ow">and</span> <span class="n">force</span><span class="p">:</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">kill</span><span class="p">()</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">waitForFinished</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">status_label</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">상태: HyperFlow 정지</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_comfy_output</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nf">bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">comfy_proc</span><span class="p">.</span><span class="nf">readAllStandardOutput</span><span class="p">()).</span><span class="nf">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="sh">"</span><span class="s">ignore</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">rstrip</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="sh">"</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">on_comfy_finished</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[INFO] HyperFlow 종료(code=</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s">, status=</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">status_label</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">상태: HyperFlow 정지</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">start_chrome</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">chrome_path</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nc">Path</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">chrome_path</span><span class="p">).</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="c1"># 경로가 없으면 시스템 기본 브라우저로라도 열기
+</span>            <span class="kn">import</span> <span class="n">webbrowser</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">http://127.0.0.1:</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="si">}</span><span class="s">/</span><span class="sh">"</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[WARN] Chrome 경로 없음 → 기본 브라우저로 열기: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">webbrowser</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">stop_chrome</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">http://127.0.0.1:</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="si">}</span><span class="s">/</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span> <span class="o">=</span> <span class="nc">QProcess</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">setProgram</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">chrome_path</span><span class="p">)</span>
+        <span class="c1"># 새 프로필을 쓰면 LSF 서버 환경에서도 충돌 적음(선택)
+</span>        <span class="n">user_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">/tmp/hyperflow_profile_</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="sh">"</span><span class="s">--new-window</span><span class="sh">"</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="sa">f</span><span class="sh">"</span><span class="s">--user-data-dir=</span><span class="si">{</span><span class="n">user_dir</span><span class="si">}</span><span class="sh">"</span><span class="p">]</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">setArguments</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">setProcessChannelMode</span><span class="p">(</span><span class="n">QProcess</span><span class="p">.</span><span class="n">MergedChannels</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="n">readyReadStandardOutput</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_chrome_output</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="n">finished</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">on_chrome_finished</span><span class="p">)</span>
+
+        <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[INFO] Chrome 실행: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">chrome_path</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="sh">'</span><span class="s"> </span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">waitForStarted</span><span class="p">(</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[ERROR] Chrome 시작 실패 (시간 초과)</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">QMessageBox</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">APP_NAME</span><span class="p">,</span> <span class="sh">"</span><span class="s">Chrome 시작 실패</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop_chrome</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[INFO] Chrome 종료 중…</span><span class="sh">"</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">terminate</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">waitForFinished</span><span class="p">(</span><span class="mi">1500</span><span class="p">):</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">kill</span><span class="p">()</span>
+                    <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">waitForFinished</span><span class="p">(</span><span class="mi">800</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">on_chrome_output</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nf">bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">chrome_proc</span><span class="p">.</span><span class="nf">readAllStandardOutput</span><span class="p">()).</span><span class="nf">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="sh">"</span><span class="s">ignore</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[Chrome] </span><span class="sh">"</span> <span class="o">+</span> <span class="n">data</span><span class="p">.</span><span class="nf">rstrip</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="sh">"</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">on_chrome_finished</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[INFO] Chrome 종료(code=</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s">, status=</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># ------------- 버튼 동작 -------------
+</span>    <span class="k">def</span> <span class="nf">on_restart_clicked</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[ACTION] HyperFlow 재시작</span><span class="sh">"</span><span class="p">)</span>
+        <span class="c1"># 같은 포트로 재시작 시도. 실패하면 새 포트 확보
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">stop_comfyui</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nf">is_port_free</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="p">):</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="nf">find_free_port</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">port</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">port_label</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">포트: </span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">port</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[WARN] 포트 재확보 실패: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">start_comfyui</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_chrome_clicked</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[ACTION] Chrome 열기</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">start_chrome</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_exit_clicked</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sh">"</span><span class="s">[ACTION] 종료</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">stop_chrome</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">stop_comfyui</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">QApplication</span><span class="p">.</span><span class="nf">quit</span><span class="p">()</span>
+
+    <span class="c1"># ------------- 보조 -------------
+</span>    <span class="k">def</span> <span class="nf">append_log</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">log_view</span><span class="p">.</span><span class="nf">appendPlainText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="c1"># 자동 스크롤
+</span>        <span class="n">cursor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">log_view</span><span class="p">.</span><span class="nf">textCursor</span><span class="p">()</span>
+        <span class="n">cursor</span><span class="p">.</span><span class="nf">movePosition</span><span class="p">(</span><span class="n">cursor</span><span class="p">.</span><span class="n">End</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">log_view</span><span class="p">.</span><span class="nf">setTextCursor</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">pick_icon</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="p">.</span><span class="nf">getOpenFileName</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="sh">"</span><span class="s">아이콘 선택</span><span class="sh">"</span><span class="p">,</span> <span class="nf">str</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="nf">home</span><span class="p">()),</span> <span class="sh">"</span><span class="s">이미지 파일 (*.png *.ico *.jpg *.bmp)</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">icon_path</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">setWindowIcon</span><span class="p">(</span><span class="nc">QIcon</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">icon_path</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">tray</span><span class="p">.</span><span class="nf">setIcon</span><span class="p">(</span><span class="nc">QIcon</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">icon_path</span><span class="p">))</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[INFO] 아이콘 변경: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">persist_settings</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">pick_chrome</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="p">.</span><span class="nf">getOpenFileName</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="sh">"</span><span class="s">Chrome 실행 파일 선택</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">/usr/bin</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">실행 파일 (*)</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">chrome_path</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">append_log</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[INFO] Chrome 경로 변경: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">persist_settings</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">persist_settings</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="nf">load_config</span><span class="p">()</span>
+        <span class="n">cfg</span><span class="p">.</span><span class="nf">update</span><span class="p">({</span>
+            <span class="sh">"</span><span class="s">venv_py</span><span class="sh">"</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">venv_py</span><span class="p">,</span>
+            <span class="sh">"</span><span class="s">comfy_dir</span><span class="sh">"</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">comfy_dir</span><span class="p">,</span>
+            <span class="sh">"</span><span class="s">chrome_path</span><span class="sh">"</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">chrome_path</span><span class="p">,</span>
+            <span class="sh">"</span><span class="s">icon_path</span><span class="sh">"</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">icon_path</span><span class="p">,</span>
+            <span class="sh">"</span><span class="s">preferred_port</span><span class="sh">"</span><span class="p">:</span> <span class="n">self</span><span class="p">.</span><span class="n">preferred_port</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="nf">save_config</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="sh">"</span><span class="s">HyperFlow(ComfyUI) Manager</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--venv-python</span><span class="sh">"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="sh">"</span><span class="s">venv_py</span><span class="sh">"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">""</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--comfy-dir</span><span class="sh">"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="sh">"</span><span class="s">comfy_dir</span><span class="sh">"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">""</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--chrome</span><span class="sh">"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="sh">"</span><span class="s">chrome_path</span><span class="sh">"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">""</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--icon</span><span class="sh">"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="sh">"</span><span class="s">icon_path</span><span class="sh">"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">""</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">--port</span><span class="sh">"</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="sh">"</span><span class="s">port</span><span class="sh">"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_PREFERRED_PORT</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">.</span><span class="nf">parse_args</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 설정 적재 우선순위: CLI &gt; 저장파일 &gt; 환경변수 &gt; 기본값
+</span>    <span class="n">args</span> <span class="o">=</span> <span class="nf">parse_args</span><span class="p">()</span>
+    <span class="n">stored</span> <span class="o">=</span> <span class="nf">load_config</span><span class="p">()</span>
+
+    <span class="n">venv_py</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">venv_py</span> <span class="ow">or</span> <span class="n">stored</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">venv_py</span><span class="sh">"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">HFM_VENV_PY</span><span class="sh">"</span><span class="p">,</span> <span class="n">VENV_PY</span><span class="p">)</span>
+    <span class="n">comfy_dir</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">comfy_dir</span> <span class="ow">or</span> <span class="n">stored</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">comfy_dir</span><span class="sh">"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">HFM_COMFY_DIR</span><span class="sh">"</span><span class="p">,</span> <span class="n">COMFY_DIR</span><span class="p">)</span>
+    <span class="n">chrome_path</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">chrome_path</span> <span class="ow">or</span> <span class="n">stored</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">chrome_path</span><span class="sh">"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">HFM_CHROME_PATH</span><span class="sh">"</span><span class="p">,</span> <span class="n">CHROME_PATH</span><span class="p">)</span>
+    <span class="n">icon_path</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">icon_path</span> <span class="ow">or</span> <span class="n">stored</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">icon_path</span><span class="sh">"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">HFM_ICON_PATH</span><span class="sh">"</span><span class="p">,</span> <span class="n">ICON_PATH</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">port</span> <span class="ow">or</span> <span class="n">stored</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">preferred_port</span><span class="sh">"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">DEFAULT_PREFERRED_PORT</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="nc">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">app</span><span class="p">.</span><span class="nf">setApplicationName</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">)</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="nc">HyperFlowManager</span><span class="p">(</span><span class="n">venv_py</span><span class="o">=</span><span class="n">venv_py</span><span class="p">,</span> <span class="n">comfy_dir</span><span class="o">=</span><span class="n">comfy_dir</span><span class="p">,</span>
+                         <span class="n">chrome_path</span><span class="o">=</span><span class="n">chrome_path</span><span class="p">,</span> <span class="n">icon_path</span><span class="o">=</span><span class="n">icon_path</span><span class="p">,</span>
+                         <span class="n">preferred_port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+    <span class="n">w</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="nf">exec</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="구현-체크리스트">구현 체크리스트</h3>
+
+<ul>
+  <li>
+    <p>시작 시:</p>
+
+    <ol>
+      <li>
+        <p>사용 가능한 포트 자동 탐색 →</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">venv/bin/python main.py --port &lt;포트&gt;</code> 로 HyperFlow(ComfyUI) 실행 →</p>
+      </li>
+      <li>
+        <p>잠시 대기 후 Chrome(지정 경로)로 <code class="language-plaintext highlighter-rouge">http://127.0.0.1:&lt;포트&gt;/</code> 접속.</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>UI:</p>
+
+    <ul>
+      <li>
+        <p><strong>HyperFlow 재시작</strong> , <strong>Chrome 열기</strong> , <strong>종료</strong> 버튼.</p>
+      </li>
+      <li>
+        <p>로그: <code class="language-plaintext highlighter-rouge">QProcess</code>의 stdout/stderr를 <strong>QPlainTextEdit</strong> 에 실시간 표시.</p>
+      </li>
+      <li>
+        <p>아이콘: <code class="language-plaintext highlighter-rouge">--icon</code> 혹은 UI에서 “아이콘 변경…”으로 교체 → 창과 트레이 모두 반영.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>트레이:</p>
+
+    <ul>
+      <li>
+        <p>X/최소화 시 <strong>트레이로 숨김</strong> + <strong>경고 아이콘</strong> 으로 풍선 메시지.</p>
+      </li>
+      <li>
+        <p>우클릭 메뉴: <strong>창 열기 / HyperFlow 재시작 / Chrome 열기 / 종료</strong>.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="csh를-pyside-위젯-안에-그대로-넣을-수-있나">csh를 PySide 위젯 안에 “그대로” 넣을 수 있나?</h3>
+
+<ul>
+  <li>
+    <p><strong>직접 내장된 csh 위젯은 없습니다.</strong> PySide/Qt 기본 위젯에 셸을 “임베드”하는 기능은 없어요.</p>
+  </li>
+  <li>
+    <p>선택지:</p>
+
+    <ol>
+      <li>
+        <p><strong>로그만 필요</strong> : 지금 예시처럼 <code class="language-plaintext highlighter-rouge">QProcess</code>로 프로세스 실행 후 stdout/stderr를 <strong>텍스트 위젯</strong> 에 스트리밍 표시(가장 간단/안정적).</p>
+      </li>
+      <li>
+        <p><strong>대화형 터미널 임베드</strong> : 리눅스라면 <strong>QTermWidget</strong>(KDE Konsole 컴포넌트, <code class="language-plaintext highlighter-rouge">libqtermwidget</code>) 같은 <strong>서드파티 위젯</strong> 을 연동할 수 있습니다(빌드/패키지 필요). 이 경우 csh도 터미널 내에서 사용할 수 있어요.</p>
+      </li>
+      <li>
+        <p><strong>준-대화형</strong> : 파이썬 <code class="language-plaintext highlighter-rouge">pty</code>/<code class="language-plaintext highlighter-rouge">pexpect</code>로 의사 터미널을 만들어 위젯과 연결(복잡하고 호환성 이슈 있음).</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>결론: <strong>로그 표시</strong> 가 목적이면 지금 방식이 가장 현실적이고, <strong>완전한 터미널</strong> 을 원하면 QTermWidget 채택을 추천합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="필요한-부분만-바꾸면-바로-사용-가능">필요한 부분만 바꾸면 바로 사용 가능</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--venv-python</code> : <code class="language-plaintext highlighter-rouge">.../venv/bin/python</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--comfy-dir</code> : <code class="language-plaintext highlighter-rouge">.../ComfyUI</code> (여기에 <code class="language-plaintext highlighter-rouge">main.py</code>)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--chrome</code> : <code class="language-plaintext highlighter-rouge">google-chrome</code>(혹은 <code class="language-plaintext highlighter-rouge">chromium</code>, 경로 명시)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--icon</code> : 원하는 이미지 파일(.png 권장)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--port</code> : 고정 포트 쓰려면 지정, 아니면 생략해서 자동 탐색</p>
+  </li>
+</ul>
+
+<p>원하시면 <code class="language-plaintext highlighter-rouge">HyperFlow</code> 이름, 로그 포맷, ComfyUI 인자(<code class="language-plaintext highlighter-rouge">--listen</code>, <code class="language-plaintext highlighter-rouge">--multi-user</code>, 등)도 추가해 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="comfyui" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">ComfyUI custom node 추가(glob)</title><link href="https://hvppycoding.github.io/comfyui/comfyui-glob-node/" rel="alternate" type="text/html" title="ComfyUI custom node 추가(glob)" /><published>2025-09-13T17:23:29+09:00</published><updated>2025-09-13T17:23:29+09:00</updated><id>https://hvppycoding.github.io/comfyui/comfyui-glob-node</id><content type="html" xml:base="https://hvppycoding.github.io/comfyui/comfyui-glob-node/"><![CDATA[<p class="chat--user">
 
 ComfyUI에 새로운 Custom node를 추가하고 싶어. python의 glob와 비슷한 역할을 하는 노드를 만들고 싶어. custom_nodes/hyperflow-core 내부에 추가할 거야. - Node name: HFFindPathnames - Category: HyperFlow - Node Display Name: HF - Find Pathnames(glob) Inputs: - pathname(str) - 검색 패턴 - root_dir(str, Optional) - 주어지지 않는다면 현재 디렉토리를 사용 - recursive(bool, default: False) - “<strong>” 패턴이 모든 디렉터리/파일과 매칭됨(하위 포함) - include_hidden(bool, default: False) - “</strong>” 패턴이 숨겨진 파일도 매칭됨 outputs: - match된 path name list
 
@@ -12518,693 +13082,4 @@ PyVerilog는 Verilog‑2001 중심이라 최신 SV 구문에 한계가 있을 �
 
 <hr />
 
-<p>필요하시면 <strong>특정 규칙(예: 일부 내부 신호 선언만 보존, 특정 모듈만 예외적으로 유지 등)</strong>을 추가한 변형도 바로 만들어 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Yosys submodule refactor</title><link href="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/" rel="alternate" type="text/html" title="Yosys submodule refactor" /><published>2025-08-18T11:33:48+09:00</published><updated>2025-08-18T11:33:48+09:00</updated><id>https://hvppycoding.github.io/verilog/yosys-submodule-refactor</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/yosys-submodule-refactor/"><![CDATA[<p class="chat--user">
-
-Verilog Netlist가 주어지고, 이 중 하나의 모듈 내의 인스턴스들을 묶어서 새로운 하나의 내부 모듈로 만드는 것을 자동화하고 싶어. 일반적인 프로그래밍에서는 함수의 일부분을 묶어서 새로운 함수로 정의하고 이걸 사용하는 식으로 refactoring 하는 것과 유사할 것 같아. 어떻게 하는게 좋을까?
-
-</p>
-
-<p>GPT-5 Pro 요청</p>
-
-<p>Reasoned for 6m 20s</p>
-
-<p>좋은 아이디어예요. 이건 소프트웨어에서 “Extract Function(함수 추출)” 리팩토링에 해당하는 <strong>“Extract Submodule(서브모듈 추출)”</strong> 작업이고, 자동화 관점에서 보면 다음 두 가지 경로가 현실적입니다.</p>
-
-<ul>
-  <li>
-    <p><strong>현존 도구 활용(추천):</strong> Yosys의 <code class="language-plaintext highlighter-rouge">submod</code> 패스를 이용해 선택한 인스턴스 묶음을 자동으로 새 내부 모듈로 뽑아내고, 원래 모듈 안에는 그 새 모듈의 인스턴스 1개만 남기는 방법. <code class="language-plaintext highlighter-rouge">submod</code>는 경계 포트(입출력/인아웃)를 자동으로 만들어 줍니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
-  </li>
-  <li>
-    <p><strong>직접 스크립팅:</strong> PyVerilog/SpyDrNet 같은 파서·넷리스트 라이브러리로 경계 신호를 계산해서 새 모듈 선언/인스턴스 치환을 생성하는 파이프라인을 짜는 방법. <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a><a href="https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=10455&amp;context=etd&amp;utm_source=chatgpt.com">BYU ScholarsArchive</a></p>
-  </li>
-</ul>
-
-<p>아래에 <strong>단계별로</strong> 정리해 드릴게요.</p>
-
-<hr />
-
-<h2 id="a안-yosys로-서브모듈-추출-자동화-가장-빠르고-안정적">A안: Yosys로 “서브모듈 추출” 자동화 (가장 빠르고 안정적)</h2>
-
-<h3 id="0-전제">0) 전제</h3>
-
-<ul>
-  <li>입력은 <strong>넷리스트(구조적 Verilog)</strong> 혹은 <code class="language-plaintext highlighter-rouge">always</code>/<code class="language-plaintext highlighter-rouge">assign</code>이 섞인 RTL이어도 됨. 다만 <code class="language-plaintext highlighter-rouge">submod</code>는 <strong>프로세스나 메모리(미변환 상태)</strong> 가 남아있는 모듈에선 동작하지 않으므로, 먼저 이를 셀로 변환합니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></li>
-</ul>
-
-<h3 id="1-설계-적재--전처리">1) 설계 적재 &amp; 전처리</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# extract.ys
-read_verilog -sv your_design.sv
-hierarchy -check -top TOP            # TOP은 최상위 모듈
-# 프로세스/메모리를 넷리스트 셀로 변환 (submod 요구사항)
-proc; memory; opt                    # 필요시 memory_map 등 추가
-</code></pre></div></div>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">proc</code>, <code class="language-plaintext highlighter-rouge">memory</code> 변환은 <code class="language-plaintext highlighter-rouge">submod</code>가 요구하는 “프로세스/메모리 없음” 조건을 만족시키기 위한 필수 단계입니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io+1</a></li>
-</ul>
-
-<h3 id="2-묶을-인스턴스-선택selection">2) 묶을 인스턴스 선택(Selection)</h3>
-
-<p>Yosys의 <strong>selection 프레임워크</strong> 로 원하는 인스턴스만 골라 집합을 만듭니다.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# 대상 모듈 컨텍스트로 진입
-cd TARGET_MODULE                      # = select -module TARGET_MODULE 와 동일 :contentReference[oaicite:4]{index=4}
-
-# 선택 집합 만들기 (예: 이름으로 3개를 고르는 간단 예)
-select -set grp c:U_ALU0 c:U_ALU1 c:U_ALU2
-
-# 또는 패턴/타입·전후방 콘 확장으로 자동 수집도 가능
-# 예: 어떤 결과 신호 out_bus의 조합논리 입력 콘을 모두 포함
-# select -set grp o:out_bus %ci.*:+
-</code></pre></div></div>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">select -set &lt;name&gt;</code>로 **이름 붙인 선택(@ <name>)** 을 저장할 수 있어 이후 명령에서 재사용이 쉽습니다. `c:`(셀 이름), `t:`(셀 타입), `i:/o:/x:`(포트), `%ci/%co/%x`(입출력 콘/연결 확장) 등 강력한 문법을 제공합니다. [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.47/cmd/select.html)</name></li>
-</ul>
-
-<h3 id="3-submod-실행으로-새-내부-모듈-만들기">3) <code class="language-plaintext highlighter-rouge">submod</code> 실행으로 새 내부 모듈 만들기</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# 선택한 셀 묶음을 새 모듈 'ALU_blk'로 추출
-submod -name ALU_blk @grp
-
-# 잔여 청소 및 출력
-clean
-write_verilog -noattr refactored.sv
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">submod -name</code>는 <strong>선택(selection) 그 자체</strong> 를 묶어 새 모듈을 만들고, 원래 모듈의 해당 부분을 <strong>그 새 모듈 인스턴스 1개로 치환</strong> 합니다.</p>
-  </li>
-  <li>
-    <p>경계에 걸린 신호는 자동으로 <strong>입력/출력/인아웃 포트</strong> 가 생성되며, 내부만 쓰는 배선은 새 모듈 내부로 들어갑니다.</p>
-  </li>
-  <li>
-    <p>옵션 팁:</p>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">-copy</code>: 원본 모듈을 수정하지 않고 <strong>복사본만 생성</strong> 합니다.</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">-hidden</code>: 생성 포트에 프라이빗 이름을 써서 이후 <code class="language-plaintext highlighter-rouge">flatten; clean</code>으로 <strong>원상복귀가 쉬운</strong> 구조를 만듭니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p>필요하면 <code class="language-plaintext highlighter-rouge">rename</code>/<code class="language-plaintext highlighter-rouge">autoname</code>으로 생성된 포트/셀 이름을 정리할 수 있습니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/rename.html?utm_source=chatgpt.com">yosyshq.readthedocs.io+1</a></p>
-  </li>
-</ul>
-
-<blockquote>
-  <p>참고: <code class="language-plaintext highlighter-rouge">submod</code>는 셀에 <code class="language-plaintext highlighter-rouge">(* submod="블록명" *)</code> 속성을 미리 달아두고 한 번에 실행하는 방식도 지원합니다. (여러 그룹을 서로 다른 속성값으로 지정 가능) <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
-</blockquote>
-
-<h3 id="4-등가성-검증선택">4) 등가성 검증(선택)</h3>
-
-<p>변환 전후가 동작 동일한지 <strong>Yosys 등가검증</strong> 으로 체크하면 안전합니다.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# 모듈 이름 충돌 방지를 위해 원본 top을 top_gold로 바꿔 읽고,
-# 리팩토링된 파일을 함께 읽은 후 등가검증
-read_verilog -sv original.sv
-rename TOP TOP_gold
-read_verilog -sv refactored.sv
-
-equiv_make TOP_gold TOP equiv_top
-hierarchy -top equiv_top
-equiv_simple
-equiv_status -assert
-</code></pre></div></div>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">equiv_make / equiv_simple / equiv_status</code> 조합으로 빠르게 동작 등가를 확인합니다. 리셋 시나리오가 중요하면 SAT 기반 옵션을 더 줄 수 있습니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.37/cmd/equiv_make.html?utm_source=chatgpt.com">yosyshq.readthedocs.io+1</a><a href="https://stackoverflow.com/questions/47745223/reset-behavior-with-miter-equivalence-checking?utm_source=chatgpt.com">Stack Overflow</a></li>
-</ul>
-
-<blockquote>
-  <p><strong>요약:</strong> Yosys <code class="language-plaintext highlighter-rouge">submod</code>는 “선택→추출→치환”까지 한 방에 처리하며, 전처리(<code class="language-plaintext highlighter-rouge">proc; memory</code> 등)만 지키면 매우 강력하게 동작합니다. 공식 문서에 동작 조건/옵션이 잘 정리되어 있습니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html">yosyshq.readthedocs.io</a></p>
-</blockquote>
-
-<hr />
-
-<h2 id="b안-파서넷리스트-라이브러리로-직접-구현-세밀-제어가-필요할-때">B안: 파서/넷리스트 라이브러리로 직접 구현 (세밀 제어가 필요할 때)</h2>
-
-<p>Yosys로 충분하지 않거나 <strong>포트 네이밍/파라미터/슬라이스 결합</strong> 등을 더 세밀하게 통제하려면 Python으로 파이프라인을 짤 수 있습니다.</p>
-
-<h3 id="큰-흐름알고리즘">큰 흐름(알고리즘)</h3>
-
-<ol>
-  <li>
-    <p><strong>파싱 &amp; 전개</strong></p>
-
-    <ul>
-      <li>
-        <p>Verilog 파싱(AST 또는 엘라보레이션된 넷리스트).</p>
-      </li>
-      <li>
-        <p>후보: <strong>PyVerilog</strong>(AST/코드생성 포함), <strong>SpyDrNet</strong>(구조적 넷리스트 그래프), 혹은 <strong>Verilator+Netlist Paths</strong>(XML 경로 질의) 등. <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a><a href="https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=10455&amp;context=etd&amp;utm_source=chatgpt.com">BYU ScholarsArchive</a><a href="https://netlist-paths.readthedocs.io/?utm_source=chatgpt.com">netlist-paths.readthedocs.io</a></p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>선택 집합 정의</strong></p>
-
-    <ul>
-      <li>이름 패턴/타입/그래프 탐색(입력·출력 콘)으로 <strong>인스턴스 묶음 S</strong> 결정.</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>경계 계산</strong></p>
-
-    <ul>
-      <li>
-        <p>각 인스턴스 포트 연결을 스캔하여 <strong>내부 전용 배선</strong> vs <strong>경계 배선</strong> 분리.</p>
-      </li>
-      <li>
-        <p>경계 배선은 <strong>드라이버 방향</strong> 을 분석해 포트 방향 결정:</p>
-
-        <ul>
-          <li>
-            <p>내부→외부로 구동: <strong>output</strong></p>
-          </li>
-          <li>
-            <p>외부→내부로 구동: <strong>input</strong></p>
-          </li>
-          <li>
-            <p>양방향/트라이스테이트/다중 드라이버: <strong>inout</strong> (필요 시 구조 변경)</p>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>비트 슬라이스</strong> /부분접속이 섞이면 동일 넷의 비트들을 모아 <strong>일관된 포트 폭</strong> 으로 리패키징.</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>새 모듈 생성</strong></p>
-
-    <ul>
-      <li>
-        <p>포트 목록(이름/방향/폭)과 내부 인스턴스/배선을 구성.</p>
-      </li>
-      <li>
-        <p>인스턴스 파라미터를 어떻게 가져갈지 결정(모듈 파라미터화 vs 인스턴스 고정값).</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>원래 모듈 치환</strong></p>
-
-    <ul>
-      <li>
-        <p>선택한 인스턴스를 제거하고 <strong>새 모듈의 단일 인스턴스</strong> 로 치환.</p>
-      </li>
-      <li>
-        <p>경계 배선을 새 인스턴스 포트에 연결.</p>
-      </li>
-      <li>
-        <p><strong>미사용 배선/인스턴스 청소</strong>.</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>코드 생성 &amp; 검증</strong></p>
-
-    <ul>
-      <li>AST→Verilog 코드 생성(PV: <code class="language-plaintext highlighter-rouge">ast_code_generator</code>) 후 시뮬레이션/등가성 확인.</li>
-    </ul>
-  </li>
-</ol>
-
-<h3 id="주의-포인트현실-이슈">주의 포인트(현실 이슈)</h3>
-
-<ul>
-  <li>
-    <p><strong>generate 블록/매크로/인터페이스/모드포트</strong> 등 SystemVerilog 기능은 파싱 난이도가 높습니다. 이 경우 <strong>UHDM(Surelog)→Yosys 프런트엔드</strong> 로 먼저 전개해 구조적으로 만든 뒤 처리하는 것이 수월합니다. <a href="https://opensource.antmicro.com/projects/uhdm-integration/?utm_source=chatgpt.com">opensource.antmicro.com</a></p>
-  </li>
-  <li>
-    <p><strong>다중 드라이버/인아웃</strong> 이 경계에 걸리면 포트 모델링을 신중히 해야 합니다(특히 패드/버스 홀드).</p>
-  </li>
-  <li>
-    <p><strong>이름 안정성</strong>(디버깅/LEC 대비)이 중요하면 자동 이름 부여 규칙을 정하고 충돌 방지를 체계화하세요. (필요 시 Yosys <code class="language-plaintext highlighter-rouge">rename</code>/<code class="language-plaintext highlighter-rouge">autoname</code>을 보조로 활용) <a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/rename.html?utm_source=chatgpt.com">yosyshq.readthedocs.io+1</a></p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="실제로-써먹는-스크립트-예시yosys">실제로 써먹는 스크립트 예시(Yosys)</h2>
-
-<blockquote>
-  <p>아래는 <strong>한 모듈(TARGET_MODULE)</strong> 안에서 <code class="language-plaintext highlighter-rouge">U_ALU0/1/2</code> 세 인스턴스를 <code class="language-plaintext highlighter-rouge">ALU_blk</code>로 추출하는 최소 예시입니다.
-```
-tcl</p>
-</blockquote>
-
-<h1 id="extractys">extract.ys</h1>
-<p>read_verilog -sv your_design.sv
-hierarchy -check -top TOP
-proc; memory; opt</p>
-
-<p>cd TARGET_MODULE
-select -set grp c:U_ALU0 c:U_ALU1 c:U_ALU2
-submod -name ALU_blk @grp</p>
-
-<p>clean
-write_verilog -noattr refactored.sv</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-  * `submod` 사용법/제약/옵션은 공식 문서 참고(선택·속성 기반 두 가지 모드, -copy/-hidden 등). [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html)
-
-  * 선택 문법(`select`)은 저장·패턴·콘 확장 등 실전 기능을 꼭 익히세요. [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.47/cmd/select.html)
-
-* * *
-
-## 선택 기준(언제 어떤 방법을?)
-
-  * **바로 써먹는 게 목표** : Yosys `submod` (가볍고 빠름, 경계 자동 생성). [yosyshq.readthedocs.io](https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html)
-
-  * **경계·네이밍·파라미터 정책을 강하게 커스터마이즈** : Python으로 직접(시간은 더 들지만 자유도 최고). [PyPI](https://pypi.org/project/pyverilog/?utm_source=chatgpt.com)[BYU ScholarsArchive](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=10455&amp;context=etd&amp;utm_source=chatgpt.com)
-
-* * *
-
-## 체크리스트(요약)
-
-  1. **(Yosys)** `proc; memory; opt` → `select`로 집합 지정 → `submod -name` → `clean`/`write_verilog`. [yosyshq.readthedocs.io+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.36/cmd/submod.html)
-
-  2. **(검증)** `equiv_make` → `equiv_simple` → `equiv_status -assert`로 등가 확인. [yosyshq.readthedocs.io+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.37/cmd/equiv_make.html?utm_source=chatgpt.com)
-
-  3. **(이슈 대응)** inout/다중 드라이버, 슬라이스 병합, 이름 정책, SV 프런트엔드(UHDM) 고려. [opensource.antmicro.com](https://opensource.antmicro.com/projects/uhdm-integration/?utm_source=chatgpt.com)
-
-* * *
-
-원하시면, **당신의 넷리스트 예시(모듈/인스턴스 이름 몇 개)** 를 알려주셨다고 가정하고, 위 스크립트를 그에 맞춰 **즉시 실행 가능한 형태** 로 작성해 드릴 수 있어요.
-
-&lt;p class="chat--user" markdown="1"&gt;
-
-만약에 define과 include가 있다면 어디서 정의해줘야해?
-
-&lt;/p&gt;
-
-GPT-5 Pro 요청
-
-Reasoned for 6m 25s
-
-좋은 질문이에요. **`define`/`include`는 Verilog “전처리(preprocess)” 단계**에서 처리되므로, Yosys 같은 도구를 쓸 때는 **소스를 읽기(`read_verilog`) 전에** “어디서 헤더를 찾을지(-I)”와 “어떤 매크로를 켤지(-D)”를 지정해 두는 게 핵심입니다. 아래를 **순서대로** 설정하면 됩니다.
-
-* * *
-
-## 1) `include` 파일은 어디서 찾게 하나요? → `-I` 옵션/디폴트 경로
-
-  * Yosys는 기본적으로 **현재 작업 디렉터리** 와 **`include`를 적은 파일이 있는 디렉터리**에서 헤더를 찾습니다. 필요하면 `-I`로 검색 경로를 추가하세요. [Stack Overflow](https://stackoverflow.com/questions/33380477/yosys-cant-open-include-file)
-
-  * `read_verilog`에는 `-I &lt;dir&gt;` 옵션이 있습니다. 여러 개를 줄 수 있어요. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
-
-&gt; 예시
-</code></pre></div></div>
-<p>tcl</p>
-
-<h1 id="공통적으로-systemverilog인클루드-경로를-기본-옵션으로-등록">공통적으로 SystemVerilog+인클루드 경로를 기본 옵션으로 등록</h1>
-<p>verilog_defaults -add -sv -I rtl/include -I third_party/ip/include</p>
-
-<h1 id="이후-read_verilog는-위-옵션을-자동-승계">이후 read_verilog는 위 옵션을 자동 승계</h1>
-<p>read_verilog rtl/top.sv rtl/core/*.sv</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-  * 위에서 쓴 `verilog_defaults`는 **이후의 모든`read_verilog` 호출에 기본 옵션을 붙여주는** 명령입니다. 흐트러지기 쉬운 스크립트에 특히 유용합니다. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.32/cmd/verilog_defaults.html?utm_source=chatgpt.com)
-
-* * *
-
-## 2) `define`은 어디서 정의하나요? → 헤더 or 도구 옵션(빌드타임 제어)
-
-선택지는 두 가지입니다.
-
-**A. 소스 안에서 헤더로 관리 (`.vh`/`.svh`)**
-```verilog
-// rtl/include/defs.svh
-`define USE_FOO 1
-`define DATA_W  32
-</code></pre></div></div>
-<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 각 파일 상단에서</span>
-<span class="cp">`include</span> <span class="s">"defs.svh"</span>
-</code></pre></div></div>
-
-<ul>
-  <li>헤더를 쓴다면 1) 위의 <code class="language-plaintext highlighter-rouge">-I</code>로 경로만 잡아주면 됩니다. 디폴트 경로 동작도 참고하세요. <a href="https://stackoverflow.com/questions/33380477/yosys-cant-open-include-file">Stack Overflow</a></li>
-</ul>
-
-<p><strong>B. 빌드/합성 스크립트에서 정의(추천: 변형 관리 쉬움)</strong></p>
-
-<ul>
-  <li>
-    <p>1회성: <code class="language-plaintext highlighter-rouge">read_verilog -D NAME[=VALUE]</code> 로 <strong>그 호출에만</strong> 매크로를 건 겁니다. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html">YosysHQ Docs</a></p>
-  </li>
-  <li>
-    <p>여러 파일/여러 번 읽을 때 공통 적용:</p>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">verilog_defines -D NAME=VALUE</code>로 <strong>글로벌 매크로 테이블</strong> 에 추가 → 이후 <code class="language-plaintext highlighter-rouge">read_verilog</code> 호출에 반영됩니다. <code class="language-plaintext highlighter-rouge">-U</code>, <code class="language-plaintext highlighter-rouge">-reset</code>, <code class="language-plaintext highlighter-rouge">-list</code>로 해제/초기화/조회도 가능. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.33/cmd/verilog_defines.html?utm_source=chatgpt.com">YosysHQ Docs</a></p>
-      </li>
-      <li>
-        <p>또는 <code class="language-plaintext highlighter-rouge">verilog_defaults -add -D NAME=VALUE</code>로 <strong>기본 옵션</strong> 에 실어주기. <a href="https://yosyshq.readthedocs.io/projects/yosys/en/0.32/cmd/verilog_defaults.html?utm_source=chatgpt.com">YosysHQ Docs</a></p>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<blockquote>
-  <p>예시
-```
-tcl</p>
-</blockquote>
-
-<h1 id="1-전처리-기본-옵션-sv--include-경로">(1) 전처리 기본 옵션: SV + include 경로</h1>
-<p>verilog_defaults -add -sv -I rtl/include -I third_party/ip/include</p>
-
-<h1 id="2-매크로-전역-테이블-세팅">(2) 매크로 전역 테이블 세팅</h1>
-<p>verilog_defines -reset
-verilog_defines -D ASIC=1 -D DATA_W=32</p>
-
-<h1 id="3-소스-읽기">(3) 소스 읽기</h1>
-<p>read_verilog rtl/top.sv rtl/core/*.sv</p>
-
-<h1 id="4-필요시-테스트벤치만-따로-sim-매크로-켬">(4) (필요시) 테스트벤치만 따로 SIM 매크로 켬</h1>
-<p>verilog_defines -D SIM=1
-read_verilog tb/tb_top.sv
-verilog_defines -U SIM</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-* * *
-
-## 3) 디버깅 팁 (전처리 문제 추적)
-
-  * `read_verilog -ppdump`로 **전처리 결과물** 을 덤프해 보면 `include`/`define`이 제대로 먹었는지 즉시 확인할 수 있습니다. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
-
-  * 현재 등록된 매크로는 `verilog_defines -list`로 확인합니다. [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.33/cmd/verilog_defines.html?utm_source=chatgpt.com)
-
-* * *
-
-## 4) 알아두면 좋은 기본 매크로
-
-  * `read_verilog`는 모드에 따라 **`SYNTHESIS` 또는 `FORMAL`**을 자동 정의하고, 항상 **`YOSYS`** 매크로도 정의합니다. 의도치 않은 `ifdef` 분기 유발 여부를 체크하세요. (필요하면 `-nosynthesis`로 억제) [YosysHQ Docs](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
-
-* * *
-
-## 5) 한눈에 정리
-
-  * 헤더 파일을 코드에서 `include`할 거면: **경로만`-I`로 보강** (필요시 `verilog_defaults`로 고정). [YosysHQ Docs+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.43/cmd/read_verilog.html)
-
-  * 빌드별로 기능 스위치를 켜고 끄려면: **매크로를 스크립트에서`-D`로 관리** (`verilog_defines`/`verilog_defaults` 활용). [YosysHQ Docs+1](https://yosyshq.readthedocs.io/projects/yosys/en/0.33/cmd/verilog_defines.html?utm_source=chatgpt.com)
-
-  * 기본 탐색 경로: **현재 디렉터리 + 포함하는 소스의 디렉터리**. 모자라면 `-I` 추가. [Stack Overflow](https://stackoverflow.com/questions/33380477/yosys-cant-open-include-file)
-
-원하시면, 현재 프로젝트의 디렉터리 구조(예: `rtl/`, `include/`, `tb/`)와 켜고 싶은 매크로 이름을 알려주시면, **바로 실행 가능한`.ys` 스크립트**를 만들어 드릴게요.
-
-&lt;p class="chat--user" markdown="1"&gt;
-
-yosys script를 미리 작성해두고 실행하는 방법 알려줘
-
-&lt;/p&gt;
-
-Yosys 스크립트는 보통 `.ys` 확장자를 가진 **Tcl-스타일 명령어 모음 파일** 입니다. 미리 작성해두고 실행하는 방법은 다음 단계로 진행하면 됩니다.
-
-* * *
-
-## 1\. 스크립트 파일 작성
-
-예를 들어 `extract.ys`라는 파일을 만들고 다음과 같이 작성합니다:
-</code></pre></div></div>
-<p>tcl</p>
-
-<h1 id="extractys-1">extract.ys</h1>
-<h1 id="1-소스-읽기">1) 소스 읽기</h1>
-<p>verilog_defaults -add -sv -I rtl/include -D ASIC=1
-read_verilog rtl/top.sv rtl/core/*.sv</p>
-
-<h1 id="2-계층-정리">2) 계층 정리</h1>
-<p>hierarchy -check -top TOP</p>
-
-<h1 id="3-전처리-submod-실행-조건-만족">3) 전처리 (submod 실행 조건 만족)</h1>
-<p>proc; memory; opt</p>
-
-<h1 id="4-묶을-인스턴스-선택--submod">4) 묶을 인스턴스 선택 + submod</h1>
-<p>cd TARGET_MODULE
-select -set grp c:U_ALU0 c:U_ALU1 c:U_ALU2
-submod -name ALU_blk @grp</p>
-
-<h1 id="5-마무리-및-출력">5) 마무리 및 출력</h1>
-<p>clean
-write_verilog -noattr refactored.sv</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-* * *
-
-## 2\. Yosys에서 실행하기
-
-터미널에서 다음 명령으로 실행할 수 있습니다:
-```bash
-yosys -s extract.ys
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">-s</code> 옵션은 <strong>스크립트 파일을 읽어서 그대로 실행</strong> 한다는 뜻입니다.</p>
-  </li>
-  <li>
-    <p>실행이 끝나면 같은 디렉터리에 <code class="language-plaintext highlighter-rouge">refactored.sv</code>가 생깁니다.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="3-대화형-모드에서-실행하기-대안">3. 대화형 모드에서 실행하기 (대안)</h2>
-
-<p>만약 중간에 결과를 확인하거나 명령을 추가로 입력하고 싶다면:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yosys
-</code></pre></div></div>
-
-<p>으로 들어간 뒤, 프롬프트에서:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-script extract.ys
-</code></pre></div></div>
-
-<p>라고 치면 스크립트를 실행합니다. 실행 중간에도 추가 명령을 계속 입력할 수 있습니다.</p>
-
-<hr />
-
-<h2 id="4-팁">4. 팁</h2>
-
-<ul>
-  <li>
-    <p>스크립트를 여러 개 만들어두고 <code class="language-plaintext highlighter-rouge">yosys -s</code>로 원하는 것만 실행하면, 합성·리팩토링·검증 단계를 각각 독립적으로 관리할 수 있습니다.</p>
-  </li>
-  <li>
-    <p>로그를 저장하고 싶으면:</p>
-  </li>
-</ul>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yosys <span class="nt">-s</span> extract.ys | <span class="nb">tee </span>yosys.log
-</code></pre></div></div>
-
-<p>처럼 하면 됩니다.</p>
-
-<hr />
-
-<p>👉 혹시 지금 프로젝트 디렉터리 구조(예: <code class="language-plaintext highlighter-rouge">rtl/</code>, <code class="language-plaintext highlighter-rouge">include/</code>, <code class="language-plaintext highlighter-rouge">tb/</code>)와 Top 모듈 이름을 알려주시면, 그에 맞는 <strong>실행 가능한<code class="language-plaintext highlighter-rouge">extract.ys</code> 예시</strong>를 만들어 드릴까요?</p>
-
-<p class="chat--user">
-
-tranif, mos 레벨이 있으니 yosys가 못 읽네
-
-</p>
-
-<p>아 네—<code class="language-plaintext highlighter-rouge">tranif*</code>, <code class="language-plaintext highlighter-rouge">nmos/pmos</code> 같은 <strong>스위치/트랜지스터 레벨 primitive</strong> 는 Yosys가 정식 지원하지 않아서 그대로는 못 읽습니다. 보통은 <strong>두 가지 우회</strong> 로 처리합니다. 아래를 “차근차근” 따라가면 됩니다.</p>
-
-<hr />
-
-<h1 id="1-가장-안전한-방법-스위치-쓰는-모듈을-블랙박스로-만들기">1) 가장 안전한 방법: “스위치 쓰는 모듈을 블랙박스”로 만들기</h1>
-
-<p>스위치/트랜지스터가 들어있는 모듈(대개 PAD, ESD, 전력게이팅 블록 등)을 <strong>검출해서 I/O만 동일한 빈 껍데기 모듈</strong> 로 치환하고, 나머지 디지털 부분만 Yosys에 넘깁니다.</p>
-
-<h3 id="1-블랙박스-대체-모듈-만들기">(1) 블랙박스 대체 모듈 만들기</h3>
-
-<p>예: <code class="language-plaintext highlighter-rouge">io_pad.sv</code> 안에 <code class="language-plaintext highlighter-rouge">tranif1</code> 등이 있다면, Yosys용으로는 다음처럼 빈 정의를 준비합니다.</p>
-<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// tools/yosys_blackboxes/io_pad__bb.sv</span>
-<span class="cp">`ifdef</span> <span class="n">YOSYS</span>
-<span class="k">module</span> <span class="n">io_pad</span> <span class="p">(</span>
-  <span class="kt">inout</span>  <span class="kt">wire</span> <span class="n">PAD</span><span class="p">,</span>
-  <span class="kt">input</span>  <span class="kt">wire</span> <span class="n">dout</span><span class="p">,</span>
-  <span class="kt">input</span>  <span class="kt">wire</span> <span class="n">oe_n</span><span class="p">,</span>
-  <span class="kt">output</span> <span class="kt">wire</span> <span class="n">din</span>
-<span class="p">);</span>
-  <span class="c1">// 내용 없음: Yosys에서는 인터페이스만 유지</span>
-<span class="k">endmodule</span>
-<span class="cp">`endif</span>
-</code></pre></div></div>
-
-<h3 id="2-yosys-스크립트에서-블랙박스-우선-로드">(2) Yosys 스크립트에서 블랙박스 우선 로드</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# extract.ys
-verilog_defaults -add -sv -D YOSYS -I rtl/include -I tools/yosys_blackboxes
-
-# 1) 블랙박스 먼저 (라이브러리 모드로 인터페이스만 인지)
-read_verilog -lib tools/yosys_blackboxes/io_pad__bb.sv
-
-# 2) 나머지 RTL/넷리스트 읽기
-read_verilog rtl/top.sv rtl/**/*.sv
-
-hierarchy -check -top TOP
-proc; memory; opt
-
-# 이후 당신이 하려던 submod 등 처리...
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">-lib</code>로 읽으면 <strong>본문은 무시</strong> 하고 <strong>포트만 있는 셀</strong> 로 취급합니다.</p>
-  </li>
-  <li>
-    <p>이렇게 하면 스위치가 들어있는 모듈은 “그냥 셀”이고, 내부 디지털은 그대로 작업 가능합니다.</p>
-  </li>
-</ul>
-
-<blockquote>
-  <p>팁: 스위치가 들어있는 모듈들이 여러 개라면, 동일 패턴으로 <strong>여러 개의 블랙박스 파일</strong> 을 준비해 <code class="language-plaintext highlighter-rouge">read_verilog -lib</code>로 한 번에 읽어두세요.</p>
-</blockquote>
-
-<hr />
-
-<h1 id="2-가벼운-근사치shim로-합성-가능한-형태로-바꾸기">2) 가벼운 근사치(shim)로 “합성 가능한 형태”로 바꾸기</h1>
-
-<p>만약 그 모듈 내부를 <strong>Yosys로도 통째로 리팩토링</strong> 하고 싶다면, 스위치 primitive를 <strong>합성 가능한 삼상버퍼/할당</strong> 으로 “근사치” 치환합니다. (스위치가 진짜 양방향을 엄격히 요구하면 부정확해질 수 있으니 주의!)</p>
-
-<h3 id="1-shim-헤더-작성">(1) shim 헤더 작성</h3>
-
-<p>아래처럼 매크로로 <strong>primitive 토큰을 대체</strong> 합니다. Yosys에서는 텍스트 전처리(<code class="language-plaintext highlighter-rouge">-D YOSYS</code>)를 켜 두고 이 헤더를 <code class="language-plaintext highlighter-rouge">include</code>시키면, 원본의 <code class="language-plaintext highlighter-rouge">tranif1 (...)</code> 같은 구문이 자동으로 <strong><code class="language-plaintext highlighter-rouge">bufif*</code>나 <code class="language-plaintext highlighter-rouge">assign</code>으로 바뀝니다.</strong></p>
-<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// tools/yosys_shims/switch_shims.svh</span>
-<span class="cp">`ifndef</span> <span class="mi">__</span><span class="n">YOSYS_SWITCH_SHIMS_SVH__</span>
-<span class="cp">`define</span> __YOSYS_SWITCH_SHIMS_SVH__<span class="cp">
-</span>
-<span class="cp">`ifdef</span> <span class="n">YOSYS</span>
-  <span class="c1">// 단방향으로 근사 (많은 패드/패스게이트는 한쪽만 읽도록 설계됨)</span>
-  <span class="c1">// tranif1(out, in, en) : en=1일 때 전도</span>
-  <span class="cp">`define</span> tranif1<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span>  bufif1 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
-</span>  <span class="c1">// tranif0(out, in, en) : en=0일 때 전도</span>
-  <span class="cp">`define</span> tranif0<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span>  bufif0 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
-</span>
-  <span class="c1">// rtranif*는 저항성 전도지만, 합성엔 의미가 없으니 동일 근사</span>
-  <span class="cp">`define</span> rtranif1<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span> bufif1 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
-</span>  <span class="cp">`define</span> rtranif0<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>en<span class="err">)</span> bufif0 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> en<span class="err">)</span><span class="cp">
-</span>
-  <span class="c1">// nmos/pmos도 enable 조건만 남긴 근사치</span>
-  <span class="cp">`define</span> nmos<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>g<span class="err">)</span>      bufif1 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> g<span class="err">)</span>     <span class="err">//</span> g<span class="o">=</span>1<span class="err">일</span> <span class="err">때</span> <span class="err">전도</span><span class="cp">
-</span>  <span class="cp">`define</span> pmos<span class="err">(</span>out<span class="err">,</span>in<span class="err">,</span>g<span class="err">)</span>      bufif0 <span class="err">(</span>out<span class="err">,</span> in<span class="err">,</span> g<span class="err">)</span>     <span class="err">//</span> g<span class="o">=</span>0<span class="err">일</span> <span class="err">때</span> <span class="err">전도</span><span class="cp">
-</span>
-  <span class="c1">// 순수 전달소자(tran/rtran)는 합성 의미가 모호하므로 금지/경고 처리</span>
-  <span class="cp">`define</span> tran<span class="err">(</span>a<span class="err">,</span>b<span class="err">)</span>           <span class="err">$</span>error<span class="err">("</span>tran not supported in Yosys shim<span class="err">")</span><span class="cp">
-</span>  <span class="cp">`define</span> rtran<span class="err">(</span>a<span class="err">,</span>b<span class="err">)</span>          <span class="err">$</span>error<span class="err">("</span>rtran not supported in Yosys shim<span class="err">")</span><span class="cp">
-`endif</span>
-
-<span class="cp">`endif</span>
-</code></pre></div></div>
-
-<blockquote>
-  <p>왜 가능한가요?<br />
- 전처리는 “토큰 대체”이기 때문에, 소스가 <code class="language-plaintext highlighter-rouge">tranif1 (A,B,EN);</code>라고 써 있어도 <code class="language-plaintext highlighter-rouge">-D YOSYS</code>가 켜진 상태에서 위처럼 <code class="language-plaintext highlighter-rouge">define tranif1(...)</code>가 있으면 <strong>텍스트가 <code class="language-plaintext highlighter-rouge">bufif1 (A,B,EN)</code></strong>으로 치환됩니다.</p>
-</blockquote>
-
-<h3 id="2-소스에-한-줄-추가">(2) 소스에 한 줄 추가</h3>
-
-<p>스위치 primitive를 쓰는 파일 상단에 다음을 넣습니다.</p>
-<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">`include</span> <span class="s">"switch_shims.svh"</span>  <span class="c1">// Yosys에서만 실질 치환됨</span>
-</code></pre></div></div>
-
-<h3 id="3-yosys-스크립트에서-전처리-활성화">(3) Yosys 스크립트에서 전처리 활성화</h3>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# extract.ys
-verilog_defaults -add -sv -D YOSYS -I tools/yosys_shims -I rtl/include
-read_verilog rtl/top.sv rtl/**/*.sv
-hierarchy -check -top TOP
-proc; memory; opt
-# ... submod 등 작업
-</code></pre></div></div>
-
-<blockquote>
-  <p>한계: <code class="language-plaintext highlighter-rouge">tranif*</code>는 <strong>본래 양방향 전도</strong> 입니다. 위 근사는 <strong>한쪽 방향만 살아있다</strong> 고 가정합니다. 내부에서 진짜로 양방향로직이 필요하면(드문 케이스) 이 방법은 <strong>정확성이 떨어집니다</strong>. 그런 모듈은 1번 방식(블랙박스)이 더 낫습니다.</p>
-</blockquote>
-
-<hr />
-
-<h1 id="3-어느-방법을-고를까-결정-가이드">3) 어느 방법을 고를까? (결정 가이드)</h1>
-
-<ul>
-  <li>
-    <p><strong>PAD, 아날로그 믹스드, 전력스위치</strong> 처럼 스위치가 “물리 레벨 의미”를 가지는 블록 → <strong>블랙박스(방법 1)</strong> 권장.</p>
-  </li>
-  <li>
-    <p><strong>단순 패스게이트 MUX</strong> 처럼 <strong>기능이 명확</strong> 하고, 내부를 Yosys로도 만지고 싶다 → <strong>shim 근사(방법 2)</strong> 후 등가성/시뮬 확인.</p>
-  </li>
-</ul>
-
-<hr />
-
-<h1 id="4-검증-루틴권장">4) 검증 루틴(권장)</h1>
-
-<ul>
-  <li>
-    <p><strong>시뮬레이터(iverilog 등)</strong>로 원본 vs shim/블랙박스 버전을 동일 테스트벤치로 돌려 파형 비교.</p>
-  </li>
-  <li>
-    <p>또는 Yosys의 <strong>등가검증(equiv_*)</strong>으로 핵심 디지털 경로가 보존됐는지 확인.</p>
-  </li>
-  <li>
-    <p>블랙박스 경계의 포트 동작은 <strong>계약(Contract) 테스트</strong> 로 체크(예: PAD OE/IN/OUT 동작).</p>
-  </li>
-</ul>
-
-<hr />
-
-<h1 id="5-바로-가져다-쓸-수-있는-최소-예시">5) 바로 가져다 쓸 수 있는 최소 예시</h1>
-
-<h2 id="a-블랙박스-방식">(A) 블랙박스 방식</h2>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tools/yosys_blackboxes/io_pad__bb.sv
-extract.ys
-</code></pre></div></div>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# extract.ys
-verilog_defaults -add -sv -D YOSYS -I rtl/include -I tools/yosys_blackboxes
-read_verilog -lib tools/yosys_blackboxes/io_pad__bb.sv
-read_verilog rtl/top.sv rtl/**/*.sv
-hierarchy -check -top TOP
-proc; memory; opt
-# cd/ select/ submod ...
-write_verilog -noattr out/refactored.sv
-</code></pre></div></div>
-
-<h2 id="b-shim-치환-방식">(B) shim 치환 방식</h2>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tools/yosys_shims/switch_shims.svh
-extract.ys
-</code></pre></div></div>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tcl
-
-# extract.ys
-verilog_defaults -add -sv -D YOSYS -I tools/yosys_shims -I rtl/include
-read_verilog rtl/top.sv rtl/**/*.sv
-hierarchy -check -top TOP
-proc; memory; opt
-# cd/ select/ submod ...
-write_verilog -noattr out/refactored.sv
-</code></pre></div></div>
-
-<p>그리고 스위치 쓰는 소스에:</p>
-<div class="language-verilog highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">`include</span> <span class="s">"switch_shims.svh"</span>
-</code></pre></div></div>
-
-<hr />
-
-<p>필요하시면, <strong>당신 프로젝트의 파일/모듈 이름</strong> 을 알려주지 않아도 됩니다—위 두 템플릿을 그대로 놓고 경로만 맞추면 동작합니다.<br />
-그래도 더 깔끔히 하고 싶다면, 스위치가 들어간 “모듈 목록”만 알려주세요. 그 목록을 기준으로 <strong>블랙박스 세트</strong> 나 <strong>맞춤 shim</strong> 을 바로 만들어 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>필요하시면 <strong>특정 규칙(예: 일부 내부 신호 선언만 보존, 특정 모듈만 예외적으로 유지 등)</strong>을 추가한 변형도 바로 만들어 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry></feed>
