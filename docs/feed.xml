@@ -1,4 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-09-15T18:33:06+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">LSF 매니저 애플리케이션 생성</title><link href="https://hvppycoding.github.io/comfyui/hyperflow-manager/" rel="alternate" type="text/html" title="LSF 매니저 애플리케이션 생성" /><published>2025-09-15T18:33:02+09:00</published><updated>2025-09-15T18:33:02+09:00</updated><id>https://hvppycoding.github.io/comfyui/hyperflow-manager</id><content type="html" xml:base="https://hvppycoding.github.io/comfyui/hyperflow-manager/"><![CDATA[<p class="chat--user">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2025-09-16T11:27:41+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">HyperFlow - script</title><link href="https://hvppycoding.github.io/misc/hyperflow-script/" rel="alternate" type="text/html" title="HyperFlow - script" /><published>2025-09-16T11:27:35+09:00</published><updated>2025-09-16T11:27:35+09:00</updated><id>https://hvppycoding.github.io/misc/hyperflow-script</id><content type="html" xml:base="https://hvppycoding.github.io/misc/hyperflow-script/"><![CDATA[<p class="chat--user">
+
+아래는 내 발표 대본이야. 근데 문제는 영어로 해야해. 이걸 영어로 바꿔줘. 어려운 용어나 수식어 쓰지말고 최대한 간단하고 엔지니어 용어로 써줘. Page 0&gt; 안녕하세요. 제 이름은 양자영입니다. 저는 ai가 추가된 workflow framework를 개발하고 사내에 배포하는 것을 기획하고 있습니다. 임시로 이름은 hyperflow라고 지었습니다. 이는 며칠 전부터 시작해서 매우 초기 단계입니다. 저의 목표는 우리 회사 엔지니어들이 쉽게 ai가 포함된 workflow를 잘 활용할 수 있게 하는 것입니다. 다른 좋은 아이디어가 있으면 공유해주시면 감사하겠습니다. Page 1&gt; 오픈소스 프레임워크인 ComfyUI를 우리의 설계 환경에 맞게 커스터마이즈하여 툴을 배포하고자 합니다. (툴 시작 데모) ComfyUI를 각자의 머신에서 띄우기 위한 간단한 Manager 앱을 만들었고, Chrome으로 접속할 수 있습니다. 제가 생각하는 이 방식의 유저 사이드 장점은 크게 5가지입니다. 1. AI의 힘을 워크플로우에 사용하는 것 그 자체. 다른 ai agent와 이 부분은 같다. 현재는 대부분의 사용자들이 chat gpt 와 같은 chat-based로 단편적인 질문 위주로 활용 중이다. 이 프레임워크를 통해 chat을 통해 묻고 자신이 직접 실행하는 것을 벗어날 수 있다. 그리고 더 많은 것을 AI에게 위임할 수 있다. 2. 안정성. 미래에는 어떨지 모르겠지만 현재의 AI의 능력으로는 자동으로 복잡한 업무를 모두 할 수는 없다. 또한 프롬프팅에 따라 영향을 많이 받는다.Workflow 그래프를 만들어두고 AI가 잘 할 수 있는 단위로 나누어시키면 안정성을 높일 수 있다. 예를 들어 "doc 폴더에 있는 모든 *.md 파일을 한국어로 번역해서 doc_kr에 넣어줘." 라는 작업을 단일 agent에게 맡긴다면 잘 하지 못할 수 있다.하지만 ai는 하나의 파일을 번역하는 것은 잘한다. 그래서 각 파일을 나누어서 번역하는 워크플로우를 만들면 안정성을 높일수 있을 것 같다. 3. 재사용성 각 워크플로우를 export하여 json형태로 저장할 수 있다. 이를 다른 사람이 load 하여 쉽게 사용할 수 있다. 간단하지만 강력한 기능이라고 생각한다. 왜냐하면 대부분의 사용자들은 잘 만들어진 워크플로우를 불러와서 입력만 수정해서 런을 할 것이기 때문이다. 4. 커스터마이저블 코딩을 잘 모르는 사람도 노드 기반으로 쉽게 워크플로우를 수정할 수 있다. 이 또한 매우 중요한 기능이라고 생각한다. 특히, 우리는 설계 현업에서의 디테일한 업무까지는 잘 알지 못한다. 이 프레임워크를 통해 그들이 우리가 제공한 다양한 Node 들을 활용해 자신들에게 맞는 워크플로우를 스스로 만들고 서로 공유하는 것을 기대한다. 5. 모니터 현재 있는 솔루션들은 AI Agent가 일을 할 때 진행 사항을 모니터링하기가 쉽지 않다. 해당 AI Agent를 개발한 사람은 ai가 잘하고 있는지, 잘못하고 있는지 로그파일이나 생성되는 파일 위치를 보고 알 수 있으나, 모르는 사람이 보면 엄청난 텍스트 밖에 보이지 않는다. Workflow화했을 때 장점은 처음 보는 사람도 지금 워크플로우 상에서 어떤 단계를 진행하고, 어떤 단계에서 실패했는지 알기 쉽다. 지금까지는 유저와 활용 입장에서의 장점들에 대해서 얘기했다. 이제는 프레임워크를 관리하는 개발자의 입장에서 얘기하겠다. 개발자가 무한히 많은 개발자가 있는 것이 아니기 때문에 효율적인 개발이 중요하다. 1. 파이썬이다. 각각의 노드는 파이썬으로 되어 있으며, 객체 간의 데이터 전달도 파이썬 객체이다. 파이썬은 현재 가장 인기있는 프로그래밍 언어이며, 최신 AI 기술 패키지를 손쉽게 설치하고 활용할 수 있다. 2. 활발한 개발 + 풍부한 Custom Node ComfyUI는 인기 있는 이미지 생성 프레임워크이기 때문에 활발히 개선되고 있는 중이다. 예를 들어, subgraph 기능과 parallel api 기능이 1달전에 릴리즈 되었다. 또한, 이미지 처리 관련 노드가 대다수이긴 하지만, 사람들이 만들어둔 많은 노드 패키지를 활용할 수 있다. 3. 확장이 쉽다. custom node를 추가하여 기능 확장이 쉽다. 파이썬 코드를 추가하여 원하는 기능을 구현하고 여러 워크플로우에서 재사용할 수 있다. ComfyUI는 인기 있는 툴이고, ChatGPT도 이에 대해 잘 알고 있기 때문에 개발할 때 도움을 받을 수 있다. 또한, 소스 자체도 오픈소스이기 때문에 최악의 경우엔 소스를 고칠 수도 있다. 단점 지금까지는 제가 생각하는 장점들에 대해 주로 이야기 했는데요, 이제 단점에 대해 얘기해 보겠습니다. 1. 안정성 개인 사용자를 대상으로 개발된 오픈소스이기 때문에 안정성이 떨어질 수 있다. 2. Parallel Processing parallel api가 최근 추가되긴 했지만 Parallelism이 많이 요구되니는 Workflow 처리 가능성은 아직 의문인 상태이다. 
+
+</p>
+
+<p>좋아요! 아래에 어렵지 않은 엔지니어 톤으로 깔끔하게 영어로 바꿔 썼어요. 페이지별로 바로 읽으시면 됩니다.</p>
+
+<hr />
+
+<h3 id="page-0">Page 0</h3>
+
+<p>Hello. My name is <strong>Ja-young Yang</strong>.<br />
+I’m planning and building a workflow framework with AI and rolling it out inside our company.<br />
+The temporary name is <strong>Hyperflow</strong>. We started a few days ago, so this is very early.</p>
+
+<p>My goal is simple: help our engineers use AI-powered workflows easily.<br />
+If you have better ideas, please share them.</p>
+
+<hr />
+
+<h3 id="page-1">Page 1</h3>
+
+<p>We will customize the open-source framework <strong>ComfyUI</strong> for our engineering environment and ship it as our tool.<br />
+<em>(Start tool demo)</em></p>
+
+<p>I made a small <strong>Manager</strong> app so each person can run ComfyUI on their own machine and access it in Chrome.</p>
+
+<p>Here are five user-side benefits of this approach:</p>
+
+<ol>
+  <li>
+    <p><strong>Use AI inside the workflow</strong><br />
+Most people use chat tools like ChatGPT for one-off questions. With this framework, you can move beyond “ask in chat, then run it yourself.” You can hand more steps to AI inside a defined workflow.</p>
+  </li>
+  <li>
+    <p><strong>Reliability</strong><br />
+Today’s AI can’t do long, complex tasks end-to-end, and results vary with prompts. If we build a <strong>workflow graph</strong> and split work into steps that AI is good at, reliability goes up.<br />
+Example: “Translate all <code class="language-plaintext highlighter-rouge">*.md</code> files in the <code class="language-plaintext highlighter-rouge">doc</code> folder to Korean and put them in <code class="language-plaintext highlighter-rouge">doc_kr</code>.” A single agent may fail. But AI is good at <strong>one file at a time</strong>. So a per-file translation workflow is more stable.</p>
+  </li>
+  <li>
+    <p><strong>Reusability</strong><br />
+You can <strong>export</strong> any workflow to <strong>JSON</strong> and <strong>share</strong> it. Others can <strong>load</strong> it, tweak inputs, and run. Simple but powerful.</p>
+  </li>
+  <li>
+    <p><strong>Customizable</strong><br />
+Non-coders can edit workflows with <strong>node-based</strong> editing. We don’t know every detail of field work. With our nodes, teams can build what they need and share with others.</p>
+  </li>
+  <li>
+    <p><strong>Monitoring</strong><br />
+Agent tools are hard to monitor. Developers read logs, but most users just see walls of text. A <strong>workflow view</strong> makes it clear which step is running and where it failed.</p>
+  </li>
+</ol>
+
+<p>So far I covered user benefits. Now from the framework maintainer’s view: we must build <strong>efficiently</strong>.</p>
+
+<ol>
+  <li>
+    <p><strong>Python</strong><br />
+Each node is Python. Data between nodes are Python objects. Python is popular and has rich AI packages.</p>
+  </li>
+  <li>
+    <p><strong>Active dev + many custom nodes</strong><br />
+ComfyUI is popular for image generation and improves fast. For example, <strong>subgraph</strong> and <strong>Parallel API</strong> shipped about a month ago. There are many community node packs (mostly image-related) we can reuse.</p>
+  </li>
+  <li>
+    <p><strong>Easy to extend</strong><br />
+We can add <strong>custom nodes</strong> to extend features. Write Python once and reuse across workflows. ComfyUI is well known, and ChatGPT can help during development. It’s open source, so in the worst case we can patch the code.</p>
+  </li>
+</ol>
+
+<p><strong>Drawbacks</strong></p>
+
+<ol>
+  <li>
+    <p><strong>Stability</strong><br />
+It’s open source aimed at individual users, so stability may be lower.</p>
+  </li>
+  <li>
+    <p><strong>Parallel processing</strong><br />
+Parallel API is new. It’s still unclear if it can handle <strong>high parallelism</strong> for heavy workflow processing.</p>
+  </li>
+</ol>]]></content><author><name>hvppycoding</name></author><category term="misc" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">LSF 매니저 애플리케이션 생성</title><link href="https://hvppycoding.github.io/comfyui/hyperflow-manager/" rel="alternate" type="text/html" title="LSF 매니저 애플리케이션 생성" /><published>2025-09-15T18:33:02+09:00</published><updated>2025-09-15T18:33:02+09:00</updated><id>https://hvppycoding.github.io/comfyui/hyperflow-manager</id><content type="html" xml:base="https://hvppycoding.github.io/comfyui/hyperflow-manager/"><![CDATA[<p class="chat--user">
 
 LSF Server에서 작동할 작은 매니저 애플리케이션을 만들어줘. PySide2 나 PySide6로 만들면 될 것 같아. 처음에 시작하면 해야하는 동작은 다음과 같아. 1. Available port를 찾는다. 2. 하나의 subprocess를 띄워서 venv 소스하고, 해당 포트에서 ComfyUI를 실행한다. 3. 띄운 ComfyUI에 접속하는 Chrome을 실행한다(경로는 내가 줄 것). UI 필요 사항 1. ComfyUI 서버 재시작 하는 버튼(ComfyUI지만 내부 이름은 HyperFlow이므로 그렇게 불러줘) 2. Chrome 시작 버튼 3. 종료 버튼(ComfyUI, Chrome 모두 꺼짐) 4. ComfyUI의 로그를 띄울 Text Browser 나 shell. csh을 여기 PySide widget 안에 넣을 수 있나? 궁금하네. 5. 창 아이콘을 내가 정하고 싶어.(이미지 파일 있음) 추가 필요 사항 1. 창의 x 버튼이나 최소화 누를 시 tray로 들어가게한다.(그 때 경고 아이콘을 가진 알람이 트레이 메시지로 뜬다). 트레이에는 내가 지정한 아이콘이 뜬다. 2. 트레이를 우클릭할 시 UI와 동일하게 (ComfyUI 재시작, Chrome 띄우기, 종료) 선택지가 나오면 좋겠어.
 
@@ -14568,300 +14650,4 @@ u_regfile
 
 <hr />
 
-<p>필요하시면 실제 여러분의 netlist 한 조각으로 바로 돌려본 <strong>전/후 결과</strong> 도 만들어 드릴게요. 캔버스의 <code class="language-plaintext highlighter-rouge">pyverilog_submod.py</code>를 그대로 저장해 실행하면 됩니다.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">PyVerilog prune_top_and_stub_children</title><link href="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/" rel="alternate" type="text/html" title="PyVerilog prune_top_and_stub_children" /><published>2025-08-18T17:38:51+09:00</published><updated>2025-08-18T17:38:51+09:00</updated><id>https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children</id><content type="html" xml:base="https://hvppycoding.github.io/verilog/pyverilog-prune-top-and-stub-children/"><![CDATA[<p class="chat--user">
-
-PyVerilog에서 TOP과 TOP의 바로 아래 하위 모듈만 남기고 다 지우고 싶어. 그리고 TOP의 바로 아래 하위 모듈들에 대해서는 signature 정보만 남기고 내용은 지우고 싶어.
-
-</p>
-
-<p>GPT-5 Pro 요청</p>
-
-<p>Reasoned for 4m 15s</p>
-
-<p>좋아요. <strong>PyVerilog</strong> 로 “TOP만 그대로 두고, TOP의 <em>직접</em> 하위 모듈들은 시그니처만 남긴 빈 껍데기(stub)로 만들며, 나머지 모든 모듈은 제거”하는 스크립트를 바로 쓸 수 있게 정리해 드릴게요.</p>
-
-<hr />
-
-<h2 id="목표-정리-stepbystep">목표 정리 (step‑by‑step)</h2>
-
-<ol>
-  <li>
-    <p>Verilog 소스를 파싱해 AST를 만든다.<br />
-<em>PyVerilog의<code class="language-plaintext highlighter-rouge">ModuleDef</code>는 <code class="language-plaintext highlighter-rouge">paramlist</code>, <code class="language-plaintext highlighter-rouge">portlist</code>, <code class="language-plaintext highlighter-rouge">items</code>로 구성됩니다.</em> <a href="https://github.com/PyHDI/Pyverilog/blob/develop/pyverilog/vparser/parser.py?utm_source=chatgpt.com">GitHub</a></p>
-  </li>
-  <li>
-    <p>TOP 모듈에서 <strong>직접 인스턴스화한 모듈 이름들</strong> 만 수집한다.<br />
-<em>인스턴스는<code class="language-plaintext highlighter-rouge">InstanceList</code>에 담기며, 인스턴스화된 모듈 이름은 <code class="language-plaintext highlighter-rouge">InstanceList.module</code> 속성에 있습니다.</em> <a href="https://repositum.tuwien.at/bitstream/20.500.12708/2051/2/Temmel%20Lukas%20-%202019%20-%20Evaluation%20of%20fault%20tolerance%20in%20network%20on%20chip%20fault...pdf?utm_source=chatgpt.com">repositum.tuwien.at</a></p>
-  </li>
-  <li>
-    <p>출력 설계에서</p>
-
-    <ul>
-      <li>
-        <p>TOP 모듈은 <strong>그대로 유지</strong>.</p>
-      </li>
-      <li>
-        <p>TOP의 <strong>직접 자식 모듈</strong> 은 <strong>시그니처만 남기고</strong>(파라미터·포트 선언) 나머지 <code class="language-plaintext highlighter-rouge">items</code>는 모두 제거.</p>
-      </li>
-      <li>
-        <p>그 외 모든 모듈은 <strong>버림</strong>.<br />
-<em>시그니처는 ANSI 포트(Ioport) 혹은 비‑ANSI 포트 선언(Input/Output/Inout),<code class="language-plaintext highlighter-rouge">parameter/localparam</code> 선언만 의미합니다.</em> <a href="https://github.com/hoangt/Pyverilog-1?utm_source=chatgpt.com">GitHub</a><a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a></p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p>수정된 AST를 Verilog로 다시 코드 생성한다. <em><code class="language-plaintext highlighter-rouge">ASTCodeGenerator</code> 사용.</em> <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a></p>
-  </li>
-</ol>
-
-<hr />
-
-<h2 id="바로-실행-가능한-스크립트">바로 실행 가능한 스크립트</h2>
-
-<blockquote>
-  <p>파일명 예: <code class="language-plaintext highlighter-rouge">prune_top_and_stub_children.py</code>
-```python
-#!/usr/bin/env python3</p>
-  <h1 id="---coding-utf-8---">-<em>- coding: utf-8 -</em>-</h1>
-  <p>"""
-PyVerilog로 다음을 수행:</p>
-  <ul>
-    <li>TOP 모듈은 그대로 유지</li>
-    <li>TOP이 직접 인스턴스화한 하위 모듈들은 시그니처(파라미터, 포트)만 남기고 본문 제거</li>
-    <li>나머지 모듈은 전부 제거
-"""</li>
-  </ul>
-</blockquote>
-
-<p>import argparse
-from pyverilog.vparser.parser import parse
-from pyverilog.vparser.ast import (
-    NodeVisitor, ModuleDef, Decl, Input, Output, Inout,
-    Parameter, Localparam, InstanceList
-)
-from pyverilog.ast_code_generator.codegen import ASTCodeGenerator</p>
-
-<h1 id="-1-top의-직접-자식-모듈-수집기-">— 1) TOP의 직접 자식 모듈 수집기 —————————————–</h1>
-<p>class InstModuleCollector(NodeVisitor):
-    def <strong>init</strong>(self):
-        self.children = set()</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def visit_InstanceList(self, node: InstanceList):
-    # InstanceList.module: 인스턴스화된 모듈의 이름 (str)
-    if hasattr(node, 'module'):
-        self.children.add(node.module)
-    self.generic_visit(node)
-</code></pre></div></div>
-
-<h1 id="-2-top-추정명시가-없을-때-">— 2) TOP 추정(명시가 없을 때) ———————————————</h1>
-<p>def autodetect_top(ast_root, explicit_top=None):
-    if explicit_top:
-        return explicit_top</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>modules = set()
-instantiated = set()
-for d in getattr(ast_root.description, 'definitions', []):
-    if isinstance(d, ModuleDef):
-        modules.add(d.name)
-        col = InstModuleCollector()
-        col.visit(d)
-        instantiated |= col.children
-
-# 인스턴스되지 않은 정의를 TOP 후보로 보고 첫 번째를 선택
-candidates = [m for m in modules if m not in instantiated]
-return candidates[0] if candidates else None
-</code></pre></div></div>
-
-<h1 id="-3-시그니처포트파라미터만-남기기-">— 3) 시그니처(포트/파라미터)만 남기기 ————————————–</h1>
-<p>def keep_signature_only(items):
-    kept = []
-    for item in items or []:
-        if isinstance(item, Decl):
-            # Decl 내부 요소 중 포트/파라미터 선언만 유지
-            allowed_kinds = (Input, Output, Inout, Parameter, Localparam)
-            filtered = [decl for decl in item.list if isinstance(decl, allowed_kinds)]
-            if filtered:
-                kept.append(Decl(filtered))
-        # 그 외(Always, Assign, InstanceList, Generate 등)는 버림
-    return kept</p>
-
-<h1 id="-4-메인-">— 4) 메인 —————————————————————</h1>
-<p>def main():
-    ap = argparse.ArgumentParser(description="Keep TOP, stub its direct children, drop others (PyVerilog).")
-    ap.add_argument('sources', nargs='+', help='Verilog sources (*.v)')
-    ap.add_argument('-t', '–top', help='Top module name (if omitted, auto-detect)')
-    ap.add_argument('-I', '–incdir', action='append', default=[], help='include search dir')
-    ap.add_argument('-D', '–define', action='append', default=[], help='macro define (e.g. FOO=1)')
-    ap.add_argument('-o', '–out', default='pruned.v', help='output verilog file')
-    args = ap.parse_args()</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># PyVerilog 전처리 define 형식 맞추기
-defines = []
-for d in args.define:
-    if '=' in d:
-        k, v = d.split('=', 1)
-        defines.append((k, v))
-    else:
-        defines.append((d, None))
-
-ast, _ = parse(
-    args.sources,
-    preprocess_include=args.incdir,
-    preprocess_define=defines
-)
-
-top_name = autodetect_top(ast, args.top)
-if not top_name:
-    raise SystemExit("ERROR: TOP을 찾지 못했습니다. --top 으로 지정하세요.")
-
-# TOP 정의 찾기
-top_def = None
-for d in ast.description.definitions:
-    if isinstance(d, ModuleDef) and d.name == top_name:
-        top_def = d
-        break
-if top_def is None:
-    raise SystemExit(f"ERROR: 지정한 TOP '{top_name}' 모듈 정의를 찾을 수 없습니다.")
-
-# TOP의 직접 하위 모듈 수집
-col = InstModuleCollector()
-col.visit(top_def)
-direct_children = col.children
-
-# 정의 목록 재구성
-new_defs = []
-for d in ast.description.definitions:
-    if not isinstance(d, ModuleDef):
-        # 모듈 외 정의는 모두 삭제
-        continue
-
-    if d.name == top_name:
-        # TOP은 그대로 유지
-        new_defs.append(d)
-    elif d.name in direct_children:
-        # 자식 모듈은 시그니처만 남김
-        d.items = keep_signature_only(d.items)
-        new_defs.append(d)
-    else:
-        # 그 외 모듈은 버림
-        pass
-
-# 결과를 AST에 반영하고 코드 생성
-ast.description.definitions = tuple(new_defs)
-codegen = ASTCodeGenerator()
-verilog_out = codegen.visit(ast)
-
-with open(args.out, 'w', encoding='utf-8') as f:
-    f.write(verilog_out)
-
-kept = [d.name for d in new_defs]
-print(f"[OK] Wrote {args.out}")
-print(f" Top      : {top_name}")
-print(f" Kept mods: {', '.join(kept)}")
-</code></pre></div></div>
-
-<p>if <strong>name</strong> == '<strong>main</strong>':
-    main()</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-* * *
-
-## 사용법 예시 (step‑by‑step)
-```bash
-# 1) 기본: 파일 여러 개를 지정
-python3 prune_top_and_stub_children.py src/top.v src/a.v src/b.v -t TOP -o pruned.v
-
-# 2) 인클루드/매크로가 있을 때
-python3 prune_top_and_stub_children.py \
-  $(find rtl -name '*.v') \
-  -t TOP \
-  -I rtl/include -I third_party/ip/include \
-  -D SYNTHESIS=1 -D WIDTH=32 \
-  -o pruned.v
-
-# 3) --top을 생략하면 "인스턴스되지 않은 모듈"을 TOP으로 자동 추정
-python3 prune_top_and_stub_children.py rtl/*.v -o pruned.v
-</code></pre></div></div>
-
-<hr />
-
-<h2 id="동작-설명--구현-포인트">동작 설명 &amp; 구현 포인트</h2>
-
-<ul>
-  <li>
-    <p><strong>시그니처만 유지하는 기준</strong></p>
-
-    <ul>
-      <li>모듈 헤더(파라미터/포트)는 PyVerilog AST에서 <code class="language-plaintext highlighter-rouge">ModuleDef.paramlist</code>, <code class="language-plaintext highlighter-rouge">ModuleDef.portlist</code>에 저장됩니다. 또한 비‑ANSI 스타일 포트의 경우 <code class="language-plaintext highlighter-rouge">items</code> 안의 <code class="language-plaintext highlighter-rouge">Decl(Input/Output/Inout)</code> 선언이 포트 방향 정보를 담고 있으므로 이것만 남기고 다른 <code class="language-plaintext highlighter-rouge">items</code>는 삭제합니다. 이렇게 하면 ANSI/비‑ANSI 모두 안전하게 “시그니처만” 남길 수 있습니다. <a href="https://github.com/PyHDI/Pyverilog/blob/develop/pyverilog/vparser/parser.py?utm_source=chatgpt.com">GitHub+1</a></li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>직접 하위 모듈만 추출</strong></p>
-
-    <ul>
-      <li>TOP 내부를 순회하며 <code class="language-plaintext highlighter-rouge">InstanceList</code>를 만나면 그 <strong>모듈명</strong>(<code class="language-plaintext highlighter-rouge">InstanceList.module</code>)을 수집합니다. 이 집합이 바로 TOP의 “직접” 자식 목록입니다. (generate 블록 내부도 방문합니다.) <a href="https://repositum.tuwien.at/bitstream/20.500.12708/2051/2/Temmel%20Lukas%20-%202019%20-%20Evaluation%20of%20fault%20tolerance%20in%20network%20on%20chip%20fault...pdf?utm_source=chatgpt.com">repositum.tuwien.at</a></li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>코드 재생성</strong></p>
-
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">pyverilog.ast_code_generator.codegen.ASTCodeGenerator</code>로 수정된 AST를 Verilog 텍스트로 다시 생성합니다. <a href="https://pypi.org/project/pyverilog/?utm_source=chatgpt.com">PyPI</a></li>
-    </ul>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="체크리스트--흔한-이슈">체크리스트 &amp; 흔한 이슈</h2>
-
-<ul>
-  <li>
-    <p><strong>SystemVerilog(.sv) 사용 중인가요?</strong><br />
-PyVerilog는 Verilog‑2001 중심이라 최신 SV 구문에 한계가 있을 수 있습니다. 필요하면 사전 변환(sv→v) 도구를 거치세요. (예: sv2v류) <a href="https://github.com/merledu/Pyverilog-sv2v?utm_source=chatgpt.com">GitHub</a></p>
-  </li>
-  <li>
-    <p><strong>generate/genvar 복잡한 케이스</strong><br />
-대부분의 인스턴스는 <code class="language-plaintext highlighter-rouge">InstanceList</code>로 잡히지만, 특정 SV 문법은 제약이 있을 수 있습니다. 문제가 생기면, 소스에서 해당 블록을 간단하게 정리한 뒤 본 스크립트를 적용하는 것을 권장합니다. 관련 이슈가 과거에 논의된 바 있습니다. <a href="https://github.com/PyHDI/Pyverilog/issues/43?utm_source=chatgpt.com">GitHub</a></p>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="원하는-결과-예-개념">원하는 결과 예 (개념)</h2>
-
-<ul>
-  <li>
-    <p><strong>입력:</strong></p>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">TOP</code> (내용 유지)</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">child_a</code>, <code class="language-plaintext highlighter-rouge">child_b</code> (TOP이 직접 인스턴스화)</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">grandchild_x</code> (child_a 내부에서만 인스턴스화)</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>출력:</strong></p>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">TOP</code> : 원본 그대로</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">child_a</code>, <code class="language-plaintext highlighter-rouge">child_b</code> : 헤더(파라미터/포트)만 남고 본문 없음</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">grandchild_x</code> : <strong>제거</strong></p>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<hr />
-
-<p>필요하시면 <strong>특정 규칙(예: 일부 내부 신호 선언만 보존, 특정 모듈만 예외적으로 유지 등)</strong>을 추가한 변형도 바로 만들어 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>필요하시면 실제 여러분의 netlist 한 조각으로 바로 돌려본 <strong>전/후 결과</strong> 도 만들어 드릴게요. 캔버스의 <code class="language-plaintext highlighter-rouge">pyverilog_submod.py</code>를 그대로 저장해 실행하면 됩니다.</p>]]></content><author><name>hvppycoding</name></author><category term="verilog" /><summary type="html"><![CDATA[]]></summary></entry></feed>
