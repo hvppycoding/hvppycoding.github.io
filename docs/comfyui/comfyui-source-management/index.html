@@ -1,0 +1,2218 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>ComfyUI 소스 코드 관리 조언 - ARCHIVE</title>
+<meta name="description" content="">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="ComfyUI 소스 코드 관리 조언">
+<meta property="og:url" content="https://hvppycoding.github.io/comfyui/comfyui-source-management/">
+
+
+  <meta property="og:description" content="">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-09-17T16:51:47+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/comfyui/comfyui-source-management/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="ComfyUI 소스 코드 관리 조언">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2025-09-17T16:51:47+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/comfyui/comfyui-source-management/" itemprop="url">ComfyUI 소스 코드 관리 조언
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-17T16:51:47+09:00">2025-09-17</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p class="chat--user">
+
+ComfyUI를 회사 내부의 Workflow Manager 툴로 patch해서 쓰려고 해. 그래서 소스 코드를 바꾸거나 커스텀노드, 템플릿 등을 건드려야 해. 그런데 한 편으로는 외부에서 개발되는 ComfyUI의 신규 기능들도 지속해서 integration하고 싶어. 이런 경우 소스 코드를 어떻게 관리하면 좋을까? 기본적인 환경은 git을 사용하고 있어.
+
+</p>
+
+<p>좋은 질문이에요. “우리만의 워크플로 매니저로 커스터마이즈”하면서도 “업스트림(ComfyUI)의 신기능은 계속 받아오기” — 이 두 마리 토끼를 잡으려면 <strong>코어 수정 최소화 + 경계(업스트림 vs 사내 코드) 명확화 + 재현 가능한 버전 고정</strong> 이 핵심이에요. 아래처럼 단계별로 설계하면 깔끔하게 굴러갑니다.</p>
+
+<h1 id="1-기본-원칙-요약">1) 기본 원칙 (요약)</h1>
+
+<ol>
+  <li>
+    <p><strong>코어 수정은 최후의 수단.</strong> 가능하면 전부 <strong>Custom Node/패키지/템플릿</strong> 으로 빼고, ComfyUI 코어는 그대로 둡니다.</p>
+  </li>
+  <li>
+    <p><strong>경계 분리.</strong> 업스트림과 사내 코드를 <strong>서로 다른 리포지토리/브랜치</strong> 로 분리합니다.</p>
+  </li>
+  <li>
+    <p><strong>버전 핀(Pin).</strong> “이 릴리스는 업스트림 커밋 X + 내부 노드 버전 Y” 같은 조합을 <strong>태그로 고정</strong> 합니다.</p>
+  </li>
+  <li>
+    <p><strong>정기 통합은 자동화.</strong> 업스트림 갱신 → 테스트 → 통합 결과 PR까지 자동으로 열리게 CI 구성.</p>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="2-추천-리포-구성-가장-실무적인-구조">2) 추천 리포 구성 (가장 실무적인 구조)</h1>
+
+<p><strong>A. 배포/운영용 래퍼(Wrapper) 리포</strong></p>
+
+<ul>
+  <li>
+    <p>이름 예: <code class="language-plaintext highlighter-rouge">company/comfyui-stack</code></p>
+  </li>
+  <li>
+    <p>용도: <strong>단일 진입점</strong>. 여기서 업스트림 ComfyUI와 내부 노드/템플릿을 <strong>서브모듈(submodule)</strong> 또는 <strong>서브트리(subtree)</strong> 로 묶어 <strong>버전을 고정</strong> 합니다. Docker/컨테이너, 런처 스크립트, 테스트, 릴리스 태깅 등도 여기서.</p>
+  </li>
+</ul>
+
+<p><strong>B. 업스트림 ComfyUI (그대로 or Fork)</strong></p>
+
+<ul>
+  <li>
+    <p>업스트림: <code class="language-plaintext highlighter-rouge">comfyanonymous/ComfyUI</code> (읽기 전용 remote: <code class="language-plaintext highlighter-rouge">upstream</code>)</p>
+  </li>
+  <li>
+    <p>꼭 코어를 건드려야 하면 <strong>프라이빗 Fork</strong> <code class="language-plaintext highlighter-rouge">company/ComfyUI</code>를 사용해 <strong>패치 브랜치</strong>(아래 4절)를 운용합니다.</p>
+  </li>
+  <li>
+    <p>가능하면 코어 PR을 업스트림에 올려 <strong>패치 부채</strong> 줄이기.</p>
+  </li>
+</ul>
+
+<p><strong>C. 내부 커스텀 노드/확장</strong></p>
+
+<ul>
+  <li>
+    <p>예: <code class="language-plaintext highlighter-rouge">company/comfyui-nodes-internal</code></p>
+  </li>
+  <li>
+    <p>내용: <code class="language-plaintext highlighter-rouge">custom_nodes/company_*</code> 하위로 로딩되도록 구성.</p>
+  </li>
+  <li>
+    <p>의존성 고정(<code class="language-plaintext highlighter-rouge">requirements.txt</code>/<code class="language-plaintext highlighter-rouge">pip-tools</code>), 간단한 단위/스모크 테스트 포함.</p>
+  </li>
+</ul>
+
+<p><strong>D. 워크플로 템플릿/프리셋</strong></p>
+
+<ul>
+  <li>
+    <p>예: <code class="language-plaintext highlighter-rouge">company/comfyui-workflows</code></p>
+  </li>
+  <li>
+    <p>JSON 워크플로 모음 + 각 템플릿이 요구하는 <strong>노드/코어 최소 버전</strong> 명시(README/메타파일).</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>왜 이렇게?</p>
+
+  <ul>
+    <li>
+      <p>업스트림과 내부 코드를 <strong>물리적으로 분리</strong> 하면 충돌/리스크가 급감합니다.</p>
+    </li>
+    <li>
+      <p>래퍼 리포가 “조합을 고정”하므로, 재현 가능한 배포/롤백이 쉬워집니다.</p>
+    </li>
+  </ul>
+
+</blockquote>
+
+<hr />
+
+<h1 id="3-submodule-vs-subtree-간단-비교">3) submodule vs subtree (간단 비교)</h1>
+
+<ul>
+  <li>
+    <p><strong>submodule</strong> : 각 리포 <strong>독립 히스토리</strong> 유지, <strong>정확한 커밋 고정</strong> 에 최적. 단, 사용자가 <code class="language-plaintext highlighter-rouge">git submodule update</code>를 신경 써야 함.</p>
+  </li>
+  <li>
+    <p><strong>subtree</strong> : 체크아웃이 단순, CI가 편함. 대신 <strong>업스트림/내부 히스토리 섞임</strong> 과 업데이트 절차가 약간 수동.</p>
+  </li>
+</ul>
+
+<p>실무에선 <strong>정밀 고정이 중요한 코어(ComfyUI)는 submodule</strong> , 템플릿은 <strong>subtree 또는 동일 리포</strong> 도 편합니다.</p>
+
+<hr />
+
+<h1 id="4-코어-패치가-불가피할-때의-git-전략-두-가지">4) 코어 패치가 “불가피”할 때의 Git 전략 (두 가지)</h1>
+
+<h2 id="옵션-1-포크--패치-스택rebase-방식">(옵션 1) 포크 + 패치 스택(rebase) 방식</h2>
+
+<ul>
+  <li>
+    <p>브랜치 구조:</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">main</code>(또는 <code class="language-plaintext highlighter-rouge">master</code>): <strong>업스트림을 미러링</strong> (직접 커밋 금지)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">internal/patches</code>: 우리 패치 <strong>얇은 커밋 스택</strong> (가능하면 작은 토픽 브랜치 묶음)</p>
+      </li>
+    </ul>
+  </li>
+  <li>업스트림 갱신 루틴:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add upstream https://github.com/comfyanonymous/ComfyUI.git
+git fetch upstream
+git checkout main
+git reset <span class="nt">--hard</span> upstream/&lt;UPSTREAM_BRANCH&gt;   <span class="c"># 업스트림 미러</span>
+git checkout internal/patches
+git rebase upstream/&lt;UPSTREAM_BRANCH&gt;         <span class="c"># 패치 스택 올려타기</span>
+<span class="c"># 충돌 해결 → 테스트 → 푸시</span>
+git push <span class="nt">--force-with-lease</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>장점: 히스토리 깔끔, 충돌 원인 추적 쉬움.</p>
+  </li>
+  <li>단점: rebase 숙련 필요.</li>
+</ul>
+
+<h2 id="옵션-2-포크--머지-기반-방식">(옵션 2) 포크 + 머지 기반 방식</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">internal/integration</code> 브랜치에 주기적으로 업스트림을 <strong>머지</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git fetch upstream
+git checkout internal/integration
+git merge <span class="nt">--no-ff</span> upstream/&lt;UPSTREAM_BRANCH&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>장점: rebase 스트레스 적음.</p>
+  </li>
+  <li>단점: 히스토리에 머지 커밋이 쌓여 분석이 다소 어려움.</li>
+</ul>
+
+<blockquote>
+  <p>Tip: 어떤 방식을 쓰든 <code class="language-plaintext highlighter-rouge">git config --global rerere.enabled true</code>(충돌 학습)로 <strong>반복 충돌 자동 해결</strong> 을 켜 두세요.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="5-코어-수정-회피-테크닉-현실-팁">5) “코어 수정 회피” 테크닉 (현실 팁)</h1>
+
+<ul>
+  <li>
+    <p><strong>후킹/확장점 재활용</strong> : 가능하면 노드/매크로/템플릿/스크립트 레벨로 해결.</p>
+  </li>
+  <li>
+    <p><strong>런칭 래퍼로 설정 주입</strong> : 코어 파일을 직접 고치지 말고, <strong>환경변수/런처 스크립트</strong> 로 경로/옵션을 주입.</p>
+  </li>
+  <li>
+    <p><strong>Monkey-patch는 최소화</strong> : 꼭 필요하면 <strong>단일 파일</strong> 에 모아두고, 업스트림 변경 시 영향 범위를 한곳에서 확인.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="6-버전-고정--릴리스-절차-step-by-step">6) 버전 고정 &amp; 릴리스 절차 (Step-by-step)</h1>
+
+<ol>
+  <li><strong>래퍼 리포</strong> 에 서브모듈 핀:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git submodule add https://github.com/comfyanonymous/ComfyUI vendor/comfyui
+git submodule add git@github.com:company/comfyui-nodes-internal.git custom_nodes/company
+git commit <span class="nt">-m</span> <span class="s2">"Add ComfyUI + internal nodes as submodules"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>KNOWN-GOOD 조합</strong> 을 태그:</p>
+
+    <ul>
+      <li>예: <code class="language-plaintext highlighter-rouge">comfy-stack-2025.09.17</code> → 특정 업스트림 커밋 + 내부 노드 커밋 조합</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Docker 이미지</strong> 나 패키징 스크립트에서 해당 커밋을 체크아웃 → <strong>재현 가능 빌드</strong>.</p>
+  </li>
+  <li><strong>CHANGELOG</strong> : “업스트림 커밋/태그, 내부 변경, 마이그레이션 노트”를 짧게 기록.</li>
+</ol>
+
+<hr />
+
+<h1 id="7-업스트림-자동-통합-파이프라인-권장-ci-형태">7) 업스트림 자동 통합 파이프라인 (권장 CI 형태)</h1>
+
+<ul>
+  <li>
+    <p><strong>주기 트리거</strong>(예: 매주):</p>
+
+    <ol>
+      <li>
+        <p>업스트림 최신 커밋 확인</p>
+      </li>
+      <li>
+        <p>포크의 <code class="language-plaintext highlighter-rouge">internal/patches</code>를 최신으로 <strong>rebase/merge 시뮬레이션</strong></p>
+      </li>
+      <li>
+        <p><strong>스모크 테스트</strong> :</p>
+
+        <ul>
+          <li>
+            <p>서버 부팅, 주요 내부 노드 로딩</p>
+          </li>
+          <li>
+            <p>핵심 워크플로 2~3개 실행(샘플 이미지/텍스트 아웃풋 비교)</p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>성공 시 래퍼 리포에서 <strong>서브모듈 커밋 bump PR 자동 생성</strong></p>
+      </li>
+      <li>
+        <p>사람이 PR 리뷰 후 머지 &amp; 새 태그 발행</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>실패하면 CI가 <strong>충돌/테스트 실패 리포트</strong> 를 남기고 종료(사람이 개입).</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="8-워크플로템플릿-호환성-관리">8) 워크플로(템플릿) 호환성 관리</h1>
+
+<ul>
+  <li>각 템플릿 폴더에 <strong><code class="language-plaintext highlighter-rouge">metadata.yaml</code></strong>(예시)로 요구사항 명시:
+```yaml
+requires:
+  comfyui: "&gt;=0.0.0,&lt;0.1.0"   # 또는 커밋/태그 SHA
+  nodes:
+    - company-nodes: "&gt;=1.4.0"
+tested_with:
+    <ul>
+      <li>comfyui_commit: "<SHA>"</SHA></li>
+      <li>company_nodes_commit: "<SHA>"
+notes: "노드 X 파라미터가 2025-09에서 변경됨"
+```</SHA></li>
+    </ul>
+  </li>
+  <li><strong>마이그레이션 스크립트</strong> : 필드명 변경/삭제를 자동 변환하는 작은 Python 유틸을 템플릿 리포에 둡니다.</li>
+</ul>
+
+<hr />
+
+<h1 id="9-팀-합의-가이드충돌-줄이는-코딩-규칙">9) 팀 합의 가이드(충돌 줄이는 코딩 규칙)</h1>
+
+<ul>
+  <li>
+    <p><strong>금지 파일 목록</strong> 정하기: “여긴 절대 손대지 말기”. (예: 코어 로더/스캐너)</p>
+  </li>
+  <li>
+    <p><strong>기능 플래그</strong> : 내부 변경은 <code class="language-plaintext highlighter-rouge">COMPANY_FEATURE_X=1</code> 식으로 켜고 끌 수 있게.</p>
+  </li>
+  <li>
+    <p><strong>커밋 규칙</strong> : “문제 → 접근 → 변경점 → 리스크/롤백 방법”을 커밋 메시지에 짧게.</p>
+  </li>
+  <li>
+    <p><strong>테스트 샌드박스</strong> : 내부 노드 당 최소 1개 워크플로 스모크 테스트 유지.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="10-처음-세팅할-때실행-예시">10) 처음 세팅할 때(실행 예시)</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 0) 래퍼 리포</span>
+git clone git@github.com:company/comfyui-stack.git
+<span class="nb">cd </span>comfyui-stack
+
+<span class="c"># 1) 업스트림과 내부 노드 서브모듈 추가</span>
+git submodule add https://github.com/comfyanonymous/ComfyUI vendor/comfyui
+git submodule add git@github.com:company/comfyui-nodes-internal.git custom_nodes/company
+git commit <span class="nt">-m</span> <span class="s2">"Add submodules"</span>
+
+<span class="c"># 2) 업스트림 기본 remote 설정(선택: 포크도 같이)</span>
+<span class="nb">cd </span>vendor/comfyui
+git remote add upstream https://github.com/comfyanonymous/ComfyUI.git
+git fetch upstream
+<span class="c"># 필요 시 포크 remote도 추가: origin=company/ComfyUI</span>
+<span class="nb">cd</span> ../..
+
+<span class="c"># 3) 로컬 실행 스크립트</span>
+./scripts/dev_up.sh    <span class="c"># venv 생성, 요구 패키지 설치, ComfyUI 실행 등</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="언제-어떤-선택을">언제 어떤 선택을?</h2>
+
+<ul>
+  <li>
+    <p><strong>코어 안 건드려도 된다</strong> → <em>가장 좋음</em> : “업스트림 그대로 + 내부는 전부 커스텀 노드/템플릿” 모델.</p>
+  </li>
+  <li>
+    <p><strong>코어도 손대야 한다</strong> → 포크 운용하되, 패치 스택을 <strong>얇고 주제별로</strong> 유지 + 가급적 업스트림에 PR로 환원.</p>
+  </li>
+  <li>
+    <p><strong>분산 배포가 중요</strong> → 래퍼 리포에서 <strong>정확한 커밋 조합</strong> 을 서브모듈로 고정하고, 태그/릴리스 노트를 운영.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면, 현재 보유한 수정 사항을 기준으로 <strong>“코어 수정 분리 설계(어떤 걸 커스텀 노드로 뺄지 / 꼭 남겨야 할 코어 패치는 무엇인지)” 체크리스트</strong> 만들어 드릴게요. 구성 중 막히는 포인트(예: submodule/subtree 적용, CI 샘플 워크플로, Docker 빌드 스크립트)도 바로 템플릿으로 드릴 수 있습니다.</p>
+
+<p class="chat--user">
+
+사내는 보안망이기 때문에 업스트림이 불가능해. 그리고 ComfyUI 자체 코드뿐만 아니라 Comfy_templates 등 패키지도 설치하던데 지금은 .venv/lib/site-packages에서 해당 패키지를 찾아서 코드를 수정했어 - 우리가 원하는 템플릿만 보이게 하기 위해
+
+</p>
+
+<p>좋아요. “외부 네트워크가 막힌 사내 망(air-gapped) + 우리가 원하는 동작으로 커스터마이즈 + 업스트림의 변화는 배치로 주기 반입”이라는 전제로, <strong>site-packages를 직접 고치는 방식은 그만</strong> 두고 다음처럼 구조화하세요. 아래는 바로 실행 가능한 단계별(최소마찰) 설계입니다.</p>
+
+<hr />
+
+<h1 id="1-전체-전략-한-장-요약">1) 전체 전략 한 장 요약</h1>
+
+<ul>
+  <li>
+    <p><strong>분리</strong> : 업스트림 스냅샷(미러) ↔ 사내 커스터마이징(오버레이/포크) ↔ 배포 조합(스택 리포)을 분리.</p>
+  </li>
+  <li>
+    <p><strong>고정</strong> : “조합(업스트림 커밋들 + 내부 패키지 버전들)”을 <strong>태그/락파일</strong> 로 고정.</p>
+  </li>
+  <li>
+    <p><strong>무수정 원칙</strong> : <code class="language-plaintext highlighter-rouge">.venv/lib/site-packages</code> <strong>직접 수정 금지</strong>. 대신 <strong>포크/오버레이/플러그인</strong> 으로 덮어쓰기.</p>
+  </li>
+  <li>
+    <p><strong>오프라인 공급망</strong> : 외부에서 <strong>번들(wheelhouse + 소스 tarball + git 스냅샷)</strong> 만들어 들여와 내부 PyPI/깃에 업로드.</p>
+  </li>
+  <li>
+    <p><strong>자동화</strong> : 미러 갱신 → 테스트 → 스택 리포 서브모듈 bump PR까지 <strong>사내 CI</strong> 로.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="2-리포지토리-구성-권장">2) 리포지토리 구성 (권장)</h1>
+
+<ol>
+  <li>
+    <p><strong>스택(래퍼) 리포</strong> : <code class="language-plaintext highlighter-rouge">company/comfy-stack</code></p>
+
+    <ul>
+      <li>
+        <p>역할: 단일 진입점. 내부 Git의 하위 리포들을 <strong>submodule</strong> 로 고정.</p>
+      </li>
+      <li>
+        <p>포함물: <code class="language-plaintext highlighter-rouge">vendor/ComfyUI</code>(업스트림 미러), <code class="language-plaintext highlighter-rouge">vendor/ComfyTemplates</code>(업스트림 미러), <code class="language-plaintext highlighter-rouge">overlays/*</code>(사내 포크/오버레이), <code class="language-plaintext highlighter-rouge">wheels/</code>(오프라인 설치용), Docker/런처/테스트, <code class="language-plaintext highlighter-rouge">STACK.lock</code>(커밋/버전 고정).</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>업스트림 미러 리포(읽기 전용)</strong> : <code class="language-plaintext highlighter-rouge">mirror/ComfyUI</code>, <code class="language-plaintext highlighter-rouge">mirror/ComfyTemplates</code>, …</p>
+
+    <ul>
+      <li>외부에서 정기 수집한 <strong>깨끗한 스냅샷</strong> 만 저장(사내에서 수정 금지).</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>사내 포크/오버레이 리포(쓰기 가능)</strong> : <code class="language-plaintext highlighter-rouge">company/ComfyUI-internal</code>, <code class="language-plaintext highlighter-rouge">company/ComfyTemplates-internal</code>, <code class="language-plaintext highlighter-rouge">company/comfy-nodes-internal</code></p>
+
+    <ul>
+      <li>
+        <p>필요한 최소 패치만 <strong>얇게</strong> 유지(토픽 브랜치/패치스택).</p>
+      </li>
+      <li>
+        <p>가능하면 “새 기능”은 <strong>커스텀 노드/플러그인/템플릿</strong> 쪽으로.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<blockquote>
+  <p>배포는 항상 <code class="language-plaintext highlighter-rouge">comfy-stack</code>에서: 서브모듈 커밋을 특정 SHAs로 핀하고, 태그 <code class="language-plaintext highlighter-rouge">stack-YYYYMMDD</code>로 릴리스.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="3-업스트림-반입외부내부-파이프라인">3) 업스트림 반입(외부→내부) 파이프라인</h1>
+
+<p>외부(인터넷 가능 환경)에서:</p>
+
+<ol>
+  <li>
+    <p>지정 리비전 체크아웃 → <strong>git 아카이브</strong>(또는 bare mirror) 생성</p>
+  </li>
+  <li>파이썬 의존성 <strong>wheelhouse</strong> 빌드:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip wheel <span class="nt">-r</span> requirements.txt <span class="nt">-w</span> wheelhouse/ <span class="nt">--no-cache-dir</span>
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">bundle/</code> 구조로 묶기:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle/
+  repos/
+    ComfyUI.tar.zst
+    ComfyTemplates.tar.zst
+  wheels/
+    <span class="k">*</span>.whl
+  MANIFEST.json   <span class="c"># 커밋 SHA, 버전, 해시</span>
+  RELEASE_NOTES.md
+</code></pre></div>    </div>
+  </li>
+  <li>해시/서명 생성 후 보안 반입(오프라인 매체).</li>
+</ol>
+
+<p>내부(사내망)에서:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mirror/*</code> 리포에 가져와 push</p>
+  </li>
+  <li>
+    <p>내부 PyPI(devpi/Nexus/Artifactory 또는 단순 파일서버)에도 <code class="language-plaintext highlighter-rouge">wheels/</code> 업로드</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="4-오프라인-설치-표준재현-가능한-빌드">4) 오프라인 설치 표준(재현 가능한 빌드)</h1>
+
+<ul>
+  <li><strong>constraints 파일</strong> 로 버전 고정 + <strong>내부 PyPI/파일서버</strong> 만 사용:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> file:///srv/pypi/simple <span class="se">\</span>
+            <span class="nt">--find-links</span> ./wheels <span class="se">\</span>
+            <span class="nt">-r</span> requirements.txt <span class="se">\</span>
+            <span class="nt">-c</span> constraints.txt
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>가급적 소스가 아닌 <strong>wheel만</strong> 사용(컴파일 변동 최소화).</p>
+  </li>
+  <li>venv 생성/업데이트는 스택 리포의 스크립트로 통일:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./scripts/bootstrap.sh   <span class="c"># venv 만들고 wheelhouse에서 설치</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="5-site-packages-직접-수정의-대체-3가지">5) “site-packages 직접 수정”의 대체 3가지</h1>
+
+<h2 id="a-포크로-덮어쓰기정석">(A) 포크로 덮어쓰기(정석)</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ComfyTemplates</code> 같이 우리가 바꾸려는 패키지를 <strong>사내 포크</strong> 로 유지(<code class="language-plaintext highlighter-rouge">company/ComfyTemplates-internal</code>).</p>
+  </li>
+  <li>
+    <p>배포 시엔 <strong>포크 빌드한 wheel</strong> 만 설치(원본 대신).</p>
+  </li>
+  <li>
+    <p>버전 표기 예: <code class="language-plaintext highlighter-rouge">1.4.2+company.3</code> (PEP440) → pip가 “우리 빌드”를 선택.</p>
+  </li>
+  <li>
+    <p>장점: 가장 명시적이고 추적 가능. 단점: 포크를 꾸준히 rebase/merge 해야 함.</p>
+  </li>
+</ul>
+
+<h2 id="b-오버레이모듈-경로-우선-방식">(B) 오버레이(모듈 경로 우선) 방식</h2>
+
+<ul>
+  <li>스택 리포에 <code class="language-plaintext highlighter-rouge">overlays/comfy_templates/</code>처럼 <strong>원본과 동일 모듈명</strong> 디렉터리를 두고, 런처에서 <code class="language-plaintext highlighter-rouge">PYTHONPATH</code> 앞쪽에 추가:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/overlays:</span><span class="nv">$PYTHONPATH</span><span class="s2">"</span>
+python <span class="nt">-m</span> comfy.launch
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>동일 경로/파일만 <strong>부분적으로 대체</strong> 가능(패치 범위가 작을 때 유리).</p>
+  </li>
+  <li>장점: 빠르고 안전한 롤백. 단점: 충돌/드리프트 감시가 필요.</li>
+</ul>
+
+<h2 id="c-엔트리포인트플러그인초기화-훅-활용">(C) 엔트리포인트/플러그인/초기화 훅 활용</h2>
+
+<ul>
+  <li>
+    <p>패키지가 <strong>엔트리포인트</strong> 나 <strong>초기화 훅</strong> 을 제공하면, 별도 <code class="language-plaintext highlighter-rouge">company-*</code> 패키지에서 <strong>정식 확장점</strong> 으로 개입.</p>
+  </li>
+  <li>
+    <p>없더라도 <code class="language-plaintext highlighter-rouge">sitecustomize.py</code>(파이썬 표준 훅)로 <strong>런타임 필터</strong> 만 주입 가능(아래 6절 참고).</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>세 방법은 <strong>혼용 가능</strong> 하지만, 기본은 (A) 포크, (B) 오버레이는 긴급/소규모 변경, (C)는 설정성 로직에 좋습니다.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="6-우리가-원하는-템플릿만-보이게-하는-안전한-구현">6) “우리가 원하는 템플릿만 보이게” 하는 안전한 구현</h1>
+
+<h3 id="61-가장-깔끔한-해법포크">6.1 가장 깔끔한 해법(포크)</h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ComfyTemplates</code> 포크에서 <strong>스캔 경로를 1곳(사내 템플릿 디렉터리)</strong>로 제한하거나, <strong>allowlist</strong> 읽도록 옵션화.</p>
+  </li>
+  <li>
+    <p>예: <code class="language-plaintext highlighter-rouge">COMFY_TEMPLATES_ALLOWLIST=/etc/comfy/allowlist.txt</code> 지원 추가.</p>
+  </li>
+  <li>
+    <p>배포는 우리 포크 wheel만 설치 → <strong>site-packages 수정 불필요</strong>.</p>
+  </li>
+</ul>
+
+<h3 id="62-원본을-유지해야-한다면오버레이-or-런타임-필터">6.2 원본을 유지해야 한다면(오버레이 or 런타임 필터)</h3>
+
+<ul>
+  <li><strong>오버레이 파일 한 개</strong> 로 템플릿 레지스트리 최종 결과만 필터:
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># overlays/comfy_templates/hooks.py  (원본 import 후 후처리)
+</span><span class="kn">from</span> <span class="n">comfy_templates</span> <span class="kn">import</span> <span class="n">registry</span>
+    
+<span class="k">def</span> <span class="nf">apply_allowlist</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="n">os</span>
+    <span class="n">allow</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMFY_TEMPLATES_ALLOWLIST</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="n">allow</span> <span class="o">=</span> <span class="p">{</span><span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nf">open</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">#</span><span class="sh">"</span><span class="p">)}</span>
+    <span class="c1"># registry.templates 는 실제 컨테이너/리스트 이름에 맞게 조정
+</span>    <span class="n">registry</span><span class="p">.</span><span class="n">templates</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">registry</span><span class="p">.</span><span class="n">templates</span> <span class="k">if</span> <span class="n">t</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>그리고 <strong>런처에서 초기화</strong> :
+    <code class="language-plaintext highlighter-rouge">bash
+    export PYTHONPATH="$REPO_ROOT/overlays:$PYTHONPATH"
+    export COMFY_TEMPLATES_ALLOWLIST="/etc/comfy/allowlist.txt"
+    python -c "import comfy_templates.hooks as h; h.apply_allowlist(); import comfy.main as m; m.run()"
+   </code></p>
+
+<ul>
+  <li>혹은 <strong><code class="language-plaintext highlighter-rouge">sitecustomize.py</code></strong>(파이썬 표준)로 주입:
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># overlays/sitecustomize.py
+</span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">comfy_templates.hooks</span> <span class="kn">import</span> <span class="n">apply_allowlist</span>
+    <span class="nf">apply_allowlist</span><span class="p">()</span>
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>런처에서 <code class="language-plaintext highlighter-rouge">PYTHONPATH</code> 앞에 <code class="language-plaintext highlighter-rouge">overlays/</code>만 추가하면 자동 적용됩니다.</p>
+
+<blockquote>
+  <p>핵심: “패키지 파일”이 아니라 “런타임”에서 <strong>정책만 주입</strong>. 업스트림 업데이트에도 충돌 최소화.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="7-git-운용업스트림-불러오기--내부-패치">7) Git 운용(업스트림 불러오기 &amp; 내부 패치)</h1>
+
+<ul>
+  <li>
+    <p>미러 리포는 외부 스냅샷을 그대로 <code class="language-plaintext highlighter-rouge">main</code>에 업데이트(사람이 직접 커밋 금지).</p>
+  </li>
+  <li>사내 포크는 <strong>패치 브랜치</strong> 를 얇게 유지:
+    <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mirror</span><span class="p">/</span><span class="n">ComfyTemplates</span>         <span class="err">#</span> <span class="err">읽기</span> <span class="err">전용</span>
+<span class="n">company</span><span class="p">/</span><span class="n">ComfyTemplates</span><span class="p">-</span><span class="k">internal</span>
+  <span class="err">├─</span> <span class="n">main</span>                <span class="err">#</span> <span class="err">미러</span> <span class="n">fast</span><span class="p">-</span><span class="n">forward</span> <span class="err">머지</span><span class="p">(</span><span class="n">rebase</span><span class="p">)</span><span class="err">만</span>
+  <span class="err">└─</span> <span class="k">internal</span><span class="p">/</span><span class="n">patches</span>    <span class="err">#</span> <span class="err">우리</span> <span class="err">변경</span><span class="p">(</span><span class="err">토픽브랜치</span> <span class="err">모음</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>갱신 루틴(사내 CI 또는 스크립트):
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 미러 갱신 후</span>
+<span class="nb">cd </span>company/ComfyTemplates-internal
+git fetch origin
+git fetch mirror
+git checkout main <span class="o">&amp;&amp;</span> git reset <span class="nt">--hard</span> mirror/main
+git checkout internal/patches <span class="o">&amp;&amp;</span> git rebase main    <span class="c"># 충돌 해결</span>
+<span class="c"># 테스트 후 wheel 빌드 → 내부 PyPI 업로드</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="8-스택-리포로-조합-고정--배포">8) 스택 리포로 조합 고정 &amp; 배포</h1>
+
+<ul>
+  <li><strong>submodule</strong> 로 내부 리포를 고정:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git submodule add ssh://git/mirror/ComfyUI vendor/ComfyUI
+git submodule add ssh://git/company/ComfyTemplates-internal overlays/ComfyTemplates
+git commit <span class="nt">-m</span> <span class="s2">"Pin ComfyUI and templates"</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>STACK.lock</strong>(예):
+    <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">comfyui</span><span class="pi">:</span> <span class="pi">{</span><span class="nv">repo</span><span class="pi">:</span> <span class="nv">mirror/ComfyUI</span><span class="pi">,</span> <span class="nv">commit</span><span class="pi">:</span> <span class="nv">abcdef1</span><span class="pi">}</span>
+<span class="na">comfytemplates</span><span class="pi">:</span> <span class="pi">{</span><span class="nv">repo</span><span class="pi">:</span> <span class="nv">company/ComfyTemplates-internal</span><span class="pi">,</span> <span class="nv">commit</span><span class="pi">:</span> <span class="nv">1234abc</span><span class="pi">}</span>
+<span class="na">nodes_internal</span><span class="pi">:</span> <span class="pi">{</span><span class="nv">repo</span><span class="pi">:</span> <span class="nv">company/comfy-nodes-internal</span><span class="pi">,</span> <span class="nv">commit</span><span class="pi">:</span> <span class="nv">9f9f9f9</span><span class="pi">}</span>
+<span class="na">wheels_manifest</span><span class="pi">:</span> <span class="s">sha256:...</span>  <span class="c1"># wheelhouse 무결성</span>
+</code></pre></div>    </div>
+  </li>
+  <li>태그: <code class="language-plaintext highlighter-rouge">stack-2025.09.17</code> → 언제든 <strong>정확히 같은 조합</strong> 으로 재배포/롤백.</li>
+</ul>
+
+<hr />
+
+<h1 id="9-실행배포-표준컨테이너-권장">9) 실행/배포 표준(컨테이너 권장)</h1>
+
+<ul>
+  <li><strong>런처 스크립트</strong> 로 경로/정책 주입:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">COMFY_HOME</span><span class="o">=</span>/opt/comfy
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$COMFY_HOME</span><span class="s2">/overlays:</span><span class="nv">$PYTHONPATH</span><span class="s2">"</span>
+<span class="nb">export </span><span class="nv">COMFY_TEMPLATES_ALLOWLIST</span><span class="o">=</span><span class="s2">"/etc/comfy/allowlist.txt"</span>
+<span class="nb">exec </span>python <span class="nt">-m</span> comfy.launch <span class="nt">--port</span> <span class="k">${</span><span class="nv">PORT</span><span class="k">:-</span><span class="nv">8188</span><span class="k">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>컨테이너 이미지에 <strong>wheelhouse와 소스만</strong> 포함 → 완전 오프라인 가능.</p>
+  </li>
+  <li>
+    <p>스모크 테스트(사내 CI):</p>
+
+    <ol>
+      <li>
+        <p>ComfyUI 부팅</p>
+      </li>
+      <li>
+        <p>내부 노드 로딩 확인</p>
+      </li>
+      <li>
+        <p>대표 워크플로 2~3개 실행(산출물 해시 비교)</p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="10-운영-체크리스트-실전용">10) 운영 체크리스트 (실전용)</h1>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">.venv/lib/site-packages</code> 직접 수정 <strong>금지 규칙화</strong></p>
+  </li>
+  <li>
+    <p>외부 번들 포맷/서명/검증 프로세스 문서화</p>
+  </li>
+  <li>
+    <p><strong>ALLOWLIST 파일</strong> 소유권/검토 프로세스(보안/컴플라이언스)</p>
+  </li>
+  <li>
+    <p>포크/오버레이 <strong>코딩 규칙</strong> : 변경 최소화·주석에 “업스트림 대응 포인트” 표시</p>
+  </li>
+  <li>
+    <p>라이선스/공지사항(OSS NOTICE) 묶어 배포</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="지금-상황에-바로-적용하는-최소-변경-경로">지금 상황에 바로 적용하는 최소 변경 경로</h2>
+
+<ol>
+  <li>
+    <p>현재 venv에서 수정한 파일을 되돌리고(새 venv 권장),</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">company/ComfyTemplates-internal</code> 리포를 만들고 <strong>원본에서 우리가 적용했던 “보이기 필터”만</strong> 반영,</p>
+  </li>
+  <li>
+    <p>스택 리포에 이 포크와 ComfyUI 미러를 <strong>submodule</strong> 로 고정,</p>
+  </li>
+  <li>
+    <p>런처에서 <code class="language-plaintext highlighter-rouge">PYTHONPATH</code>/ALLOWLIST 주입으로 정책 적용,</p>
+  </li>
+  <li>
+    <p>오프라인 wheelhouse 설치로 완성.</p>
+  </li>
+</ol>
+
+<p>필요하면, <strong>스택 리포 스켈레톤 + 오버레이 훅 파일 + 오프라인 설치 스크립트</strong> 예제를 바로 드릴게요.</p>
+
+<p class="chat--user">
+
+그런데 개발을 주로 사내망 내부에서 해. 그리고 pip install는 가능하지만 git clone은 불가능해. 그래서 지금은 comfyui 소스코드만 받고 사내망으로 옮긴 후 pip install -r requirements.txt &amp;&amp; python main.py 로 실행하고 있어. 이 상황을 고려해서 편하면서도 지속 가능한 방안을 다시 조언해줘.
+
+</p>
+
+<p>좋아요. “사내망에서 개발 중심 + <code class="language-plaintext highlighter-rouge">pip install</code>은 되지만 <code class="language-plaintext highlighter-rouge">git clone</code>은 불가 + 지금은 소스 디렉터리(ComfyUI)만 들여와서 실행” 조건에서, <strong>편하면서도 지속 가능한</strong> 운영·개발 흐름을 아래처럼 잡으면 됩니다. (핵심은 “모든 커스터마이징을 <code class="language-plaintext highlighter-rouge">pip install</code>로 주입”하고, 업스트림 스냅샷은 <strong>번들 형태</strong> 로 들여오는 것)</p>
+
+<hr />
+
+<h1 id="0-한-줄-원칙">0) 한 줄 원칙</h1>
+
+<ul>
+  <li>
+    <p><strong>site-packages 직접 수정 금지</strong> → 대신 <strong>사내용 휠(whl) 패키지</strong> 로 정책/패치를 주입.</p>
+  </li>
+  <li>
+    <p>외부에서는 <strong>휠 번들(wheelhouse) + 고정된 의존성</strong> 만 만들어서 반입.</p>
+  </li>
+  <li>
+    <p>내부에서는 <strong><code class="language-plaintext highlighter-rouge">pip install --no-index --find-links …</code></strong> 로만 설치(재현성).</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="1-폴더아티팩트-구성-사내-개발자가-만나는-단일-패키지">1) 폴더/아티팩트 구성 (사내 개발자가 만나는 단일 패키지)</h1>
+
+<p>외부(인터넷 가능)에서 주기적으로 아래 구조의 <strong>번들</strong> 을 만들어 사내로 들여옵니다.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle/
+  wheels/                 <span class="c"># 모든 파이썬 패키지의 wheel (*.whl)</span>
+  src/ComfyUI/            <span class="c"># 실행용 ComfyUI 소스 스냅샷(압축해도 됨)</span>
+  constraints.txt         <span class="c"># 정확한 버전 고정 목록 (pip-tools로 생성 권장)</span>
+  MANIFEST.json           <span class="c"># 커밋/버전/해시 요약</span>
+  RELEASE_NOTES.md        <span class="c"># 변경 요약</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>포인트: <strong>git 없이도</strong> 이 묶음만 있으면 <code class="language-plaintext highlighter-rouge">pip install</code>로 동일 환경을 재현할 수 있습니다.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="2-커스터마이징은-사내-파이썬-패키지로-주입">2) 커스터마이징은 “사내 파이썬 패키지”로 주입</h1>
+
+<p>site-packages를 고치지 말고, 다음 <strong>두 가지</strong> 내부 패키지로 해결합니다. (둘 다 단순 wheel)</p>
+
+<h3 id="21-company-comfy-policies-필수">2.1 <code class="language-plaintext highlighter-rouge">company-comfy-policies</code> (필수)</h3>
+
+<ul>
+  <li>
+    <p>역할: <strong>런타임 정책 주입(템플릿 필터 등)</strong></p>
+  </li>
+  <li>
+    <p>설치만 하면 자동으로 동작하도록 <strong><code class="language-plaintext highlighter-rouge">sitecustomize.py</code></strong> 사용</p>
+  </li>
+  <li>예시 구현:
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># company_comfy_policies/sitecustomize.py
+</span><span class="kn">import</span> <span class="n">os</span>
+    
+<span class="c1"># (예시) Comfy_templates 템플릿 레지스트리 필터
+</span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">comfy_templates</span> <span class="kn">import</span> <span class="n">registry</span>  <span class="c1"># 실제 레지스트리 경로/이름에 맞게 조정
+</span>    <span class="n">allowlist_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMFY_TEMPLATES_ALLOWLIST</span><span class="sh">"</span><span class="p">,</span> <span class="sh">""</span><span class="p">)</span>
+    <span class="n">allow</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">allowlist_path</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">allowlist_path</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">allowlist_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">#</span><span class="sh">"</span><span class="p">):</span>
+                    <span class="n">allow</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">allow</span><span class="p">:</span>
+        <span class="c1"># registry.templates 의 실제 자료구조에 맞게 필터링
+</span>        <span class="n">registry</span><span class="p">.</span><span class="n">templates</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">registry</span><span class="p">.</span><span class="n">templates</span> <span class="k">if</span> <span class="n">t</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>    </div>
+  </li>
+  <li>패키지 버전은 <code class="language-plaintext highlighter-rouge">1.0.0+company.1</code> 같이 내부 식별자를 붙여 관리.</li>
+</ul>
+
+<h3 id="22-company-comfy-templates-선택">2.2 <code class="language-plaintext highlighter-rouge">company-comfy-templates</code> (선택)</h3>
+
+<ul>
+  <li>
+    <p>역할: “<strong>우리가 쓰는 템플릿만</strong> 포함한 패키지”</p>
+  </li>
+  <li>
+    <p>원본 <code class="language-plaintext highlighter-rouge">Comfy_templates</code>를 대체하거나, <strong>추가 템플릿만 제공</strong> 하도록 구성(모듈명은 충돌 피해서 <code class="language-plaintext highlighter-rouge">company_comfy_templates</code> 권장).</p>
+  </li>
+  <li>
+    <p>ComfyUI가 템플릿 검색 경로를 지원하지 않으면, <code class="language-plaintext highlighter-rouge">company-comfy-policies</code>에서 <strong>검색 경로에 이 패키지의 템플릿 디렉터리 추가</strong>(sys.path/ENV)만 해도 됩니다.</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>장점: 내부에선 <strong><code class="language-plaintext highlighter-rouge">pip install company-comfy-*</code>만</strong> 하면 정책과 템플릿이 적용됩니다. git 불필요.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="3-개발실행-플로우사내망-기준">3) 개발/실행 플로우(사내망 기준)</h1>
+
+<h3 id="31-day-1-환경-부팅재현-가능">3.1 Day 1: 환경 부팅(재현 가능)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> venv .venv
+<span class="nb">source</span> .venv/bin/activate
+
+<span class="c"># 외부 번들 반입물만 사용 (내부 파일서버/로컬 경로)</span>
+pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels <span class="nt">-c</span> ./bundle/constraints.txt <span class="nt">-r</span> ComfyUI/requirements.txt
+
+<span class="c"># 사내 정책/템플릿 패키지 설치</span>
+pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels company-comfy-policies company-comfy-templates
+
+<span class="c"># (권장) 정책 파일 경로 지정</span>
+<span class="nb">export </span><span class="nv">COMFY_TEMPLATES_ALLOWLIST</span><span class="o">=</span>/etc/comfy/allowlist.txt
+
+<span class="c"># 실행</span>
+<span class="nb">cd </span>bundle/src/ComfyUI
+python main.py
+</code></pre></div></div>
+
+<h3 id="32-사내에서-개발할-때깃-없이도-ok">3.2 “사내에서 개발”할 때(깃 없이도 OK)</h3>
+
+<ul>
+  <li>사내망에서 회사 패키지 소스를 수정하려면, <strong>로컬 폴더</strong> 에서 <strong>editable 설치</strong> :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 예: company-comfy-policies 소스가 ./dev/company-comfy-policies/ 에 있을 때</span>
+pip <span class="nb">install</span> <span class="nt">-e</span> ./dev/company-comfy-policies
+<span class="c"># 수정 → 바로 반영(재설치 불필요)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>완성되면 <code class="language-plaintext highlighter-rouge">python -m build</code>로 <strong>wheel 생성</strong> → <code class="language-plaintext highlighter-rouge">bundle/wheels/</code>에 교체.</li>
+</ul>
+
+<blockquote>
+  <p>포인트: <strong>git remote 없어도</strong> editable 설치로 내부 개발 편하게 하고, 결과물은 wheel로 고정해 배포.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="4-업스트림-반입외부내부-자동화-관점">4) 업스트림 반입(외부→내부) 자동화 관점</h1>
+
+<p>외부 CI(인터넷 가능)에서:</p>
+
+<ol>
+  <li>
+    <p>지정 리비전의 ComfyUI/의존성 <strong>버전 고정</strong>(<code class="language-plaintext highlighter-rouge">pip-compile</code> → <code class="language-plaintext highlighter-rouge">constraints.txt</code>)</p>
+  </li>
+  <li>
+    <p><strong>wheelhouse</strong> 빌드(<code class="language-plaintext highlighter-rouge">pip wheel -r requirements.txt -w wheelhouse/</code>)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">company-comfy-*</code> 최신 빌드 포함하여 <code class="language-plaintext highlighter-rouge">bundle/</code> 조립</p>
+  </li>
+  <li>
+    <p>해시/서명 + 간단 테스트 로그 → 사내로 전달</p>
+  </li>
+</ol>
+
+<p>사내에서:</p>
+
+<ul>
+  <li>
+    <p>기존 venv 제거 후 <strong>같은 명령</strong> 으로 재설치 → <strong>완전 동일 환경</strong> 보장</p>
+  </li>
+  <li>
+    <p>문제가 생기면 <strong>이전 번들</strong> 로 즉시 롤백 가능(폴더 바꾸기만으로 OK)</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="5-우리가-원하는-템플릿만-보이게의-안전-패턴-두-가지-중-택1">5) “우리가 원하는 템플릿만 보이게”의 안전 패턴 (두 가지 중 택1)</h1>
+
+<h2 id="a-정책-패키지--allowlist-추천유연">(A) 정책 패키지 + Allowlist (추천·유연)</h2>
+
+<ul>
+  <li>
+    <p>운영은 <code class="language-plaintext highlighter-rouge">allowlist.txt</code>만 바꾸면 됨(릴리스 불필요).</p>
+  </li>
+  <li>예시:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/comfy/allowlist.txt</span>
+StableDiffusionXL_Default
+MyCompany_Inpaint_v3
+MyCompany_Text2Img_Light
+</code></pre></div>    </div>
+  </li>
+  <li>장점: 업스트림 구조 변경에도 영향이 적고, <strong>운영/보안팀이 파일만 관리</strong> 가능.</li>
+</ul>
+
+<h2 id="b-회사-템플릿-패키지로-공식-템플릿-셋-고정">(B) 회사 템플릿 패키지로 “공식 템플릿 셋” 고정</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">company-comfy-templates</code>에 <strong>정해진 셋</strong> 만 포함 → 업스트림 변동과 무관.</p>
+  </li>
+  <li>
+    <p>장점: 더 엄격한 통제. 단점: 템플릿 바꿀 때마다 재빌드 필요.</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>필요하면 (A)+(B) 혼합: 회사 템플릿만 우선 로딩, 그중에서도 allowlist로 최종 필터.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="6-comfyui-코어를-건드려야-할-때가능하면-회피">6) ComfyUI 코어를 건드려야 할 때(가능하면 회피)</h1>
+
+<ul>
+  <li>
+    <p>코어를 직접 고치지 말고, <strong>회사 패키지에서 런타임 패치</strong>(import 후 한정된 함수/레지스트리만 후처리).</p>
+  </li>
+  <li>
+    <p>불가피하면, 외부에서 <strong>패치 적용된 소스 스냅샷</strong> 을 <code class="language-plaintext highlighter-rouge">bundle/src/ComfyUI</code>에 넣어 배포.</p>
+
+    <ul>
+      <li>
+        <p>사내에선 그대로 실행만 하므로 git이 필요 없음.</p>
+      </li>
+      <li>
+        <p>변경 이력은 외부 CI가 관리(패치 목록/RELEASE_NOTES에 기록).</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="7-품질운영-체크리스트">7) 품질/운영 체크리스트</h1>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">constraints.txt</code>로 <strong>의존성 핀 고정</strong> (파편화 방지)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">bundle/wheels</code>만 사용하도록 <code class="language-plaintext highlighter-rouge">--no-index --find-links</code> 강제(실수로 외부 접속 방지)</p>
+  </li>
+  <li>
+    <p><strong>스모크 테스트 스크립트</strong> : 서버 기동, 내부 노드/템플릿 로딩, 대표 워크플로 1~2개 실행</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">company-comfy-policies</code> 내 <strong>예외 안전(try/except)</strong> 과 <strong>로그</strong>(환경변수로 on/off)</p>
+  </li>
+  <li>
+    <p>운영 값(allowlist 경로/추가 검색 경로 등)은 <strong>ENV 또는 설정 파일</strong> 로만 변경</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="빠른-적용-가이드지금-상황에서-최소-변경">빠른 적용 가이드(지금 상황에서 최소 변경)</h2>
+
+<ol>
+  <li>
+    <p><strong>site-packages 수정분 되돌리기</strong>(새 venv 권장).</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">company-comfy-policies</code> 패키지 간단히 만들어 위 <code class="language-plaintext highlighter-rouge">sitecustomize.py</code> 넣기 → wheel 빌드.</p>
+  </li>
+  <li>
+    <p>(선택) <code class="language-plaintext highlighter-rouge">company-comfy-templates</code>로 내부 공식 템플릿만 패키징.</p>
+  </li>
+  <li>
+    <p>외부에서 <code class="language-plaintext highlighter-rouge">bundle/</code>(wheels + ComfyUI 소스 + constraints) 만들고 사내 반입.</p>
+  </li>
+  <li>
+    <p>사내에선 아래 3줄만 기억:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels <span class="nt">-c</span> ./bundle/constraints.txt <span class="nt">-r</span> ComfyUI/requirements.txt
+pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels company-comfy-policies company-comfy-templates
+<span class="nv">COMFY_TEMPLATES_ALLOWLIST</span><span class="o">=</span>/etc/comfy/allowlist.txt python ./bundle/src/ComfyUI/main.py
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>이렇게 하면 <strong>git 없이도</strong> 개발·배포가 매끄럽고, 업스트림 반입 주기가 와도 <strong>번들 교체만</strong> 으로 안전하게 따라갈 수 있습니다. 원하시면 <code class="language-plaintext highlighter-rouge">company-comfy-policies</code>의 최소 패키지 스캐폴드(폴더 구조, <code class="language-plaintext highlighter-rouge">pyproject.toml</code>, 빌드/설치 스크립트) 예제도 바로 드릴게요.</p>
+
+<p class="chat--user">
+
+런 타임 패치를 바꿀 수 있어? 예를 들어 comfyui_templates 라는 package를 comfyui/main.py에서 import 한다고 가정하자. main.py를 안 건드리고 company_templates를 대신 로드하게 할 수 있어?
+
+</p>
+
+<p>가능해요. <strong>main.py는 건드리지 않고</strong> <code class="language-plaintext highlighter-rouge">comfyui_templates</code> 대신 <code class="language-plaintext highlighter-rouge">company_templates</code>를 로드(혹은 완전히 대체)하는 방법이 몇 가지 있어요. 사내망 환경(깃 클론 불가, <code class="language-plaintext highlighter-rouge">pip install</code> 가능) 기준으로 <strong>안정성 순</strong> 으로 정리할게요.</p>
+
+<hr />
+
+<h1 id="0-결론-한-줄">0) 결론 한 줄</h1>
+
+<p>가장 깔끔한 건 <strong>“드롭인 패키지 교체”</strong>예요:<br />
+업스트림과 <strong>같은 import 이름(<code class="language-plaintext highlighter-rouge">comfyui_templates</code>)</strong>을 가진 <strong>우리 wheel</strong> 을 빌드해서 설치하면, <code class="language-plaintext highlighter-rouge">main.py</code>는 그대로 <code class="language-plaintext highlighter-rouge">import comfyui_templates</code>를 쓰되 실제로는 우리 코드가 로드됩니다.</p>
+
+<hr />
+
+<h1 id="1-방법-a--드롭인-교체추천-장기-안정">1) 방법 A — 드롭인 교체(추천, 장기 안정)</h1>
+
+<p><strong>아이디어</strong> : 프로젝트/모듈 이름을 업스트림과 동일하게 맞춘 <strong>내부 wheel</strong> 을 만들어 wheelhouse에 넣고 설치합니다. 그러면 <code class="language-plaintext highlighter-rouge">import comfyui_templates</code>가 자동으로 <strong>우리 구현</strong> 을 가져옵니다.</p>
+
+<h2 id="a-1-구조">A-1. 구조</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>comfyui-templates/              <span class="c"># 배포용 디렉터리 (우리 코드)</span>
+  pyproject.toml
+  src/
+    comfyui_templates/          <span class="c"># ← import 이름을 업스트림과 동일하게!</span>
+      __init__.py
+      ...                       <span class="c"># 우리 템플릿/레지스트리/필터 구현</span>
+</code></pre></div></div>
+
+<h2 id="a-2-최소-pyprojecttoml-예시">A-2. 최소 pyproject.toml 예시</h2>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
+</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+
+<span class="nn">[project]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"comfyui-templates"</span>              <span class="c"># 업스트림과 '프로젝트명' 동일</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"1.4.2+company.3"</span>             <span class="c"># 내부 식별자(+company.N)로 표기</span>
+<span class="py">description</span> <span class="p">=</span> <span class="s">"Company override for ComfyUI templates"</span>
+<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.10</span><span class="s">"</span><span class="err">
+</span>
+<span class="nn">[tool.setuptools.packages.find]</span>
+<span class="py">where</span> <span class="p">=</span> <span class="p">[</span><span class="s">"src"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>포인트</p>
+
+  <ul>
+    <li>
+      <p><strong>프로젝트명과 import 모듈명 모두</strong> 업스트림과 동일(= 완전 대체).</p>
+    </li>
+    <li>
+      <p>업스트림 wheel은 <strong>설치하지 않거나 제거</strong> 하세요. (우리 wheel만 wheelhouse에 두면 안전)</p>
+    </li>
+  </ul>
+
+</blockquote>
+
+<h2 id="a-3-빌드--설치오프라인">A-3. 빌드 &amp; 설치(오프라인)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 빌드(외부 환경)</span>
+python <span class="nt">-m</span> build  <span class="c"># dist/*.whl 생성</span>
+
+<span class="c"># 사내망 설치</span>
+pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels comfyui-templates
+<span class="c"># (또는 -r requirements.txt 설치 시 wheelhouse에 우리 wheel만 존재하게)</span>
+</code></pre></div></div>
+
+<h2 id="a-4-검증">A-4. 검증</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-c</span> <span class="s2">"import comfyui_templates, importlib.metadata as m; print(comfyui_templates.__file__, m.version('comfyui-templates'))"</span>
+<span class="c"># 출력 경로가 우리 wheel의 site-packages를 가리키면 성공</span>
+</code></pre></div></div>
+
+<p><strong>장점</strong></p>
+
+<ul>
+  <li>
+    <p>가장 호환성이 높고(서브모듈/상대 import/엔트리포인트 등), 업스트림 변경에도 튼튼.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">requirements.txt</code>에 <code class="language-plaintext highlighter-rouge">comfyui-templates</code>가 있어도 <strong>그 요구사항을 우리가 충족</strong>.</p>
+  </li>
+</ul>
+
+<p><strong>주의</strong></p>
+
+<ul>
+  <li>
+    <p>업스트림을 일부만 쓰고 싶다면, 우리 구현에서 필요한 것만 남기고 나머지는 제거/필터.</p>
+  </li>
+  <li>
+    <p>버전 업 시 <code class="language-plaintext highlighter-rouge">1.4.2+company.4</code>처럼 늘려서 배포.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="2-방법-b--sitecustomize로-런타임-모듈-대체빠르고-유연">2) 방법 B — “sitecustomize”로 런타임 모듈 대체(빠르고 유연)</h1>
+
+<p><strong>아이디어</strong> : 파이썬은 시작 시 <code class="language-plaintext highlighter-rouge">sitecustomize</code>라는 <strong>최상위 모듈</strong> 이 있으면 자동 import합니다. 여기에 “<code class="language-plaintext highlighter-rouge">comfyui_templates</code>라는 이름으로 <code class="language-plaintext highlighter-rouge">company_templates</code>를 alias”하는 코드를 넣으면, <code class="language-plaintext highlighter-rouge">main.py</code>는 그대로인데도 <strong>우리 모듈이 로드</strong> 됩니다.</p>
+
+<h2 id="b-1-배포-구조간단-wheel">B-1. 배포 구조(간단 wheel)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>company-comfy-policies/
+  pyproject.toml
+  sitecustomize.py        <span class="c"># ← 최상위 모듈명! (중요)</span>
+  company_comfy_policies/
+    __init__.py
+</code></pre></div></div>
+
+<h2 id="b-2-pyprojecttoml-최소">B-2. pyproject.toml (최소)</h2>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
+</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+
+<span class="nn">[project]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"company-comfy-policies"</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"1.0.0"</span>
+<span class="py">description</span> <span class="p">=</span> <span class="s">"Runtime policies for ComfyUI in company"</span>
+
+<span class="nn">[tool.setuptools]</span>
+<span class="py">py-modules</span> <span class="p">=</span> <span class="p">[</span><span class="s">"sitecustomize"</span><span class="p">]</span>           <span class="c"># ← 최상위 모듈 설치</span>
+<span class="py">packages</span> <span class="p">=</span> <span class="p">[</span><span class="s">"company_comfy_policies"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="b-3-sitecustomizepy-별도-설정-없이-기본-동작">B-3. sitecustomize.py (별도 설정 없이 기본 동작)</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sitecustomize.py  (site가 파이썬 시작 시 자동 import)
+</span><span class="kn">import</span> <span class="n">os</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">importlib</span>
+
+<span class="c1"># 우리 구현 모듈(패키지) 이름; ENV로 교체 가능
+</span><span class="n">TARGET</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMPANY_TEMPLATES_MODULE</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">company_templates</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">ALIAS</span>  <span class="o">=</span> <span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">target_mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="n">TARGET</span><span class="p">)</span>
+    <span class="c1"># top-level alias: import comfyui_templates → company_templates 객체
+</span>    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">.</span><span class="nf">setdefault</span><span class="p">(</span><span class="n">ALIAS</span><span class="p">,</span> <span class="n">target_mod</span><span class="p">)</span>
+
+    <span class="c1"># (선택) 버전/메타 노출
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="n">importlib.metadata</span> <span class="k">as</span> <span class="n">im</span>
+        <span class="n">__version__</span> <span class="o">=</span> <span class="n">im</span><span class="p">.</span><span class="nf">version</span><span class="p">(</span><span class="n">TARGET</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s">.</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">))</span>
+        <span class="nf">setattr</span><span class="p">(</span><span class="n">target_mod</span><span class="p">,</span> <span class="sh">"</span><span class="s">__company_alias_version__</span><span class="sh">"</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+    <span class="c1"># 실패해도 앱을 막지 않음
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<p><strong>설치 &amp; 실행</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels company-comfy-policies company-templates
+<span class="c"># 필요 시:</span>
+<span class="nb">export </span><span class="nv">COMPANY_TEMPLATES_MODULE</span><span class="o">=</span>company_templates
+python ./ComfyUI/main.py
+</code></pre></div></div>
+
+<p><strong>장점</strong></p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">main.py</code> 무수정, <strong>스위치/롤백 쉬움</strong>(ENV로 대상 바꾸기).</p>
+  </li>
+  <li>
+    <p>우리 모듈을 <code class="language-plaintext highlighter-rouge">company_templates</code>로 개발하면서, 배포/실행 때만 alias.</p>
+  </li>
+</ul>
+
+<p><strong>주의(중요)</strong></p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">import comfyui_templates.submod</code> 같은 <strong>서브모듈 import</strong> 가 많다면,<br />
+단순 alias만으로는 상대 import가 꼬일 수 있어요. 이 경우엔<br />
+→ (1) 우리 쪽 패키지 구조를 업스트림과 <strong>동일 트리</strong> 로 맞추거나,<br />
+→ (2) <strong>메타패스 파인더</strong>(import hook)로 접두사 매핑을 구현해야 합니다.</p>
+  </li>
+  <li>
+    <p>“드롭인 교체(A)”가 이런 모서리 케이스에 더 안전합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="3-방법-c--pythonpath-선점-얇은-셈shim-패키지">3) 방법 C — PYTHONPATH 선점 “얇은 셈(Shim)” 패키지</h1>
+
+<p><strong>아이디어</strong> : 실행 스크립트에서 <code class="language-plaintext highlighter-rouge">PYTHONPATH=/opt/overrides</code>를 <strong>앞에</strong> 두고, 그 안에 <code class="language-plaintext highlighter-rouge">comfyui_templates</code>라는 <strong>얇은 패키지</strong> 를 둡니다. 이 패키지는 내부에서 <code class="language-plaintext highlighter-rouge">company_templates</code>를 import하고 <strong>자기 자신을 대체</strong> 합니다.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/opt/overrides/
+  comfyui_templates/
+    __init__.py
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">__init__.py</code>:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">importlib</span><span class="p">,</span> <span class="n">sys</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="sh">"</span><span class="s">company_templates</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod</span>  <span class="c1"># 자신을 대체
+</span></code></pre></div></div>
+
+<p>런처:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">"/opt/overrides:</span><span class="nv">$PYTHONPATH</span><span class="s2">"</span>
+python ./ComfyUI/main.py
+</code></pre></div></div>
+
+<p><strong>장점</strong> : 설치 없이도 즉시 테스트 가능.<br />
+<strong>주의</strong> : B와 동일하게 서브모듈 import가 많다면 구조를 맞추거나 hook이 필요.</p>
+
+<hr />
+
+<h2 id="어떤-걸-고를까">어떤 걸 고를까?</h2>
+
+<ul>
+  <li>
+    <p><strong>서브모듈/상대 import가 많다</strong> → <strong>A(드롭인 교체)</strong> 권장. 가장 튼튼.</p>
+  </li>
+  <li>
+    <p><strong>빠른 스위치/실험</strong> 이 필요 → <strong>B(sitecustomize)</strong> 또는 <strong>C(shim)</strong></p>
+  </li>
+  <li>
+    <p>“pip로만 배포, git 없이 개발/테스트”라는 현재 조건에도 <strong>A/B/C 모두 적용 가능</strong> 합니다.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="실전-체크리스트">실전 체크리스트</h2>
+
+<ol>
+  <li>
+    <p><strong>업스트림 wheel 제거 or 우선순위 통제</strong>(우리 wheel만 설치되도록).</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">constraints.txt</code>로 버전 <strong>핀 고정</strong>.</p>
+  </li>
+  <li>
+    <p><strong>스모크 테스트</strong> : 서버 부팅, 템플릿 로딩, 대표 워크플로 1~2개 실행.</p>
+  </li>
+  <li>
+    <p>문제시 <strong>번들 교체/ENV 스위치</strong> 로 즉시 롤백.</p>
+  </li>
+</ol>
+
+<hr />
+
+<p>원하시면 바로 쓸 수 있는 <strong>방법 A 템플릿(폴더 + <code class="language-plaintext highlighter-rouge">pyproject.toml</code>)</strong>이나 <strong>방법 B의 <code class="language-plaintext highlighter-rouge">sitecustomize.py</code> 완성본(서브모듈까지 매핑하는 import hook 버전)</strong>도 만들어 드릴게요.</p>
+
+<p class="chat--user">
+
+그러면 comfyui_templates를 완전히 클론해서 우리 패키지로 만들라는거지?
+
+</p>
+
+<p>짧은 답: <strong>굳이 “전체 클론”까지는 필수는 아니지만</strong> ,<br />
+<code class="language-plaintext highlighter-rouge">main.py</code>를 건드리지 않고 <code class="language-plaintext highlighter-rouge">import comfyui_templates</code>를 우리 구현으로 바꾸려면 <strong>“드롭인 교체(drop-in replacement)” 패키지</strong> 가 가장 안전합니다. 이건 두 방식이 있어요:</p>
+
+<ol>
+  <li>
+    <p><strong>완전 포크(클론) 기반 드롭인 교체</strong> ← 가장 튼튼 (서브모듈/하위패키지 import가 많을 때 권장)</p>
+  </li>
+  <li>
+    <p><strong>얇은 대체(래퍼/alias) 기반 드롭인</strong> ← 바꿀 게 적을 때 빠름 (서브모듈 import가 적을 때)</p>
+  </li>
+</ol>
+
+<p>아래에 각각 “언제/어떻게”를 단계별로 정리할게요.</p>
+
+<hr />
+
+<h1 id="1-언제-완전-클론포크--우리-패키지가-맞나">1) 언제 “완전 클론(포크) → 우리 패키지”가 맞나?</h1>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">comfyui_templates</code>가 <strong>하위 패키지/서브모듈</strong> 을 많이 쓰거나, 내부에서 상대 import가 복잡함</p>
+  </li>
+  <li>
+    <p>업스트림과 <strong>동일한 디렉터리 구조</strong> 를 유지해야 안전함</p>
+  </li>
+  <li>
+    <p>장기적으로 업스트림 변경에도 <strong>호환성 스트레스 최소화</strong> 가 우선</p>
+  </li>
+</ul>
+
+<p>이때는 외부 환경(인터넷 가능)에서 업스트림을 한 번 클론해 토대 삼고, <strong>우리 리포/우리 wheel</strong> 로 빌드해 반입하는 게 정석입니다. 사내망에서는 <code class="language-plaintext highlighter-rouge">pip install</code>만으로 우리 버전이 로드되죠.</p>
+
+<h3 id="실전-절차권장">실전 절차(권장)</h3>
+
+<ol>
+  <li>
+    <p><strong>외부에서</strong> 업스트림 <code class="language-plaintext highlighter-rouge">comfyui_templates</code> 가져오기 → 우리 변경(템플릿 필터/정책 반영).</p>
+  </li>
+  <li>
+    <p><strong>배포 이름 그대로</strong> 빌드</p>
+
+    <ul>
+      <li>
+        <p>배포(Distribution) 이름: <code class="language-plaintext highlighter-rouge">comfyui-templates</code> (업스트림과 동일)</p>
+      </li>
+      <li>
+        <p>모듈(Import) 이름: <code class="language-plaintext highlighter-rouge">comfyui_templates</code> (업스트림과 동일)</p>
+      </li>
+      <li>
+        <p>버전: <code class="language-plaintext highlighter-rouge">1.4.2+company.3</code> 같은 <strong>local version</strong> 으로 표기(PEP 440)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>wheel 빌드 → 번들에 넣어 사내 반입</p>
+  </li>
+  <li>사내에서:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels comfyui-templates
+<span class="c"># ComfyUI 실행 시 main.py의 `import comfyui_templates`가 자동으로 "우리 것"을 로드</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>constraints.txt</strong> 에 <code class="language-plaintext highlighter-rouge">comfyui-templates==1.4.2+company.3</code>를 핀(Pin)해 재현성 보장</li>
+</ol>
+
+<blockquote>
+  <p>장점: 서브모듈 import, 패키지 데이터(템플릿 파일) 포함, 엔트리포인트 등 <strong>모든 케이스를 안정적으로 커버</strong>.<br />
+ 주의: 라이선스/NOTICE 동봉, 업스트림 반영은 외부에서 패치 합치고 다시 wheel로 반입.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="2-얇은-대체래퍼alias로-클론-없이-바꾸는-방법">2) 얇은 대체(래퍼/alias)로 “클론 없이” 바꾸는 방법</h1>
+
+<p>“전체 클론까진 과해요. 우리는 <strong>정책/필터만</strong> 끼우면 끝”이라면:</p>
+
+<h3 id="21-sitecustomize로-런타임-alias">2.1 <code class="language-plaintext highlighter-rouge">sitecustomize</code>로 <strong>런타임 alias</strong></h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">company-comfy-policies</code>라는 <strong>작은 wheel</strong> 을 만들어 설치만 하면 Python이 시작할 때 자동 실행되게 함.</p>
+  </li>
+  <li>
+    <p>내부에서 <code class="language-plaintext highlighter-rouge">sys.modules['comfyui_templates'] = importlib.import_module('company_templates')</code>로 <strong>이름 바꿔치기</strong>.</p>
+  </li>
+  <li>설치:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels company-comfy-policies company-templates
+python ComfyUI/main.py
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>장점: 빠르고 롤백 쉬움(ENV로 대상 모듈 교체 가능).</p>
+  </li>
+  <li>주의: 코드에서 <code class="language-plaintext highlighter-rouge">import comfyui_templates.subpkg</code> 같은 <strong>서브모듈 import가 많으면</strong> alias만으론 깨질 수 있음 → 그땐 ① 우리 쪽 패키지 구조를 업스트림과 동일하게 맞추거나, ② import hook(메타패스 파인더)까지 써야 해요. 복잡해지면 <strong>1) 완전 클론 방식</strong> 으로 가는 게 낫습니다.</li>
+</ul>
+
+<h3 id="22-pythonpath-선점-얇은-셈shim-패키지">2.2 PYTHONPATH 선점 <strong>얇은 셈(Shim) 패키지</strong></h3>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">PYTHONPATH=/opt/overrides</code>를 앞에 두고, 그 안에 <code class="language-plaintext highlighter-rouge">comfyui_templates/__init__.py</code>만 두어 내부에서 <code class="language-plaintext highlighter-rouge">company_templates</code>를 import한 뒤 자기 자신을 대체.</p>
+  </li>
+  <li>
+    <p>테스트/실험엔 편하지만, 장기 운영/배포는 wheel 기반이 더 나아요.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="3-드롭인-교체용-최소-스캐폴드완전-클론대체-공통">3) 드롭인 교체용 최소 스캐폴드(완전 클론/대체 공통)</h1>
+
+<blockquote>
+  <p>“우리 패키지로 만들려면 뭐가 꼭 필요해?”에 대한 최소 체크리스트</p>
+</blockquote>
+
+<ol>
+  <li><strong>pyproject.toml</strong></li>
+</ol>
+
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
+</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+
+<span class="nn">[project]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"comfyui-templates"</span>          <span class="c"># 업스트림과 동일</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"1.4.2+company.3"</span>         <span class="c"># 내부 식별자</span>
+<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.10</span><span class="s">"</span><span class="err">
+</span><span class="py">description</span> <span class="p">=</span> <span class="s">"Company override for ComfyUI templates"</span>
+
+<span class="nn">[tool.setuptools.packages.find]</span>
+<span class="py">where</span> <span class="p">=</span> <span class="p">[</span><span class="s">"src"</span><span class="p">]</span>
+
+<span class="nn">[tool.setuptools.package-data]</span>
+<span class="py">comfyui_templates</span> <span class="p">=</span> <span class="p">[</span><span class="s">"**/*.json"</span><span class="p">,</span> <span class="s">"**/*.yaml"</span><span class="p">,</span> <span class="s">"**/*.txt"</span><span class="p">]</span>   <span class="c"># 템플릿 파일 포함</span>
+</code></pre></div></div>
+
+<ol>
+  <li><strong>디렉터리</strong></li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src/comfyui_templates/
+  __init__.py
+  registry.py         <span class="c"># (업스트림이 기대하는 API 맞추기)</span>
+  templates/<span class="k">*</span>.json    <span class="c"># 필요한 템플릿만 포함</span>
+</code></pre></div></div>
+
+<ol>
+  <li><strong>API/데이터 호환</strong></li>
+</ol>
+
+<ul>
+  <li>
+    <p>업스트림이 참조하는 <strong>함수/객체/상수 이름</strong> 을 동일하게 노출.</p>
+  </li>
+  <li>
+    <p>템플릿 파일은 <strong>package data</strong> 로 포함(importlib.resources로 접근 시 OK).</p>
+  </li>
+  <li>
+    <p>변경 지점에 <strong>환경변수(예: <code class="language-plaintext highlighter-rouge">COMFY_TEMPLATES_ALLOWLIST</code>)</strong>로 정책 주입 가능.</p>
+  </li>
+</ul>
+
+<ol>
+  <li><strong>빌드 &amp; 설치</strong></li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> build            <span class="c"># dist/*.whl 생성</span>
+pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels comfyui-templates
+python <span class="nt">-c</span> <span class="s2">"import comfyui_templates, importlib; print(comfyui_templates.__file__)"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="4-권장-의사결정">4) 권장 의사결정</h1>
+
+<ul>
+  <li>
+    <p><strong>서브모듈 import 많다 / 장기 안정 우선</strong> → <strong>완전 클론 기반 드롭인 교체</strong>(YES, “우리 패키지”로 만드세요).</p>
+  </li>
+  <li>
+    <p><strong>작은 정책 주입이면 충분</strong> → <strong>sitecustomize alias</strong> 로 빠르게(클론 불필요).</p>
+  </li>
+  <li>
+    <p>어느 길이든, 배포는 <strong>wheel + constraints</strong> 로 고정하고, <strong>site-packages 직접 수정은 금지</strong> 가 핵심.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p>필요하시면,</p>
+
+<ul>
+  <li>
+    <p>(A) <strong>완전 드롭인 패키지</strong> 템플릿 한 벌(폴더/pyproject/데이터 포함)</p>
+  </li>
+  <li>
+    <p>(B) <strong>sitecustomize alias</strong> 풀버전(서브모듈까지 매핑하는 import hook 포함)<br />
+둘 중 원하는 쪽으로 바로 써먹을 수 있게 만들어 드릴게요.</p>
+  </li>
+</ul>
+
+<p class="chat--user">
+
+어떻게 alias만 해서 해결한다는거야? 어쨌든 우리가 만든 코드도 원래 코드가 가진 function들을 모두 구현해야할거아니야
+
+</p>
+
+<p>좋은 포인트예요. <strong>“alias만으로 된다” = 전부 새로 구현한다</strong> 가 아니라,<br />
+대부분의 경우 <strong>원본 모듈을 먼저 로드한 뒤 “필요한 부분만 덮어쓰기(몽키패치)”</strong> 하면 됩니다.<br />
+즉, <code class="language-plaintext highlighter-rouge">main.py</code>는 그대로 <code class="language-plaintext highlighter-rouge">import comfyui_templates</code>를 하되, 우리는 시작 시점에 <strong>원본 함수/데이터를 그대로 재사용</strong> 하고 <strong>일부만 교체/필터</strong> 하면 돼요.</p>
+
+<p>아래처럼 하면 “모든 함수 재구현”은 필요 없습니다.</p>
+
+<hr />
+
+<h1 id="선택-1-가장-쉬운-방법-sitecustomizepy로-원본을-로드--일부만-패치">선택 1) 가장 쉬운 방법: <code class="language-plaintext highlighter-rouge">sitecustomize.py</code>로 “원본을 로드 → 일부만 패치”</h1>
+
+<p>파이썬은 시작할 때 <code class="language-plaintext highlighter-rouge">sitecustomize</code> 모듈이 있으면 자동 import 합니다.<br />
+여기에 원본 <code class="language-plaintext highlighter-rouge">comfyui_templates</code>를 <strong>그대로 import</strong> 하고, <strong>필요한 함수/전역만 바꿔치기</strong> 하세요.</p>
+
+<h2 id="패키지-구조내부-wheel-한-개면-충분">패키지 구조(내부 wheel 한 개면 충분)</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>company-comfy-policies/
+  pyproject.toml
+  sitecustomize.py           <span class="c"># ← 여기서 패치 일괄 적용</span>
+  company_comfy_policies/__init__.py
+</code></pre></div></div>
+
+<h2 id="pyprojecttoml-요지"><code class="language-plaintext highlighter-rouge">pyproject.toml</code> (요지)</h2>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
+</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+
+<span class="nn">[project]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"company-comfy-policies"</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"1.0.0"</span>
+<span class="py">description</span> <span class="p">=</span> <span class="s">"Runtime policies for ComfyUI"</span>
+<span class="c"># sitecustomize만 설치해도 되므로 packages 대신 py-modules 사용 가능</span>
+<span class="nn">[tool.setuptools]</span>
+<span class="py">py-modules</span> <span class="p">=</span> <span class="p">[</span><span class="s">"sitecustomize"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="sitecustomizepy-예시-템플릿-allowlist-필터--함수-래핑"><code class="language-plaintext highlighter-rouge">sitecustomize.py</code> (예시: 템플릿 allowlist 필터 + 함수 래핑)</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sitecustomize.py  (파이썬이 시작할 때 자동 실행)
+</span><span class="kn">import</span> <span class="n">os</span>
+
+<span class="k">def</span> <span class="nf">_load_allowlist</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMFY_TEMPLATES_ALLOWLIST</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">ln</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">if</span> <span class="n">ln</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ln</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">#</span><span class="sh">"</span><span class="p">)}</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># 1) 원본 모듈 "그대로" 로드
+</span>    <span class="kn">import</span> <span class="n">comfyui_templates</span> <span class="k">as</span> <span class="n">ct</span>
+
+    <span class="c1"># 2) 글로벌 레지스트리/리스트를 필터링 (데이터 구조에 맞게 수정)
+</span>    <span class="n">allow</span> <span class="o">=</span> <span class="nf">_load_allowlist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">allow</span> <span class="ow">and</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="sh">"</span><span class="s">registry</span><span class="sh">"</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">,</span> <span class="sh">"</span><span class="s">templates</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">.</span><span class="n">templates</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">.</span><span class="n">templates</span> <span class="k">if</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
+
+    <span class="c1"># 3) 특정 함수만 래핑(필요할 때만)
+</span>    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="sh">"</span><span class="s">build_index</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">_orig_build_index</span> <span class="o">=</span> <span class="n">ct</span><span class="p">.</span><span class="n">build_index</span>
+        <span class="k">def</span> <span class="nf">build_index</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nf">_orig_build_index</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">allow</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="sh">"</span><span class="s">templates</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="sh">"</span><span class="s">templates</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="sh">"</span><span class="s">templates</span><span class="sh">"</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">res</span>
+        <span class="n">ct</span><span class="p">.</span><span class="n">build_index</span> <span class="o">=</span> <span class="n">build_index</span>
+
+    <span class="c1"># 4) 클래스 메서드만 부분 교체도 가능
+</span>    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="sh">"</span><span class="s">Template</span><span class="sh">"</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">.</span><span class="n">Template</span><span class="p">,</span> <span class="sh">"</span><span class="s">render</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">_orig_render</span> <span class="o">=</span> <span class="n">ct</span><span class="p">.</span><span class="n">Template</span><span class="p">.</span><span class="n">render</span>
+        <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
+            <span class="c1"># 필요시 정책 체크/로깅 추가
+</span>            <span class="k">return</span> <span class="nf">_orig_render</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">ct</span><span class="p">.</span><span class="n">Template</span><span class="p">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">render</span>
+
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+    <span class="c1"># 실패해도 앱 동작은 막지 않음(로그는 필요시 추가)
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="설치실행사내망">설치/실행(사내망)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install</span> <span class="nt">--no-index</span> <span class="nt">--find-links</span> ./bundle/wheels company-comfy-policies
+<span class="nb">export </span><span class="nv">COMFY_TEMPLATES_ALLOWLIST</span><span class="o">=</span>/etc/comfy/allowlist.txt
+python ./ComfyUI/main.py
+</code></pre></div></div>
+
+<p><strong>장점</strong></p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">main.py</code>와 원본 패키지 <strong>그대로 사용</strong> → 나머지 함수·클래스는 전부 <strong>원본을 그대로 씀</strong></p>
+  </li>
+  <li>
+    <p>우리는 “필요한 부분만” 갈아끼움 → <strong>모든 함수 재구현 불필요</strong></p>
+  </li>
+  <li>
+    <p>롤백도 간단(패키지 제거/ENV 해제)</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>요지: “alias”라고 표현했던 건, 실제로는 <strong>원본을 import한 뒤 일부 심만 바꾸는 런타임 패치</strong> 를 의미합니다.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="선택-2-프록시-모듈얇은-래퍼로-오버라이드--나머지는-위임">선택 2) 프록시 모듈(얇은 래퍼)로 “오버라이드 + 나머지는 위임”</h1>
+
+<p>조금 더 분리하고 싶다면, <code class="language-plaintext highlighter-rouge">sitecustomize</code>에서 <strong>프록시 모듈</strong> 을 만들어<br />
+<code class="language-plaintext highlighter-rouge">sys.modules['comfyui_templates']</code>에 꽂아 넣고, <strong>겹치는 심만 오버라이드</strong> ,<br />
+나머지 속성 접근은 <strong>원본으로 위임</strong> 하게 만들 수 있어요.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sitecustomize.py (프록시 버전 — 필요할 때만)
+</span><span class="kn">import</span> <span class="n">types</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">importlib</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">_orig</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 원본 로드
+</span>    <span class="n">proxy</span> <span class="o">=</span> <span class="n">types</span><span class="p">.</span><span class="nc">ModuleType</span><span class="p">(</span><span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># 1) 기본 위임(__getattr__)으로 모든 심을 원본으로 전달
+</span>    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">_orig</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">proxy</span><span class="p">.</span><span class="n">__getattr__</span> <span class="o">=</span> <span class="n">__getattr__</span>
+
+    <span class="c1"># 2) 여기서 필요한 것만 덮어쓰기
+</span>    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">_orig</span><span class="p">,</span> <span class="sh">"</span><span class="s">build_index</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">_orig_build_index</span> <span class="o">=</span> <span class="n">_orig</span><span class="p">.</span><span class="n">build_index</span>
+        <span class="k">def</span> <span class="nf">build_index</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nf">_orig_build_index</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">)</span>
+            <span class="c1"># ...필터/추가정책...
+</span>            <span class="k">return</span> <span class="n">res</span>
+        <span class="n">proxy</span><span class="p">.</span><span class="n">build_index</span> <span class="o">=</span> <span class="n">build_index</span>
+
+    <span class="c1"># 3) 교체
+</span>    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">proxy</span>
+
+<span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div></div>
+
+<p><strong>주의</strong></p>
+
+<ul>
+  <li>이 방식은 <strong>속성 접근</strong> 은 잘 위임하지만, <code class="language-plaintext highlighter-rouge">import comfyui_templates.subpkg</code> 같은 <strong>서브모듈 import</strong> 까지 전부 대리하려면 추가 훅이 필요할 수 있습니다. 이런 경우엔 <strong>선택 1(원본 in-place 패치)</strong>가 훨씬 간단하고 안전합니다.</li>
+</ul>
+
+<hr />
+
+<h1 id="언제-완전-드롭인-교체우리-패키지로-대체가-필요한가">언제 “완전 드롭인 교체(우리 패키지로 대체)”가 필요한가?</h1>
+
+<ul>
+  <li>
+    <p>원본 내부 구조가 자주 바뀌고, 우리가 <strong>여러 서브모듈까지 광범위 수정</strong> 해야 할 때</p>
+  </li>
+  <li>
+    <p>서브모듈 import/패키지 데이터/엔트리포인트 등 <strong>패키지 전체 동작을 통째로 관리</strong> 하고 싶을 때</p>
+  </li>
+</ul>
+
+<p>그럴 때만 <strong>업스트림과 동일한 import 이름으로 우리 wheel</strong> 을 빌드해 “완전 교체”하면 되고,<br />
+그 외 <strong>대부분의 필터/정책 주입 요구</strong> 는 위의 <strong>선택 1</strong> 로 충분합니다.</p>
+
+<hr />
+
+<h2 id="요약-현실-적용">요약 (현실 적용)</h2>
+
+<ul>
+  <li>
+    <p>“모든 함수를 우리가 다시 만들 필요 없다.”</p>
+  </li>
+  <li>
+    <p><strong>가장 단순/탄탄한 해법</strong> : <code class="language-plaintext highlighter-rouge">company-comfy-policies</code> wheel에 <code class="language-plaintext highlighter-rouge">sitecustomize.py</code>를 넣고,<br />
+거기서 <strong>원본<code class="language-plaintext highlighter-rouge">comfyui_templates</code>를 import → 필요한 함수/데이터만 패치</strong>.</p>
+  </li>
+  <li>
+    <p>템플릿 노출 제어처럼 <strong>선택적 필터링</strong> 은 전역 레지스트리/로딩 함수 한두 곳만 건드리면 끝.</p>
+  </li>
+</ul>
+
+<p>원하시면, 위 <code class="language-plaintext highlighter-rouge">sitecustomize.py</code>를 여러분 환경(레지스트리 구조/함수명)에 맞춰 <strong>딱 맞는 버전</strong> 으로 작성해 드릴게요.</p>
+
+<p class="chat--user">
+
+잘 이해가 안돼 아직도. 엄청 작은 예시로 알려줘. 예를 들어 hello world를 프린트 하는 모듈을 패키지를 hello man 으로 바꾼다든지
+
+</p>
+
+<p>좋아요—진짜 <strong>초미니 데모</strong> 로 보여줄게요.<br />
+포인트는 두 가지예요.</p>
+
+<ol>
+  <li>
+    <p><strong>모듈을 통째로 바꿔치기(Alias)</strong></p>
+  </li>
+  <li>
+    <p><strong>원본을 그대로 쓰되, 필요한 함수만 덮어쓰기(Monkey-patch)</strong></p>
+  </li>
+</ol>
+
+<p>아래 예시는 <code class="language-plaintext highlighter-rouge">main.py</code>가 <strong>절대 수정되지 않는다</strong> 는 가정입니다.</p>
+
+<hr />
+
+<h1 id="데모-1-모듈-통째로-교체-alias-방식">데모 1) “모듈 통째로 교체” (alias 방식)</h1>
+
+<h2 id="파일-배치">파일 배치</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./main.py
+./man.py
+./sitecustomize.py    <span class="c"># 파이썬은 시작할 때 이 모듈을 자동 import함</span>
+</code></pre></div></div>
+
+<h2 id="코드">코드</h2>
+
+<p><strong>man.py</strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">greet</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, man</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>main.py</strong> ← 수정 금지(여기서는 ‘hello’라는 모듈을 쓴다고 가정)</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">hello</span>
+<span class="n">hello</span><span class="p">.</span><span class="nf">greet</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><strong>sitecustomize.py</strong> ← 여기서 “hello”라는 이름을 “man”으로 바꿔치기</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">importlib</span><span class="p">,</span> <span class="n">sys</span>
+<span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="sh">'</span><span class="s">hello</span><span class="sh">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="sh">'</span><span class="s">man</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="실행">실행</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python main.py
+<span class="c"># 출력: Hello, man</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>왜 되나?<br />
+ 파이썬은 시작 시 <code class="language-plaintext highlighter-rouge">sitecustomize</code>를 자동 로드해요(기본 옵션에서).<br />
+ 여기서 <code class="language-plaintext highlighter-rouge">sys.modules['hello']</code>에 <strong>우리가 원하는 모듈(man)</strong>을 꽂아두면,<br />
+ <code class="language-plaintext highlighter-rouge">main.py</code>의 <code class="language-plaintext highlighter-rouge">import hello</code>가 <strong>그걸 그대로</strong> 가져옵니다.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="데모-2-원본은-유지-함수만-갈아끼우기-monkey-patch-방식">데모 2) “원본은 유지, 함수만 갈아끼우기” (monkey-patch 방식)</h1>
+
+<h2 id="파일-배치-1">파일 배치</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./main.py
+./hello.py
+./sitecustomize.py
+</code></pre></div></div>
+
+<h2 id="코드-1">코드</h2>
+
+<p><strong>hello.py</strong> ← 원래 구현(건드리지 않는다고 가정)</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">greet</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, world</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>main.py</strong> ← 수정 금지</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">hello</span>
+<span class="n">hello</span><span class="p">.</span><span class="nf">greet</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><strong>sitecustomize.py</strong> ← 시작 시 원본을 로드해서 필요한 함수만 교체</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">hello</span> <span class="k">as</span> <span class="n">_hello</span>
+
+<span class="k">def</span> <span class="nf">_new_greet</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, company!</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="n">_hello</span><span class="p">.</span><span class="n">greet</span> <span class="o">=</span> <span class="n">_new_greet</span>
+</code></pre></div></div>
+
+<h2 id="실행-1">실행</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python main.py
+<span class="c"># 출력: Hello, company!</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>핵심: <strong>모든 함수를 다시 만들 필요 없음.</strong><br />
+ 원본 <code class="language-plaintext highlighter-rouge">hello</code>를 그대로 import한 뒤 <strong>딱 필요한 심만 교체</strong> 하면 됩니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="실전-팁-comfyui에-대입하면">실전 팁 (ComfyUI에 대입하면)</h2>
+
+<ul>
+  <li>
+    <p>예를 들어 <code class="language-plaintext highlighter-rouge">main.py</code>가 <code class="language-plaintext highlighter-rouge">import comfyui_templates</code>를 한다면,</p>
+
+    <ul>
+      <li>
+        <p><strong>데모 1 패턴</strong> : <code class="language-plaintext highlighter-rouge">sys.modules['comfyui_templates'] = importlib.import_module('company_templates')</code></p>
+      </li>
+      <li>
+        <p><strong>데모 2 패턴</strong> : <code class="language-plaintext highlighter-rouge">import comfyui_templates as ct</code> 후 <code class="language-plaintext highlighter-rouge">ct.build_index = our_build_index</code> 같이 <strong>일부만</strong> 교체</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>이 파일(<code class="language-plaintext highlighter-rouge">sitecustomize.py</code>)은 <strong>휠(wheel)로 패키징</strong> 해서 <code class="language-plaintext highlighter-rouge">pip install</code>만으로 배포할 수 있어요.<br />
+설치만 되면 파이썬이 알아서 로드해줍니다(옵션 <code class="language-plaintext highlighter-rouge">-S</code>로 실행하지 않는 한).</p>
+  </li>
+</ul>
+
+<p>필요하면, 위 예시를 바로 <strong>패키지(휠) 형태</strong> 로 빌드하는 <code class="language-plaintext highlighter-rouge">pyproject.toml</code> 틀도 만들어 줄게요.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#comfyui" class="page__taxonomy-item p-category" rel="tag">comfyui</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-09-17T16:51:47+09:00">2025-09-17</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/misc/hyperflow-script/" class="pagination--pager" title="HyperFlow - script">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/hyperflow-script/" rel="permalink">HyperFlow - script
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-16T11:27:35+09:00">2025-09-16</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/comfyui/hyperflow-manager/" rel="permalink">LSF 매니저 애플리케이션 생성
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-15T18:33:02+09:00">2025-09-15</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/comfyui/comfyui-glob-node/" rel="permalink">ComfyUI custom node 추가(glob)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-13T17:23:29+09:00">2025-09-13</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux/wsl-docker/" rel="permalink">WSL Docker 설치 방법
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-11T11:13:29+09:00">2025-09-11</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
