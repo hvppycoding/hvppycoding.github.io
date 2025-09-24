@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2025-09-23T17:54:47+09:00">
+  <meta property="article:published_time" content="2025-09-24T11:03:11+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="HyperFlow Launcher 개발">
     <meta itemprop="description" content="">
-    <meta itemprop="datePublished" content="2025-09-23T17:54:47+09:00">
+    <meta itemprop="datePublished" content="2025-09-24T11:03:11+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2025-09-23T17:54:47+09:00">2025-09-23</time>
+        <time datetime="2025-09-24T11:03:11+09:00">2025-09-24</time>
       </span>
     
 
@@ -6874,6 +6874,1525 @@ comfyui 랑 비슷한 컬러로 다크 모드로 해줬으면 좋겠어 qss 부�
 
 <p>원하는 포인트/색감 더 맞추고 싶으면(예: 노드 포커스 컬러나 강조색을 더 푸르게/더 청록색으로) <code class="language-plaintext highlighter-rouge">#2BB3C0</code> 계열만 바꿔주면 전체 톤 유지한 채 쉽게 튜닝할 수 있어요.</p>
 
+<p class="chat--user">
+
+QScrollArea 부분이 아직 안바뀐거 같아. 투명하게 하거나 하는게 좋을듯
+
+</p>
+
+<p>totally—<code class="language-plaintext highlighter-rouge">QScrollArea</code> needs a couple of extra selectors because of its <code class="language-plaintext highlighter-rouge">viewport</code>.<br />
+Drop these <strong>QSS additions</strong> under your dark theme to make the list area transparent (and keep the scrollbars):</p>
+
+<h3 id="option-a--fully-transparent-scroll-area">Option A — fully transparent scroll area</h3>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* QScrollArea: make the container and its viewport transparent */</span>
+<span class="nt">QScrollArea</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>              <span class="c">/* we already hide the frame in code, this is a safety net */</span>
+<span class="p">}</span>
+
+<span class="c">/* QAbstractScrollArea base also owns the viewport subcontrol */</span>
+<span class="nt">QAbstractScrollArea</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* The actual paint target inside QScrollArea */</span>
+<span class="nt">QAbstractScrollArea</span><span class="nd">::viewport</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* If you gave the inner widget an objectName, un-comment and use this too:
+QWidget#cardsContainer {
+    background: transparent;
+}
+*/</span>
+</code></pre></div></div>
+
+<h3 id="option-b--subtle-dark-panel-if-you-want-a-faint-panel-instead-of-full-transparent">Option B — subtle dark panel (if you want a faint panel instead of full transparent)</h3>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* Slightly lifted panel behind the cards */</span>
+<span class="nt">QScrollArea</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">QAbstractScrollArea</span><span class="nd">::viewport</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nx">#0E1217</span><span class="p">;</span>       <span class="c">/* just a hair lighter than #0F1115 */</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="nx">#1A2029</span><span class="p">;</span>
+    <span class="nl">border-radius</span><span class="p">:</span> <span class="m">10px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Optional: add inner padding spacing */</span>
+<span class="nt">QScrollArea</span> <span class="p">{</span>
+    <span class="nl">padding</span><span class="p">:</span> <span class="m">6px</span><span class="p">;</span>              <span class="c">/* creates breathing room around the viewport */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Tip: your code already does <code class="language-plaintext highlighter-rouge">scroll.setFrameShape(QFrame::NoFrame)</code>, which helps. If you want even tighter control, set the inner widget’s name once:</p>
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python
+
+self.cards_container.setObjectName("cardsContainer")
+
+</code></pre></div>  </div>
+
+  <p>…then use the commented <code class="language-plaintext highlighter-rouge">#cardsContainer</code> rule above.</p>
+</blockquote>
+
+<p class="chat--user">
+
+옵션 A로 했는데 안돼
+
+</p>
+
+<p>ok—Qt’s scroll area can be stubborn. Two things usually block transparency:</p>
+
+<ol>
+  <li>
+    <p>the <strong>viewport</strong> paints an opaque background, and</p>
+  </li>
+  <li>
+    <p>the <strong>inner widget chain</strong> under <code class="language-plaintext highlighter-rouge">QScrollArea</code> keeps a default background.</p>
+  </li>
+</ol>
+
+<p>Here’s a small, surgical fix that works reliably in PySide6. Do <strong>both</strong> the code patch and the QSS tweak.</p>
+
+<hr />
+
+<h2 id="1-tiny-code-patch-right-after-you-build-the-scroll-area">1) Tiny code patch (right after you build the scroll area)</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># after creating the scroll area and inner widget
+</span><span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">.</span><span class="nf">setObjectName</span><span class="p">(</span><span class="sh">"</span><span class="s">cardsContainer</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="n">scroll</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="p">.</span><span class="nc">QScrollArea</span><span class="p">()</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setWidgetResizable</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setFrameShape</span><span class="p">(</span><span class="n">QtWidgets</span><span class="p">.</span><span class="n">QFrame</span><span class="p">.</span><span class="n">NoFrame</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setHorizontalScrollBarPolicy</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">ScrollBarAlwaysOff</span><span class="p">)</span>
+
+<span class="c1"># --- critical: make every layer transparent programmatically ---
+</span><span class="n">scroll</span><span class="p">.</span><span class="nf">setStyleSheet</span><span class="p">(</span><span class="sh">"</span><span class="s">background: transparent; border: none;</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">setStyleSheet</span><span class="p">(</span><span class="sh">"</span><span class="s">background: transparent;</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">.</span><span class="nf">setStyleSheet</span><span class="p">(</span><span class="sh">"</span><span class="s">background: transparent;</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># Some styles ignore QSS for the viewport; force palette-based transparency:
+</span><span class="n">pal</span> <span class="o">=</span> <span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">palette</span><span class="p">()</span>
+<span class="n">pal</span><span class="p">.</span><span class="nf">setColor</span><span class="p">(</span><span class="n">QtGui</span><span class="p">.</span><span class="n">QPalette</span><span class="p">.</span><span class="n">Base</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">transparent</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">setPalette</span><span class="p">(</span><span class="n">pal</span><span class="p">)</span>
+
+<span class="c1"># Make sure nothing auto-fills an opaque background:
+</span><span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">setAutoFillBackground</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">.</span><span class="nf">setAutoFillBackground</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="c1"># If your platform style still paints, allow styled bg on the inner widget:
+</span><span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">.</span><span class="nf">setAttribute</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">WA_StyledBackground</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>If you wrap the cards in another intermediate widget, apply the same <code class="language-plaintext highlighter-rouge">setStyleSheet("background: transparent;")</code> to that widget too.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="2-add-these-qss-rules-append-to-your-dark-theme">2) Add these QSS rules (append to your dark theme)</h2>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* QScrollArea: force a transparent stack from container → viewport → inner widget */</span>
+<span class="nt">QScrollArea</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">QAbstractScrollArea</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">QAbstractScrollArea</span><span class="nd">::viewport</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Qt inserts an extra QWidget under QScrollArea. Target both levels. */</span>
+<span class="nt">QScrollArea</span> <span class="o">&gt;</span> <span class="nt">QWidget</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">QScrollArea</span> <span class="o">&gt;</span> <span class="nt">QWidget</span> <span class="o">&gt;</span> <span class="nt">QWidget</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Your actual inner widget holding the cards */</span>
+<span class="nt">QWidget</span><span class="nf">#cardsContainer</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="why-this-works">Why this works</h3>
+
+<ul>
+  <li>
+    <p>Some Qt styles (Fusion, platform themes) <strong>ignore QSS</strong> for the viewport’s base color; setting the <strong>palette</strong> to <code class="language-plaintext highlighter-rouge">Qt.transparent</code> closes that gap.</p>
+  </li>
+  <li>
+    <p>The <strong>nested<code class="language-plaintext highlighter-rouge">&gt; QWidget &gt; QWidget</code></strong> selectors catch the anonymous child Qt inserts under <code class="language-plaintext highlighter-rouge">QScrollArea</code>.</p>
+  </li>
+  <li>
+    <p>Disabling <strong>AutoFillBackground</strong> prevents a default fill from repainting over your transparent style.</p>
+  </li>
+</ul>
+
+<p>If it still paints, tell me your platform theme/style, and I’ll give you a minimal style override (e.g., switch to Fusion for a quick test) or a fallback with a 1-pixel alpha panel instead of full transparency.</p>
+
+<p class="chat--user">
+
+1번으로 하니깐 각각 카드도 투명해진거 같아 배경이. 그리고 콘솔도
+
+</p>
+
+<p>맞아—투명 처리를 너무 넓게 잡으면 카드/콘솔까지 투명해져요.<br />
+해결 방법은 <strong>투명 범위를 스크롤 컨테이너에만 국한</strong> 하고, <strong>카드/콘솔에는 스타일 배경을 강제 렌더</strong> 하게 하는 거예요.</p>
+
+<p>아래 두 가지를 적용하세요.</p>
+
+<hr />
+
+<h2 id="a-코드-수정-투명-범위-축소--카드콘솔에-styledbackground-부여">A) 코드 수정 (투명 범위 축소 + 카드/콘솔에 StyledBackground 부여)</h2>
+
+<p><strong>1) 스크롤 영역 만드는 곳</strong>(HyperFlowPage)에서 투명 처리 범위를 아래처럼 조정:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">.</span><span class="nf">setObjectName</span><span class="p">(</span><span class="sh">"</span><span class="s">cardsContainer</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="n">scroll</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="p">.</span><span class="nc">QScrollArea</span><span class="p">()</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setWidgetResizable</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setFrameShape</span><span class="p">(</span><span class="n">QtWidgets</span><span class="p">.</span><span class="n">QFrame</span><span class="p">.</span><span class="n">NoFrame</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">setHorizontalScrollBarPolicy</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">ScrollBarAlwaysOff</span><span class="p">)</span>
+
+<span class="c1"># only the scroll area &amp; its viewport are transparent
+</span><span class="n">scroll</span><span class="p">.</span><span class="nf">setStyleSheet</span><span class="p">(</span><span class="sh">"</span><span class="s">background: transparent; border: none;</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">setStyleSheet</span><span class="p">(</span><span class="sh">"</span><span class="s">background: transparent;</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># palette-based transparency for stubborn styles
+</span><span class="n">pal</span> <span class="o">=</span> <span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">palette</span><span class="p">()</span>
+<span class="n">pal</span><span class="p">.</span><span class="nf">setColor</span><span class="p">(</span><span class="n">QtGui</span><span class="p">.</span><span class="n">QPalette</span><span class="p">.</span><span class="n">Base</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">transparent</span><span class="p">)</span>
+<span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">setPalette</span><span class="p">(</span><span class="n">pal</span><span class="p">)</span>
+
+<span class="n">scroll</span><span class="p">.</span><span class="nf">viewport</span><span class="p">().</span><span class="nf">setAutoFillBackground</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">cards_container</span><span class="p">.</span><span class="nf">setAutoFillBackground</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="c1"># keep container neutral; DO NOT set it to transparent here
+# self.cards_container.setStyleSheet("background: transparent;")  # ← remove this
+# self.cards_container.setAttribute(QtCore.Qt.WA_StyledBackground, True)      # not needed on container
+</span></code></pre></div></div>
+
+<p><strong>2) 카드/콘솔 위젯에 “스타일 배경을 꼭 칠해라” 플래그 부여</strong><br />
+InstanceCard 생성자와 콘솔 뷰 생성 직후에 추가:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InstanceCard</span><span class="p">(</span><span class="n">QtWidgets</span><span class="p">.</span><span class="n">QFrame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setObjectName</span><span class="p">(</span><span class="sh">"</span><span class="s">card</span><span class="sh">"</span><span class="p">)</span>
+        <span class="c1"># ensure QSS background paints even if ancestors are transparent
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">setAttribute</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">WA_StyledBackground</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">...</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="p">.</span><span class="nc">QTextBrowser</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">setObjectName</span><span class="p">(</span><span class="sh">"</span><span class="s">console</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">setAttribute</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">WA_StyledBackground</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">...</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>핵심: <strong>cards_container에는 투명 QSS를 주지 말고</strong> , 오직 <code class="language-plaintext highlighter-rouge">QScrollArea</code>와 <code class="language-plaintext highlighter-rouge">viewport</code>만 투명.<br />
+ 그리고 <strong>배경을 가져야 하는 위젯(카드/콘솔)</strong> 에는 <code class="language-plaintext highlighter-rouge">WA_StyledBackground</code> 를 켜서 QSS 배경이 반드시 칠해지게 합니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="b-qss-수정-너무-광범위한-선택자-제거">B) QSS 수정 (너무 광범위한 선택자 제거)</h2>
+
+<p>이전에 제안했던 다음 규칙은 <strong>삭제</strong> 하거나 주석 처리하세요. (이게 카드까지 투명하게 만들 수 있어요)</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* REMOVE these broad rules */</span>
+<span class="nt">QScrollArea</span> <span class="o">&gt;</span> <span class="nt">QWidget</span> <span class="p">{</span> <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">QScrollArea</span> <span class="o">&gt;</span> <span class="nt">QWidget</span> <span class="o">&gt;</span> <span class="nt">QWidget</span> <span class="p">{</span> <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span> <span class="p">}</span>
+<span class="c">/* keep this one if 쓰고 있었다면 그대로 유지 가능 */</span>
+<span class="nt">QWidget</span><span class="nf">#cardsContainer</span> <span class="p">{</span> <span class="c">/* ← 이건 굳이 필요 없음, 뺍시다 */</span>
+    <span class="c">/* background: transparent; */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>대신, <strong>스크롤 영역만 투명</strong> 하게 유지:</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* GOOD: only the scroll area stack transparent */</span>
+<span class="nt">QScrollArea</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">QAbstractScrollArea</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">QAbstractScrollArea</span><span class="nd">::viewport</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nb">transparent</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Keep card and console with their dark backgrounds (from your dark theme) */</span>
+<span class="nt">QFrame</span><span class="nf">#card</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nx">#0F131A</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="nx">#1E2430</span><span class="p">;</span>
+    <span class="nl">border-radius</span><span class="p">:</span> <span class="m">10px</span><span class="p">;</span>
+    <span class="nl">padding</span><span class="p">:</span> <span class="m">12px</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">QTextBrowser</span><span class="nf">#console</span> <span class="p">{</span>
+    <span class="nl">background</span><span class="p">:</span> <span class="nx">#0C0F14</span><span class="p">;</span>
+    <span class="nl">color</span><span class="p">:</span> <span class="nx">#E6E8EB</span><span class="p">;</span>
+    <span class="nl">border</span><span class="p">:</span> <span class="m">1px</span> <span class="nb">solid</span> <span class="nx">#1E2430</span><span class="p">;</span>
+    <span class="nl">border-radius</span><span class="p">:</span> <span class="m">8px</span><span class="p">;</span>
+    <span class="nl">padding</span><span class="p">:</span> <span class="m">8px</span><span class="p">;</span>
+    <span class="nl">min-height</span><span class="p">:</span> <span class="m">160px</span><span class="p">;</span>
+    <span class="nl">font-family</span><span class="p">:</span> <span class="n">Consolas</span><span class="p">,</span> <span class="s1">"Courier New"</span><span class="p">,</span> <span class="nb">monospace</span><span class="p">;</span>
+    <span class="nl">font-size</span><span class="p">:</span> <span class="m">12px</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="정리">정리</h3>
+
+<ul>
+  <li>
+    <p>투명 처리는 <code class="language-plaintext highlighter-rouge">QScrollArea</code>/<code class="language-plaintext highlighter-rouge">viewport</code>까지만.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">cards_container</code>는 투명 X (중립), <strong>카드/콘솔은<code class="language-plaintext highlighter-rouge">WA_StyledBackground=True</code></strong> 로 QSS 배경을 강제 렌더.</p>
+  </li>
+  <li>
+    <p>넓은 <code class="language-plaintext highlighter-rouge">QScrollArea &gt; QWidget &gt; QWidget</code> 선택자는 삭제.</p>
+  </li>
+</ul>
+
+<p>이대로 하면 배경은 그대로 어둡게 유지되고, 스크롤 영역만 자연스럽게 바탕과 어울립니다.</p>
+
+<p class="chat--user">
+
+그냥 처음의 라이트 모드 theme가 더 나은것 같아서 그걸로 돌릴게, (대신 Scroll 관련 위젯들을 autoFillBackground=False로 줬어) 그리고 log 파일을 읽는데서 에러가 나는데 QProcess로 그냥 출력을 바로 콘솔 창에 프린트하는게 낫지 않아?
+
+</p>
+
+<p>좋아. <strong>로그 파일 tail →<code class="language-plaintext highlighter-rouge">QProcess</code> 직결</strong>로 바꾼 깔끔한 방법을 정리해줄게.<br />
+(라이트 테마/스크롤 오토필 조정은 그대로 두고, 필요한 부분만 교체하면 된다.)</p>
+
+<p>아래는 <strong>핵심 변경점만</strong> 모아서 준 “드롭인 패치”야.<br />
+파일 전체를 갈아엎을 필요 없이, 이 블록들만 기존 코드에 반영해.</p>
+
+<hr />
+
+<h2 id="1-instance-모델에-qprocess로그-핸들-추가">1) <code class="language-plaintext highlighter-rouge">Instance</code> 모델에 QProcess/로그 핸들 추가</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">PySide6</span> <span class="kn">import</span> <span class="n">QtCore</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Instance</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">cwd</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Path</span><span class="p">)</span>
+    <span class="n">log_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Path</span><span class="p">)</span>
+    <span class="n">proc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>   <span class="c1"># ← QProcess로 교체
+</span>    <span class="n">pid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>                <span class="c1"># QProcess PID 캐시
+</span>    <span class="n">chrome_pids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nf">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">STOPPED</span><span class="sh">"</span>                  <span class="c1"># STARTING / RUNNING / STOPPED
+</span>    <span class="n">log_fh</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>          <span class="c1"># 파일로도 남기고 싶으면(선택)
+</span></code></pre></div></div>
+
+<hr />
+
+<h2 id="2-processmanagerlocal--qprocess로-실행로그-파이프">2) <code class="language-plaintext highlighter-rouge">ProcessManagerLocal</code> — QProcess로 실행/로그 파이프</h2>
+
+<h3 id="2-1-시그널-추가">2-1) 시그널 추가</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ProcessManagerLocal</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">QObject</span><span class="p">):</span>
+    <span class="n">status_updated</span> <span class="o">=</span> <span class="n">QtCore</span><span class="p">.</span><span class="nc">Signal</span><span class="p">()</span>
+    <span class="n">bulk_stop_finished</span> <span class="o">=</span> <span class="n">QtCore</span><span class="p">.</span><span class="nc">Signal</span><span class="p">()</span>
+    <span class="n">log_received</span> <span class="o">=</span> <span class="n">QtCore</span><span class="p">.</span><span class="nc">Signal</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>   <span class="c1"># (port, text) → 카드에서 받아 콘솔에 append
+</span></code></pre></div></div>
+
+<h3 id="2-2-시작-로직-교체-start_instance">2-2) 시작 로직 교체 (<code class="language-plaintext highlighter-rouge">start_instance</code>)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">start_instance</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">:</span> <span class="n">Instance</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="ow">and</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># 포트 충돌 마지막 점검
+</span>    <span class="k">if</span> <span class="nf">is_port_in_use</span><span class="p">(</span><span class="n">inst</span><span class="p">.</span><span class="n">port</span><span class="p">):</span>
+        <span class="n">s</span><span class="p">,</span> <span class="n">new_port</span> <span class="o">=</span> <span class="nf">reserve_free_port</span><span class="p">(</span><span class="n">BIND_ADDR</span><span class="p">);</span> <span class="n">s</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nf">is_port_in_use</span><span class="p">(</span><span class="n">new_port</span><span class="p">):</span>
+            <span class="n">QtWidgets</span><span class="p">.</span><span class="n">QMessageBox</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="sh">"</span><span class="s">Port Error</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Failed to acquire a free port. Please try again.</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">inst</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">new_port</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">COMFYUI_EXEC</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">inst</span><span class="p">.</span><span class="n">port</span><span class="p">)</span>
+
+    <span class="c1"># QProcess 준비
+</span>    <span class="n">p</span> <span class="o">=</span> <span class="n">QtCore</span><span class="p">.</span><span class="nc">QProcess</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">setWorkingDirectory</span><span class="p">(</span><span class="n">COMFYUI_WORKDIR</span><span class="p">)</span>
+    <span class="c1"># stdout/stderr를 분리해서 받을 수도 있지만, 단순화 위해 합치자
+</span>    <span class="n">p</span><span class="p">.</span><span class="nf">setProcessChannelMode</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">.</span><span class="n">MergedChannels</span><span class="p">)</span>
+    <span class="c1"># Bash -lc 로 실행하면 쉘 확장/환경활용 가능
+</span>    <span class="n">p</span><span class="p">.</span><span class="nf">setProgram</span><span class="p">(</span><span class="sh">"</span><span class="s">/bin/bash</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">setArguments</span><span class="p">([</span><span class="sh">"</span><span class="s">-lc</span><span class="sh">"</span><span class="p">,</span> <span class="n">cmd</span><span class="p">])</span>
+
+    <span class="c1"># readyRead 핸들러: 즉시 읽어 색 변환 후 시그널로 전달 + 선택적으로 파일에 기록
+</span>    <span class="k">def</span> <span class="nf">_on_ready</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nf">bytes</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">readAllStandardOutput</span><span class="p">()).</span><span class="nf">decode</span><span class="p">(</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ignore</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># 파일로도 남기고 싶으면(옵션)
+</span>        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="n">inst</span><span class="p">.</span><span class="n">log_path</span><span class="p">,</span> <span class="sh">"</span><span class="s">a</span><span class="sh">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+                <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span><span class="p">:</span>
+            <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">data</span><span class="p">);</span> <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span><span class="p">.</span><span class="nf">flush</span><span class="p">()</span>
+        <span class="c1"># UI로 보냄
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">log_received</span><span class="p">.</span><span class="nf">emit</span><span class="p">(</span><span class="n">inst</span><span class="p">.</span><span class="n">port</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="n">p</span><span class="p">.</span><span class="n">readyReadStandardOutput</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_on_ready</span><span class="p">)</span>
+
+    <span class="c1"># 종료/크래시 핸들
+</span>    <span class="k">def</span> <span class="nf">_on_finished</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="c1"># 파일 핸들 닫기
+</span>        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span> <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span> <span class="k">pass</span>
+            <span class="n">inst</span><span class="p">.</span><span class="n">log_fh</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">inst</span><span class="p">.</span><span class="n">pid</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">inst</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="sh">"</span><span class="s">STOPPED</span><span class="sh">"</span>
+        <span class="c1"># 혹시 남은 브라우저 종료
+</span>        <span class="k">for</span> <span class="n">pid</span> <span class="ow">in</span> <span class="nf">list</span><span class="p">(</span><span class="n">inst</span><span class="p">.</span><span class="n">chrome_pids</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span> <span class="n">os</span><span class="p">.</span><span class="nf">kill</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">signal</span><span class="p">.</span><span class="n">SIGTERM</span><span class="p">)</span>
+            <span class="k">except</span> <span class="nb">ProcessLookupError</span><span class="p">:</span> <span class="k">pass</span>
+        <span class="n">inst</span><span class="p">.</span><span class="n">chrome_pids</span><span class="p">.</span><span class="nf">clear</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">status_updated</span><span class="p">.</span><span class="nf">emit</span><span class="p">()</span>
+        <span class="c1"># 벌크 종료 중이면 카운트다운 로직은 기존 kill_all_async 쪽에서 처리
+</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">finished</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_on_finished</span><span class="p">)</span>
+
+    <span class="c1"># 시작
+</span>    <span class="n">inst</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="sh">"</span><span class="s">STARTING</span><span class="sh">"</span>
+    <span class="n">p</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="p">.</span><span class="nf">waitForStarted</span><span class="p">(</span><span class="mi">3000</span><span class="p">):</span>   <span class="c1"># 블로킹 X, 내부 폴링. 3초 정도만 확인
+</span>        <span class="n">QtWidgets</span><span class="p">.</span><span class="n">QMessageBox</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="sh">"</span><span class="s">Start Error</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Failed to start process.</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">inst</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="sh">"</span><span class="s">STOPPED</span><span class="sh">"</span>
+        <span class="k">return</span>
+
+    <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="n">inst</span><span class="p">.</span><span class="n">pid</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">processId</span><span class="p">())</span> <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="nf">processId</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="bp">None</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">status_updated</span><span class="p">.</span><span class="nf">emit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-3-정지-로직-단순화-qthread-없이-타이머로-비동기-종료">2-3) 정지 로직 단순화 (QThread 없이 타이머로 비동기 종료)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">stop_instance_async</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="c1"># 1) 그레이스풀
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">terminate</span><span class="p">()</span>  <span class="c1"># SIGTERM
+</span>    <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># 2) timeout 뒤에도 살아있으면 SIGKILL
+</span>    <span class="n">pid</span> <span class="o">=</span> <span class="n">inst</span><span class="p">.</span><span class="n">pid</span>
+    <span class="k">def</span> <span class="nf">_force_kill</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="ow">and</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pid</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span> <span class="n">os</span><span class="p">.</span><span class="nf">kill</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">signal</span><span class="p">.</span><span class="n">SIGKILL</span><span class="p">)</span>
+                <span class="k">except</span> <span class="nb">ProcessLookupError</span><span class="p">:</span> <span class="k">pass</span>
+            <span class="k">try</span><span class="p">:</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">kill</span><span class="p">()</span>
+            <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span> <span class="k">pass</span>
+    <span class="n">QtCore</span><span class="p">.</span><span class="n">QTimer</span><span class="p">.</span><span class="nf">singleShot</span><span class="p">(</span><span class="nf">int</span><span class="p">(</span><span class="n">timeout_sec</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">_force_kill</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-4-전체-종료-kill_all_async-는-각-인스턴스에-위-함수-호출">2-4) 전체 종료 (<code class="language-plaintext highlighter-rouge">kill_all_async</code>) 는 각 인스턴스에 위 함수 호출</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">kill_all_async</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">):</span>
+    <span class="n">running_ports</span> <span class="o">=</span> <span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">port</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">instances</span><span class="p">.</span><span class="nf">values</span><span class="p">()</span>
+                     <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="ow">and</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">running_ports</span><span class="p">:</span>
+        <span class="n">QtCore</span><span class="p">.</span><span class="n">QTimer</span><span class="p">.</span><span class="nf">singleShot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">bulk_stop_finished</span><span class="p">.</span><span class="n">emit</span><span class="p">);</span> <span class="k">return</span>
+
+    <span class="c1"># 완료 체크를 간단히: 주기적으로 상태 보고 → 모두 STOPPED면 emit
+</span>    <span class="n">self</span><span class="p">.</span><span class="n">_bulk_stop_check_timer</span> <span class="o">=</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="sh">"</span><span class="s">_bulk_stop_check_timer</span><span class="sh">"</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">.</span><span class="nc">QTimer</span><span class="p">(</span><span class="n">self</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_bulk_stop_check_timer</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_tick</span><span class="p">():</span>
+        <span class="n">alive</span> <span class="o">=</span> <span class="p">[</span><span class="n">inst</span> <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">instances</span><span class="p">.</span><span class="nf">values</span><span class="p">()</span>
+                 <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="ow">and</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">alive</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">_bulk_stop_check_timer</span><span class="p">.</span><span class="nf">stop</span><span class="p">()</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">bulk_stop_finished</span><span class="p">.</span><span class="nf">emit</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_bulk_stop_check_timer</span><span class="p">.</span><span class="n">timeout</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_tick</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_bulk_stop_check_timer</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">instances</span><span class="p">.</span><span class="nf">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="ow">and</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="nf">stop_instance_async</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-5-상태-폴링은-포트-리스닝--qprocess-상태를-함께-반영">2-5) 상태 폴링은 포트 리스닝 + QProcess 상태를 함께 반영</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">poll_status</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+    <span class="n">changed</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">instances</span><span class="p">.</span><span class="nf">values</span><span class="p">():</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="n">inst</span><span class="p">.</span><span class="n">status</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span> <span class="ow">or</span> <span class="n">inst</span><span class="p">.</span><span class="n">proc</span><span class="p">.</span><span class="nf">state</span><span class="p">()</span> <span class="o">==</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">QProcess</span><span class="p">.</span><span class="n">NotRunning</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prev</span> <span class="o">!=</span> <span class="sh">"</span><span class="s">STOPPED</span><span class="sh">"</span><span class="p">:</span>
+                <span class="n">inst</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="sh">"</span><span class="s">STOPPED</span><span class="sh">"</span><span class="p">;</span> <span class="n">changed</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># 프로세스 살아있으면 리스닝 여부로 RUNNING/STARTING 구분
+</span>        <span class="n">inst</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="sh">"</span><span class="s">RUNNING</span><span class="sh">"</span> <span class="k">if</span> <span class="nf">is_port_in_use</span><span class="p">(</span><span class="n">inst</span><span class="p">.</span><span class="n">port</span><span class="p">)</span> <span class="k">else</span> <span class="sh">"</span><span class="s">STARTING</span><span class="sh">"</span>
+        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">prev</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">status_updated</span><span class="p">.</span><span class="nf">emit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-instancecard--tailthread-제거-log_received-시그널을-구독">3) <code class="language-plaintext highlighter-rouge">InstanceCard</code> — TailThread 제거, <code class="language-plaintext highlighter-rouge">log_received</code> 시그널을 구독</h2>
+
+<h3 id="3-1-생성자에서-procman을-받도록-변경">3-1) 생성자에서 <code class="language-plaintext highlighter-rouge">procman</code>을 받도록 변경</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InstanceCard</span><span class="p">(</span><span class="n">QtWidgets</span><span class="p">.</span><span class="n">QFrame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">:</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">procman</span><span class="p">:</span> <span class="sh">'</span><span class="s">ProcessManagerLocal</span><span class="sh">'</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">procman</span> <span class="o">=</span> <span class="n">procman</span>
+        <span class="bp">...</span>
+        <span class="c1"># 콘솔 뷰는 그대로 유지
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="p">.</span><span class="nc">QTextBrowser</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">setObjectName</span><span class="p">(</span><span class="sh">"</span><span class="s">console</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">setReadOnly</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">setHidden</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">document</span><span class="p">().</span><span class="nf">setMaximumBlockCount</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span>
+
+        <span class="c1"># ★ 여기서 포트별 로그 수신 연결
+</span>        <span class="k">def</span> <span class="nf">_on_log</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">port</span> <span class="o">!=</span> <span class="n">self</span><span class="p">.</span><span class="n">inst</span><span class="p">.</span><span class="n">port</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="c1"># 접혀 있어도 계속 쌓이게 (요구사항)
+</span>            <span class="n">html</span> <span class="o">=</span> <span class="nf">ansi_to_html</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">moveCursor</span><span class="p">(</span><span class="n">QtGui</span><span class="p">.</span><span class="n">QTextCursor</span><span class="p">.</span><span class="n">End</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">insertHtml</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">moveCursor</span><span class="p">(</span><span class="n">QtGui</span><span class="p">.</span><span class="n">QTextCursor</span><span class="p">.</span><span class="n">End</span><span class="p">)</span>
+
+        <span class="c1"># 중복 연결 방지를 위해 try/except
+</span>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">procman</span><span class="p">.</span><span class="n">log_received</span><span class="p">.</span><span class="nf">disconnect</span><span class="p">()</span>
+        <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">procman</span><span class="p">.</span><span class="n">log_received</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">_on_log</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="3-2-콘솔-토글만-남기고-tailthread-관련-코드-삭제">3-2) 콘솔 토글만 남기고 TailThread 관련 코드 삭제</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># InstanceCard._on_console_toggled
+</span><span class="k">def</span> <span class="nf">_on_console_toggled</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">console_toggle</span><span class="p">.</span><span class="nf">setArrowType</span><span class="p">(</span><span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">DownArrow</span> <span class="k">if</span> <span class="n">checked</span> <span class="k">else</span> <span class="n">QtCore</span><span class="p">.</span><span class="n">Qt</span><span class="p">.</span><span class="n">RightArrow</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">console_view</span><span class="p">.</span><span class="nf">setHidden</span><span class="p">(</span><span class="ow">not</span> <span class="n">checked</span><span class="p">)</span>
+
+<span class="c1"># TailThread 사용/중지 코드, close()에서의 TailThread 정리 등은 삭제
+</span></code></pre></div></div>
+
+<h3 id="3-3-hyperflowpage에서-카드-만들-때-procman-전달">3-3) <code class="language-plaintext highlighter-rouge">HyperFlowPage</code>에서 카드 만들 때 <code class="language-plaintext highlighter-rouge">procman</code> 전달</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">card</span> <span class="o">=</span> <span class="nc">InstanceCard</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">procman</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="4-선택-로그-파일도-남기고-싶다면">4) (선택) 로그 파일도 남기고 싶다면</h2>
+
+<p>위 <code class="language-plaintext highlighter-rouge">start_instance()</code>에서 <code class="language-plaintext highlighter-rouge">inst.log_fh</code>를 열어두고, <code class="language-plaintext highlighter-rouge">readyRead</code>에서 들어온 텍스트를 동시에 <code class="language-plaintext highlighter-rouge">self.log_received.emit()</code>과 파일에 <code class="language-plaintext highlighter-rouge">write()</code> 해주면 끝.<br />
+에러가 나던 “파일 tail”은 더 이상 쓰지 않으니 사라져.</p>
+
+<hr />
+
+<h2 id="왜-이게-좋은가">왜 이게 좋은가</h2>
+
+<ul>
+  <li>
+    <p><strong>파일 I/O 의존 제거</strong> : QProcess 스트림을 바로 UI로 보내므로 파일 잠금/권한/경로 문제에서 자유롭다.</p>
+  </li>
+  <li>
+    <p><strong>프리즈 없음</strong> : <code class="language-plaintext highlighter-rouge">readyRead…</code>는 Qt 이벤트 루프에서 비동기로 호출 → 즉시 HTML 변환해 <code class="language-plaintext highlighter-rouge">QTextBrowser</code>에 append.</p>
+  </li>
+  <li>
+    <p><strong>접힘 상태에서도 계속 기록</strong> : 카드가 콘솔을 숨겨도 receiver는 계속 붙어 있으므로 자연스럽게 누적.</p>
+  </li>
+  <li>
+    <p><strong>종료도 비동기</strong> : <code class="language-plaintext highlighter-rouge">terminate()</code> 후 타이머로 강제 kill → UI는 즉시 응답.</p>
+  </li>
+</ul>
+
+<p>필요하면 이 변경을 반영한 <strong>전체 파일</strong> 도 만들어 줄 수 있어. 지금은 요청하신 포인트(로그를 QProcess로 직결)만 최소 수정으로 정리했어.</p>
+
+<p class="chat--user">
+
+설치 가능한 패키지로 만들어줘. icon를 내부 assets 안에 넣고 싶어.
+
+</p>
+
+<p>sweet — let’s ship this as a proper, pip-installable package with the icon bundled inside the package assets.</p>
+
+<p>below is a <strong>ready-to-build Python package</strong> using modern <code class="language-plaintext highlighter-rouge">pyproject.toml</code> (PEP 621 + Hatchling).<br />
+it includes:</p>
+
+<ul>
+  <li>
+    <p>your launcher code (PySide6 UI, non-freezing, QProcess live logging to in-panel console, auto-scroll page, auto-start/auto-open).</p>
+  </li>
+  <li>
+    <p>an <strong>embedded icon</strong> under <code class="language-plaintext highlighter-rouge">hyperflow_launcher/assets/icon.png</code>, loaded via <code class="language-plaintext highlighter-rouge">importlib.resources</code>.</p>
+  </li>
+  <li>
+    <p>a console entry point: run it as <code class="language-plaintext highlighter-rouge">hyperflow-launcher</code>.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="1-project-layout">1) project layout</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hyperflow-launcher/
+├─ pyproject.toml
+├─ README.md
+├─ LICENSE
+└─ hyperflow_launcher/
+   ├─ __init__.py
+   ├─ __main__.py           <span class="c"># console entry (hyperflow-launcher)</span>
+   ├─ app.py                <span class="c"># all UI + logic</span>
+   ├─ ansi.py               <span class="c"># ANSI→HTML converter</span>
+   ├─ qss_light.py          <span class="c"># the light theme (modern look)</span>
+   └─ assets/
+      └─ icon.png           <span class="c"># &lt;--- put your icon file here (your actual icon)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>place your desired icon at <code class="language-plaintext highlighter-rouge">hyperflow_launcher/assets/icon.png</code>.</p>
+</blockquote>
+
+<hr />
+
+<h1 id="2-pyprojecttoml">2) <code class="language-plaintext highlighter-rouge">pyproject.toml</code></h1>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[project]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"hyperflow-launcher"</span>
+<span class="py">version</span> <span class="p">=</span> <span class="s">"0.1.0"</span>
+<span class="py">description</span> <span class="p">=</span> <span class="s">"HyperFlow (ComfyUI) Launcher with modern UI, QProcess console, and tray integration."</span>
+<span class="py">readme</span> <span class="p">=</span> <span class="s">"README.md"</span>
+<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.11</span><span class="s">"</span><span class="err">
+</span><span class="py">authors</span> <span class="p">=</span> <span class="p">[</span><span class="err">{</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"Your Team"</span><span class="p">,</span> <span class="py">email</span> <span class="p">=</span> <span class="s">"you@example.com"</span> <span class="err">}</span><span class="p">]</span>
+<span class="py">license</span> <span class="o">=</span> <span class="p">{</span> <span class="py">text</span> <span class="p">=</span> <span class="s">"Proprietary"</span> <span class="p">}</span>
+<span class="py">dependencies</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="py">"PySide6&gt;</span><span class="p">=</span><span class="mf">6.5</span><span class="p">,</span><span class="err">&lt;</span><span class="mf">7.0</span><span class="s">"</span><span class="err">
+</span><span class="p">]</span>
+
+<span class="nn">[project.scripts]</span>
+<span class="py">hyperflow-launcher</span> <span class="p">=</span> <span class="s">"hyperflow_launcher.__main__:main"</span>
+
+<span class="nn">[tool.hatch.build]</span>
+<span class="py">include</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="s">"hyperflow_launcher/**"</span><span class="p">,</span>
+  <span class="s">"README.md"</span><span class="p">,</span>
+  <span class="s">"LICENSE"</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="3-hyperflow_launcher__init__py">3) <code class="language-plaintext highlighter-rouge">hyperflow_launcher/__init__.py</code></h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="sh">"</span><span class="s">main</span><span class="sh">"</span><span class="p">]</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="sh">"</span><span class="s">0.1.0</span><span class="sh">"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="4-hyperflow_launcher__main__py">4) <code class="language-plaintext highlighter-rouge">hyperflow_launcher/__main__.py</code></h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">.app</span> <span class="kn">import</span> <span class="n">main</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="nc">SystemExit</span><span class="p">(</span><span class="nf">main</span><span class="p">())</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="5-hyperflow_launcheransipy">5) <code class="language-plaintext highlighter-rouge">hyperflow_launcher/ansi.py</code></h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="c1"># Minimal ANSI SGR → HTML (foreground colors + bold)
+</span><span class="n">_ANSI_RE</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">compile</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\x1b\[((?:\d{1,3};?)+)m</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="n">_STYLES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">0</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">reset</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">1</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">bold</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">30</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-0</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">31</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-1</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">32</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-2</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">33</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-3</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">34</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-4</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">35</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-5</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">36</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-6</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">37</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-7</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">90</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-8</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">91</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-9</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">92</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-10</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">93</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-11</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">94</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-12</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">95</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-13</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">96</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-14</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">97</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-15</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">39</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fg-reset</span><span class="sh">'</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_COLORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">fg-0</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#000000</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-1</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#d32f2f</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-2</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#2e7d32</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-3</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#f9a825</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">fg-4</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#1565c0</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-5</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#6a1b9a</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-6</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#00838f</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-7</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#e0e0e0</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">fg-8</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#616161</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-9</span><span class="sh">'</span><span class="p">:</span>  <span class="sh">'</span><span class="s">#ef5350</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-10</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">#66bb6a</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-11</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">#ffee58</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">fg-12</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">#42a5f5</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-13</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">#ab47bc</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-14</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">#26c6da</span><span class="sh">'</span><span class="p">,</span>  <span class="sh">'</span><span class="s">fg-15</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">#ffffff</span><span class="sh">'</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">ansi_to_html</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sh">"""</span><span class="s">Convert basic ANSI SGR codes to HTML spans (fg colors + bold).</span><span class="sh">"""</span>
+    <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">open_tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">close_all</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">open_tags</span>
+        <span class="k">while</span> <span class="n">open_tags</span><span class="p">:</span>
+            <span class="n">parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;/span&gt;</span><span class="sh">"</span><span class="p">)</span>
+            <span class="n">open_tags</span><span class="p">.</span><span class="nf">pop</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">_ANSI_RE</span><span class="p">.</span><span class="nf">finditer</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="nf">span</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="n">last</span><span class="p">:</span>
+            <span class="n">literal</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">last</span><span class="p">:</span><span class="n">start</span><span class="p">]</span>
+                       <span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s">&amp;</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">&amp;amp;</span><span class="sh">"</span><span class="p">)</span>
+                       <span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">&amp;lt;</span><span class="sh">"</span><span class="p">)</span>
+                       <span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s">&gt;</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">&amp;gt;</span><span class="sh">"</span><span class="p">))</span>
+            <span class="n">parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
+        <span class="n">codes</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nf">split</span><span class="p">(</span><span class="sh">"</span><span class="s">;</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">_STYLES</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="sh">"</span><span class="s">reset</span><span class="sh">"</span><span class="p">:</span>
+                <span class="nf">close_all</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="sh">"</span><span class="s">bold</span><span class="sh">"</span><span class="p">:</span>
+                <span class="n">parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">'</span><span class="s">&lt;span style=</span><span class="sh">"</span><span class="s">font-weight:600</span><span class="sh">"</span><span class="s">&gt;</span><span class="sh">'</span><span class="p">);</span> <span class="n">open_tags</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">"</span><span class="s">bold</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">key</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">fg-</span><span class="sh">"</span><span class="p">):</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">_COLORS</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="sh">"</span><span class="s">#ffffff</span><span class="sh">"</span><span class="p">)</span>
+                <span class="n">parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">&lt;span style=</span><span class="sh">"</span><span class="s">color:</span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="sh">"</span><span class="s">&gt;</span><span class="sh">'</span><span class="p">);</span> <span class="n">open_tags</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="sh">"</span><span class="s">fg-reset</span><span class="sh">"</span><span class="p">:</span>
+                <span class="n">bold_active</span> <span class="o">=</span> <span class="nf">any</span><span class="p">(</span><span class="n">tag</span> <span class="o">==</span> <span class="sh">"</span><span class="s">bold</span><span class="sh">"</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">open_tags</span><span class="p">)</span>
+                <span class="nf">close_all</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">bold_active</span><span class="p">:</span>
+                    <span class="n">parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">'</span><span class="s">&lt;span style=</span><span class="sh">"</span><span class="s">font-weight:600</span><span class="sh">"</span><span class="s">&gt;</span><span class="sh">'</span><span class="p">);</span> <span class="n">open_tags</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="sh">"</span><span class="s">bold</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">end</span>
+
+    <span class="n">tail</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">last</span><span class="p">:]</span>
+            <span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s">&amp;</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">&amp;amp;</span><span class="sh">"</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s">&lt;</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">&amp;lt;</span><span class="sh">"</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s">&gt;</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">&amp;gt;</span><span class="sh">"</span><span class="p">))</span>
+    <span class="n">parts</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
+    <span class="nf">close_all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="sh">'</span><span class="s">&lt;pre style=</span><span class="sh">"</span><span class="s">margin:0;white-space:pre-wrap;</span><span class="sh">"</span><span class="s">&gt;</span><span class="sh">'</span> <span class="o">+</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">+</span> <span class="sh">"</span><span class="s">&lt;/pre&gt;</span><span class="sh">"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="6-hyperflow_launcherqss_lightpy-your-modern-light-theme">6) <code class="language-plaintext highlighter-rouge">hyperflow_launcher/qss_light.py</code> (your modern <strong>light theme</strong>)</h1>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">QSS</span> <span class="o">=</span> <span class="sh">"""</span><span class="s">
+QWidget#content { background: #F7F8FA; }
+QFrame#sidebar { min-width: 180px; max-width: 220px; background: #FFFFFF; border-right: 1px solid #E6E8EF; }
+QFrame#sidebarSection { background: transparent; }
+
+QLabel#h1 { font-size:20px; font-weight:600; color:#1F2328; }
+QLabel#h2 { font-size:16px; font-weight:600; color:#1F2328; }
+QLabel#subtle { color:#64748B; }
+
+QFrame#card { background:#FFFFFF; border:1px solid #E6E8EF; border-radius:10px; padding:12px; }
+
+QPushButton#primary { border:none; background:#2563EB; color:white; padding:8px 14px; border-radius:8px; }
+QPushButton#primary:hover { background:#1E4FD6; }
+QPushButton#primary:pressed { background:#173FB0; }
+QPushButton#primary:disabled { background:#A7B7F0; }
+
+QPushButton#nav { border:none; background:transparent; text-align:left; padding:10px 14px; border-radius:8px; font-size:14px; color:#374151; }
+QPushButton#nav:hover { background:#EEF2FF; }
+QPushButton#nav:checked { background:#E0E7FF; color:#1E3A8A; font-weight:600; }
+
+QPushButton { padding:6px 12px; border-radius:8px; background:#F1F5F9; border:1px solid #E2E8F0; color:#0F172A; }
+QPushButton:hover { background:#E9EEF6; }
+QPushButton:pressed { background:#DDE4EE; }
+QPushButton:disabled { color:#9CA3AF; background:#F4F6FA; }
+
+QToolButton#consoleToggle {
+    padding:6px 12px; border-radius:8px; background:#F1F5F9; border:1px solid #E2E8F0; color:#0F172A;
+}
+QToolButton#consoleToggle:hover { background:#E9EEF6; }
+QToolButton#consoleToggle:checked {
+    background:#E0E7FF; color:#1E3A8A; border:1px solid #C7D2FE; font-weight:600;
+}
+
+QLineEdit { background:white; border:1px solid #E2E8F0; border-radius:8px; padding:6px 10px; }
+QLineEdit:focus { border:1px solid #2563EB; }
+
+/* Console area */
+QTextBrowser#console {
+    background:#0B1020; color:#E5E7EB; border:1px solid #1F2937; border-radius:8px;
+    padding:8px; min-height:160px; font-family: Consolas, </span><span class="sh">"</span><span class="s">Courier New</span><span class="sh">"</span><span class="s">, monospace; font-size: 12px;
+}
+</span><span class="sh">"""</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="7-hyperflow_launcherapppy-main-application">7) <code class="language-plaintext highlighter-rouge">hyperflow_launcher/app.py</code> (main application)</h1>
+
+<blockquote>
+  <p>this file wires everything: config, OS-port allocation, QProcess logging → console, modern UI, tray, auto-start/open, scrollable instance list. it keeps your <strong>no-freeze</strong> rule and <strong>graceful shutdown</strong>.
+```python
+#!/usr/bin/env python3</p>
+  <h1 id="---coding-utf-8---">-<em>- coding: utf-8 -</em>-</h1>
+  <p>"""
+HyperFlow Launcher (installable package)</p>
+  <ul>
+    <li>RHEL 8.x, Python 3.11, PySide6</li>
+    <li>QProcess-based logging directly into embedded console (no file tailing needed)</li>
+    <li>Auto-scrolling instance page (QScrollArea), no window growth</li>
+    <li>Auto-create one instance, auto-start, and auto-open web when port listens</li>
+    <li>STARTING animation (dots)</li>
+    <li>System tray: double-click restore, menu (Show Window / Quit)
+"""</li>
+  </ul>
+</blockquote>
+
+<p>import os
+import sys
+import time
+import socket
+import signal
+import json
+import subprocess
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, Optional, List
+from importlib import resources</p>
+
+<p>from PySide6 import QtCore, QtGui, QtWidgets</p>
+
+<p>from .ansi import ansi_to_html
+from .qss_light import QSS</p>
+
+<h1 id="-constants-">———————– Constants ———————–</h1>
+
+<p>APP_NAME = "HyperFlow Launcher"
+CONFIG_PATH = str(Path.home() / ".hyperflow_launcher.json")</p>
+
+<h1 id="you-can-override-via-env-if-needed">You can override via env if needed</h1>
+<p>COMFYUI_WORKDIR = os.environ.get("COMFYUI_WORKDIR", "/opt/comfyui")
+COMFYUI_EXEC = os.environ.get("COMFYUI_EXEC", "python3 main.py –listen –port {port}")
+BROWSER_DEFAULT = os.environ.get("BROWSER_PATH", "/path/to/chrome")</p>
+
+<p>BIND_ADDR = "127.0.0.1"
+MAX_INSTANCES = 8</p>
+
+<h1 id="-utilities-">———————– Utilities ———————–</h1>
+
+<p>def app_icon() -&gt; QtGui.QIcon:
+    """Load icon from package assets; fallback to system icon if missing."""
+    try:
+        icon_data = (resources.files(<strong>package</strong>) / "assets" / "icon.png").read_bytes()
+        pm = QtGui.QPixmap()
+        if pm.loadFromData(icon_data):
+            return QtGui.QIcon(pm)
+    except Exception:
+        pass
+    return QtWidgets.QApplication.style().standardIcon(QtWidgets.QStyle.SP_ComputerIcon)</p>
+
+<p>def is_port_in_use(port: int, host: str = BIND_ADDR, timeout: float = 0.2) -&gt; bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(timeout)
+        try:
+            return s.connect_ex((host, port)) == 0
+        except OSError:
+            return False</p>
+
+<p>def reserve_free_port(host: str = BIND_ADDR) -&gt; int:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((host, 0))
+    port = s.getsockname()[1]
+    s.close()
+    return port</p>
+
+<h1 id="-data-model-">———————– Data model ———————–</h1>
+
+<p>@dataclass
+class Instance:
+    name: str
+    port: int
+    cwd: Path = field(default_factory=Path)
+    log_path: Path = field(default_factory=Path)
+    proc: Optional[QtCore.QProcess] = None
+    pid: Optional[int] = None
+    chrome_pids: List[int] = field(default_factory=list)
+    status: str = "STOPPED"  # STARTING / RUNNING / STOPPED
+    log_fh: Optional[object] = None      # optional: still write to file</p>
+
+<h1 id="-config-">———————– Config ———————–</h1>
+
+<p>class ConfigManager:
+    def <strong>init</strong>(self, path: str):
+        self.path = path
+        self.data = {"data_dir": "", "browser_path": BROWSER_DEFAULT}
+        self.load()</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def load(self):
+    if not os.path.exists(self.path):
+        return
+    try:
+        with open(self.path, "r", encoding="utf-8") as f:
+            self.data.update(json.load(f))
+    except Exception:
+        self.data = {"data_dir": "", "browser_path": BROWSER_DEFAULT}
+
+def save(self):
+    with open(self.path, "w", encoding="utf-8") as f:
+        json.dump(self.data, f, indent=2, ensure_ascii=False)
+
+@property
+def data_dir(self) -&gt; Optional[Path]:
+    dd = self.data.get("data_dir", "")
+    return Path(dd) if dd else None
+
+@property
+def browser_path(self) -&gt; str:
+    return self.data.get("browser_path") or BROWSER_DEFAULT
+</code></pre></div></div>
+
+<h1 id="-welcome-dialog-">———————– Welcome dialog ———————–</h1>
+
+<p>class WelcomeDialog(QtWidgets.QDialog):
+    def <strong>init</strong>(self):
+        super().<strong>init</strong>()
+        self.setWindowTitle("Welcome to HyperFlow!")
+        self.setWindowIcon(app_icon())
+        self.setModal(True)
+        self.resize(520, 200)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    label = QtWidgets.QLabel(
+        "Welcome to HyperFlow!\n"
+        "Please Select a Data Directory\n"
+        "This is where application data (workflows, etc.) will be installed."
+    )
+    label.setWordWrap(True)
+
+    self.path_edit = QtWidgets.QLineEdit()
+    self.path_edit.setPlaceholderText("Choose a directory for HyperFlow data…")
+    browse_btn = QtWidgets.QPushButton("Browse…")
+    browse_btn.clicked.connect(self.on_browse)
+
+    path_row = QtWidgets.QHBoxLayout()
+    path_row.addWidget(self.path_edit)
+    path_row.addWidget(browse_btn)
+
+    cancel_btn = QtWidgets.QPushButton("Cancel")
+    cont_btn = QtWidgets.QPushButton("Continue")
+    cancel_btn.clicked.connect(self.reject)
+    cont_btn.clicked.connect(self.accept)
+
+    btn_row = QtWidgets.QHBoxLayout()
+    btn_row.addStretch()
+    btn_row.addWidget(cancel_btn)
+    btn_row.addWidget(cont_btn)
+
+    v = QtWidgets.QVBoxLayout(self)
+    v.addWidget(label)
+    v.addLayout(path_row)
+    v.addStretch()
+    v.addLayout(btn_row)
+
+def on_browse(self):
+    d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select Data Directory")
+    if d:
+        self.path_edit.setText(d)
+
+def selected_path(self) -&gt; str:
+    return self.path_edit.text().strip()
+</code></pre></div></div>
+
+<h1 id="-process-manager-qprocess-logging-">———————– Process manager (QProcess logging) ———————–</h1>
+
+<p>class ProcessManagerLocal(QtCore.QObject):
+    status_updated = QtCore.Signal()
+    bulk_stop_finished = QtCore.Signal()
+    log_received = QtCore.Signal(int, str)   # (port, text)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def __init__(self, data_dir: Path, parent=None):
+    super().__init__(parent)
+    self.data_dir = data_dir
+    self.instances: Dict[int, Instance] = {}
+    (self.data_dir / "instances").mkdir(parents=True, exist_ok=True)
+    (self.data_dir / "logs").mkdir(parents=True, exist_ok=True)
+    (self.data_dir / "tmp").mkdir(parents=True, exist_ok=True)
+
+    # faster tick so STARTING→RUNNING flips as soon as port is listening
+    self.poll_timer = QtCore.QTimer(self)
+    self.poll_timer.timeout.connect(self.poll_status)
+    self.poll_timer.start(800)
+
+    self._bulk_stop_check_timer: Optional[QtCore.QTimer] = None
+
+def create_instance(self) -&gt; Instance:
+    if len(self.instances) &gt;= MAX_INSTANCES:
+        raise RuntimeError("Maximum number of instances reached.")
+    port = reserve_free_port(BIND_ADDR)
+    if is_port_in_use(port):
+        port = reserve_free_port(BIND_ADDR)
+    name = f"HyperFlow-{port}"
+    cwd = self.data_dir / "instances" / name
+    cwd.mkdir(parents=True, exist_ok=True)
+    log_path = self.data_dir / "logs" / f"{name}.log"
+    inst = Instance(name=name, port=port, cwd=cwd, log_path=log_path)
+    self.instances[port] = inst
+    return inst
+
+def start_instance(self, inst: Instance):
+    if inst.proc and inst.proc.state() != QtCore.QProcess.NotRunning:
+        return
+    if is_port_in_use(inst.port):
+        new_port = reserve_free_port(BIND_ADDR)
+        if is_port_in_use(new_port):
+            QtWidgets.QMessageBox.critical(None, "Port Error", "Failed to acquire a free port. Please try again.")
+            return
+        inst.port = new_port
+
+    cmd = COMFYUI_EXEC.format(port=inst.port)
+
+    p = QtCore.QProcess(self)
+    p.setWorkingDirectory(COMFYUI_WORKDIR)
+    p.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+    p.setProgram("/bin/bash")
+    p.setArguments(["-lc", cmd])
+
+    def _on_ready():
+        try:
+            data = bytes(p.readAllStandardOutput()).decode("utf-8", "ignore")
+        except Exception:
+            return
+        if not data:
+            return
+        # (optional) also persist to file
+        if inst.log_fh is None:
+            try:
+                inst.log_fh = open(inst.log_path, "a", encoding="utf-8")
+            except Exception:
+                inst.log_fh = None
+        if inst.log_fh:
+            try:
+                inst.log_fh.write(data); inst.log_fh.flush()
+            except Exception:
+                pass
+        self.log_received.emit(inst.port, data)
+
+    def _on_finished(code, status):
+        if inst.log_fh:
+            try: inst.log_fh.close()
+            except Exception: pass
+            inst.log_fh = None
+        inst.proc = None
+        inst.pid = None
+        inst.status = "STOPPED"
+        for pid in list(inst.chrome_pids):
+            try: os.kill(pid, signal.SIGTERM)
+            except ProcessLookupError: pass
+        inst.chrome_pids.clear()
+        self.status_updated.emit()
+
+    p.readyReadStandardOutput.connect(_on_ready)
+    p.finished.connect(_on_finished)
+
+    inst.status = "STARTING"
+    p.start()
+    if not p.waitForStarted(3000):
+        QtWidgets.QMessageBox.critical(None, "Start Error", "Failed to start process.")
+        inst.status = "STOPPED"
+        return
+    inst.proc = p
+    inst.pid = int(p.processId()) if p.processId() is not None else None
+    self.status_updated.emit()
+
+def stop_instance_async(self, inst: Instance, timeout_sec: float = 5.0):
+    if not inst.proc:
+        return
+    try:
+        inst.proc.terminate()
+    except Exception:
+        pass
+    pid = inst.pid
+
+    def _force_kill():
+        if inst.proc and inst.proc.state() != QtCore.QProcess.NotRunning:
+            if pid:
+                try: os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError: pass
+            try: inst.proc.kill()
+            except Exception: pass
+
+    QtCore.QTimer.singleShot(int(timeout_sec * 1000), _force_kill)
+
+def kill_all_async(self, timeout_sec: float = 5.0):
+    running = [i for i in self.instances.values() if i.proc and i.proc.state() != QtCore.QProcess.NotRunning]
+    if not running:
+        QtCore.QTimer.singleShot(0, self.bulk_stop_finished.emit)
+        return
+
+    if self._bulk_stop_check_timer is None:
+        self._bulk_stop_check_timer = QtCore.QTimer(self)
+
+    self._bulk_stop_check_timer.setInterval(300)
+
+    def _tick():
+        alive = [i for i in self.instances.values() if i.proc and i.proc.state() != QtCore.QProcess.NotRunning]
+        if not alive:
+            self._bulk_stop_check_timer.stop()
+            self.bulk_stop_finished.emit()
+
+    try:
+        self._bulk_stop_check_timer.timeout.disconnect()
+    except Exception:
+        pass
+    self._bulk_stop_check_timer.timeout.connect(_tick)
+    self._bulk_stop_check_timer.start()
+
+    for inst in running:
+        self.stop_instance_async(inst, timeout_sec)
+
+def poll_status(self):
+    changed = False
+    for inst in self.instances.values():
+        prev = inst.status
+        if not inst.proc or inst.proc.state() == QtCore.QProcess.NotRunning:
+            if prev != "STOPPED":
+                inst.status = "STOPPED"; changed = True
+            continue
+        inst.status = "RUNNING" if is_port_in_use(inst.port) else "STARTING"
+        if inst.status != prev:
+            changed = True
+    if changed:
+        self.status_updated.emit()
+
+def open_web(self, inst: Instance, browser_path: str):
+    url = f"http://localhost:{inst.port}"
+    try:
+        p = subprocess.Popen([browser_path, url])
+        inst.chrome_pids.append(p.pid)
+    except FileNotFoundError:
+        QtWidgets.QMessageBox.warning(None, "Browser Not Found", f"The browser path is invalid:\n{browser_path}")
+</code></pre></div></div>
+
+<h1 id="-ui-widgets-">———————– UI widgets ———————–</h1>
+
+<p>class InstanceCard(QtWidgets.QFrame):
+    start_clicked = QtCore.Signal(int)
+    stop_clicked = QtCore.Signal(int)
+    openweb_clicked = QtCore.Signal(int)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def __init__(self, inst: Instance, procman: ProcessManagerLocal, parent=None):
+    super().__init__(parent)
+    self.inst = inst
+    self.procman = procman
+    self.setObjectName("card")
+    self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+    self._anim_tick = 0
+
+    name_lbl = QtWidgets.QLabel(f"{inst.name}"); name_lbl.setObjectName("h2")
+    self.subtitle = QtWidgets.QLabel(self._subtitle_text()); self.subtitle.setObjectName("subtle")
+
+    self.start_btn = QtWidgets.QPushButton("Start")
+    self.stop_btn = QtWidgets.QPushButton("Stop")
+    self.web_btn = QtWidgets.QPushButton("Open Web")
+
+    self.start_btn.clicked.connect(lambda: self.start_clicked.emit(inst.port))
+    self.stop_btn.clicked.connect(lambda: self.stop_clicked.emit(inst.port))
+    self.web_btn.clicked.connect(lambda: self.openweb_clicked.emit(inst.port))
+
+    # Console toggle + view
+    self.console_toggle = QtWidgets.QToolButton()
+    self.console_toggle.setObjectName("consoleToggle")
+    self.console_toggle.setText("Console")
+    self.console_toggle.setCheckable(True)
+    self.console_toggle.setArrowType(QtCore.Qt.RightArrow)
+    self.console_toggle.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+    self.console_toggle.toggled.connect(self._on_console_toggled)
+
+    self.console_view = QtWidgets.QTextBrowser()
+    self.console_view.setObjectName("console")
+    self.console_view.setReadOnly(True)
+    self.console_view.setHidden(True)
+    self.console_view.document().setMaximumBlockCount(5000)
+    self.console_view.setAutoFillBackground(False)
+
+    header = QtWidgets.QHBoxLayout()
+    header.addWidget(name_lbl); header.addStretch(); header.addWidget(self.subtitle)
+
+    actions = QtWidgets.QHBoxLayout()
+    actions.addStretch()
+    actions.addWidget(self.start_btn)
+    actions.addWidget(self.stop_btn)
+    actions.addWidget(self.web_btn)
+    actions.addWidget(self.console_toggle)
+
+    v = QtWidgets.QVBoxLayout(self)
+    v.addLayout(header)
+    v.addLayout(actions)
+    v.addWidget(self.console_view)
+
+    # STARTING animation timer
+    self.anim_timer = QtCore.QTimer(self)
+    self.anim_timer.setInterval(1000)
+    self.anim_timer.timeout.connect(self._animate_starting)
+    self._sync_anim_timer()
+
+    # connect live logs
+    self.procman.log_received.connect(self._on_log)
+
+    self.update_buttons()
+
+def _subtitle_text(self) -&gt; str:
+    if self.inst.status == "STARTING":
+        dots = "." * ((self._anim_tick % 3) + 1)
+        return f"Port {self.inst.port} • Status: STARTING{dots}"
+    return f"Port {self.inst.port} • Status: {self.inst.status}"
+
+def _sync_anim_timer(self):
+    if self.inst.status == "STARTING" and not self.anim_timer.isActive():
+        self.anim_timer.start()
+    elif self.inst.status != "STARTING" and self.anim_timer.isActive():
+        self.anim_timer.stop()
+
+def _animate_starting(self):
+    if self.inst.status != "STARTING":
+        self._sync_anim_timer(); return
+    self._anim_tick += 1
+    self.subtitle.setText(self._subtitle_text())
+
+def _on_console_toggled(self, checked: bool):
+    self.console_toggle.setArrowType(QtCore.Qt.DownArrow if checked else QtCore.Qt.RightArrow)
+    self.console_view.setHidden(not checked)
+
+@QtCore.Slot(int, str)
+def _on_log(self, port: int, text: str):
+    if port != self.inst.port:
+        return
+    html = ansi_to_html(text)
+    self.console_view.moveCursor(QtGui.QTextCursor.End)
+    self.console_view.insertHtml(html)
+    self.console_view.moveCursor(QtGui.QTextCursor.End)
+
+def update_view(self, inst: Instance):
+    self.inst = inst
+    self._sync_anim_timer()
+    self.subtitle.setText(self._subtitle_text())
+    self.update_buttons()
+
+def update_buttons(self):
+    running = self.inst.status == "RUNNING"
+    starting = self.inst.status == "STARTING"
+    self.start_btn.setEnabled(not running and not starting)
+    self.stop_btn.setEnabled(running or starting)
+    self.web_btn.setEnabled(running)
+</code></pre></div></div>
+
+<p>class HyperFlowPage(QtWidgets.QWidget):
+    def <strong>init</strong>(self, procman: ProcessManagerLocal, browser_path: str, parent=None):
+        super().<strong>init</strong>(parent)
+        self.procman = procman
+        self.browser_path = browser_path
+        self._auto_open_done = False</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    title = QtWidgets.QLabel("HyperFlow"); title.setObjectName("h1")
+    add_btn = QtWidgets.QPushButton("New Instance"); add_btn.setObjectName("primary"); add_btn.clicked.connect(self.on_add)
+
+    header = QtWidgets.QHBoxLayout(); header.addWidget(title); header.addStretch(); header.addWidget(add_btn)
+
+    # Scrollable card list
+    self.cards_container = QtWidgets.QWidget()
+    self.cards_layout = QtWidgets.QVBoxLayout(self.cards_container)
+    self.cards_layout.setSpacing(10); self.cards_layout.addStretch(1)
+
+    scroll = QtWidgets.QScrollArea()
+    scroll.setWidget(self.cards_container)
+    scroll.setWidgetResizable(True)
+    scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+    scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+    # prevent opaque repaint from styles
+    scroll.setAutoFillBackground(False)
+    scroll.viewport().setAutoFillBackground(False)
+
+    outer = QtWidgets.QVBoxLayout(self)
+    outer.addLayout(header)
+    outer.addSpacing(8)
+    outer.addWidget(scroll, 1)
+
+    procman.status_updated.connect(self.refresh)
+
+    # ensure at least one card; auto-start + auto-open web once RUNNING
+    if not self.procman.instances:
+        card = self.on_add()
+        if card:
+            QtCore.QTimer.singleShot(50, lambda: self._auto_start_and_open(card))
+
+    self.refresh()
+
+def on_add(self) -&gt; Optional[InstanceCard]:
+    try:
+        inst = self.procman.create_instance()
+    except Exception as e:
+        QtWidgets.QMessageBox.warning(self, "Create Failed", str(e)); return None
+    card = InstanceCard(inst, self.procman)
+    # insert above the stretch
+    self.cards_layout.insertWidget(self.cards_layout.count() - 1, card)
+
+    # hook buttons
+    card.start_clicked.connect(self.on_start)
+    card.stop_clicked.connect(self.on_stop)
+    card.openweb_clicked.connect(self.on_openweb)
+    return card
+
+def _auto_start_and_open(self, card: InstanceCard):
+    inst = card.inst
+    self.procman.start_instance(inst)
+
+    def maybe_open():
+        if self._auto_open_done:
+            return
+        cur = self.procman.instances.get(inst.port)
+        if cur and cur.status == "RUNNING":
+            self._auto_open_done = True
+            self.procman.open_web(cur, self.browser_path)
+            try: self.procman.status_updated.disconnect(maybe_open)
+            except Exception: pass
+
+    self.procman.status_updated.connect(maybe_open)
+
+def on_start(self, port: int):
+    inst = self.procman.instances.get(port)
+    if inst: self.procman.start_instance(inst)
+
+def on_stop(self, port: int):
+    inst = self.procman.instances.get(port)
+    if inst: self.procman.stop_instance_async(inst)
+
+def on_openweb(self, port: int):
+    inst = self.procman.instances.get(port)
+    if inst: self.procman.open_web(inst, self.browser_path)
+
+@QtCore.Slot()
+def refresh(self):
+    for i in range(self.cards_layout.count() - 1):
+        w = self.cards_layout.itemAt(i).widget()
+        if isinstance(w, InstanceCard):
+            inst = self.procman.instances.get(w.inst.port)
+            if inst: w.update_view(inst)
+</code></pre></div></div>
+
+<p>class SettingsWidget(QtWidgets.QWidget):
+    request_restart = QtCore.Signal(Path)
+    def <strong>init</strong>(self, config: ConfigManager, parent=None):
+        super().<strong>init</strong>(parent); self.config = config
+        title = QtWidgets.QLabel("Settings"); title.setObjectName("h1")
+        data_label = QtWidgets.QLabel("Data Directory")
+        self.data_edit = QtWidgets.QLineEdit(str(config.data_dir or ""))
+        self.data_edit.setPlaceholderText("Path to HyperFlow data directory")
+        data_browse = QtWidgets.QPushButton("Browse…"); data_browse.clicked.connect(self.on_browse)
+        grid = QtWidgets.QGridLayout(); grid.addWidget(data_label,0,0); grid.addWidget(self.data_edit,0,1); grid.addWidget(data_browse,0,2)
+        info = QtWidgets.QLabel("Changing the data directory will restart the launcher.")
+        save_btn = QtWidgets.QPushButton("Apply &amp; Restart"); save_btn.clicked.connect(self.apply_and_restart)
+        card = QtWidgets.QFrame(); card.setObjectName("card"); card.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+        card_l = QtWidgets.QVBoxLayout(card); card_l.addLayout(grid); card_l.addWidget(info); card_l.addStretch(); card_l.addWidget(save_btn, alignment=QtCore.Qt.AlignRight)
+        v = QtWidgets.QVBoxLayout(self); v.addWidget(title); v.addSpacing(8); v.addWidget(card, 1)
+    def on_browse(self):
+        d = QtWidgets.QFileDialog.getExistingDirectory(self, "Select Data Directory")
+        if d: self.data_edit.setText(d)
+    def apply_and_restart(self):
+        new_path = Path(self.data_edit.text().strip())
+        if not new_path.exists():
+            QtWidgets.QMessageBox.warning(self, "Invalid Path", "The selected path does not exist."); return
+        self.request_restart.emit(new_path)</p>
+
+<p>class Sidebar(QtWidgets.QFrame):
+    indexChanged = QtCore.Signal(int)
+    def <strong>init</strong>(self, parent=None):
+        super().<strong>init</strong>(parent); self.setObjectName("sidebar")
+        self.btn_hf = QtWidgets.QPushButton("HyperFlow"); self.btn_hf.setCheckable(True); self.btn_hf.setObjectName("nav")
+        self.btn_settings = QtWidgets.QPushButton("Settings"); self.btn_settings.setCheckable(True); self.btn_settings.setObjectName("nav")
+        self.btn_hf.clicked.connect(lambda: self._activate(0)); self.btn_settings.clicked.connect(lambda: self._activate(1))
+        top_box = QtWidgets.QVBoxLayout(); top_box.setContentsMargins(12,12,12,12); top_box.setSpacing(8); top_box.addWidget(self.btn_hf)
+        bottom_box = QtWidgets.QVBoxLayout(); bottom_box.setContentsMargins(12,12,12,12); bottom_box.setSpacing(8); bottom_box.addWidget(self.btn_settings)
+        v = QtWidgets.QVBoxLayout(self); v.setContentsMargins(0,0,0,0); v.setSpacing(0)
+        top_wrap = QtWidgets.QFrame(); top_wrap.setObjectName("sidebarSection"); top_wrap.setLayout(top_box)
+        bottom_wrap = QtWidgets.QFrame(); bottom_wrap.setObjectName("sidebarSection"); bottom_wrap.setLayout(bottom_box)
+        v.addWidget(top_wrap); v.addStretch(1); v.addWidget(bottom_wrap)
+        self._activate(0)
+    def _activate(self, idx: int):
+        self.btn_hf.setChecked(idx == 0); self.btn_settings.setChecked(idx == 1); self.indexChanged.emit(idx)</p>
+
+<p>class MainWindow(QtWidgets.QMainWindow):
+    def <strong>init</strong>(self, config: ConfigManager):
+        super().<strong>init</strong>()
+        self.config = config
+        self.setWindowTitle(APP_NAME)
+        self.setWindowIcon(app_icon())</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    self.sidebar = Sidebar(); self.sidebar.indexChanged.connect(self.on_sidebar_index)
+    self.procman = ProcessManagerLocal(config.data_dir)
+    self.page_hf = HyperFlowPage(self.procman, config.browser_path)
+    self.page_settings = SettingsWidget(config); self.page_settings.request_restart.connect(self.on_request_restart)
+
+    self.stack = QtWidgets.QStackedWidget(); self.stack.addWidget(self.page_hf); self.stack.addWidget(self.page_settings)
+
+    content_wrap = QtWidgets.QFrame(); content_wrap.setObjectName("content")
+    content_layout = QtWidgets.QVBoxLayout(content_wrap); content_layout.setContentsMargins(16,16,16,16); content_layout.addWidget(self.stack)
+
+    central = QtWidgets.QWidget(); h = QtWidgets.QHBoxLayout(central); h.setContentsMargins(0,0,0,0); h.setSpacing(0)
+    h.addWidget(self.sidebar); h.addWidget(content_wrap, 1); self.setCentralWidget(central)
+
+    self._create_tray()
+    self.resize(1120, 720)
+    self._apply_qss()
+
+def _apply_qss(self):
+    self.setStyleSheet(QSS)
+
+def on_sidebar_index(self, idx: int): self.stack.setCurrentIndex(idx)
+
+def _create_tray(self):
+    self.tray = QtWidgets.QSystemTrayIcon(self)
+    self.tray.setIcon(app_icon())
+    self.tray.setToolTip(APP_NAME)
+    self.tray.activated.connect(self.on_tray_activated)
+    menu = QtWidgets.QMenu()
+    show_act = menu.addAction("Show Window")
+    quit_act = menu.addAction("Quit")
+    show_act.triggered.connect(self.show_normal_from_tray)
+    quit_act.triggered.connect(self.quit_app)
+    self.tray.setContextMenu(menu)
+    self.tray.show()
+
+def on_tray_activated(self, reason):
+    if reason == QtWidgets.QSystemTrayIcon.DoubleClick:
+        self.show_normal_from_tray()
+
+def show_normal_from_tray(self):
+    self.show()
+    self.setWindowState(self.windowState() &amp; ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
+    self.raise_()
+    self.activateWindow()
+
+def closeEvent(self, e: QtGui.QCloseEvent):
+    ret = QtWidgets.QMessageBox.question(
+        self, "Exit",
+        "Keep running in the system tray?\nClick 'No' to quit.",
+        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+        QtWidgets.QMessageBox.Yes
+    )
+    if ret == QtWidgets.QMessageBox.Yes:
+        e.ignore(); self.hide()
+    else:
+        e.ignore(); self.quit_app()
+
+def on_request_restart(self, new_dir: Path):
+    self.config.data["data_dir"] = str(new_dir); self.config.save()
+    QtWidgets.QMessageBox.information(self, "Restart Required", "Settings changed. The launcher will restart now.")
+    self._restart_self()
+
+def _restart_self(self):
+    python = sys.executable; args = sys.argv[:]
+    QtCore.QProcess.startDetached(python, args)
+    self.quit_app(force=True)
+
+def quit_app(self, force: bool = False):
+    if force:
+        QtWidgets.QApplication.quit(); return
+    def _finish(): QtWidgets.QApplication.quit()
+    try:
+        self.procman.bulk_stop_finished.disconnect()
+    except Exception:
+        pass
+    self.procman.bulk_stop_finished.connect(_finish)
+    self.procman.kill_all_async()
+</code></pre></div></div>
+
+<h1 id="-first-run-validation--entry-">———————– first-run validation &amp; entry ———————–</h1>
+
+<p>def validate_or_welcome(config: ConfigManager) -&gt; bool:
+    dd = config.data_dir
+    if dd and dd.exists() and dd.is_dir():
+        return True
+    dlg = WelcomeDialog()
+    if dlg.exec() != QtWidgets.QDialog.Accepted:
+        return False
+    sel = dlg.selected_path()
+    if not sel:
+        return False
+    p = Path(sel)
+    if not p.exists():
+        try: p.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            QtWidgets.QMessageBox.critical(None, "Error", f"Failed to create directory:\n{e}")
+            return False
+    for sub in ("instances", "logs", "tmp"):
+        (p / sub).mkdir(parents=True, exist_ok=True)
+    config.data["data_dir"] = str(p); config.save()
+    return True</p>
+
+<p>def main():
+    app = QtWidgets.QApplication(sys.argv)
+    app.setQuitOnLastWindowClosed(False)
+    app.setWindowIcon(app_icon())</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config = ConfigManager(CONFIG_PATH)
+if not validate_or_welcome(config):
+    return 0
+
+w = MainWindow(config)
+w.show()
+return app.exec() ```
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="8-build--install">8) build &amp; install</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># in the project root (where pyproject.toml lives)</span>
+python3.11 <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--upgrade</span> build
+python3.11 <span class="nt">-m</span> build            <span class="c"># produces dist/*.whl and dist/*.tar.gz</span>
+
+<span class="c"># install</span>
+python3.11 <span class="nt">-m</span> pip <span class="nb">install </span>dist/hyperflow_launcher-0.1.0-py3-none-any.whl
+
+<span class="c"># run</span>
+hyperflow-launcher
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="notes--knobs-you-can-tweak-later">notes / knobs you can tweak later</h2>
+
+<ul>
+  <li>
+    <p>set real defaults via env:</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">COMFYUI_WORKDIR</code> (e.g., <code class="language-plaintext highlighter-rouge">/opt/comfyui</code>)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">COMFYUI_EXEC</code> (e.g., <code class="language-plaintext highlighter-rouge">bash -lc "source ~/miniconda3/etc/profile.d/conda.sh &amp;&amp; conda activate comfy &amp;&amp; python main.py --listen --port {port}"</code>)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">BROWSER_PATH</code> (defaults to <code class="language-plaintext highlighter-rouge">/path/to/chrome</code>; or patch <code class="language-plaintext highlighter-rouge">config.data["browser_path"]</code>)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>the <strong>Open Web</strong> button only enables once the port is actually listening.</p>
+  </li>
+  <li>
+    <p>logs stream live into the console (and also append to <code class="language-plaintext highlighter-rouge">&lt;data_dir&gt;/logs/*.log</code>).</p>
+  </li>
+  <li>
+    <p>the instance list is scrollable and won’t grow the window height.</p>
+  </li>
+  <li>
+    <p>clean shutdown: all QProcess children and spawned browser PIDs are terminated before exit.</p>
+  </li>
+</ul>
+
         
       </section>
 
@@ -6899,7 +8418,7 @@ comfyui 랑 비슷한 컬러로 다크 모드로 해줬으면 좋겠어 qss 부�
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-09-23T17:54:47+09:00">2025-09-23</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2025-09-24T11:03:11+09:00">2025-09-24</time></p>
 
       </footer>
 
@@ -6908,7 +8427,7 @@ comfyui 랑 비슷한 컬러로 다크 모드로 해줬으면 좋겠어 qss 부�
       
   <nav class="pagination">
     
-      <a href="/comfyui/comfyui-source-management/" class="pagination--pager" title="ComfyUI 소스 코드 관리 조언">Previous</a>
+      <a href="/comfyui/hyperflow-launcher/" class="pagination--pager" title="HyperFlow Launcher 개발">Previous</a>
     
     
       <a href="#" class="pagination--pager disabled">Next</a>
@@ -6929,6 +8448,7 @@ comfyui 랑 비슷한 컬러로 다크 모드로 해줬으면 좋겠어 qss 부�
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
     
+      
       
       
 
@@ -7036,47 +8556,6 @@ comfyui 랑 비슷한 컬러로 다크 모드로 해줬으면 좋겠어 qss 부�
         -->
         
         <time datetime="2025-09-15T18:33:02+09:00">2025-09-15</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">
-
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/comfyui/comfyui-glob-node/" rel="permalink">ComfyUI custom node 추가(glob)
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2025-09-13T17:23:29+09:00">2025-09-13</time>
       </span>
     
 
