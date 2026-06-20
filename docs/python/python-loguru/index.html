@@ -249,27 +249,27 @@ python에서 loguru를 쓰던데 이건 뭐하는 패키지야?
 
 <h3 id="-간단한-예시">📌 간단한 예시</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">Debug message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Info message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="sh">"</span><span class="s">Warning message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">Error message</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">critical</span><span class="p">(</span><span class="sh">"</span><span class="s">Critical message</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s">"Debug message"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Info message"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">warning</span><span class="p">(</span><span class="s">"Warning message"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="s">"Error message"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">critical</span><span class="p">(</span><span class="s">"Critical message"</span><span class="p">)</span>
 
 <span class="c1"># 예외 자동 로깅
-</span><span class="nd">@logger.catch</span>
+</span><span class="o">@</span><span class="n">logger</span><span class="p">.</span><span class="n">catch</span>
 <span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
 
-<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
 
 <h3 id="-로그-파일-저장도-간단하게">🔧 로그 파일 저장도 간단하게</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">my_log.log</span><span class="sh">"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="sh">"</span><span class="s">500 MB</span><span class="sh">"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="sh">"</span><span class="s">zip</span><span class="sh">"</span><span class="p">,</span> <span class="n">retention</span><span class="o">=</span><span class="sh">"</span><span class="s">10 days</span><span class="sh">"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"my_log.log"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s">"500 MB"</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s">"zip"</span><span class="p">,</span> <span class="n">retention</span><span class="o">=</span><span class="s">"10 days"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>위 코드는 로그를 <code class="language-plaintext highlighter-rouge">my_log.log</code> 파일에 저장하면서,</p>
@@ -316,13 +316,13 @@ python에서 loguru를 쓰던데 이건 뭐하는 패키지야?
 
 <h3 id="-예시">📌 예시:</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="nd">@logger.catch</span>
+<span class="o">@</span><span class="n">logger</span><span class="p">.</span><span class="n">catch</span>
 <span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
 
-<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># 예외 발생
+<span class="n">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># 예외 발생
 </span></code></pre></div></div>
 
 <h4 id="결과-터미널-출력">결과 (터미널 출력):</h4>
@@ -358,11 +358,11 @@ ZeroDivisionError: division by zero
   </li>
 </ul>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@logger.catch</span><span class="p">(</span><span class="n">reraise</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="n">logger</span><span class="p">.</span><span class="n">catch</span><span class="p">(</span><span class="n">reraise</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">buggy</span><span class="p">():</span>
-    <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">bad!</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"bad!"</span><span class="p">)</span>
 
-<span class="nf">buggy</span><span class="p">()</span>
+<span class="n">buggy</span><span class="p">()</span>
 </code></pre></div></div>
 
 <hr />
@@ -373,15 +373,15 @@ ZeroDivisionError: division by zero
 
 <h3 id="예시">예시:</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">debug.log</span><span class="sh">"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="sh">"</span><span class="s">1 MB</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"debug.log"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s">"1 MB"</span><span class="p">)</span>
 
-<span class="nd">@logger.catch</span>
+<span class="o">@</span><span class="n">logger</span><span class="p">.</span><span class="n">catch</span>
 <span class="k">def</span> <span class="nf">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
 
-<span class="nf">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>✔️ 이래야 <code class="language-plaintext highlighter-rouge">debug.log</code> 파일에 로그가 저장됩니다.<br />
@@ -435,18 +435,18 @@ cli entry에서 logger에 add 해주면 전체 패키지에서 다 공유되는�
 <h2 id="-기본-동작-cli-entry에서-loggeradd-하면-전체에서-공유됨">✅ 기본 동작: CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()</code> 하면 전체에서 공유됨</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+</span><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">app.log</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"app.log"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Starting the app</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Starting the app"</span><span class="p">)</span>
 
 <span class="c1"># utils.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+</span><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
 <span class="k">def</span> <span class="nf">helper</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Inside helper</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Inside helper"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># main.py 실행</span>
@@ -466,14 +466,14 @@ python main.py
 <p>만약 <code class="language-plaintext highlighter-rouge">logger.add()</code>가 실행되기 전에 다른 모듈이 먼저 로그를 찍으면?</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># utils.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello from utils</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># add() 호출 전이므로 안 찍힐 수도 있음
+</span><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"hello from utils"</span><span class="p">)</span>  <span class="c1"># add() 호출 전이므로 안 찍힐 수도 있음
 </span>
 <span class="c1"># main.py
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">import</span> <span class="n">utils</span>
+</span><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="nn">utils</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"log.txt"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>→ <code class="language-plaintext highlighter-rouge">utils</code>가 먼저 로딩되면서 로그를 찍고, <code class="language-plaintext highlighter-rouge">add()</code>는 그 후에 호출되므로 <strong>처음 로그는 안 남을 수 있음</strong>.</p>
@@ -487,8 +487,8 @@ python main.py
 <p>다른 곳에서 또 <code class="language-plaintext highlighter-rouge">logger.add()</code>를 하면 핸들러가 추가로 붙기 때문에, <strong>같은 로그가 여러 번 출력될 수 있음</strong>.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log1.txt</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log2.txt</span><span class="sh">"</span><span class="p">)</span>
+</span><span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"log1.txt"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"log2.txt"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>→ 하나의 로그 메시지가 두 파일에 동시에 저장됨.<br />
@@ -501,8 +501,8 @@ python main.py
 <p><code class="language-plaintext highlighter-rouge">logger.add()</code>는 핸들러 ID를 반환합니다. 이를 저장해뒀다가 필요할 때 <code class="language-plaintext highlighter-rouge">logger.remove(handler_id)</code>로
 제거해줘야 합니다. 안 그러면 계속 누적됩니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log_id</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log_id</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"log.txt"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -535,19 +535,19 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
 <h2 id="-기본-상태-자동으로-stdout-출력됨">✅ 기본 상태: 자동으로 stdout 출력됨</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello world</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"hello world"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>위 코드는 아무런 설정도 없지만 <code class="language-plaintext highlighter-rouge">stdout</code>으로 다음과 같이 컬러풀한 로그를 출력합니다:</p>
 
-<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2025</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">25</span> <span class="mi">14</span><span class="o">:</span><span class="mi">12</span><span class="o">:</span><span class="mf">30.123</span> <span class="o">|</span> <span class="n">INFO</span>     <span class="o">|</span> <span class="n">__main__</span><span class="o">:&lt;</span><span class="k">module</span><span class="o">&gt;:</span><span class="mi">3</span> <span class="o">-</span> <span class="n">hello</span> <span class="n">world</span>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2025</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">25</span> <span class="mi">14</span><span class="o">:</span><span class="mi">12</span><span class="o">:</span><span class="mf">30.123</span> <span class="o">|</span> <span class="n">INFO</span>     <span class="o">|</span> <span class="n">__main__</span><span class="o">:&lt;</span><span class="n">module</span><span class="o">&gt;:</span><span class="mi">3</span> <span class="o">-</span> <span class="n">hello</span> <span class="n">world</span>
 </code></pre></div></div>
 
 <p>이건 <code class="language-plaintext highlighter-rouge">loguru</code>가 <strong>프로그램 시작 시 내부적으로 다음과 같은 핸들러를 자동 등록</strong> 해두기 때문입니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="p">...,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">DEBUG</span><span class="sh">"</span><span class="p">,</span> <span class="n">colorize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="p">...,</span> <span class="n">level</span><span class="o">=</span><span class="s">"DEBUG"</span><span class="p">,</span> <span class="n">colorize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>✔️ 즉, <strong>자동으로 stderr (터미널 출력)으로 로그를 내보냅니다.</strong><br />
@@ -557,8 +557,8 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
 <h2 id="-명시적으로-파일-로깅을-추가하면-어떻게-되나">❗ 명시적으로 파일 로깅을 추가하면 어떻게 되나?</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">mylog.log</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">only in file?</span><span class="sh">"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"mylog.log"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"only in file?"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>➡ <strong>아닙니다.</strong> 기본 stdout 출력도 여전히 유지됩니다.<br />
@@ -571,10 +571,10 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
 <p>기존의 기본 핸들러를 <strong>명시적으로 제거</strong> 해야 합니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>  <span class="c1"># 기존 stdout 핸들러 제거
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="sh">"</span><span class="s">log.txt</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">remove</span><span class="p">()</span>  <span class="c1"># 기존 stdout 핸들러 제거
+</span><span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"log.txt"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이러면 stdout에는 아무 것도 출력되지 않고, 파일에만 저장됩니다.</p>
@@ -630,9 +630,9 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
 <p>기존 표준 <code class="language-plaintext highlighter-rouge">logging</code> 모듈에서는 이렇게 모듈별로 logger를 만들었습니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">logging</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이렇게 하면 모듈마다 이름이 붙은 logger가 생기고, 나중에 어떤 모듈에서 로그를 찍었는지 추적이 쉬웠죠.</p>
@@ -644,9 +644,9 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 <p><code class="language-plaintext highlighter-rouge">loguru</code>는 <code class="language-plaintext highlighter-rouge">from loguru import logger</code> 하면 <strong>무조건 전역 공유 싱글톤 인스턴스를 씁니다.</strong></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 어떤 모듈에서든
-</span><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+</span><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"hello"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>모듈명, 줄 번호, 함수명 같은 메타데이터는 자동으로 로그에 포함되기 때문에<br />
@@ -697,9 +697,9 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
 <p><code class="language-plaintext highlighter-rouge">loguru</code>는 <code class="language-plaintext highlighter-rouge">logger.bind()</code>를 제공해서 일부 유사한 기능을 흉내낼 수 있습니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="sh">"</span><span class="s">my.module</span><span class="sh">"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s">"my.module"</span><span class="p">)</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">hello</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 로그에 module="my.module" 붙음
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"hello"</span><span class="p">)</span>  <span class="c1"># 로그에 module="my.module" 붙음
 </span></code></pre></div></div>
 
 <p>또는 <code class="language-plaintext highlighter-rouge">enqueue=True</code>와 <code class="language-plaintext highlighter-rouge">filter=</code> 같은 옵션으로 조건부 로깅도 구현 가능합니다. 하지만 <strong>모듈별 logger 관리가
@@ -755,14 +755,14 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
 <h2 id="-로그-수준-변경-방법-표준-출력">✅ 로그 수준 변경 방법 (표준 출력)</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">import</span> <span class="n">sys</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="c1"># 기존 핸들러 제거 (stdout 출력 포함됨)
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>
+</span><span class="n">logger</span><span class="p">.</span><span class="n">remove</span><span class="p">()</span>
 
 <span class="c1"># 새 핸들러 추가: INFO 이상만 출력하도록
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">)</span>
+</span><span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s">"INFO"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이렇게 하면, <code class="language-plaintext highlighter-rouge">DEBUG</code> 로그는 출력되지 않고 <code class="language-plaintext highlighter-rouge">INFO</code>, <code class="language-plaintext highlighter-rouge">WARNING</code>, <code class="language-plaintext highlighter-rouge">ERROR</code>, <code class="language-plaintext highlighter-rouge">CRITICAL</code>만 출력됩니다.</p>
@@ -771,16 +771,16 @@ CLI entry에서 <code class="language-plaintext highlighter-rouge">logger.add()<
 
 <h2 id="-예시-코드">🧪 예시 코드</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">import</span> <span class="n">sys</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">remove</span><span class="p">()</span>  <span class="c1"># 기본 stderr 핸들러 제거
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">WARNING</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># WARNING 이상만 출력
+<span class="n">logger</span><span class="p">.</span><span class="n">remove</span><span class="p">()</span>  <span class="c1"># 기본 stderr 핸들러 제거
+</span><span class="n">logger</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s">"WARNING"</span><span class="p">)</span>  <span class="c1"># WARNING 이상만 출력
 </span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">This is DEBUG</span><span class="sh">"</span><span class="p">)</span>     <span class="c1"># 출력 안 됨
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">This is INFO</span><span class="sh">"</span><span class="p">)</span>       <span class="c1"># 출력 안 됨
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="sh">"</span><span class="s">This is WARNING</span><span class="sh">"</span><span class="p">)</span> <span class="c1"># 출력됨
-</span><span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">This is ERROR</span><span class="sh">"</span><span class="p">)</span>     <span class="c1"># 출력됨
+<span class="n">logger</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s">"This is DEBUG"</span><span class="p">)</span>     <span class="c1"># 출력 안 됨
+</span><span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"This is INFO"</span><span class="p">)</span>       <span class="c1"># 출력 안 됨
+</span><span class="n">logger</span><span class="p">.</span><span class="n">warning</span><span class="p">(</span><span class="s">"This is WARNING"</span><span class="p">)</span> <span class="c1"># 출력됨
+</span><span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="s">"This is ERROR"</span><span class="p">)</span>     <span class="c1"># 출력됨
 </span></code></pre></div></div>
 
 <hr />
@@ -1119,7 +1119,7 @@ stdout과 파일 각각 다른 레벨로 설정 가능?| ✅ 예. 핸들러는 �
 </div>
 
 
-<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

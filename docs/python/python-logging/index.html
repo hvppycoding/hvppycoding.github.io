@@ -220,24 +220,24 @@
 
 <h2 id="-2-기본적인-설정-예시">✅ 2. 기본적인 설정 예시</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">logging</span>
-<span class="kn">import</span> <span class="n">sys</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>  <span class="c1"># 개발 중엔 DEBUG, 배포 시엔 INFO 이상
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>  <span class="c1"># 개발 중엔 DEBUG, 배포 시엔 INFO 이상
 </span>
-<span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">Formatter</span><span class="p">(</span>
-    <span class="sh">'</span><span class="s">[%(asctime)s] %(levelname)s - %(name)s - %(message)s</span><span class="sh">'</span>
+<span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">Formatter</span><span class="p">(</span>
+    <span class="s">'[%(asctime)s] %(levelname)s - %(name)s - %(message)s'</span>
 <span class="p">)</span>
 
-<span class="n">console_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
-<span class="n">console_handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+<span class="n">console_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
+<span class="n">console_handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
 
-<span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">FileHandler</span><span class="p">(</span><span class="sh">'</span><span class="s">your_package.log</span><span class="sh">'</span><span class="p">)</span>
-<span class="n">file_handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+<span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s">'your_package.log'</span><span class="p">)</span>
+<span class="n">file_handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">console_handler</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">console_handler</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -252,9 +252,9 @@
 <p>스크립트 진입점(예: <code class="language-plaintext highlighter-rouge">main()</code> 함수)에서 로그 초기화를 수행하세요:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="kn">import</span> <span class="n">your_package.logging_setup</span>  <span class="c1"># 로그 초기화
-</span>    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Script started.</span><span class="sh">"</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">your_package.logging_setup</span>  <span class="c1"># 로그 초기화
+</span>    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Script started."</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>혹은 <code class="language-plaintext highlighter-rouge">entry_points</code>에서 사용하는 CLI 툴이 있다면, CLI 진입점에서도 로그 초기화를 포함시키면 됩니다.</p>
@@ -266,8 +266,8 @@
 <p>각 모듈 파일에서 다음처럼 작성하세요:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># your_package/some_module.py
-</span><span class="kn">import</span> <span class="n">logging</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+</span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -327,11 +327,11 @@ logging_setup은 어디어디 해야하지?
 logging.getLogger(__name__)</code>만 해놓습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># your_package/module_a.py
-</span><span class="kn">import</span> <span class="n">logging</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+</span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">do_something</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">doing something</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s">"doing something"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -345,14 +345,14 @@ logging.getLogger(__name__)</code>만 해놓습니다.</p>
 <p>여기서 <strong>한 번만</strong> <code class="language-plaintext highlighter-rouge">logging_setup.setup_logging()</code> 같은 걸 호출하면 됩니다. 예:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># your_package/__main__.py
-</span><span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+</span><span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="nf">setup_logging</span><span class="p">()</span>
+    <span class="n">setup_logging</span><span class="p">()</span>
     <span class="c1"># 그 다음부터는 로거 쓰면 됨
-</span>    <span class="kn">import</span> <span class="n">logging</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Script started.</span><span class="sh">"</span><span class="p">)</span>
+</span>    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Script started."</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이 구조를 쓰면,</p>
@@ -396,26 +396,26 @@ logging.getLogger(__name__)</code>만 해놓습니다.</p>
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># logging_setup.py
-</span><span class="kn">import</span> <span class="n">logging</span>
-<span class="kn">import</span> <span class="n">sys</span>
+</span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">):</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">logger</span><span class="p">.</span><span class="n">handlers</span><span class="p">:</span>
         <span class="k">return</span>  <span class="c1"># 중복 설정 방지
 </span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
-    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">Formatter</span><span class="p">(</span><span class="sh">'</span><span class="s">[%(asctime)s] %(levelname)s - %(name)s - %(message)s</span><span class="sh">'</span><span class="p">)</span>
-    <span class="n">handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s">'[%(asctime)s] %(levelname)s - %(name)s - %(message)s'</span><span class="p">)</span>
+    <span class="n">handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># cli.py
-</span><span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+</span><span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="nf">setup_logging</span><span class="p">()</span>
+    <span class="n">setup_logging</span><span class="p">()</span>
     <span class="c1"># ...
 </span></code></pre></div></div>
 
@@ -470,26 +470,26 @@ logging.getLogger(__name__)</code>만 해놓습니다.</p>
 <h2 id="-1-argparse로-로그-레벨-설정-받기">✅ 1. <code class="language-plaintext highlighter-rouge">argparse</code>로 로그 레벨 설정 받기</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># cli.py
-</span><span class="kn">import</span> <span class="n">argparse</span>
-<span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
-<span class="kn">import</span> <span class="n">logging</span>
+</span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span>
-        <span class="sh">"</span><span class="s">--log-level</span><span class="sh">"</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">,</span>
-        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="sh">"</span><span class="s">DEBUG</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">WARNING</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ERROR</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">CRITICAL</span><span class="sh">"</span><span class="p">],</span>
-        <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Set the logging level</span><span class="sh">"</span><span class="p">,</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s">"--log-level"</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s">"INFO"</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s">"DEBUG"</span><span class="p">,</span> <span class="s">"INFO"</span><span class="p">,</span> <span class="s">"WARNING"</span><span class="p">,</span> <span class="s">"ERROR"</span><span class="p">,</span> <span class="s">"CRITICAL"</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s">"Set the logging level"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">parser</span><span class="p">.</span><span class="nf">parse_args</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="nf">parse_args</span><span class="p">()</span>
-    <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="nf">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">log_level</span><span class="p">.</span><span class="nf">upper</span><span class="p">()))</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">log_level</span><span class="p">.</span><span class="n">upper</span><span class="p">()))</span>
     
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Started with log level %s</span><span class="sh">"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">log_level</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Started with log level %s"</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">log_level</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h3 id="실행-예시">실행 예시</h3>
@@ -502,22 +502,22 @@ logging.getLogger(__name__)</code>만 해놓습니다.</p>
 <h2 id="-2-click으로-하는-경우-더-직관적인-cli">✅ 2. <code class="language-plaintext highlighter-rouge">click</code>으로 하는 경우 (더 직관적인 CLI)</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># cli.py
-</span><span class="kn">import</span> <span class="n">click</span>
-<span class="kn">import</span> <span class="n">logging</span>
-<span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+</span><span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 
-<span class="nd">@click.command</span><span class="p">()</span>
-<span class="nd">@click.option</span><span class="p">(</span>
-    <span class="sh">"</span><span class="s">--log-level</span><span class="sh">"</span><span class="p">,</span>
-    <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="p">.</span><span class="nc">Choice</span><span class="p">([</span><span class="sh">"</span><span class="s">DEBUG</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">WARNING</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ERROR</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">CRITICAL</span><span class="sh">"</span><span class="p">]),</span>
-    <span class="n">default</span><span class="o">=</span><span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">,</span>
-    <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Set logging level.</span><span class="sh">"</span>
+<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">command</span><span class="p">()</span>
+<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">option</span><span class="p">(</span>
+    <span class="s">"--log-level"</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="p">.</span><span class="n">Choice</span><span class="p">([</span><span class="s">"DEBUG"</span><span class="p">,</span> <span class="s">"INFO"</span><span class="p">,</span> <span class="s">"WARNING"</span><span class="p">,</span> <span class="s">"ERROR"</span><span class="p">,</span> <span class="s">"CRITICAL"</span><span class="p">]),</span>
+    <span class="n">default</span><span class="o">=</span><span class="s">"INFO"</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s">"Set logging level."</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">log_level</span><span class="p">):</span>
-    <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="nf">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">log_level</span><span class="p">.</span><span class="nf">upper</span><span class="p">()))</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">This is a debug message</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">This is an info message</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">log_level</span><span class="p">.</span><span class="n">upper</span><span class="p">()))</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s">"This is a debug message"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"This is an info message"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -528,15 +528,15 @@ logging.getLogger(__name__)</code>만 해놓습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># logging_setup.py
 </span><span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">):</span>
-    <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">()</span>
+    <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">root_logger</span><span class="p">.</span><span class="n">handlers</span><span class="p">:</span>
         <span class="k">return</span>  <span class="c1"># 중복 설정 방지
 </span>
-    <span class="n">root_logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
-    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">Formatter</span><span class="p">(</span><span class="sh">'</span><span class="s">[%(asctime)s] %(levelname)s - %(name)s - %(message)s</span><span class="sh">'</span><span class="p">)</span>
-    <span class="n">handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
-    <span class="n">root_logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    <span class="n">root_logger</span><span class="p">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s">'[%(asctime)s] %(levelname)s - %(name)s - %(message)s'</span><span class="p">)</span>
+    <span class="n">handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">root_logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -637,13 +637,13 @@ pytest 같은데서 돌릴 땐 어떻게 되지?
 <p><code class="language-plaintext highlighter-rouge">caplog</code>은 pytest의 built-in fixture로, 테스트 중 발생한 로그를 수집합니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test_something.py
-</span><span class="kn">import</span> <span class="n">logging</span>
+</span><span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="k">def</span> <span class="nf">test_log_output</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">"</span><span class="s">your_package.module_x</span><span class="sh">"</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="nf">at_level</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">):</span>
-        <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello from test</span><span class="sh">"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">Hello from test</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">"your_package.module_x"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="n">at_level</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">):</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Hello from test"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s">"Hello from test"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
 </code></pre></div></div>
 
 <hr />
@@ -664,9 +664,9 @@ pytest 같은데서 돌릴 땐 어떻게 되지?
 </ul>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test_setup.py
-</span><span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+</span><span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 
-<span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>단, 이 설정은 전역 영향을 주므로 주의해야 합니다. <code class="language-plaintext highlighter-rouge">pytest.ini</code> 또는 <code class="language-plaintext highlighter-rouge">conftest.py</code>에서 공통 설정을 하거나,
@@ -746,19 +746,19 @@ setup을 안하면 그냥 stdout으로 나오나?
 
 <p>예를 들어, 아래 코드는 <code class="language-plaintext highlighter-rouge">print()</code>는 출력되지만 <code class="language-plaintext highlighter-rouge">logger.debug()</code>는 콘솔에 안 나옵니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">logging</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
-<span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">this won</span><span class="sh">'</span><span class="s">t show</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 출력 안 됨
-</span><span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">this will show</span><span class="sh">"</span><span class="p">)</span>          <span class="c1"># 출력됨
+<span class="n">logger</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s">"this won't show"</span><span class="p">)</span>  <span class="c1"># 출력 안 됨
+</span><span class="k">print</span><span class="p">(</span><span class="s">"this will show"</span><span class="p">)</span>          <span class="c1"># 출력됨
 </span></code></pre></div></div>
 
 <hr />
 
 <h2 id="-예외-loggingbasicconfig를-어디선가-호출한-경우">✅ 예외: <code class="language-plaintext highlighter-rouge">logging.basicConfig()</code>를 어디선가 호출한 경우</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logging</span><span class="p">.</span><span class="nf">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logging</span><span class="p">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이걸 어딘가에서 한 번이라도 호출했다면, stdout으로 출력됩니다. 하지만:</p>
@@ -904,12 +904,12 @@ setup을 안하면 그냥 stdout으로 나오나?
 <p>테스트 전용의 간단한 로그 설정을 만들어 직접 불러줄 수도 있습니다:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># conftest.py
-</span><span class="kn">import</span> <span class="n">pytest</span>
-<span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+</span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">session</span><span class="sh">"</span><span class="p">)</span>
+<span class="o">@</span><span class="n">pytest</span><span class="p">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s">"session"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">configure_logging</span><span class="p">():</span>
-    <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s">"INFO"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -934,10 +934,10 @@ setup을 안하면 그냥 stdout으로 나오나?
 <p>테스트 내에서 로그 출력 여부를 검증하고 싶다면 <code class="language-plaintext highlighter-rouge">caplog</code> fixture를 쓰면 됩니다:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_logging_behavior</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="n">your_package</span> <span class="kn">import</span> <span class="n">something</span>
-    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="nf">at_level</span><span class="p">(</span><span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span><span class="p">):</span>
-        <span class="n">something</span><span class="p">.</span><span class="nf">do_work</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">expected log message</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
+    <span class="kn">from</span> <span class="nn">your_package</span> <span class="kn">import</span> <span class="n">something</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="n">at_level</span><span class="p">(</span><span class="s">"INFO"</span><span class="p">):</span>
+        <span class="n">something</span><span class="p">.</span><span class="n">do_work</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s">"expected log message"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
 </code></pre></div></div>
 
 <hr />
@@ -1003,11 +1003,11 @@ setup을 안하면 그냥 stdout으로 나오나?
 
 <p>pytest 내부적으로는 다음과 같은 방식으로 작동합니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">()</span>
-<span class="n">root_logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">log_cli_level</span><span class="p">)</span>
-<span class="n">handler</span> <span class="o">=</span> <span class="nc">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
-<span class="n">handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">user_configured_formatter</span><span class="p">)</span>
-<span class="n">root_logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">()</span>
+<span class="n">root_logger</span><span class="p">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log_cli_level</span><span class="p">)</span>
+<span class="n">handler</span> <span class="o">=</span> <span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+<span class="n">handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">user_configured_formatter</span><span class="p">)</span>
+<span class="n">root_logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>즉,</p>
@@ -1036,24 +1036,24 @@ setup을 안하면 그냥 stdout으로 나오나?
 
 <p>→ <code class="language-plaintext highlighter-rouge">setup_logging()</code>에서 <strong>pytest 실행 시는 건너뛰는 로직</strong> 을 넣는 게 안전합니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">logging</span>
-<span class="kn">import</span> <span class="n">sys</span>
-<span class="kn">import</span> <span class="n">os</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nf">any</span><span class="p">(</span><span class="sh">"</span><span class="s">PYTEST_CURRENT_TEST</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="s">"PYTEST_CURRENT_TEST"</span> <span class="ow">in</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">):</span>
         <span class="c1"># pytest 실행 중이면 설정 안 함
 </span>        <span class="k">return</span>
 
-    <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">()</span>
+    <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">root_logger</span><span class="p">.</span><span class="n">handlers</span><span class="p">:</span>
         <span class="k">return</span>  <span class="c1"># 이미 설정된 경우 생략
 </span>
-    <span class="n">root_logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
-    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">Formatter</span><span class="p">(</span><span class="sh">'</span><span class="s">[%(asctime)s] %(levelname)s - %(name)s - %(message)s</span><span class="sh">'</span><span class="p">)</span>
-    <span class="n">handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
-    <span class="n">root_logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    <span class="n">root_logger</span><span class="p">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s">'[%(asctime)s] %(levelname)s - %(name)s - %(message)s'</span><span class="p">)</span>
+    <span class="n">handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">root_logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -1111,48 +1111,48 @@ setup을 안하면 그냥 stdout으로 나오나?
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># your_package/logging_setup.py
 </span>
-<span class="kn">import</span> <span class="n">logging</span>
-<span class="kn">import</span> <span class="n">sys</span>
-<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="k">class</span> <span class="nc">ColorFormatter</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">Formatter</span><span class="p">):</span>
     <span class="n">COLORS</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="sh">'</span><span class="s">DEBUG</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="se">\033</span><span class="s">[94m</span><span class="sh">'</span><span class="p">,</span>     <span class="c1"># 파랑
-</span>        <span class="sh">'</span><span class="s">INFO</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="se">\033</span><span class="s">[92m</span><span class="sh">'</span><span class="p">,</span>      <span class="c1"># 초록
-</span>        <span class="sh">'</span><span class="s">WARNING</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="se">\033</span><span class="s">[93m</span><span class="sh">'</span><span class="p">,</span>   <span class="c1"># 노랑
-</span>        <span class="sh">'</span><span class="s">ERROR</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="se">\033</span><span class="s">[91m</span><span class="sh">'</span><span class="p">,</span>     <span class="c1"># 빨강
-</span>        <span class="sh">'</span><span class="s">CRITICAL</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="se">\033</span><span class="s">[95m</span><span class="sh">'</span><span class="p">,</span>  <span class="c1"># 마젠타
+        <span class="s">'DEBUG'</span><span class="p">:</span> <span class="s">'</span><span class="se">\033</span><span class="s">[94m'</span><span class="p">,</span>     <span class="c1"># 파랑
+</span>        <span class="s">'INFO'</span><span class="p">:</span> <span class="s">'</span><span class="se">\033</span><span class="s">[92m'</span><span class="p">,</span>      <span class="c1"># 초록
+</span>        <span class="s">'WARNING'</span><span class="p">:</span> <span class="s">'</span><span class="se">\033</span><span class="s">[93m'</span><span class="p">,</span>   <span class="c1"># 노랑
+</span>        <span class="s">'ERROR'</span><span class="p">:</span> <span class="s">'</span><span class="se">\033</span><span class="s">[91m'</span><span class="p">,</span>     <span class="c1"># 빨강
+</span>        <span class="s">'CRITICAL'</span><span class="p">:</span> <span class="s">'</span><span class="se">\033</span><span class="s">[95m'</span><span class="p">,</span>  <span class="c1"># 마젠타
 </span>    <span class="p">}</span>
-    <span class="n">RESET</span> <span class="o">=</span> <span class="sh">'</span><span class="se">\033</span><span class="s">[0m</span><span class="sh">'</span>
+    <span class="n">RESET</span> <span class="o">=</span> <span class="s">'</span><span class="se">\033</span><span class="s">[0m'</span>
 
-    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
         <span class="n">levelname</span> <span class="o">=</span> <span class="n">record</span><span class="p">.</span><span class="n">levelname</span>
-        <span class="k">if</span> <span class="n">levelname</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">COLORS</span><span class="p">:</span>
-            <span class="n">record</span><span class="p">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">COLORS</span><span class="p">[</span><span class="n">levelname</span><span class="p">]</span><span class="si">}{</span><span class="n">levelname</span><span class="si">}{</span><span class="n">self</span><span class="p">.</span><span class="n">RESET</span><span class="si">}</span><span class="sh">"</span>
-        <span class="k">return</span> <span class="nf">super</span><span class="p">().</span><span class="nf">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">levelname</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">COLORS</span><span class="p">:</span>
+            <span class="n">record</span><span class="p">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">COLORS</span><span class="p">[</span><span class="n">levelname</span><span class="p">]</span><span class="si">}{</span><span class="n">levelname</span><span class="si">}{</span><span class="bp">self</span><span class="p">.</span><span class="n">RESET</span><span class="si">}</span><span class="s">"</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">().</span><span class="nb">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="sh">"</span><span class="s">your_package.log</span><span class="sh">"</span><span class="p">):</span>
-    <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="s">"your_package.log"</span><span class="p">):</span>
+    <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">root_logger</span><span class="p">.</span><span class="n">handlers</span><span class="p">:</span>
         <span class="k">return</span>  <span class="c1"># 중복 방지
 </span>
-    <span class="n">root_logger</span><span class="p">.</span><span class="nf">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+    <span class="n">root_logger</span><span class="p">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
 
     <span class="c1"># 공통 포맷
-</span>    <span class="n">fmt</span> <span class="o">=</span> <span class="sh">'</span><span class="s">[%(asctime)s] %(levelname)s - %(name)s - %(message)s</span><span class="sh">'</span>
-    <span class="n">datefmt</span> <span class="o">=</span> <span class="sh">'</span><span class="s">%Y-%m-%d %H:%M:%S</span><span class="sh">'</span>
+</span>    <span class="n">fmt</span> <span class="o">=</span> <span class="s">'[%(asctime)s] %(levelname)s - %(name)s - %(message)s'</span>
+    <span class="n">datefmt</span> <span class="o">=</span> <span class="s">'%Y-%m-%d %H:%M:%S'</span>
 
     <span class="c1"># 파일 핸들러 (색 없음)
-</span>    <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
-    <span class="n">file_handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="nc">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">datefmt</span><span class="p">))</span>
-    <span class="n">root_logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+</span>    <span class="n">file_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">file_handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">datefmt</span><span class="p">))</span>
+    <span class="n">root_logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
 
     <span class="c1"># pytest 실행 중이면 표준 출력 핸들러 추가 조건 확인
-</span>    <span class="n">is_pytest</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PYTEST_CURRENT_TEST</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_pytest</span> <span class="ow">or</span> <span class="p">(</span><span class="n">is_pytest</span> <span class="ow">and</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="nf">isatty</span><span class="p">()):</span>
-        <span class="n">stream_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nc">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
-        <span class="n">stream_handler</span><span class="p">.</span><span class="nf">setFormatter</span><span class="p">(</span><span class="nc">ColorFormatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">datefmt</span><span class="p">))</span>
-        <span class="n">root_logger</span><span class="p">.</span><span class="nf">addHandler</span><span class="p">(</span><span class="n">stream_handler</span><span class="p">)</span>
+</span>    <span class="n">is_pytest</span> <span class="o">=</span> <span class="s">"PYTEST_CURRENT_TEST"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_pytest</span> <span class="ow">or</span> <span class="p">(</span><span class="n">is_pytest</span> <span class="ow">and</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">isatty</span><span class="p">()):</span>
+        <span class="n">stream_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="n">stream_handler</span><span class="p">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">ColorFormatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="n">datefmt</span><span class="p">))</span>
+        <span class="n">root_logger</span><span class="p">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">stream_handler</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -1179,13 +1179,13 @@ setup을 안하면 그냥 stdout으로 나오나?
 <h2 id="-사용-예시">✅ 사용 예시</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># your_package/__main__.py or cli.py
-</span><span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
-<span class="kn">import</span> <span class="n">logging</span>
+</span><span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="nf">setup_logging</span><span class="p">()</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Started something</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">setup_logging</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Started something"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -1228,8 +1228,8 @@ pytest에서 setup_logging을 해줘야해?
 
 <p>당신이 설정한 <code class="language-plaintext highlighter-rouge">setup_logging()</code> 함수는 다음 조건을 체크합니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">is_pytest</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PYTEST_CURRENT_TEST</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">is_pytest</span> <span class="ow">or</span> <span class="p">(</span><span class="n">is_pytest</span> <span class="ow">and</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="nf">isatty</span><span class="p">()):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">is_pytest</span> <span class="o">=</span> <span class="s">"PYTEST_CURRENT_TEST"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">is_pytest</span> <span class="ow">or</span> <span class="p">(</span><span class="n">is_pytest</span> <span class="ow">and</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">isatty</span><span class="p">()):</span>
     <span class="c1"># 콘솔 핸들러 추가
 </span></code></pre></div></div>
 
@@ -1276,12 +1276,12 @@ pytest에서 setup_logging을 해줘야해?
 <h2 id="-추천-테스트-시-자동으로-설정하려면-conftestpy">🧪 추천: 테스트 시 자동으로 설정하려면 <code class="language-plaintext highlighter-rouge">conftest.py</code></h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># conftest.py (테스트 루트 디렉토리)
-</span><span class="kn">import</span> <span class="n">pytest</span>
-<span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+</span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">session</span><span class="sh">"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="o">@</span><span class="n">pytest</span><span class="p">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s">"session"</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_init_logging</span><span class="p">():</span>
-    <span class="nf">setup_logging</span><span class="p">()</span>
+    <span class="n">setup_logging</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>단, 이 방식은 항상 로깅이 파일로 기록되므로, 테스트 격리성을 중요시하는 환경에선 조심해야 합니다.</p>
@@ -1325,9 +1325,9 @@ root_logger.addHandler(stream_handler) 이 코드는 왜 있는거야? 그리고
 <p>정확히 보셨습니다.<br />
 <strong><code class="language-plaintext highlighter-rouge">setup_logging()</code> 자체를 <code class="language-plaintext highlighter-rouge">pytest</code>에서 호출하지 않는다면</strong>, 거기에 있는 <code class="language-plaintext highlighter-rouge">is_pytest</code> 분기:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">is_pytest</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PYTEST_CURRENT_TEST</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">is_pytest</span> <span class="ow">or</span> <span class="p">(</span><span class="n">is_pytest</span> <span class="ow">and</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="nf">isatty</span><span class="p">()):</span>
-    <span class="bp">...</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">is_pytest</span> <span class="o">=</span> <span class="s">"PYTEST_CURRENT_TEST"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">is_pytest</span> <span class="ow">or</span> <span class="p">(</span><span class="n">is_pytest</span> <span class="ow">and</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">isatty</span><span class="p">()):</span>
+    <span class="p">...</span>
 </code></pre></div></div>
 
 <p>→ <strong>전혀 실행되지 않습니다.</strong><br />
@@ -1527,12 +1527,12 @@ fixture</code>)<br />
   </li>
 </ol>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span>
-<span class="kn">import</span> <span class="n">sys</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(...):</span>
-    <span class="k">if</span> <span class="sh">"</span><span class="s">PYTEST_CURRENT_TEST</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="nf">isatty</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s">"PYTEST_CURRENT_TEST"</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="n">isatty</span><span class="p">():</span>
             <span class="k">return</span>  <span class="c1"># pytest + -s 아님 → 출력 X
 </span>
     <span class="c1"># 그 외엔 일반 로그 설정
@@ -1543,12 +1543,12 @@ fixture</code>)<br />
 </ol>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># conftest.py
-</span><span class="kn">import</span> <span class="n">pytest</span>
-<span class="kn">from</span> <span class="n">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+</span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">your_package.logging_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 
-<span class="nd">@pytest.fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="sh">"</span><span class="s">session</span><span class="sh">"</span><span class="p">)</span>
+<span class="o">@</span><span class="n">pytest</span><span class="p">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">autouse</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="s">"session"</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_init_logging</span><span class="p">():</span>
-    <span class="nf">setup_logging</span><span class="p">()</span>
+    <span class="n">setup_logging</span><span class="p">()</span>
 </code></pre></div></div>
 
 <hr />
@@ -1743,18 +1743,18 @@ caplog은 어떻게 쓰는거야?
 <h2 id="-caplog-기본-사용법">✅ caplog 기본 사용법</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test_module.py
-</span><span class="kn">import</span> <span class="n">logging</span>
+</span><span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">"</span><span class="s">my_module</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">"my_module"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">some_function</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Running some_function</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Running some_function"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">test_logging_output</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
-    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="nf">at_level</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">):</span>
-        <span class="nf">some_function</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="n">at_level</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">INFO</span><span class="p">):</span>
+        <span class="n">some_function</span><span class="p">()</span>
 
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">Running some_function</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
+    <span class="k">assert</span> <span class="s">"Running some_function"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
 </code></pre></div></div>
 
 <h3 id="설명">설명:</h3>
@@ -1780,15 +1780,15 @@ caplog은 어떻게 쓰는거야?
 
 <h3 id="caplogtext-문자열로-모든-로그-모아보기"><code class="language-plaintext highlighter-rouge">caplog.text</code>: 문자열로 모든 로그 모아보기</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="n">caplog</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">caplog</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
 <span class="c1"># 예: [2025-07-21 00:00:00] INFO - my_module - Running some_function
 </span></code></pre></div></div>
 
 <h3 id="caplogrecords-logginglogrecord-객체-리스트"><code class="language-plaintext highlighter-rouge">caplog.records</code>: <code class="language-plaintext highlighter-rouge">logging.LogRecord</code> 객체 리스트</h3>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">records</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">record</span><span class="p">.</span><span class="n">levelname</span> <span class="o">==</span> <span class="sh">"</span><span class="s">INFO</span><span class="sh">"</span>
-    <span class="k">assert</span> <span class="n">record</span><span class="p">.</span><span class="n">message</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">Running</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">record</span><span class="p">.</span><span class="n">levelname</span> <span class="o">==</span> <span class="s">"INFO"</span>
+    <span class="k">assert</span> <span class="n">record</span><span class="p">.</span><span class="n">message</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">"Running"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -1796,16 +1796,16 @@ caplog은 어떻게 쓰는거야?
 <h2 id="-여러-로거에서-발생한-로그도-다-캡처됨">✅ 여러 로거에서 발생한 로그도 다 캡처됨</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_multi_logger</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="n">logging</span>
-    <span class="n">logger1</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">"</span><span class="s">a</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">logger2</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">"</span><span class="s">b</span><span class="sh">"</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="n">logger1</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">"a"</span><span class="p">)</span>
+    <span class="n">logger2</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">"b"</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="nf">at_level</span><span class="p">(</span><span class="sh">"</span><span class="s">WARNING</span><span class="sh">"</span><span class="p">):</span>
-        <span class="n">logger1</span><span class="p">.</span><span class="nf">warning</span><span class="p">(</span><span class="sh">"</span><span class="s">Warn from a</span><span class="sh">"</span><span class="p">)</span>
-        <span class="n">logger2</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">Error from b</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="n">at_level</span><span class="p">(</span><span class="s">"WARNING"</span><span class="p">):</span>
+        <span class="n">logger1</span><span class="p">.</span><span class="n">warning</span><span class="p">(</span><span class="s">"Warn from a"</span><span class="p">)</span>
+        <span class="n">logger2</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="s">"Error from b"</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">Warn from a</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">Error from b</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
+    <span class="k">assert</span> <span class="s">"Warn from a"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
+    <span class="k">assert</span> <span class="s">"Error from b"</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">text</span>
 </code></pre></div></div>
 
 <hr />
@@ -1824,13 +1824,13 @@ caplog은 어떻게 쓰는거야?
 <h2 id="-실제-테스트-검증-예시-정리된-형태">✅ 실제 테스트 검증 예시 (정리된 형태)</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_error_logged</span><span class="p">(</span><span class="n">caplog</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="n">logging</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="sh">"</span><span class="s">my_module</span><span class="sh">"</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">"my_module"</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="nf">at_level</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">ERROR</span><span class="p">):</span>
-        <span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="sh">"</span><span class="s">Something failed!</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">caplog</span><span class="p">.</span><span class="n">at_level</span><span class="p">(</span><span class="n">logging</span><span class="p">.</span><span class="n">ERROR</span><span class="p">):</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="s">"Something failed!"</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="nf">any</span><span class="p">(</span><span class="sh">"</span><span class="s">Something failed!</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">msg</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">messages</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="s">"Something failed!"</span> <span class="ow">in</span> <span class="n">msg</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">caplog</span><span class="p">.</span><span class="n">messages</span><span class="p">)</span>
 </code></pre></div></div>
 
 <ul>
@@ -1906,8 +1906,8 @@ caplog은 어떻게 쓰는거야?
 
 <p>예:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
-<span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">All files processed successfully.</span><span class="sh">"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"All files processed successfully."</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>→ 콘솔에 찍히긴 하지만, 로그 포맷이 <code class="language-plaintext highlighter-rouge">[2025-07-21 10:00:00] INFO - ...</code> 식이면 사용자가 "이게 뭐지?" 할 수
@@ -1946,11 +1946,11 @@ caplog은 어떻게 쓰는거야?
 <h3 id="-구조-분리-방식-추천">✔ 구조 분리 방식 (추천)</h3>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">notify_user</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>  <span class="c1"># 사용자에게 보여줄 메시지
+    <span class="k">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>  <span class="c1"># 사용자에게 보여줄 메시지
 </span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Starting processing</span><span class="sh">"</span><span class="p">)</span>
-    <span class="nf">notify_user</span><span class="p">(</span><span class="sh">"</span><span class="s">🔄 작업을 시작합니다...</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Starting processing"</span><span class="p">)</span>
+    <span class="n">notify_user</span><span class="p">(</span><span class="s">"🔄 작업을 시작합니다..."</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이렇게 <code class="language-plaintext highlighter-rouge">print()</code>나 사용자 출력 전용 함수(<code class="language-plaintext highlighter-rouge">click.echo()</code> 등)를 따로 두는 것이 일반적입니다.</p>
@@ -1959,15 +1959,15 @@ caplog은 어떻게 쓰는거야?
 
 <h2 id="-실제-예-click-cli의-경우">✅ 실제 예: <code class="language-plaintext highlighter-rouge">click</code> CLI의 경우</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">click</span>
-<span class="kn">import</span> <span class="n">logging</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="nf">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
-<span class="nd">@click.command</span><span class="p">()</span>
+<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="sh">"</span><span class="s">Command started</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">click</span><span class="p">.</span><span class="nf">echo</span><span class="p">(</span><span class="sh">"</span><span class="s">✅ 사용 준비 완료!</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s">"Command started"</span><span class="p">)</span>
+    <span class="n">click</span><span class="p">.</span><span class="n">echo</span><span class="p">(</span><span class="s">"✅ 사용 준비 완료!"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <ul>
@@ -1983,8 +1983,8 @@ caplog은 어떻게 쓰는거야?
 
 <h2 id="-혼합-사용도-가능-주의해서">✅ 혼합 사용도 가능 (주의해서)</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="sh">"</span><span class="s">Fetching user info</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 로그 기록용
-</span><span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">📦 사용자 정보 가져오는 중...</span><span class="sh">"</span><span class="p">)</span>   <span class="c1"># 사용자 전달용
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Fetching user info"</span><span class="p">)</span>  <span class="c1"># 로그 기록용
+</span><span class="k">print</span><span class="p">(</span><span class="s">"📦 사용자 정보 가져오는 중..."</span><span class="p">)</span>   <span class="c1"># 사용자 전달용
 </span></code></pre></div></div>
 
 <p>이렇게 <strong>로그와 사용자 메시지를 구분해서 이중 출력</strong> 하는 것도 하나의 패턴입니다.<br />
@@ -2088,9 +2088,9 @@ click.echo랑 print의 차이는?
 
 <h2 id="-유니코드인코딩-처리">✅ 유니코드/인코딩 처리</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">✅ 작업 완료</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 일부 윈도우/리눅스 환경에서 깨짐 가능
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"✅ 작업 완료"</span><span class="p">)</span>  <span class="c1"># 일부 윈도우/리눅스 환경에서 깨짐 가능
 </span>
-<span class="n">click</span><span class="p">.</span><span class="nf">echo</span><span class="p">(</span><span class="sh">"</span><span class="s">✅ 작업 완료</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># click이 내부적으로 안전한 인코딩 사용
+<span class="n">click</span><span class="p">.</span><span class="n">echo</span><span class="p">(</span><span class="s">"✅ 작업 완료"</span><span class="p">)</span>  <span class="c1"># click이 내부적으로 안전한 인코딩 사용
 </span></code></pre></div></div>
 
 <blockquote>
@@ -2102,7 +2102,7 @@ click.echo랑 print의 차이는?
 
 <h2 id="-stderr-지원">✅ <code class="language-plaintext highlighter-rouge">stderr</code> 지원</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">click</span><span class="p">.</span><span class="nf">echo</span><span class="p">(</span><span class="sh">"</span><span class="s">오류 발생</span><span class="sh">"</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">click</span><span class="p">.</span><span class="n">echo</span><span class="p">(</span><span class="s">"오류 발생"</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>→ 이 메시지는 <code class="language-plaintext highlighter-rouge">sys.stderr</code>로 나가므로, 표준 출력과 분리되어 리디렉션 시 구분 가능</p>
@@ -2113,12 +2113,12 @@ click.echo랑 print의 차이는?
 
 <p><code class="language-plaintext highlighter-rouge">click.echo()</code>는 <code class="language-plaintext highlighter-rouge">click.testing.CliRunner</code>와 완벽하게 호환됩니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">click.testing</span> <span class="kn">import</span> <span class="n">CliRunner</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">click.testing</span> <span class="kn">import</span> <span class="n">CliRunner</span>
 
 <span class="k">def</span> <span class="nf">test_cli_output</span><span class="p">():</span>
-    <span class="n">runner</span> <span class="o">=</span> <span class="nc">CliRunner</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">main_command</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="sh">"</span><span class="s">작업 완료</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">result</span><span class="p">.</span><span class="n">output</span>
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">CliRunner</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="p">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">main_command</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s">"작업 완료"</span> <span class="ow">in</span> <span class="n">result</span><span class="p">.</span><span class="n">output</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -2439,7 +2439,7 @@ click.echo랑 print의 차이는?
 </div>
 
 
-<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

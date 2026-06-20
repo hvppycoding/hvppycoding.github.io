@@ -501,7 +501,7 @@
 </span></code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">myscript.js</code></p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">이 메시지는 example.com에 접속할 때만 보임!</span><span class="dl">"</span><span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">이 메시지는 example.com에 접속할 때만 보임!</span><span class="dl">"</span><span class="p">);</span>
 <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">yellow</span><span class="dl">"</span><span class="p">;</span>
 </code></pre></div></div>
 
@@ -784,81 +784,81 @@ C:\chrome-extension\
 <span class="c1">// 아이디어: 조합 중(isComposing / keyCode 229)에는 키/입력 이벤트 전파를 막아</span>
 <span class="c1">// 사이트 단축키(Enter 전송 등)나 값 덮어쓰기가 끼어들지 못하게 함.</span>
 
-<span class="p">(</span><span class="nf">function </span><span class="p">()</span> <span class="p">{</span>
+<span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
   <span class="kd">const</span> <span class="nx">DEBUG</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
-  <span class="kd">function</span> <span class="nf">log</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if </span><span class="p">(</span><span class="nx">DEBUG</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">[IME-FIX]</span><span class="dl">"</span><span class="p">,</span> <span class="p">...</span><span class="nx">args</span><span class="p">);</span>
+  <span class="kd">function</span> <span class="nx">log</span><span class="p">(...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">DEBUG</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">[IME-FIX]</span><span class="dl">"</span><span class="p">,</span> <span class="p">...</span><span class="nx">args</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="c1">// IME 조합 중인지 판별: e.isComposing이 표준, 일부 환경은 keyCode 229를 병행</span>
-  <span class="kd">function</span> <span class="nf">isIMEComposingEvent</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">isIMEComposingEvent</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// 일부 브라우저/확장 조합에서 e.isComposing이 undefined일 수 있음</span>
     <span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">isComposing</span> <span class="o">===</span> <span class="kc">true</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">===</span> <span class="mi">229</span><span class="p">;</span>
   <span class="p">}</span>
 
   <span class="c1">// 조합 중 이벤트는 막아버림(캡처링 단계에서)</span>
-  <span class="kd">function</span> <span class="nf">stopIfComposing</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if </span><span class="p">(</span><span class="nf">isIMEComposingEvent</span><span class="p">(</span><span class="nx">e</span><span class="p">))</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">stopIfComposing</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isIMEComposingEvent</span><span class="p">(</span><span class="nx">e</span><span class="p">))</span> <span class="p">{</span>
       <span class="c1">// Enter가 조합 중에 눌리면 전송 방지</span>
-      <span class="k">if </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span> <span class="o">&amp;&amp;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">key</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">Enter</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">e</span><span class="p">.</span><span class="nf">preventDefault</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span> <span class="o">&amp;&amp;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">key</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">Enter</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
       <span class="p">}</span>
-      <span class="nx">e</span><span class="p">.</span><span class="nf">stopImmediatePropagation</span><span class="p">();</span>
-      <span class="nx">e</span><span class="p">.</span><span class="nf">stopPropagation</span><span class="p">();</span>
-      <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">blocked during composition:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="p">);</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nx">stopImmediatePropagation</span><span class="p">();</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
+      <span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">blocked during composition:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">key</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="c1">// 일부 사이트는 beforeinput/input에서 값 조작을 함 → 조합 중에는 이것도 차단</span>
-  <span class="kd">function</span> <span class="nf">stopInputIfComposing</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">stopInputIfComposing</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// isComposing이 이벤트에 없을 수 있어 activeElement 상태도 참고</span>
     <span class="c1">// 다만 표준적으론 e.isComposing 체크가 핵심</span>
-    <span class="k">if </span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">isComposing</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">e</span><span class="p">.</span><span class="nf">stopImmediatePropagation</span><span class="p">();</span>
-      <span class="nx">e</span><span class="p">.</span><span class="nf">stopPropagation</span><span class="p">();</span>
-      <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">blocked input during composition:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">isComposing</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nx">stopImmediatePropagation</span><span class="p">();</span>
+      <span class="nx">e</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
+      <span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">blocked input during composition:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
   <span class="c1">// 문서 전체에 “먼저” 붙여 사이트 리스너보다 우선권 확보</span>
-  <span class="p">[</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keypress</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keyup</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span> <span class="c1">// useCapture = true</span>
+  <span class="p">[</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keypress</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keyup</span><span class="dl">"</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span> <span class="c1">// useCapture = true</span>
   <span class="p">});</span>
 
-  <span class="p">[</span><span class="dl">"</span><span class="s2">beforeinput</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopInputIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  <span class="p">[</span><span class="dl">"</span><span class="s2">beforeinput</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopInputIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
   <span class="p">});</span>
 
   <span class="c1">// 추가 안전장치: 채팅 입력 필드에 직접 패치(중복 부착 방지)</span>
-  <span class="kd">function</span> <span class="nf">patchEditable</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">el</span> <span class="o">||</span> <span class="nx">el</span><span class="p">.</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">imePatched</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+  <span class="kd">function</span> <span class="nx">patchEditable</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">el</span> <span class="o">||</span> <span class="nx">el</span><span class="p">.</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">imePatched</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
     <span class="nx">el</span><span class="p">.</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">imePatched</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">;</span>
-    <span class="p">[</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keypress</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keyup</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">el</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="p">[</span><span class="dl">"</span><span class="s2">keydown</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keypress</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">keyup</span><span class="dl">"</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
     <span class="p">});</span>
-    <span class="p">[</span><span class="dl">"</span><span class="s2">beforeinput</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">].</span><span class="nf">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">el</span><span class="p">.</span><span class="nf">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopInputIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="p">[</span><span class="dl">"</span><span class="s2">beforeinput</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">].</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">t</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">el</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stopInputIfComposing</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
     <span class="p">});</span>
-    <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">patched:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">el</span><span class="p">);</span>
+    <span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">patched:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">el</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="c1">// Open WebUI는 textarea나 contenteditable을 쓸 수 있으니 둘 다 케어</span>
-  <span class="kd">function</span> <span class="nf">scanAndPatch</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">scanAndPatch</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">candidates</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="p">...</span><span class="nb">document</span><span class="p">.</span><span class="nf">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">textarea, input[type="text"], [contenteditable="true"]</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">...</span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="dl">'</span><span class="s1">textarea, input[type="text"], [contenteditable="true"]</span><span class="dl">'</span><span class="p">)</span>
     <span class="p">];</span>
-    <span class="nx">candidates</span><span class="p">.</span><span class="nf">forEach</span><span class="p">(</span><span class="nx">patchEditable</span><span class="p">);</span>
+    <span class="nx">candidates</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">patchEditable</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="c1">// 초기 스캔</span>
-  <span class="nf">scanAndPatch</span><span class="p">();</span>
+  <span class="nx">scanAndPatch</span><span class="p">();</span>
 
   <span class="c1">// 동적 생성 대응</span>
-  <span class="kd">const</span> <span class="nx">mo</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MutationObserver</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nf">scanAndPatch</span><span class="p">());</span>
-  <span class="nx">mo</span><span class="p">.</span><span class="nf">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">,</span> <span class="p">{</span> <span class="na">childList</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="na">subtree</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
+  <span class="kd">const</span> <span class="nx">mo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MutationObserver</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">scanAndPatch</span><span class="p">());</span>
+  <span class="nx">mo</span><span class="p">.</span><span class="nx">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">,</span> <span class="p">{</span> <span class="na">childList</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="na">subtree</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
 
-  <span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">IME fix initialized</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">IME fix initialized</span><span class="dl">"</span><span class="p">);</span>
 <span class="p">})();</span>
 </code></pre></div></div>
 
@@ -1201,7 +1201,7 @@ C:\chrome-extension\
 </div>
 
 
-<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

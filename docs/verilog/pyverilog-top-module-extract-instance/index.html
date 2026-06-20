@@ -207,67 +207,67 @@ pyverilog 이용해서 top module 바로 아래에 위치한 모든 인스턴스
 <h1 id="스크립트">스크립트</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
 # dump_top_instances.py
-</span><span class="kn">import</span> <span class="n">argparse</span><span class="p">,</span> <span class="n">csv</span><span class="p">,</span> <span class="n">sys</span>
-<span class="kn">from</span> <span class="n">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">from</span> <span class="n">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="n">ModuleDef</span><span class="p">,</span> <span class="n">InstanceList</span>
+</span><span class="kn">import</span> <span class="nn">argparse</span><span class="p">,</span> <span class="n">csv</span><span class="p">,</span> <span class="n">sys</span>
+<span class="kn">from</span> <span class="nn">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="nn">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="n">ModuleDef</span><span class="p">,</span> <span class="n">InstanceList</span>
 
 <span class="k">def</span> <span class="nf">find_top_module</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">top_name</span><span class="p">):</span>
     <span class="c1"># ast.description.definitions 안에서 모듈 정의 찾기
-</span>    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">ast</span><span class="p">.</span><span class="n">description</span><span class="p">,</span> <span class="sh">'</span><span class="s">definitions</span><span class="sh">'</span><span class="p">,</span> <span class="p">[]):</span>
-        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">ModuleDef</span><span class="p">)</span> <span class="ow">and</span> <span class="n">d</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">top_name</span><span class="p">:</span>
+</span>    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ast</span><span class="p">.</span><span class="n">description</span><span class="p">,</span> <span class="s">'definitions'</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">ModuleDef</span><span class="p">)</span> <span class="ow">and</span> <span class="n">d</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">top_name</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">d</span>
     <span class="k">return</span> <span class="bp">None</span>
 
 <span class="k">def</span> <span class="nf">collect_direct_instances</span><span class="p">(</span><span class="n">top_def</span><span class="p">:</span> <span class="n">ModuleDef</span><span class="p">):</span>
-    <span class="sh">"""</span><span class="s">
+    <span class="s">"""
     top 모듈의 직계 하위 인스턴스만 수집
     (Generate 블록 내부나 하위 계층은 보지 않음)
     반환: [(module_name, instance_name), ...]
-    </span><span class="sh">"""</span>
+    """</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">top_def</span><span class="p">,</span> <span class="sh">'</span><span class="s">items</span><span class="sh">'</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
-        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">top_def</span><span class="p">,</span> <span class="s">'items'</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="p">[]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
             <span class="n">modname</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span>  <span class="c1"># 인스턴스의 모듈명 (str)
 </span>            <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">instances</span><span class="p">:</span>
-                <span class="n">rows</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">modname</span><span class="p">,</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="n">rows</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">modname</span><span class="p">,</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">rows</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="sh">"</span><span class="s">Dump direct child instances of a top module to CSV</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">files</span><span class="sh">"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="sh">"</span><span class="s">+</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Verilog/SystemVerilog source files</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-t</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--top</span><span class="sh">"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Top module name</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-o</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--out</span><span class="sh">"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">"</span><span class="s">instances.csv</span><span class="sh">"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Output CSV path (default: instances.csv)</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-I</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--incdir</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">append</span><span class="sh">"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Include directories (repeatable)</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-D</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--define</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">append</span><span class="sh">"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Preprocessor defines (e.g., FOO=1). Repeatable</span><span class="sh">"</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="nf">parse_args</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s">"Dump direct child instances of a top module to CSV"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"files"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s">"+"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">"Verilog/SystemVerilog source files"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-t"</span><span class="p">,</span> <span class="s">"--top"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">"Top module name"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-o"</span><span class="p">,</span> <span class="s">"--out"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">"instances.csv"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">"Output CSV path (default: instances.csv)"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-I"</span><span class="p">,</span> <span class="s">"--incdir"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">"append"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="s">"Include directories (repeatable)"</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-D"</span><span class="p">,</span> <span class="s">"--define"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">"append"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="s">"Preprocessor defines (e.g., FOO=1). Repeatable"</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="c1"># pyverilog 전처리 옵션 구성
 </span>    <span class="n">incs</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">incdir</span> <span class="ow">or</span> <span class="p">[]</span>
     <span class="n">defs</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">define</span> <span class="ow">or</span> <span class="p">[]</span>
 
-    <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">(</span>
+    <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span>
         <span class="n">args</span><span class="p">.</span><span class="n">files</span><span class="p">,</span>
         <span class="n">preprocess_include</span><span class="o">=</span><span class="n">incs</span><span class="p">,</span>
         <span class="n">preprocess_define</span><span class="o">=</span><span class="n">defs</span>
     <span class="p">)</span>
 
-    <span class="n">top_def</span> <span class="o">=</span> <span class="nf">find_top_module</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">top</span><span class="p">)</span>
+    <span class="n">top_def</span> <span class="o">=</span> <span class="n">find_top_module</span><span class="p">(</span><span class="n">ast</span><span class="p">,</span> <span class="n">args</span><span class="p">.</span><span class="n">top</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">top_def</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[ERROR] Top module </span><span class="sh">'</span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">top</span><span class="si">}</span><span class="sh">'</span><span class="s"> not found.</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s">"[ERROR] Top module '</span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">top</span><span class="si">}</span><span class="s">' not found.</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">rows</span> <span class="o">=</span> <span class="nf">collect_direct_instances</span><span class="p">(</span><span class="n">top_def</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">collect_direct_instances</span><span class="p">(</span><span class="n">top_def</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">out</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="sh">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">csv</span><span class="p">.</span><span class="nf">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">w</span><span class="p">.</span><span class="nf">writerow</span><span class="p">([</span><span class="sh">"</span><span class="s">module</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">instance</span><span class="sh">"</span><span class="p">])</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">out</span><span class="p">,</span> <span class="s">"w"</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">csv</span><span class="p">.</span><span class="n">writer</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">w</span><span class="p">.</span><span class="n">writerow</span><span class="p">([</span><span class="s">"module"</span><span class="p">,</span> <span class="s">"instance"</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-            <span class="n">w</span><span class="p">.</span><span class="nf">writerow</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            <span class="n">w</span><span class="p">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
 
-    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Wrote </span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="si">}</span><span class="s"> rows to </span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">out</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Wrote </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="si">}</span><span class="s"> rows to </span><span class="si">{</span><span class="n">args</span><span class="p">.</span><span class="n">out</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
-    <span class="nf">main</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
 </code></pre></div></div>
 
 <h1 id="체크-포인트">체크 포인트</h1>
@@ -563,7 +563,7 @@ pyverilog 이용해서 top module 바로 아래에 위치한 모든 인스턴스
 </div>
 
 
-<div class="page__footer-copyright">&copy; 2013 - 2025 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
