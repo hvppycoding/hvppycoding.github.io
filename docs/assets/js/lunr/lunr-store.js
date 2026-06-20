@@ -274,4 +274,10 @@ var store = [{
         "tags": [],
         "url": "/git/offline-git-flow/",
         "teaser": null
+      },{
+        "title": "Codex Publish Test",
+        "excerpt":"Codex Publish Test   This is a temporary end-to-end publish test post.   The automation should:      import this Markdown file into _posts/   build the Jekyll site   sync the generated site into the public repository's docs/ directory   ","categories": ["misc"],
+        "tags": [],
+        "url": "/misc/codex-publish-test/",
+        "teaser": null
       }]
