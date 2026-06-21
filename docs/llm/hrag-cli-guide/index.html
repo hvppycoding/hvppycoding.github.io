@@ -1,0 +1,808 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI - ARCHIVE</title>
+<meta name="description" content="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI">
+<meta property="og:url" content="https://hvppycoding.github.io/llm/hrag-cli-guide/">
+
+
+  <meta property="og:description" content="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-06-21T15:27:18+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/llm/hrag-cli-guide/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI">
+    <meta itemprop="description" content="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI">
+    <meta itemprop="datePublished" content="2026-06-21T15:27:18+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/llm/hrag-cli-guide/" itemprop="url">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T15:27:18+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="hraghyperrag-사용법--git처럼-쓰는-로컬-문서-검색rag-cli">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI</h1>
+
+<p><code class="language-plaintext highlighter-rouge">hrag</code>(<code class="language-plaintext highlighter-rouge">hyperrag</code>)는 <strong>Git처럼 동작하는 로컬 RAG(검색 증강) CLI</strong>입니다.
+워크스페이스마다 <code class="language-plaintext highlighter-rouge">.hrag/</code> 아래에 인덱스를 저장하고, 커밋한 모든 문서의
+정규화된 Markdown 스냅샷을 보관하며, 검색 결과로는 "내용"이 아니라
+<strong>원본/Markdown 위치(locator)</strong> 를 돌려줍니다. 그래서 에이전트(LLM)는 검색 →
+<code class="language-plaintext highlighter-rouge">read</code>로 실제 내용을 확인 → 답변, 이라는 깔끔한 흐름을 가집니다.</p>
+
+<p>핵심 철학은 <strong>명시성</strong>입니다. 자동 색인이 없습니다. <code class="language-plaintext highlighter-rouge">add</code>로 명시적으로 올린
+파일만 <code class="language-plaintext highlighter-rouge">commit</code> 시점에 변환·청킹·임베딩·색인됩니다.</p>
+
+<hr />
+
+<h2 id="1-설치">1. 설치</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 기본 설치 (검색/색인 코어)</span>
+pip <span class="nb">install</span> <span class="nt">-e</span> <span class="nb">.</span>
+
+<span class="c"># PDF / DOCX 변환 + PDF 시각 자산까지 쓰려면</span>
+pip <span class="nb">install</span> <span class="nt">-e</span> <span class="s1">'.[convert]'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>PDF Markdown 추출: <strong>PyMuPDF4LLM</strong></li>
+  <li>DOCX 변환: <strong>MarkItDown</strong></li>
+  <li>Python 3.11+ 필요</li>
+</ul>
+
+<hr />
+
+<h2 id="2-환경-변수와-설정">2. 환경 변수와 설정</h2>
+
+<p>임베딩/리랭커 엔드포인트는 <code class="language-plaintext highlighter-rouge">.hrag/config.toml</code>에서 읽고, <code class="language-plaintext highlighter-rouge">$VAR</code> 또는 <code class="language-plaintext highlighter-rouge">${VAR}</code>
+형태의 문자열은 환경 변수로 치환됩니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">HYPERRAG_EMBEDDING_ENDPOINT</span><span class="o">=</span><span class="s2">"https://your-embedding-endpoint/v1/embeddings"</span>
+<span class="nb">export </span><span class="nv">HYPERRAG_RERANKER_ENDPOINT</span><span class="o">=</span><span class="s2">"https://your-reranker-endpoint/v1/rerank"</span>
+<span class="nb">export </span><span class="nv">HYPERRAG_API_KEY</span><span class="o">=</span><span class="s2">"sk-..."</span>   <span class="c"># 인증이 필요 없는 엔드포인트면 생략 가능</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">hrag init</code>이 생성하는 기본 <code class="language-plaintext highlighter-rouge">config.toml</code>:</p>
+
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">version</span> <span class="p">=</span> <span class="mi">1</span>
+
+<span class="nn">[embedding]</span>
+<span class="py">endpoint</span> <span class="p">=</span> <span class="s">"$HYPERRAG_EMBEDDING_ENDPOINT"</span>
+<span class="py">api_key</span> <span class="p">=</span> <span class="s">"$HYPERRAG_API_KEY"</span>
+<span class="py">model</span> <span class="p">=</span> <span class="s">"BAAI/bge-m3"</span>
+<span class="py">dim</span> <span class="p">=</span> <span class="mi">1024</span>
+<span class="py">batch_size</span> <span class="p">=</span> <span class="mi">64</span>
+
+<span class="nn">[reranker]</span>
+<span class="py">endpoint</span> <span class="p">=</span> <span class="s">"$HYPERRAG_RERANKER_ENDPOINT"</span>
+<span class="py">api_key</span> <span class="p">=</span> <span class="s">"$HYPERRAG_API_KEY"</span>
+<span class="py">model</span> <span class="p">=</span> <span class="s">"BAAI/bge-reranker-v2-m3"</span>
+
+<span class="nn">[chunking]</span>
+<span class="py">max_tokens</span> <span class="p">=</span> <span class="mi">800</span>
+<span class="py">overlap_tokens</span> <span class="p">=</span> <span class="mi">120</span>
+
+<span class="nn">[search]</span>
+<span class="py">bm25_top_k</span> <span class="p">=</span> <span class="mi">80</span>
+<span class="py">vector_top_k</span> <span class="p">=</span> <span class="mi">80</span>
+<span class="py">rerank_top_k</span> <span class="p">=</span> <span class="mi">50</span>
+<span class="py">return_top_k</span> <span class="p">=</span> <span class="mi">10</span>
+<span class="py">exclude_stale</span> <span class="p">=</span> <span class="kc">false</span>
+
+<span class="nn">[visual]</span>
+<span class="py">enabled</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="py">page_renders</span> <span class="p">=</span> <span class="s">"lazy"</span>      <span class="c"># off | lazy | eager</span>
+<span class="py">page_render_dpi</span> <span class="p">=</span> <span class="mi">150</span>
+<span class="py">page_render_format</span> <span class="p">=</span> <span class="s">"png"</span>
+<span class="py">extract_images</span> <span class="p">=</span> <span class="kc">true</span>      <span class="c"># PDF 내부 이미지 추출</span>
+<span class="py">image_min_pixels</span> <span class="p">=</span> <span class="mi">0</span>       <span class="c"># width*height 가 이 값 미만이면 건너뜀 (0=전부)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>규칙: <code class="language-plaintext highlighter-rouge">"$NAME"</code> / <code class="language-plaintext highlighter-rouge">"${NAME}"</code> 처럼 <strong>정확히 환경 변수 한 개</strong>만 치환됩니다.
+<code class="language-plaintext highlighter-rouge">"https://$HOST/v1"</code> 같은 부분 보간은 지원하지 않습니다. 엔드포인트가 비어 있으면
+해당 명령에서 곧바로 실패합니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="3-5분-워크플로우">3. 5분 워크플로우</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrag init                          <span class="c"># .hrag/ 와 SQLite 인덱스 생성</span>
+hrag add README.md docs/           <span class="c"># 색인할 파일/디렉터리를 "스테이징"만 함</span>
+hrag status                        <span class="c"># 스테이징/변경/삭제 상태 확인</span>
+hrag commit <span class="nt">-m</span> <span class="s2">"add docs"</span>          <span class="c"># 변환→청킹→임베딩→색인 (여기서 실제 작업)</span>
+hrag <span class="nb">ls</span>                            <span class="c"># 색인된 문서 목록 + 라이브 상태</span>
+hrag search <span class="s2">"rate limit policy"</span>    <span class="c"># 검색 (locator 반환)</span>
+hrag <span class="nb">read </span>doc_xxx <span class="nt">--chunk</span> 3        <span class="c"># 검색이 가리킨 청크 주변을 실제로 읽기</span>
+</code></pre></div></div>
+
+<p>색인은 워크스페이스 루트(<code class="language-plaintext highlighter-rouge">.hrag/</code>가 있는 디렉터리)를 자동으로 찾아 동작합니다.
+하위 디렉터리에서 명령을 실행해도 상위의 워크스페이스를 사용합니다.</p>
+
+<hr />
+
+<h2 id="4-상태-모델-git처럼">4. 상태 모델 (Git처럼)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>상태</th>
+      <th>의미</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">untracked</code></td>
+      <td>파일은 있지만 한 번도 스테이징/색인되지 않음</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">staged</code></td>
+      <td><code class="language-plaintext highlighter-rouge">hrag add</code>로 스테이징 테이블에 기록됨</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">indexed</code></td>
+      <td><code class="language-plaintext highlighter-rouge">hrag commit</code>으로 변환/청킹/임베딩/색인 완료</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">modified</code></td>
+      <td>색인 당시 해시와 현재 파일 해시가 다름</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deleted</code></td>
+      <td>색인된 원본 경로가 더 이상 존재하지 않음</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stale</code></td>
+      <td><code class="language-plaintext highlighter-rouge">modified</code> 또는 <code class="language-plaintext highlighter-rouge">deleted</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>기본적으로 검색은 stale 문서도 포함하고 결과에 <code class="language-plaintext highlighter-rouge">stale=true</code>로 표시합니다.
+제외하려면 <code class="language-plaintext highlighter-rouge">[search] exclude_stale = true</code>.</p>
+
+<hr />
+
+<h2 id="5-명령어-레퍼런스">5. 명령어 레퍼런스</h2>
+
+<h3 id="hrag-init-path---force"><code class="language-plaintext highlighter-rouge">hrag init [path] [--force]</code></h3>
+<p><code class="language-plaintext highlighter-rouge">.hrag/</code>와 인덱스 DB를 생성합니다. <code class="language-plaintext highlighter-rouge">path</code>를 생략하면 현재 디렉터리.
+이미 있으면 그대로 두며, <code class="language-plaintext highlighter-rouge">--force</code>로 <code class="language-plaintext highlighter-rouge">config.toml</code>을 덮어씁니다.</p>
+
+<h3 id="hrag-add-path---include-code---all-supported---force-secret"><code class="language-plaintext highlighter-rouge">hrag add &lt;path&gt;... [--include-code] [--all-supported] [--force-secret]</code></h3>
+<p>파일/디렉터리를 <strong>스테이징만</strong> 합니다(변환·색인하지 않음).</p>
+<ul>
+  <li>기본 대상: <code class="language-plaintext highlighter-rouge">.md .mdx .txt .rst .pdf .docx</code> 및 <code class="language-plaintext highlighter-rouge">README*</code>, <code class="language-plaintext highlighter-rouge">CHANGELOG*</code> 등</li>
+  <li><code class="language-plaintext highlighter-rouge">--include-code</code>: 디렉터리 추가 시 소스/설정 확장자(<code class="language-plaintext highlighter-rouge">.py .ts .go .json</code> 등)도 포함</li>
+  <li><code class="language-plaintext highlighter-rouge">--all-supported</code>: 지원하는 문서/코드 타입 전부 스테이징</li>
+  <li><code class="language-plaintext highlighter-rouge">--force-secret</code>: <code class="language-plaintext highlighter-rouge">.env</code>, <code class="language-plaintext highlighter-rouge">*.pem</code> 같은 비밀 파일도 강제 포함(위험)</li>
+</ul>
+
+<h3 id="hrag-status---json"><code class="language-plaintext highlighter-rouge">hrag status [--json]</code></h3>
+<p>스테이징된 파일, <code class="language-plaintext highlighter-rouge">modified</code>/<code class="language-plaintext highlighter-rouge">deleted</code> 문서, 색인된 문서·청크 수를 보여줍니다.</p>
+
+<h3 id="hrag-ls---json"><code class="language-plaintext highlighter-rouge">hrag ls [--json]</code></h3>
+<p>색인된 문서 목록을 라이브 상태(<code class="language-plaintext highlighter-rouge">indexed</code>/<code class="language-plaintext highlighter-rouge">modified</code>/<code class="language-plaintext highlighter-rouge">deleted</code>)와 함께 표로 출력합니다.</p>
+
+<h3 id="hrag-commit--m-message"><code class="language-plaintext highlighter-rouge">hrag commit [-m MESSAGE]</code></h3>
+<p>스테이징된 파일을 정규 Markdown으로 변환하고 청킹·임베딩한 뒤 SQLite 인덱스를
+갱신합니다. 실제 변환·임베딩이 일어나는 유일한 지점입니다.</p>
+
+<h3 id="hrag-search-query---json---include-assets--w-root-"><code class="language-plaintext highlighter-rouge">hrag search &lt;query&gt; [--json] [--include-assets] [-W &lt;root&gt; ...]</code></h3>
+<p>커밋된 청크를 검색합니다. (검색 파이프라인은 §7 참고)</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">--json</code>: 안정적인 기계 판독용 출력(에이전트 계약)</li>
+  <li><code class="language-plaintext highlighter-rouge">--include-assets</code>: 결과 청크에 연결된 시각 자산(페이지 렌더/추출 이미지) locator 포함</li>
+  <li><code class="language-plaintext highlighter-rouge">--workspace</code>/<code class="language-plaintext highlighter-rouge">-W</code>: 다른 워크스페이스 루트를 추가로 검색(반복 가능, 멀티 워크스페이스)</li>
+</ul>
+
+<h3 id="hrag-read-doc_id---chunk-n---around-n---with-assets"><code class="language-plaintext highlighter-rouge">hrag read &lt;doc_id&gt; --chunk &lt;n&gt; [--around &lt;n&gt;] [--with-assets]</code></h3>
+<p>검색이 가리킨 청크 주변의 Markdown 발췌를 읽습니다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">--around</code>: 앞뒤 몇 개의 청크까지 포함할지(기본 2)</li>
+  <li><code class="language-plaintext highlighter-rouge">--with-assets</code>: 연결된 시각 자산을 <strong>materialize</strong>(필요 시 렌더)하여 경로와 함께 반환</li>
+</ul>
+
+<h3 id="hrag-cat-doc_id"><code class="language-plaintext highlighter-rouge">hrag cat &lt;doc_id&gt;</code></h3>
+<p>해당 문서의 정규 Markdown 스냅샷 전체를 출력합니다.</p>
+
+<h3 id="hrag-path-doc_id---json"><code class="language-plaintext highlighter-rouge">hrag path &lt;doc_id&gt; [--json]</code></h3>
+<p>원본 경로와 정규 Markdown 경로(상대/절대)를 보여줍니다.</p>
+
+<h3 id="hrag-asset-asset_id---json---materialize--no-materialize"><code class="language-plaintext highlighter-rouge">hrag asset &lt;asset_id&gt; [--json] [--materialize/--no-materialize]</code></h3>
+<p>시각 자산의 경로를 보여줍니다. 기본적으로 lazy 페이지 렌더는 즉시 렌더합니다.
+<code class="language-plaintext highlighter-rouge">--no-materialize</code>면 메타데이터만 조회합니다.</p>
+
+<h3 id="hrag-log"><code class="language-plaintext highlighter-rouge">hrag log</code></h3>
+<p>최근 커밋 기록(문서/청크 수, 메시지)을 보여줍니다.</p>
+
+<hr />
+
+<h2 id="6-pdf와-시각-자산">6. PDF와 시각 자산</h2>
+
+<p>PDF는 두 종류의 시각 자산을 다룹니다.</p>
+
+<p><strong>(1) 페이지 렌더(page render)</strong> — PDF의 각 페이지를 통째로 PNG로 렌더합니다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">[visual] page_renders</code> 모드: <code class="language-plaintext highlighter-rouge">lazy</code>(기본, 요청 시 렌더) / <code class="language-plaintext highlighter-rouge">eager</code>(커밋 때 전부 렌더) / <code class="language-plaintext highlighter-rouge">off</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page_render_dpi</code>로 해상도 조절</li>
+  <li>asset id 예: <code class="language-plaintext highlighter-rouge">page:doc_xxx:p000012:render:150dpi:png</code></li>
+</ul>
+
+<p><strong>(2) 임베디드 이미지 추출</strong> — PDF 내부에 박혀 있는 그림/도표를 꺼냅니다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">hrag commit</code> 시 PDF 객체(xref) 단위로 <strong>중복 제거</strong>하여
+<code class="language-plaintext highlighter-rouge">.hrag/assets/by-doc/&lt;doc_id&gt;/images/</code>에 저장</li>
+  <li>정규 Markdown 스냅샷에는 <strong>상대 경로 이미지 링크</strong>로 삽입됩니다:
+<code class="language-plaintext highlighter-rouge">![embedded image x7 (60x40)](../../../assets/by-doc/doc_xxx/images/x000007.png)</code></li>
+  <li>임베딩/검색용 텍스트에서는 이미지 마크업을 제거하므로 검색 품질에 영향이 없고,
+스냅샷에는 그대로 남아 <code class="language-plaintext highlighter-rouge">cat</code>/<code class="language-plaintext highlighter-rouge">read</code>로 노출되어 LLM이 경로로 열어볼 수 있습니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">[visual] extract_images = false</code>로 끄거나, <code class="language-plaintext highlighter-rouge">image_min_pixels</code>로 작은 아이콘을 거를 수 있습니다.</li>
+</ul>
+
+<p>사용 예:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrag search <span class="s2">"revenue chart"</span> <span class="nt">--include-assets</span> <span class="nt">--json</span>
+hrag <span class="nb">read </span>doc_xxx <span class="nt">--chunk</span> 3 <span class="nt">--with-assets</span>
+hrag asset page:doc_xxx:p000012:render:150dpi:png <span class="nt">--json</span>
+hrag asset image:doc_xxx:x000007:png <span class="nt">--json</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>참고: 벡터로 그려진(임베디드 래스터가 아닌) 도표는 이미지 추출 대상이 아니며,
+페이지 렌더로 커버됩니다. 비전 캡션 생성은 하지 않으므로 이미지 "내용"으로
+직접 검색되지는 않고, 검색된 청크에 자산 경로가 따라옵니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="7-검색-파이프라인">7. 검색 파이프라인</h2>
+
+<ol>
+  <li>커밋된 청크에 대해 <strong>FTS5/BM25</strong> 키워드 검색</li>
+  <li>쿼리를 OpenAI 호환 임베딩 엔드포인트로 임베딩</li>
+  <li>청크 임베딩과 <strong>코사인 유사도</strong>(인프로세스 브루트포스)</li>
+  <li>BM25 + 벡터 후보를 <strong>RRF(상호 순위 융합)</strong> 로 병합</li>
+  <li>상위 <code class="language-plaintext highlighter-rouge">rerank_top_k</code>개를 <strong>Cohere 스타일 리랭커</strong>로 재정렬</li>
+  <li>상위 <code class="language-plaintext highlighter-rouge">return_top_k</code>개 반환 (stale 문서 기본 포함)</li>
+</ol>
+
+<p>리랭커 호출이 실패하면 융합 점수 기반으로 폴백합니다(<code class="language-plaintext highlighter-rouge">reranker_fallback=true</code>).</p>
+
+<hr />
+
+<h2 id="8-멀티-워크스페이스-검색">8. 멀티 워크스페이스 검색</h2>
+
+<p>여러 워크스페이스를 한 번에 검색할 수 있습니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrag search <span class="s2">"deployment"</span> <span class="nt">-W</span> ~/proj/a <span class="nt">-W</span> ~/proj/b <span class="nt">--json</span>
+</code></pre></div></div>
+
+<p>이때 각 결과의 <code class="language-plaintext highlighter-rouge">read_command</code>에는 해당 워크스페이스로 이동하는 <code class="language-plaintext highlighter-rouge">cd</code>가 포함되어
+바로 복사·실행할 수 있습니다.</p>
+
+<hr />
+
+<h2 id="9-에이전트llm-연동">9. 에이전트(LLM) 연동</h2>
+
+<p><code class="language-plaintext highlighter-rouge">hrag search --json</code>은 <strong>안정적인 기계 판독 계약</strong>입니다. 결과는 내용이 아니라
+locator이므로, 에이전트는 반드시 <code class="language-plaintext highlighter-rouge">read</code>/<code class="language-plaintext highlighter-rouge">cat</code> 또는 반환된 Markdown 경로+라인
+범위로 실제 내용을 확인한 뒤 답해야 합니다.</p>
+
+<p>검색 JSON 결과(요약):</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"doc_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"doc_xxx"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"chunk_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API Policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"snippet"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"source_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"docs/api.pdf"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"source_page"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"source_locator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"docs/api.pdf:page 12"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"markdown_locator"</span><span class="p">:</span><span class="w"> </span><span class="s2">".hrag/markdown/xx/yy/doc_xxx__api.md:120-167"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"read_target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"markdown"</span><span class="p">,</span><span class="w"> </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nl">"start_line"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="nl">"end_line"</span><span class="p">:</span><span class="w"> </span><span class="mi">167</span><span class="w"> </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"related_assets"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"stale"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"read_command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hrag read doc_xxx --chunk 3 --around 2"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"cat_command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hrag cat doc_xxx"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"path_command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hrag path doc_xxx --json"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>에이전트 정책</strong></p>
+
+<ul>
+  <li>호출해도 되는 명령: <code class="language-plaintext highlighter-rouge">hrag search</code>, <code class="language-plaintext highlighter-rouge">hrag read</code>, <code class="language-plaintext highlighter-rouge">hrag cat</code>, <code class="language-plaintext highlighter-rouge">hrag path</code></li>
+  <li>사람이 명시적으로 요청할 때만: <code class="language-plaintext highlighter-rouge">hrag add</code>, <code class="language-plaintext highlighter-rouge">hrag commit</code>, <code class="language-plaintext highlighter-rouge">hrag init</code>, <code class="language-plaintext highlighter-rouge">hrag reset</code></li>
+</ul>
+
+<hr />
+
+<h2 id="10-저장-구조-고정">10. 저장 구조 (고정)</h2>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>workspace-root/
+  .hrag/
+    config.toml          # 설정 ( 프로젝트 루트가 아니라 .hrag 안에 위치 )
+    index.sqlite         # 인덱스 DB
+    markdown/            # 정규 Markdown 스냅샷 (doc_id 기준)
+    assets/              # 페이지 렌더 / 추출 이미지
+    cache/  tmp/  logs/
+</code></pre></div></div>
+
+<ul>
+  <li>Markdown 스냅샷 경로: <code class="language-plaintext highlighter-rouge">.hrag/markdown/&lt;doc-id-prefix&gt;/&lt;...&gt;/doc_&lt;hash&gt;__&lt;slug&gt;.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">doc_id = "doc_" + base32(sha256("file://" + 절대경로))[0:20]</code>
+→ 같은 파일은 수정해도 같은 <code class="language-plaintext highlighter-rouge">doc_id</code>, 이름을 바꾸면 새 <code class="language-plaintext highlighter-rouge">doc_id</code>.</li>
+  <li>저장 레이아웃은 사용자 설정 대상이 아닙니다(고정).</li>
+</ul>
+
+<hr />
+
+<h2 id="요약">요약</h2>
+
+<p><code class="language-plaintext highlighter-rouge">hrag</code>는 "검색은 위치만, 내용은 read로"라는 원칙과 Git식 명시적 워크플로우
+(<code class="language-plaintext highlighter-rouge">add</code> → <code class="language-plaintext highlighter-rouge">commit</code> → <code class="language-plaintext highlighter-rouge">search</code> → <code class="language-plaintext highlighter-rouge">read</code>)를 결합한 로컬 RAG CLI입니다. PDF의 페이지
+렌더와 내부 이미지 추출까지 지원해, 문서의 텍스트뿐 아니라 시각 자료까지
+에이전트가 경로로 접근할 수 있습니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#llm" class="page__taxonomy-item p-category" rel="tag">llm</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-21T15:27:18+09:00">2026-06-21</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/misc/farad-usage-ledger/" class="pagination--pager" title="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/farad-usage-ledger/" rel="permalink">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T15:02:23+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/hyperrun-script-variable-map/" rel="permalink">HyperRun(hrun) 스크립트 / 변수 맵
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T14:32:35+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">HyperRun(hrun) 스크립트 / 변수 맵
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/codex-publish-test/" rel="permalink">Codex Publish Test
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-20T00:00:00+09:00">2026-06-20</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Codex Publish Test
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/git/offline-git-flow/" rel="permalink">내부망 Git 운영 Flow
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2025-09-25T13:15:00+09:00">2025-09-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
