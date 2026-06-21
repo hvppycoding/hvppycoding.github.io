@@ -10,8 +10,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>HyperRun(hrun) 사용법 - ARCHIVE</title>
-<meta name="description" content="HyperRun(hrun) 사용법">
+<!-- begin _includes/seo.html --><title>HyperRun(hrun) 사용자 가이드 - ARCHIVE</title>
+<meta name="description" content="HyperRun(hrun) 사용자 가이드">
 
 
   <meta name="author" content="hvppycoding">
@@ -23,11 +23,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="ARCHIVE">
-<meta property="og:title" content="HyperRun(hrun) 사용법">
+<meta property="og:title" content="HyperRun(hrun) 사용자 가이드">
 <meta property="og:url" content="https://hvppycoding.github.io/misc/hrun-usage/">
 
 
-  <meta property="og:description" content="HyperRun(hrun) 사용법">
+  <meta property="og:description" content="HyperRun(hrun) 사용자 가이드">
 
 
 
@@ -150,8 +150,8 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="HyperRun(hrun) 사용법">
-    <meta itemprop="description" content="HyperRun(hrun) 사용법">
+    <meta itemprop="headline" content="HyperRun(hrun) 사용자 가이드">
+    <meta itemprop="description" content="HyperRun(hrun) 사용자 가이드">
     <meta itemprop="datePublished" content="2026-06-21T15:29:14+09:00">
     
 
@@ -159,7 +159,7 @@
       
         <header>
           <h1 id="page-title" class="page__title" itemprop="headline">
-            <a href="https://hvppycoding.github.io/misc/hrun-usage/" itemprop="url">HyperRun(hrun) 사용법
+            <a href="https://hvppycoding.github.io/misc/hrun-usage/" itemprop="url">HyperRun(hrun) 사용자 가이드
 </a>
           </h1>
           
@@ -187,150 +187,146 @@
 
       <section class="page__content" itemprop="text">
         
-        <h1 id="hyperrunhrun-사용법">HyperRun(hrun) 사용법</h1>
+        <h1 id="hyperrunhrun-사용자-가이드">HyperRun(hrun) 사용자 가이드</h1>
 
-<p><code class="language-plaintext highlighter-rouge">hrun</code>은 폐쇄망(내부망)에서 도구·런타임·환경을 <strong>라우팅</strong>해주는 작은 런처다. 사용자는 네트워크(A/B)나 설치 경로를 신경 쓰지 않고 <code class="language-plaintext highlighter-rouge">hrun &lt;command&gt;</code> 한 줄로 내부 도구를 실행한다.</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun python <span class="nt">-V</span>
-hrun pip list
-hrun mycli a b c
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">hrun</code>은 보이는 네트워크 러너를 고르고, 공통 디스패치 레이어를 거쳐, 요청한 도구의 래퍼를 실행한다.</p>
+<p>폐쇄망에서 <code class="language-plaintext highlighter-rouge">hrun</code>으로 내부 도구를 실행하는 <strong>일반 사용자</strong> 관점의 가이드다. 여기서 다루는 모든 것은 <strong>내 데이터 디렉터리</strong> 안에서 일어나며, 시스템(글로벌) 영역은 건드리지 않는다. (글로벌 툴 추가는 <a href="/misc/hrun-add-tool/">관리자 가이드</a> 참고.)</p>
 
 <h2 id="기본-사용">기본 사용</h2>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun &lt;<span class="nb">command</span><span class="o">&gt;</span> <span class="o">[</span>args...]
+hrun python <span class="nt">-V</span>
+hrun pip list
+hrun mycli a b c
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">&lt;command&gt;</code> 뒤 인자는 그대로 실제 도구로 전달된다.</p>
+
+<h2 id="내-데이터-디렉터리">내 데이터 디렉터리</h2>
+
+<p>내 모든 상태(<code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>)가 들어가는 곳이다. 위치는 이 순서로 정해진다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 내가 지정한 절대경로 HYPERRUN_DATA_DIR
+2. HYPERRUN_SHARED_DATA_ROOT/&lt;user&gt;/.hrun   (관리자가 컴파일로 켠 경우만)
+3. $HOME/.hrun
 </code></pre></div></div>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">&lt;command&gt;</code> 는 등록된 내부 도구 이름(<code class="language-plaintext highlighter-rouge">python</code>, <code class="language-plaintext highlighter-rouge">pip</code>, <code class="language-plaintext highlighter-rouge">mycli</code> 등).</li>
-  <li>뒤에 오는 인자는 그대로 실제 도구로 전달된다.</li>
+  <li>전부 <strong>일반 폴더</strong>다(심볼릭 없음). 권한은 기본값(umask)을 따른다.</li>
+  <li>어디로 잡혔는지 확인:</li>
 </ul>
-
-<p>명령 탐색 순서는 <strong>사용자 우선</strong>이다.</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. $HYPERRUN_DATA_DIR/commands/&lt;command&gt;   (사용자)
-2. $HYPERRUN_ROOT/commands/&lt;command&gt;       (시스템)
-</code></pre></div></div>
-
-<p>즉 같은 이름이면 사용자 커맨드가 시스템 커맨드를 덮어쓴다.</p>
-
-<h2 id="내장-커맨드">내장 커맨드</h2>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun <span class="nb">help</span>                 <span class="c"># 사용법</span>
-hrun version              <span class="c"># core 버전</span>
-hrun doctor               <span class="c"># 진단 정보(네트워크/경로/플랫폼)</span>
-hrun config               <span class="c"># 데이터 디렉터리 경로와 존재 여부</span>
-hrun list                 <span class="c"># 사용 가능한 커맨드 목록</span>
-hrun which &lt;<span class="nb">command</span><span class="o">&gt;</span>      <span class="c"># 실제 실행 파일 경로</span>
-hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>        <span class="c"># 그 커맨드의 환경 컨텍스트</span>
-hrun docs <span class="o">[</span><span class="nt">--path</span><span class="o">]</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 커맨드 문서 출력(또는 경로만)</span>
-</code></pre></div></div>
-
-<h3 id="list-출력-예">list 출력 예</h3>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>COMMAND   SOURCE   DESCRIPTION
-python    system   Company Python runtime
-pip       system   ...
-mycli     user     ...
-</code></pre></div></div>
-
-<h3 id="doctor">doctor</h3>
-
-<p>네트워크 선택 결과와 경로, 플랫폼을 보여준다. 환경이 꼬였을 때 가장 먼저 확인할 것.</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun doctor
-</code></pre></div></div>
-
-<h3 id="config">config</h3>
-
-<p>데이터 디렉터리 후보와 존재 여부만 출력하며, <strong>디렉터리를 만들지는 않는다.</strong> 실제 생성은 일반 커맨드를 실행할 때 일어난다.</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>hrun config
 <span class="nv">data_dir</span><span class="o">=</span>/home/me/.hrun
 <span class="nv">data_dir_exists</span><span class="o">=</span><span class="nb">yes</span>
 </code></pre></div></div>
 
+<p><code class="language-plaintext highlighter-rouge">config</code>는 경로만 보여주고 디렉터리를 만들지는 않는다. 실제 생성은 일반 커맨드를 처음 실행할 때 일어난다.</p>
+
+<p>레이아웃:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$HYPERRUN_DATA_DIR/
+  commands/            # 내 커맨드(시스템보다 우선)
+  desc/  docs/         # 내 설명·문서
+  env/                 # 내 환경변수 오버라이드
+    global.env
+    profiles/{user,agent}.env
+    tools/&lt;tool&gt;.env
+  tools/&lt;tool_id&gt;/     # 툴별 쓰기 공간(HYPERRUN_TOOL_HOME)
+  .hyperrun/           # 세션·로그·캐시
+</code></pre></div></div>
+
+<h2 id="내가-쓰는-내장-커맨드">내가 쓰는 내장 커맨드</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun <span class="nb">help</span>                 <span class="c"># 사용법</span>
+hrun version              <span class="c"># core 버전</span>
+hrun doctor               <span class="c"># 진단(네트워크/경로/플랫폼)</span>
+hrun config               <span class="c"># 내 데이터 디렉터리 경로/존재여부</span>
+hrun list                 <span class="c"># 쓸 수 있는 커맨드 목록</span>
+hrun which &lt;<span class="nb">command</span><span class="o">&gt;</span>      <span class="c"># 실제 실행 파일 경로</span>
+hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>        <span class="c"># 그 커맨드의 환경 컨텍스트</span>
+hrun docs <span class="o">[</span><span class="nt">--path</span><span class="o">]</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 커맨드 문서</span>
+</code></pre></div></div>
+
+<h2 id="내-커맨드-추가-관리자-없이">내 커맨드 추가 (관리자 없이)</h2>
+
+<p>관리자 권한이 없어도, 내 데이터 디렉터리에 실행 파일을 두면 바로 커맨드가 된다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$HYPERRUN_DATA_DIR</span><span class="s2">/commands/hello"</span> <span class="o">&lt;&lt;</span><span class="sh">'</span><span class="no">SH</span><span class="sh">'
+#!/bin/sh
+echo "hi from </span><span class="nv">$HYPERRUN_USER</span><span class="sh">"
+</span><span class="no">SH
+</span><span class="nb">chmod</span> +x <span class="s2">"</span><span class="nv">$HYPERRUN_DATA_DIR</span><span class="s2">/commands/hello"</span>
+
+hrun hello
+</code></pre></div></div>
+
+<p>탐색 순서가 <strong>사용자 → 시스템</strong>이라, 같은 이름이면 내 커맨드가 시스템 커맨드를 덮어쓴다. 설명/문서도 내 데이터 디렉터리에 둘 수 있다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$HYPERRUN_DATA_DIR/desc/hello.desc          # list에 뜨는 한 줄 설명
+$HYPERRUN_DATA_DIR/docs/commands/hello.md   # hrun docs hello
+</code></pre></div></div>
+
+<h2 id="내-환경변수-오버라이드">내 환경변수 오버라이드</h2>
+
+<p>env 파일은 셸이 <code class="language-plaintext highlighter-rouge">source</code> 하지 않고 HyperRun이 안전 파싱한다. 내 데이터 디렉터리의 파일이 시스템 기본값을 덮어쓴다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># $HYPERRUN_DATA_DIR/env/global.env</span>
+<span class="nv">KEY</span><span class="o">=</span>value
+<span class="nv">KEY</span><span class="o">=</span><span class="s2">"value with space"</span>
+<span class="nv">KEY</span><span class="o">=</span><span class="s1">'literal'</span>              <span class="c"># 작은따옴표는 확장 안 함</span>
+<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">}</span>/suffix
+<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">:-</span><span class="nv">default</span><span class="k">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">$VAR</code>, <code class="language-plaintext highlighter-rouge">$(cmd)</code>, 백틱, 산술 확장 등은 거부된다. <code class="language-plaintext highlighter-rouge">:-default</code> 없는 미정의 <code class="language-plaintext highlighter-rouge">${VAR}</code>도 에러라 오타를 일찍 잡아준다.</p>
+
+<p>로드 순서(뒤가 앞을 덮어씀):</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$HYPERRUN_ROOT/env/global.env              (시스템)
+$HYPERRUN_DATA_DIR/env/global.env          (나)
+$HYPERRUN_ROOT/env/profiles/&lt;profile&gt;.env  (시스템)
+$HYPERRUN_DATA_DIR/env/profiles/&lt;profile&gt;.env (나)
+</code></pre></div></div>
+
 <h2 id="프로파일">프로파일</h2>
 
-<p>기본 프로파일은 <code class="language-plaintext highlighter-rouge">user</code>다. 다른 프로파일로 실행하려면:</p>
+<p>기본은 <code class="language-plaintext highlighter-rouge">user</code>. 다른 프로파일로:</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun <span class="nt">--profile</span> agent python job.py
 </code></pre></div></div>
 
-<p>프로파일은 환경변수 파일 로딩에 영향을 준다. 로드 순서:</p>
+<h2 id="툴별-쓰기-공간">툴별 쓰기 공간</h2>
 
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$HYPERRUN_ROOT/env/global.env
-$HYPERRUN_DATA_DIR/env/global.env
-$HYPERRUN_ROOT/env/profiles/&lt;profile&gt;.env
-$HYPERRUN_DATA_DIR/env/profiles/&lt;profile&gt;.env
-</code></pre></div></div>
-
-<h2 id="환경변수-파일">환경변수 파일</h2>
-
-<p>env 파일은 셸이 <code class="language-plaintext highlighter-rouge">source</code> 하지 않고 <strong>HyperRun이 직접 안전하게 파싱</strong>한다. 지원 형식:</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">KEY</span><span class="o">=</span>value
-<span class="nv">KEY</span><span class="o">=</span><span class="s2">"value with space"</span>
-<span class="nv">KEY</span><span class="o">=</span><span class="s1">'literal value'</span>        <span class="c"># 작은따옴표는 확장 안 함</span>
-<span class="nb">export </span><span class="nv">KEY</span><span class="o">=</span>value
-<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">}</span>/suffix
-<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">:-</span><span class="nv">default</span><span class="k">}</span>
-<span class="c"># 주석</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">$VAR</code>, <code class="language-plaintext highlighter-rouge">$(cmd)</code>, 백틱, 산술 확장 등은 <strong>거부</strong>된다. <code class="language-plaintext highlighter-rouge">:-default</code> 없는 미정의 <code class="language-plaintext highlighter-rouge">${VAR}</code>도 에러라, 오타를 일찍 잡아준다.</p>
-
-<h2 id="데이터-디렉터리와-툴-홈">데이터 디렉터리와 툴 홈</h2>
-
-<p>사용자 데이터 루트(<code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>)는 다음 순서로 결정된다.</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 절대경로로 지정된 HYPERRUN_DATA_DIR
-2. HYPERRUN_DEFAULT_DATA_DIR
-3. HYPERRUN_SHARED_DATA_ROOT/&lt;user&gt;/.hrun   (관리자가 컴파일로 켰을 때만)
-4. $HOME/.hrun
-</code></pre></div></div>
-
-<p>관리자가 <strong>공유 데이터 루트</strong>(<code class="language-plaintext highlighter-rouge">HYPERRUN_SHARED_DATA_ROOT</code>)를 켜 둔 사이트라면, 데이터가 공유 트리 아래 사용자별로 <code class="language-plaintext highlighter-rouge">&lt;root&gt;/&lt;user&gt;/.hrun</code>에 모이고, <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기를 가리키는 <strong>편의 심볼릭 링크</strong>로 만들어진다(기존 실디렉터리는 건드리지 않음). 명시적으로 <code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>을 주면 항상 그게 우선이라 언제든 빠져나올 수 있다.</p>
-
-<p>도구가 쓰기 가능한 공간이 필요하면 <strong>툴 홈</strong>을 쓴다.</p>
+<p>도구가 쓰기 공간이 필요하면 <strong>툴 홈</strong>을 쓴다.</p>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HYPERRUN_TOOL_HOME = $HYPERRUN_DATA_DIR/tools/&lt;tool_id&gt;
 </code></pre></div></div>
 
 <ul>
-  <li>래퍼가 도구로 진입할 때 <strong>lazy 생성</strong>된다(미리 만들지 않음).</li>
-  <li><code class="language-plaintext highlighter-rouge">pip</code>과 <code class="language-plaintext highlighter-rouge">python</code>처럼 한 툴에 속한 커맨드는 같은 <code class="language-plaintext highlighter-rouge">tool_id</code>를 공유한다 → <code class="language-plaintext highlighter-rouge">tools/python</code> 하나를 같이 쓴다.</li>
+  <li>도구를 처음 실행할 때 <strong>lazy 생성</strong>된다.</li>
+  <li><code class="language-plaintext highlighter-rouge">pip</code>/<code class="language-plaintext highlighter-rouge">python</code>처럼 한 툴에 속한 커맨드는 같은 <code class="language-plaintext highlighter-rouge">tool_id</code>라 <code class="language-plaintext highlighter-rouge">tools/python</code>을 공유한다.</li>
 </ul>
 
-<p>도구 자체가 쓰는 HOME 환경변수가 있다면, 그 도구의 env 파일에서 매핑해주면 된다.</p>
+<p>도구가 자기만의 HOME 환경변수를 쓰면, <strong>툴 env 파일</strong>에서 매핑한다.</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># $HYPERRUN_DATA_DIR/env/tools/&lt;tool&gt;.env</span>
 <span class="nv">FOO_HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">HYPERRUN_TOOL_HOME</span><span class="k">}</span>
-<span class="c"># 하위 경로가 필요하면</span>
 <span class="nv">AWS_CONFIG_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">HYPERRUN_TOOL_HOME</span><span class="k">}</span>/config
 </code></pre></div></div>
 
 <blockquote>
-  <p>주의: <code class="language-plaintext highlighter-rouge">${HYPERRUN_TOOL_HOME}</code> 는 <strong>툴 env 파일</strong>(<code class="language-plaintext highlighter-rouge">env/tools/&lt;tool&gt;.env</code>)에서만 쓸 수 있다. <code class="language-plaintext highlighter-rouge">global.env</code>/프로파일 env는 툴 진입 전에 로딩돼서 그 시점엔 값이 없다.</p>
+  <p><code class="language-plaintext highlighter-rouge">${HYPERRUN_TOOL_HOME}</code>는 <strong>툴 env 파일에서만</strong> 쓸 수 있다(툴 진입 후 로딩되기 때문). <code class="language-plaintext highlighter-rouge">global.env</code>/프로파일 env에 쓰면 그 시점엔 값이 없어 에러난다.</p>
 </blockquote>
 
-<h2 id="진단--트러블슈팅">진단 / 트러블슈팅</h2>
+<h2 id="트러블슈팅">트러블슈팅</h2>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun doctor
 hrun which &lt;<span class="nb">command</span><span class="o">&gt;</span>
 hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>
-<span class="nv">HYPERRUN_TRACE</span><span class="o">=</span>1 hrun &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 선택된 네트워크/러너를 stderr로 출력</span>
+<span class="nv">HYPERRUN_TRACE</span><span class="o">=</span>1 hrun &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 선택된 네트워크/러너를 stderr로</span>
 </code></pre></div></div>
 
-<p>종료 코드 메모:</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">126</code> — 러너/실행 파일이 있지만 실행 권한 없음</li>
-  <li><code class="language-plaintext highlighter-rouge">127</code> — 러너/커맨드를 찾지 못함</li>
-  <li><code class="language-plaintext highlighter-rouge">2</code> — 잘못된 인자·이름, 또는 env 문법 오류</li>
-</ul>
+<p>종료 코드: <code class="language-plaintext highlighter-rouge">126</code> 실행 권한 없음 · <code class="language-plaintext highlighter-rouge">127</code> 러너/커맨드 못 찾음 · <code class="language-plaintext highlighter-rouge">2</code> 잘못된 인자·이름 또는 env 문법 오류.</p>
 
         
       </section>
@@ -386,6 +382,46 @@ hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class=
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/farad-usage-ledger/" rel="permalink">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T16:12:01+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</p>
+  </article>
+</div>
+
     
       
       
@@ -502,46 +538,6 @@ hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class=
 
 
     <p class="archive__item-excerpt" itemprop="description">HyperRun(hrun) 스크립트 / 변수 맵
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/misc/farad-usage-ledger/" rel="permalink">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-21T00:00:00+09:00">2026-06-21</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
 </p>
   </article>
 </div>
