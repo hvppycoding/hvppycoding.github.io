@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T16:48:28+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</title><link href="https://hvppycoding.github.io/misc/farad-usage-ledger/" rel="alternate" type="text/html" title="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기" /><published>2026-06-21T16:41:18+09:00</published><updated>2026-06-21T16:41:18+09:00</updated><id>https://hvppycoding.github.io/misc/farad-usage-ledger</id><content type="html" xml:base="https://hvppycoding.github.io/misc/farad-usage-ledger/"><![CDATA[<h1 id="farad에-토큰-사용량-원장과-greeting-대시보드-카드-붙이기">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T16:48:34+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</title><link href="https://hvppycoding.github.io/misc/farad-usage-ledger/" rel="alternate" type="text/html" title="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기" /><published>2026-06-21T16:41:18+09:00</published><updated>2026-06-21T16:41:18+09:00</updated><id>https://hvppycoding.github.io/misc/farad-usage-ledger</id><content type="html" xml:base="https://hvppycoding.github.io/misc/farad-usage-ledger/"><![CDATA[<h1 id="farad에-토큰-사용량-원장과-greeting-대시보드-카드-붙이기">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</h1>
 
 <p>데스크톱 AI 에이전트 앱 <strong>Farad</strong>에 "내가 토큰을 얼마나 썼는지"를 보여주는 기능을
 넣었다. 빈 세션(Greeting) 화면에 GitHub 잔디 같은 활동 히트맵과 사용량 타일을 띄우는
@@ -263,16 +263,18 @@ $HYPERRUN_ROOT/toolkits/python/current -&gt; releases/v0.2.0
 
 <h3 id="공유-데이터-루트-선택">공유 데이터 루트 (선택)</h3>
 
-<p><code class="language-plaintext highlighter-rouge">HYPERRUN_SHARED_DATA_ROOT_A/B</code>를 컴파일하면, 그 네트워크 사용자 데이터가 <code class="language-plaintext highlighter-rouge">$HOME/.hrun</code> 대신 <strong>공유 트리 아래 사용자별 일반 폴더</strong>로 모인다.</p>
+<p><code class="language-plaintext highlighter-rouge">HYPERRUN_SHARED_DATA_ROOT_A/B</code>를 컴파일하면, 그 네트워크 사용자 데이터가 <code class="language-plaintext highlighter-rouge">~/.hrun</code> 대신 <strong>공유 트리 아래 사용자별</strong>로 모이고, <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기로 링크된다.</p>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HYPERRUN_SHARED_DATA_ROOT_A=/user/aegis/RELEASE/userdata
-  -&gt; HYPERRUN_DATA_DIR=/user/aegis/RELEASE/userdata/&lt;user&gt;/.hrun
+  -&gt; HYPERRUN_DATA_DIR = .../userdata/&lt;user&gt;/.hrun   (실폴더)
+  -&gt; ~/.hrun           -&gt; .../userdata/&lt;user&gt;/.hrun   (심볼릭)
 </code></pre></div></div>
 
 <ul>
-  <li>사용자명은 <code class="language-plaintext highlighter-rouge">id -un</code>(euid 기반, <code class="language-plaintext highlighter-rouge">$USER</code> 변조 무관). 데이터 디렉터리 해석·초기화는 <code class="language-plaintext highlighter-rouge">hrun-core</code>가 한다.</li>
-  <li><strong>심볼릭은 만들지 않는다</strong> — 그냥 일반 폴더다. 권한도 기본 umask(강제 모드 없음).</li>
-  <li>비워 두면(기본값) <code class="language-plaintext highlighter-rouge">$HOME/.hrun</code> 동작 그대로. 사용자가 <code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>을 직접 주면 항상 그게 우선.</li>
+  <li>사용자명은 <code class="language-plaintext highlighter-rouge">id -un</code>(euid 기반, <code class="language-plaintext highlighter-rouge">$USER</code> 변조 무관), 홈(<code class="language-plaintext highlighter-rouge">~</code>)은 <code class="language-plaintext highlighter-rouge">getent passwd</code>(없으면 <code class="language-plaintext highlighter-rouge">$HOME</code>)로 구한다. 해석·초기화·심볼릭은 <code class="language-plaintext highlighter-rouge">hrun-core</code>가 한다.</li>
+  <li>실폴더는 공유 경로이고 <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기로 <strong>best-effort 심볼릭</strong>(실패해도 동작, 기존 실디렉터리 <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 절대 덮어쓰지 않고 경고).</li>
+  <li>비워 두면(기본값) <code class="language-plaintext highlighter-rouge">~/.hrun</code> 자체가 데이터 폴더(심볼릭 없음). 사용자가 <code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>을 직접 주면 항상 그게 우선.</li>
+  <li>권한은 기본 umask(강제 모드 없음).</li>
 </ul>
 
 <h2 id="8-검증">8. 검증</h2>
