@@ -346,6 +346,7 @@ $HYPERRUN_ROOT/toolkits/python/current -&gt; releases/v0.2.0
   <span class="nv">HYPERRUN_ROOT_A</span><span class="o">=</span>/user/aegis/RELEASE/apps/hrun <span class="se">\</span>
   <span class="nv">HYPERRUN_API_KEY_A</span><span class="o">=</span>... <span class="se">\</span>
   <span class="nv">HYPERRUN_BASE_URL_A</span><span class="o">=</span>https://api-a.example/v1 <span class="se">\</span>
+  <span class="nv">HYPERRUN_SHARED_DATA_ROOT_A</span><span class="o">=</span>/user/aegis/RELEASE/userdata <span class="se">\</span>
   <span class="nv">HYPERRUN_RUNNER_B</span><span class="o">=</span>/user/llmsol00/RELEASE/bin/run_hrun <span class="se">\</span>
   <span class="nv">HYPERRUN_ROOT_B</span><span class="o">=</span>/user/llmsol00/RELEASE/apps/hrun
 
@@ -353,6 +354,21 @@ $HYPERRUN_ROOT/toolkits/python/current -&gt; releases/v0.2.0
 </code></pre></div></div>
 
 <p>RHEL7 배포는 <code class="language-plaintext highlighter-rouge">STATIC_LIBS=1</code> 로 <code class="language-plaintext highlighter-rouge">-static-libstdc++ -static-libgcc</code> 를 붙일 수 있다. <strong>A/B 경로 하드코딩은 오직 이 C++ 빌드 상수에서만</strong> 한다.</p>
+
+<h3 id="공유-데이터-루트-선택">공유 데이터 루트 (선택)</h3>
+
+<p><code class="language-plaintext highlighter-rouge">HYPERRUN_SHARED_DATA_ROOT_A/B</code> 를 컴파일하면, 그 네트워크 사용자들의 데이터가 <code class="language-plaintext highlighter-rouge">$HOME/.hrun</code> 대신 <strong>공유 트리 아래 사용자별</strong>로 모인다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HYPERRUN_SHARED_DATA_ROOT_A=/user/aegis/RELEASE/userdata
+  -&gt; HYPERRUN_DATA_DIR=/user/aegis/RELEASE/userdata/&lt;user&gt;/.hrun
+</code></pre></div></div>
+
+<ul>
+  <li>사용자명은 <code class="language-plaintext highlighter-rouge">id -un</code>(euid 기반, <code class="language-plaintext highlighter-rouge">$USER</code> 변조 무관), 심볼릭용 홈은 <code class="language-plaintext highlighter-rouge">getent passwd</code>(없으면 <code class="language-plaintext highlighter-rouge">$HOME</code> fallback)로 구한다.</li>
+  <li>실제 데이터 디렉터리는 공유 경로이고, <code class="language-plaintext highlighter-rouge">~/.hrun</code> 은 거기를 가리키는 <strong>best-effort 심볼릭</strong>으로 만들어진다(심볼릭 실패해도 동작).</li>
+  <li>기존 <strong>실디렉터리</strong> <code class="language-plaintext highlighter-rouge">~/.hrun</code> 은 절대 덮어쓰지 않고 경고만 낸다.</li>
+  <li>비워 두면(기본값) 기존 <code class="language-plaintext highlighter-rouge">$HOME/.hrun</code> 동작 그대로다. 사용자가 <code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code> 을 직접 주면 항상 그게 우선.</li>
+</ul>
 
 <h2 id="8-검증">8. 검증</h2>
 
