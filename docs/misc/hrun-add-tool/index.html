@@ -344,6 +344,8 @@ $HYPERRUN_ROOT/toolkits/python/current -&gt; releases/v0.2.0
 
 <p>RHEL7 배포는 <code class="language-plaintext highlighter-rouge">STATIC_LIBS=1</code>로 <code class="language-plaintext highlighter-rouge">-static-libstdc++ -static-libgcc</code>를 붙일 수 있다. <strong>A/B 경로 하드코딩은 오직 이 C++ 빌드 상수에서만</strong> 한다. 바이너리는 실행 전용 권한으로 두면 사용자가 컴파일된 API_KEY를 읽지 못한다.</p>
 
+<p>컴파일된 <code class="language-plaintext highlighter-rouge">HYPERRUN_API_KEY_A/B</code>·<code class="language-plaintext highlighter-rouge">HYPERRUN_BASE_URL_A/B</code>는 선택된 네트워크에 따라 <strong>런타임에 <code class="language-plaintext highlighter-rouge">HYPERRUN_API_KEY</code> / <code class="language-plaintext highlighter-rouge">HYPERRUN_BASE_URL</code></strong> 로 환경에 주입되어, 래퍼·도구가 별도 설정 없이 그대로 읽을 수 있다(값이 비어 있으면 주입 안 함).</p>
+
 <h3 id="공유-데이터-루트-선택">공유 데이터 루트 (선택)</h3>
 
 <p><code class="language-plaintext highlighter-rouge">HYPERRUN_SHARED_DATA_ROOT_A/B</code>를 컴파일하면, 그 네트워크 사용자 데이터가 <code class="language-plaintext highlighter-rouge">~/.hrun</code> 대신 <strong>공유 트리 아래 사용자별</strong>로 모이고, <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기로 링크된다.</p>
