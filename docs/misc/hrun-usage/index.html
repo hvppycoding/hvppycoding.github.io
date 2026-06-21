@@ -1,0 +1,625 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>HyperRun(hrun) 사용법 - ARCHIVE</title>
+<meta name="description" content="HyperRun(hrun) 사용법">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="HyperRun(hrun) 사용법">
+<meta property="og:url" content="https://hvppycoding.github.io/misc/hrun-usage/">
+
+
+  <meta property="og:description" content="HyperRun(hrun) 사용법">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-06-21T15:29:14+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/misc/hrun-usage/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="HyperRun(hrun) 사용법">
+    <meta itemprop="description" content="HyperRun(hrun) 사용법">
+    <meta itemprop="datePublished" content="2026-06-21T15:29:14+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/misc/hrun-usage/" itemprop="url">HyperRun(hrun) 사용법
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T15:29:14+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="hyperrunhrun-사용법">HyperRun(hrun) 사용법</h1>
+
+<p><code class="language-plaintext highlighter-rouge">hrun</code>은 폐쇄망(내부망)에서 도구·런타임·환경을 <strong>라우팅</strong>해주는 작은 런처다. 사용자는 네트워크(A/B)나 설치 경로를 신경 쓰지 않고 <code class="language-plaintext highlighter-rouge">hrun &lt;command&gt;</code> 한 줄로 내부 도구를 실행한다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun python <span class="nt">-V</span>
+hrun pip list
+hrun mycli a b c
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">hrun</code>은 보이는 네트워크 러너를 고르고, 공통 디스패치 레이어를 거쳐, 요청한 도구의 래퍼를 실행한다.</p>
+
+<h2 id="기본-사용">기본 사용</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun &lt;<span class="nb">command</span><span class="o">&gt;</span> <span class="o">[</span>args...]
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&lt;command&gt;</code> 는 등록된 내부 도구 이름(<code class="language-plaintext highlighter-rouge">python</code>, <code class="language-plaintext highlighter-rouge">pip</code>, <code class="language-plaintext highlighter-rouge">mycli</code> 등).</li>
+  <li>뒤에 오는 인자는 그대로 실제 도구로 전달된다.</li>
+</ul>
+
+<p>명령 탐색 순서는 <strong>사용자 우선</strong>이다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. $HYPERRUN_DATA_DIR/commands/&lt;command&gt;   (사용자)
+2. $HYPERRUN_ROOT/commands/&lt;command&gt;       (시스템)
+</code></pre></div></div>
+
+<p>즉 같은 이름이면 사용자 커맨드가 시스템 커맨드를 덮어쓴다.</p>
+
+<h2 id="내장-커맨드">내장 커맨드</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun <span class="nb">help</span>                 <span class="c"># 사용법</span>
+hrun version              <span class="c"># core 버전</span>
+hrun doctor               <span class="c"># 진단 정보(네트워크/경로/플랫폼)</span>
+hrun config               <span class="c"># 데이터 디렉터리 경로와 존재 여부</span>
+hrun list                 <span class="c"># 사용 가능한 커맨드 목록</span>
+hrun which &lt;<span class="nb">command</span><span class="o">&gt;</span>      <span class="c"># 실제 실행 파일 경로</span>
+hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>        <span class="c"># 그 커맨드의 환경 컨텍스트</span>
+hrun docs <span class="o">[</span><span class="nt">--path</span><span class="o">]</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 커맨드 문서 출력(또는 경로만)</span>
+</code></pre></div></div>
+
+<h3 id="list-출력-예">list 출력 예</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>COMMAND   SOURCE   DESCRIPTION
+python    system   Company Python runtime
+pip       system   ...
+mycli     user     ...
+</code></pre></div></div>
+
+<h3 id="doctor">doctor</h3>
+
+<p>네트워크 선택 결과와 경로, 플랫폼을 보여준다. 환경이 꼬였을 때 가장 먼저 확인할 것.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun doctor
+</code></pre></div></div>
+
+<h3 id="config">config</h3>
+
+<p>데이터 디렉터리 후보와 존재 여부만 출력하며, <strong>디렉터리를 만들지는 않는다.</strong> 실제 생성은 일반 커맨드를 실행할 때 일어난다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>hrun config
+<span class="nv">data_dir</span><span class="o">=</span>/home/me/.hrun
+<span class="nv">data_dir_exists</span><span class="o">=</span><span class="nb">yes</span>
+</code></pre></div></div>
+
+<h2 id="프로파일">프로파일</h2>
+
+<p>기본 프로파일은 <code class="language-plaintext highlighter-rouge">user</code>다. 다른 프로파일로 실행하려면:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun <span class="nt">--profile</span> agent python job.py
+</code></pre></div></div>
+
+<p>프로파일은 환경변수 파일 로딩에 영향을 준다. 로드 순서:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$HYPERRUN_ROOT/env/global.env
+$HYPERRUN_DATA_DIR/env/global.env
+$HYPERRUN_ROOT/env/profiles/&lt;profile&gt;.env
+$HYPERRUN_DATA_DIR/env/profiles/&lt;profile&gt;.env
+</code></pre></div></div>
+
+<h2 id="환경변수-파일">환경변수 파일</h2>
+
+<p>env 파일은 셸이 <code class="language-plaintext highlighter-rouge">source</code> 하지 않고 <strong>HyperRun이 직접 안전하게 파싱</strong>한다. 지원 형식:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">KEY</span><span class="o">=</span>value
+<span class="nv">KEY</span><span class="o">=</span><span class="s2">"value with space"</span>
+<span class="nv">KEY</span><span class="o">=</span><span class="s1">'literal value'</span>        <span class="c"># 작은따옴표는 확장 안 함</span>
+<span class="nb">export </span><span class="nv">KEY</span><span class="o">=</span>value
+<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">}</span>/suffix
+<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">:-</span><span class="nv">default</span><span class="k">}</span>
+<span class="c"># 주석</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">$VAR</code>, <code class="language-plaintext highlighter-rouge">$(cmd)</code>, 백틱, 산술 확장 등은 <strong>거부</strong>된다. <code class="language-plaintext highlighter-rouge">:-default</code> 없는 미정의 <code class="language-plaintext highlighter-rouge">${VAR}</code>도 에러라, 오타를 일찍 잡아준다.</p>
+
+<h2 id="데이터-디렉터리와-툴-홈">데이터 디렉터리와 툴 홈</h2>
+
+<p>사용자 데이터 루트(<code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>)는 다음 순서로 결정된다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 절대경로로 지정된 HYPERRUN_DATA_DIR
+2. HYPERRUN_DEFAULT_DATA_DIR
+3. $HOME/.hrun
+</code></pre></div></div>
+
+<p>도구가 쓰기 가능한 공간이 필요하면 <strong>툴 홈</strong>을 쓴다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HYPERRUN_TOOL_HOME = $HYPERRUN_DATA_DIR/tools/&lt;tool_id&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>래퍼가 도구로 진입할 때 <strong>lazy 생성</strong>된다(미리 만들지 않음).</li>
+  <li><code class="language-plaintext highlighter-rouge">pip</code>과 <code class="language-plaintext highlighter-rouge">python</code>처럼 한 툴에 속한 커맨드는 같은 <code class="language-plaintext highlighter-rouge">tool_id</code>를 공유한다 → <code class="language-plaintext highlighter-rouge">tools/python</code> 하나를 같이 쓴다.</li>
+</ul>
+
+<p>도구 자체가 쓰는 HOME 환경변수가 있다면, 그 도구의 env 파일에서 매핑해주면 된다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># $HYPERRUN_DATA_DIR/env/tools/&lt;tool&gt;.env</span>
+<span class="nv">FOO_HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">HYPERRUN_TOOL_HOME</span><span class="k">}</span>
+<span class="c"># 하위 경로가 필요하면</span>
+<span class="nv">AWS_CONFIG_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">HYPERRUN_TOOL_HOME</span><span class="k">}</span>/config
+</code></pre></div></div>
+
+<blockquote>
+  <p>주의: <code class="language-plaintext highlighter-rouge">${HYPERRUN_TOOL_HOME}</code> 는 <strong>툴 env 파일</strong>(<code class="language-plaintext highlighter-rouge">env/tools/&lt;tool&gt;.env</code>)에서만 쓸 수 있다. <code class="language-plaintext highlighter-rouge">global.env</code>/프로파일 env는 툴 진입 전에 로딩돼서 그 시점엔 값이 없다.</p>
+</blockquote>
+
+<h2 id="진단--트러블슈팅">진단 / 트러블슈팅</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun doctor
+hrun which &lt;<span class="nb">command</span><span class="o">&gt;</span>
+hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>
+<span class="nv">HYPERRUN_TRACE</span><span class="o">=</span>1 hrun &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 선택된 네트워크/러너를 stderr로 출력</span>
+</code></pre></div></div>
+
+<p>종료 코드 메모:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">126</code> — 러너/실행 파일이 있지만 실행 권한 없음</li>
+  <li><code class="language-plaintext highlighter-rouge">127</code> — 러너/커맨드를 찾지 못함</li>
+  <li><code class="language-plaintext highlighter-rouge">2</code> — 잘못된 인자·이름, 또는 env 문법 오류</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#misc" class="page__taxonomy-item p-category" rel="tag">misc</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-21T15:29:14+09:00">2026-06-21</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/llm/hrag-cli-guide/" class="pagination--pager" title="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/llm/hrag-cli-guide/" rel="permalink">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T15:27:18+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/farad-usage-ledger/" rel="permalink">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T15:02:23+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/hyperrun-script-variable-map/" rel="permalink">HyperRun(hrun) 스크립트 / 변수 맵
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T14:32:35+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">HyperRun(hrun) 스크립트 / 변수 맵
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/codex-publish-test/" rel="permalink">Codex Publish Test
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-20T00:00:00+09:00">2026-06-20</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Codex Publish Test
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

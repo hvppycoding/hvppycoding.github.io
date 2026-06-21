@@ -1,4 +1,144 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T15:27:19+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI</title><link href="https://hvppycoding.github.io/llm/hrag-cli-guide/" rel="alternate" type="text/html" title="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI" /><published>2026-06-21T15:27:18+09:00</published><updated>2026-06-21T15:27:18+09:00</updated><id>https://hvppycoding.github.io/llm/hrag-cli-guide</id><content type="html" xml:base="https://hvppycoding.github.io/llm/hrag-cli-guide/"><![CDATA[<h1 id="hraghyperrag-사용법--git처럼-쓰는-로컬-문서-검색rag-cli">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T15:29:15+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">HyperRun(hrun) 사용법</title><link href="https://hvppycoding.github.io/misc/hrun-usage/" rel="alternate" type="text/html" title="HyperRun(hrun) 사용법" /><published>2026-06-21T15:29:14+09:00</published><updated>2026-06-21T15:29:14+09:00</updated><id>https://hvppycoding.github.io/misc/hrun-usage</id><content type="html" xml:base="https://hvppycoding.github.io/misc/hrun-usage/"><![CDATA[<h1 id="hyperrunhrun-사용법">HyperRun(hrun) 사용법</h1>
+
+<p><code class="language-plaintext highlighter-rouge">hrun</code>은 폐쇄망(내부망)에서 도구·런타임·환경을 <strong>라우팅</strong>해주는 작은 런처다. 사용자는 네트워크(A/B)나 설치 경로를 신경 쓰지 않고 <code class="language-plaintext highlighter-rouge">hrun &lt;command&gt;</code> 한 줄로 내부 도구를 실행한다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun python <span class="nt">-V</span>
+hrun pip list
+hrun mycli a b c
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">hrun</code>은 보이는 네트워크 러너를 고르고, 공통 디스패치 레이어를 거쳐, 요청한 도구의 래퍼를 실행한다.</p>
+
+<h2 id="기본-사용">기본 사용</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun &lt;<span class="nb">command</span><span class="o">&gt;</span> <span class="o">[</span>args...]
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&lt;command&gt;</code> 는 등록된 내부 도구 이름(<code class="language-plaintext highlighter-rouge">python</code>, <code class="language-plaintext highlighter-rouge">pip</code>, <code class="language-plaintext highlighter-rouge">mycli</code> 등).</li>
+  <li>뒤에 오는 인자는 그대로 실제 도구로 전달된다.</li>
+</ul>
+
+<p>명령 탐색 순서는 <strong>사용자 우선</strong>이다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. $HYPERRUN_DATA_DIR/commands/&lt;command&gt;   (사용자)
+2. $HYPERRUN_ROOT/commands/&lt;command&gt;       (시스템)
+</code></pre></div></div>
+
+<p>즉 같은 이름이면 사용자 커맨드가 시스템 커맨드를 덮어쓴다.</p>
+
+<h2 id="내장-커맨드">내장 커맨드</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun <span class="nb">help</span>                 <span class="c"># 사용법</span>
+hrun version              <span class="c"># core 버전</span>
+hrun doctor               <span class="c"># 진단 정보(네트워크/경로/플랫폼)</span>
+hrun config               <span class="c"># 데이터 디렉터리 경로와 존재 여부</span>
+hrun list                 <span class="c"># 사용 가능한 커맨드 목록</span>
+hrun which &lt;<span class="nb">command</span><span class="o">&gt;</span>      <span class="c"># 실제 실행 파일 경로</span>
+hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>        <span class="c"># 그 커맨드의 환경 컨텍스트</span>
+hrun docs <span class="o">[</span><span class="nt">--path</span><span class="o">]</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 커맨드 문서 출력(또는 경로만)</span>
+</code></pre></div></div>
+
+<h3 id="list-출력-예">list 출력 예</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>COMMAND   SOURCE   DESCRIPTION
+python    system   Company Python runtime
+pip       system   ...
+mycli     user     ...
+</code></pre></div></div>
+
+<h3 id="doctor">doctor</h3>
+
+<p>네트워크 선택 결과와 경로, 플랫폼을 보여준다. 환경이 꼬였을 때 가장 먼저 확인할 것.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun doctor
+</code></pre></div></div>
+
+<h3 id="config">config</h3>
+
+<p>데이터 디렉터리 후보와 존재 여부만 출력하며, <strong>디렉터리를 만들지는 않는다.</strong> 실제 생성은 일반 커맨드를 실행할 때 일어난다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>hrun config
+<span class="nv">data_dir</span><span class="o">=</span>/home/me/.hrun
+<span class="nv">data_dir_exists</span><span class="o">=</span><span class="nb">yes</span>
+</code></pre></div></div>
+
+<h2 id="프로파일">프로파일</h2>
+
+<p>기본 프로파일은 <code class="language-plaintext highlighter-rouge">user</code>다. 다른 프로파일로 실행하려면:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun <span class="nt">--profile</span> agent python job.py
+</code></pre></div></div>
+
+<p>프로파일은 환경변수 파일 로딩에 영향을 준다. 로드 순서:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$HYPERRUN_ROOT/env/global.env
+$HYPERRUN_DATA_DIR/env/global.env
+$HYPERRUN_ROOT/env/profiles/&lt;profile&gt;.env
+$HYPERRUN_DATA_DIR/env/profiles/&lt;profile&gt;.env
+</code></pre></div></div>
+
+<h2 id="환경변수-파일">환경변수 파일</h2>
+
+<p>env 파일은 셸이 <code class="language-plaintext highlighter-rouge">source</code> 하지 않고 <strong>HyperRun이 직접 안전하게 파싱</strong>한다. 지원 형식:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">KEY</span><span class="o">=</span>value
+<span class="nv">KEY</span><span class="o">=</span><span class="s2">"value with space"</span>
+<span class="nv">KEY</span><span class="o">=</span><span class="s1">'literal value'</span>        <span class="c"># 작은따옴표는 확장 안 함</span>
+<span class="nb">export </span><span class="nv">KEY</span><span class="o">=</span>value
+<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">}</span>/suffix
+<span class="nv">KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">OTHER</span><span class="k">:-</span><span class="nv">default</span><span class="k">}</span>
+<span class="c"># 주석</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">$VAR</code>, <code class="language-plaintext highlighter-rouge">$(cmd)</code>, 백틱, 산술 확장 등은 <strong>거부</strong>된다. <code class="language-plaintext highlighter-rouge">:-default</code> 없는 미정의 <code class="language-plaintext highlighter-rouge">${VAR}</code>도 에러라, 오타를 일찍 잡아준다.</p>
+
+<h2 id="데이터-디렉터리와-툴-홈">데이터 디렉터리와 툴 홈</h2>
+
+<p>사용자 데이터 루트(<code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>)는 다음 순서로 결정된다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 절대경로로 지정된 HYPERRUN_DATA_DIR
+2. HYPERRUN_DEFAULT_DATA_DIR
+3. $HOME/.hrun
+</code></pre></div></div>
+
+<p>도구가 쓰기 가능한 공간이 필요하면 <strong>툴 홈</strong>을 쓴다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HYPERRUN_TOOL_HOME = $HYPERRUN_DATA_DIR/tools/&lt;tool_id&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>래퍼가 도구로 진입할 때 <strong>lazy 생성</strong>된다(미리 만들지 않음).</li>
+  <li><code class="language-plaintext highlighter-rouge">pip</code>과 <code class="language-plaintext highlighter-rouge">python</code>처럼 한 툴에 속한 커맨드는 같은 <code class="language-plaintext highlighter-rouge">tool_id</code>를 공유한다 → <code class="language-plaintext highlighter-rouge">tools/python</code> 하나를 같이 쓴다.</li>
+</ul>
+
+<p>도구 자체가 쓰는 HOME 환경변수가 있다면, 그 도구의 env 파일에서 매핑해주면 된다.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># $HYPERRUN_DATA_DIR/env/tools/&lt;tool&gt;.env</span>
+<span class="nv">FOO_HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">HYPERRUN_TOOL_HOME</span><span class="k">}</span>
+<span class="c"># 하위 경로가 필요하면</span>
+<span class="nv">AWS_CONFIG_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">HYPERRUN_TOOL_HOME</span><span class="k">}</span>/config
+</code></pre></div></div>
+
+<blockquote>
+  <p>주의: <code class="language-plaintext highlighter-rouge">${HYPERRUN_TOOL_HOME}</code> 는 <strong>툴 env 파일</strong>(<code class="language-plaintext highlighter-rouge">env/tools/&lt;tool&gt;.env</code>)에서만 쓸 수 있다. <code class="language-plaintext highlighter-rouge">global.env</code>/프로파일 env는 툴 진입 전에 로딩돼서 그 시점엔 값이 없다.</p>
+</blockquote>
+
+<h2 id="진단--트러블슈팅">진단 / 트러블슈팅</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hrun doctor
+hrun which &lt;<span class="nb">command</span><span class="o">&gt;</span>
+hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>
+<span class="nv">HYPERRUN_TRACE</span><span class="o">=</span>1 hrun &lt;<span class="nb">command</span><span class="o">&gt;</span>   <span class="c"># 선택된 네트워크/러너를 stderr로 출력</span>
+</code></pre></div></div>
+
+<p>종료 코드 메모:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">126</code> — 러너/실행 파일이 있지만 실행 권한 없음</li>
+  <li><code class="language-plaintext highlighter-rouge">127</code> — 러너/커맨드를 찾지 못함</li>
+  <li><code class="language-plaintext highlighter-rouge">2</code> — 잘못된 인자·이름, 또는 env 문법 오류</li>
+</ul>]]></content><author><name>hvppycoding</name></author><category term="misc" /><summary type="html"><![CDATA[HyperRun(hrun) 사용법]]></summary></entry><entry><title type="html">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI</title><link href="https://hvppycoding.github.io/llm/hrag-cli-guide/" rel="alternate" type="text/html" title="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI" /><published>2026-06-21T15:27:18+09:00</published><updated>2026-06-21T15:27:18+09:00</updated><id>https://hvppycoding.github.io/llm/hrag-cli-guide</id><content type="html" xml:base="https://hvppycoding.github.io/llm/hrag-cli-guide/"><![CDATA[<h1 id="hraghyperrag-사용법--git처럼-쓰는-로컬-문서-검색rag-cli">hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI</h1>
 
 <p><code class="language-plaintext highlighter-rouge">hrag</code>(<code class="language-plaintext highlighter-rouge">hyperrag</code>)는 <strong>Git처럼 동작하는 로컬 RAG(검색 증강) CLI</strong>입니다.
 워크스페이스마다 <code class="language-plaintext highlighter-rouge">.hrag/</code> 아래에 인덱스를 저장하고, 커밋한 모든 문서의
@@ -16898,465 +17038,4 @@ Chrome은 기본 설정만으로도 10~20+ 프로세스를 씁니다.<br />
   </li>
 </ul>
 
-<p>If you want headless Chromium instead (to reduce processes) or need to auto-start with <code class="language-plaintext highlighter-rouge">--listen 0.0.0.0</code>, I can add toggles.</p>]]></content><author><name>hvppycoding</name></author><category term="comfyui" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">ComfyUI custom node 추가(glob)</title><link href="https://hvppycoding.github.io/comfyui/comfyui-glob-node/" rel="alternate" type="text/html" title="ComfyUI custom node 추가(glob)" /><published>2025-09-13T17:23:29+09:00</published><updated>2025-09-13T17:23:29+09:00</updated><id>https://hvppycoding.github.io/comfyui/comfyui-glob-node</id><content type="html" xml:base="https://hvppycoding.github.io/comfyui/comfyui-glob-node/"><![CDATA[<p class="chat--user">
-
-ComfyUI에 새로운 Custom node를 추가하고 싶어. python의 glob와 비슷한 역할을 하는 노드를 만들고 싶어. custom_nodes/hyperflow-core 내부에 추가할 거야. - Node name: HFFindPathnames - Category: HyperFlow - Node Display Name: HF - Find Pathnames(glob) Inputs: - pathname(str) - 검색 패턴 - root_dir(str, Optional) - 주어지지 않는다면 현재 디렉토리를 사용 - recursive(bool, default: False) - “<strong>” 패턴이 모든 디렉터리/파일과 매칭됨(하위 포함) - include_hidden(bool, default: False) - “</strong>” 패턴이 숨겨진 파일도 매칭됨 outputs: - match된 path name list
-
-</p>
-
-<p>좋아! 요청하신 사양으로 ComfyUI 커스텀 노드를 깔끔하게 만들어드릴게요.<br />
-(아래 코드는 그대로 저장하면 바로 동작합니다.)</p>
-
-<hr />
-
-<h1 id="1-설계-요약-step-by-step">1) 설계 요약 (step-by-step)</h1>
-
-<ol>
-  <li>
-    <p><strong>입력 위젯</strong></p>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">pathname: STRING</code> (필수) – <code class="language-plaintext highlighter-rouge">**/*.png</code> 같은 glob 패턴</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">root_dir: STRING</code> (옵션) – 비우면 현재 작업 디렉터리 사용</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">recursive: BOOLEAN</code> (기본 False)</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">include_hidden: BOOLEAN</code> (기본 False)</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>출력</strong></p>
-
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">STRING</code> <strong>리스트</strong> 한 개(매칭된 경로들).<br />
-Comfy가 이 리스트를 “여러 아이템”으로 다루도록 <code class="language-plaintext highlighter-rouge">OUTPUT_IS_LIST = (True,)</code>를 사용합니다. <a href="https://docs.comfy.org/custom-nodes/backend/lists">docs.comfy.org</a></li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>동작</strong></p>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">glob.iglob()</code>을 기본 사용.</p>
-      </li>
-      <li>
-        <p>Python 3.11+ 환경이면 <code class="language-plaintext highlighter-rouge">include_hidden</code> 파라미터를 <strong>그대로</strong> 활용.</p>
-      </li>
-      <li>
-        <p>3.11 미만일 때도 <code class="language-plaintext highlighter-rouge">**</code>가 들어간 패턴에 대해 숨김 포함을 최대한 보완(패턴 변형)해서 수집.</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">root_dir</code>가 주어지면 상대 패턴은 해당 루트 기준으로 탐색.</p>
-      </li>
-      <li>
-        <p>경로/환경변수(<code class="language-plaintext highlighter-rouge">~</code>, <code class="language-plaintext highlighter-rouge">%VAR%</code>) 확장 지원.</p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>타입 정의</strong></p>
-
-    <ul>
-      <li>입력 타입: <code class="language-plaintext highlighter-rouge">STRING</code>, <code class="language-plaintext highlighter-rouge">BOOLEAN</code> (공식 문서의 기본 타입 표준을 따름). <a href="https://docs.comfy.org/custom-nodes/backend/datatypes">docs.comfy.org</a></li>
-    </ul>
-  </li>
-</ol>
-
-<hr />
-
-<h1 id="2-설치-위치">2) 설치 위치</h1>
-
-<p>다음 파일로 저장하세요:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>custom_nodes/hyperflow-core/hf_find_pathnames.py
-</code></pre></div></div>
-
-<hr />
-
-<h1 id="3-코드">3) 코드</h1>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># custom_nodes/hyperflow-core/hf_find_pathnames.py
-</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-
-<span class="k">class</span> <span class="nc">HFFindPathnames</span><span class="p">:</span>
-    <span class="s">"""
-    HF - Find Pathnames(glob)
-    - Python glob과 유사한 패턴 매칭
-    - include_hidden(True)일 때: Python 3.11+이면 glob의 include_hidden을 사용.
-      3.11 미만이면 '**' 패턴에 한해 숨김 포함 변형 패턴을 추가로 탐색(최대한의 호환).
-    """</span>
-
-    <span class="o">@</span><span class="nb">classmethod</span>
-    <span class="k">def</span> <span class="nf">INPUT_TYPES</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s">"required"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"pathname"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"예: **/*.png"</span>
-                <span class="p">}),</span>
-            <span class="p">},</span>
-            <span class="s">"optional"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"root_dir"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"비우면 현재 디렉토리"</span>
-                <span class="p">}),</span>
-                <span class="s">"recursive"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"recursive"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"not recursive"</span>
-                <span class="p">}),</span>
-                <span class="s">"include_hidden"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"include .dot files"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"exclude .dot files"</span>
-                <span class="p">}),</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-    <span class="n">RETURN_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,)</span>
-    <span class="n">RETURN_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"pathnames"</span><span class="p">,)</span>
-    <span class="c1"># 리스트 출력임을 명시 (다음 노드가 리스트를 순차 처리하도록)
-</span>    <span class="n">OUTPUT_IS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="bp">True</span><span class="p">,)</span>
-    <span class="n">FUNCTION</span> <span class="o">=</span> <span class="s">"find"</span>
-    <span class="n">CATEGORY</span> <span class="o">=</span> <span class="s">"HyperFlow"</span>
-
-    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># 환경변수/홈(~) 확장 + 정규화
-</span>        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
-
-    <span class="k">def</span> <span class="nf">_effective_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">pathname</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">pathname</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">root_dir</span> <span class="k">else</span> <span class="n">os</span><span class="p">.</span><span class="n">getcwd</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">pathname</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_iglob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="s">"""Python 3.11+이면 include_hidden 사용, 아니면 호환 경로."""</span>
-        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="n">signature</span><span class="p">(</span><span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">)</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">parameters</span>
-        <span class="k">if</span> <span class="s">"include_hidden"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Python 3.11+
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">),</span> <span class="n">include_hidden</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">include_hidden</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># 3.11 미만: 기본 동작(숨김 제외)만 제공
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
-        <span class="s">"""
-        3.11 미만 환경에서 include_hidden=True + '**' 패턴일 때,
-        '**'를 '**/.*'로 치환한 변형을 추가 생성해 숨김 파일/폴더를 최대한 포괄.
-        (첫 limit개 '**'에 대해서만 조합 생성하여 폭발 방지)
-        """</span>
-        <span class="k">if</span> <span class="s">"**"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"**"</span><span class="p">)</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-        <span class="n">n_use</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
-        <span class="n">prefix_parts</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[:</span><span class="n">n_use</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s">"**"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">n_use</span><span class="p">:])</span> <span class="k">if</span> <span class="n">n_use</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="n">variants</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">product</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_use</span><span class="p">):</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_hidden</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combo</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="s">"**/.*"</span> <span class="k">if</span> <span class="n">use_hidden</span> <span class="k">else</span> <span class="s">"**"</span><span class="p">)</span> <span class="o">+</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">variants</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">variants</span>
-
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pathname</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">""</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">([],)</span>
-
-        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">None</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_effective_pattern</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-
-        <span class="n">matches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-        <span class="c1"># 1) 기본 패턴
-</span>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">):</span>
-            <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-
-        <span class="c1"># 2) (레거시 호환) include_hidden=True + '**'일 때 변형 패턴도 검색
-</span>        <span class="k">if</span> <span class="n">include_hidden</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="p">(</span><span class="s">"**"</span> <span class="ow">in</span> <span class="n">pathname</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-                    <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-
-        <span class="c1"># 정렬(Windows는 대소문자 무시 정렬)
-</span>        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">"nt"</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span>
-
-<span class="n">NODE_CLASS_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="n">HFFindPathnames</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="n">NODE_DISPLAY_NAME_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="s">"HF - Find Pathnames(glob)"</span><span class="p">,</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<hr />
-
-<h1 id="4-사용-방법">4) 사용 방법</h1>
-
-<ol>
-  <li>
-    <p>ComfyUI 재시작 → <code class="language-plaintext highlighter-rouge">HyperFlow</code> 카테고리에서 <strong>“HF - Find Pathnames(glob)”</strong> 검색.</p>
-  </li>
-  <li>
-    <p>예시</p>
-
-    <ul>
-      <li>
-        <p>현재 작업 폴더에서 PNG 모두:<br />
-<code class="language-plaintext highlighter-rouge">pathname="**/*.png"</code>, <code class="language-plaintext highlighter-rouge">recursive=True</code></p>
-      </li>
-      <li>
-        <p>특정 루트 기준으로 <code class="language-plaintext highlighter-rouge">.txt</code> 전부(숨김 포함):<br />
-<code class="language-plaintext highlighter-rouge">pathname="**/*.txt"</code>, <code class="language-plaintext highlighter-rouge">root_dir="/data/project"</code>, <code class="language-plaintext highlighter-rouge">recursive=True</code>, <code class="language-plaintext highlighter-rouge">include_hidden=True</code></p>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p>출력은 <strong>문자열 리스트</strong> 이므로, 그 다음 노드가 리스트를 “순차 처리”할 수 있습니다(<code class="language-plaintext highlighter-rouge">OUTPUT_IS_LIST</code> 설정 덕분). <a href="https://docs.comfy.org/custom-nodes/backend/lists">docs.comfy.org</a></p>
-  </li>
-</ol>
-
-<hr />
-
-<h2 id="참고공식-문서">참고(공식 문서)</h2>
-
-<ul>
-  <li>
-    <p>리스트 출력 처리(<code class="language-plaintext highlighter-rouge">OUTPUT_IS_LIST</code>) – ComfyUI 개발 문서 “Data lists” 섹션. <a href="https://docs.comfy.org/custom-nodes/backend/lists">docs.comfy.org</a></p>
-  </li>
-  <li>
-    <p>입력 타입(STRING/BOOLEAN 등) 정의 – “Datatypes” 섹션. <a href="https://docs.comfy.org/custom-nodes/backend/datatypes">docs.comfy.org</a></p>
-  </li>
-</ul>
-
-<hr />
-
-<p>필요하면 <code class="language-plaintext highlighter-rouge">RETURN_NAMES</code> 변경(예: <code class="language-plaintext highlighter-rouge">"matches"</code>)이나, UI placeholder/라벨 문구를 더 다듬어드릴게요.</p>
-
-<p class="chat--user">
-
-그런데 String List 말고 줄바꿈으로 Join된 하나의 String으로 나와도 편리할 것 같아. 이런 출력을 하나 추가해줘.
-
-</p>
-
-<p>좋은 아이디어예요! “줄바꿈으로 합친 하나의 문자열” 출력을 <strong>추가</strong> 만 해서, 기존 리스트 출력은 그대로 유지하겠습니다.</p>
-
-<h1 id="변경-요약-step-by-step">변경 요약 (step-by-step)</h1>
-
-<ol>
-  <li><strong>출력 추가</strong></li>
-</ol>
-
-<ul>
-  <li>
-    <p>기존: <code class="language-plaintext highlighter-rouge">("STRING",)</code> 1개 (리스트/다중항목)</p>
-  </li>
-  <li>
-    <p>변경: <code class="language-plaintext highlighter-rouge">("STRING", "STRING")</code> 2개</p>
-
-    <ul>
-      <li>
-        <p>1번 출력: <code class="language-plaintext highlighter-rouge">pathnames</code> (리스트, 기존과 동일)</p>
-      </li>
-      <li>
-        <p>2번 출력: <code class="language-plaintext highlighter-rouge">joined_text</code> (단일 문자열, <code class="language-plaintext highlighter-rouge">\n</code>로 join)</p>
-      </li>
-    </ul>
-  </li>
-</ul>
-
-<ol>
-  <li><strong>리스트 표기</strong></li>
-</ol>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">OUTPUT_IS_LIST = (True, False)</code> 로 업데이트</li>
-</ul>
-
-<ol>
-  <li><strong>리턴 값</strong></li>
-</ol>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">return (result, "\n".join(result))</code></li>
-</ul>
-
-<hr />
-
-<h1 id="교체-코드">교체 코드</h1>
-
-<p>아래 내용을 기존 파일(<code class="language-plaintext highlighter-rouge">custom_nodes/hyperflow-core/hf_find_pathnames.py</code>)에 그대로 덮어쓰세요.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># custom_nodes/hyperflow-core/hf_find_pathnames.py
-</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-
-<span class="k">class</span> <span class="nc">HFFindPathnames</span><span class="p">:</span>
-    <span class="s">"""
-    HF - Find Pathnames(glob)
-    - Python glob과 유사한 패턴 매칭
-    - include_hidden(True)일 때: Python 3.11+이면 glob의 include_hidden을 사용.
-      3.11 미만이면 '**' 패턴에 한해 숨김 포함 변형 패턴을 추가 탐색.
-    - 출력:
-      (1) pathnames: STRING 리스트 (OUTPUT_IS_LIST=True)
-      (2) joined_text: 줄바꿈으로 합친 하나의 STRING
-    """</span>
-
-    <span class="o">@</span><span class="nb">classmethod</span>
-    <span class="k">def</span> <span class="nf">INPUT_TYPES</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s">"required"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"pathname"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"예: **/*.png"</span>
-                <span class="p">}),</span>
-            <span class="p">},</span>
-            <span class="s">"optional"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"root_dir"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"비우면 현재 디렉토리"</span>
-                <span class="p">}),</span>
-                <span class="s">"recursive"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"recursive"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"not recursive"</span>
-                <span class="p">}),</span>
-                <span class="s">"include_hidden"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"include .dot files"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"exclude .dot files"</span>
-                <span class="p">}),</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-    <span class="c1"># 출력 두 개: (리스트 STRING, 단일 STRING)
-</span>    <span class="n">RETURN_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="s">"STRING"</span><span class="p">)</span>
-    <span class="n">RETURN_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"pathnames"</span><span class="p">,</span> <span class="s">"joined_text"</span><span class="p">)</span>
-    <span class="n">OUTPUT_IS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-    <span class="n">FUNCTION</span> <span class="o">=</span> <span class="s">"find"</span>
-    <span class="n">CATEGORY</span> <span class="o">=</span> <span class="s">"HyperFlow"</span>
-
-    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># 환경변수/홈(~) 확장 + 정규화
-</span>        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
-
-    <span class="k">def</span> <span class="nf">_effective_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">pathname</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">pathname</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">root_dir</span> <span class="k">else</span> <span class="n">os</span><span class="p">.</span><span class="n">getcwd</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">pathname</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_iglob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="s">"""Python 3.11+이면 include_hidden 사용, 아니면 호환 경로."""</span>
-        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="n">signature</span><span class="p">(</span><span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">)</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">parameters</span>
-        <span class="k">if</span> <span class="s">"include_hidden"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Python 3.11+
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">),</span> <span class="n">include_hidden</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">include_hidden</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># 3.11 미만: 기본 동작(숨김 제외)만 제공
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
-        <span class="s">"""
-        3.11 미만 환경에서 include_hidden=True + '**' 패턴일 때,
-        '**'를 '**/.*'로 치환한 변형을 추가 생성해 숨김 파일/폴더를 최대한 포괄.
-        (첫 limit개 '**'에 대해서만 조합 생성하여 폭발 방지)
-        """</span>
-        <span class="k">if</span> <span class="s">"**"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"**"</span><span class="p">)</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-        <span class="n">n_use</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
-        <span class="n">prefix_parts</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[:</span><span class="n">n_use</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s">"**"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">n_use</span><span class="p">:])</span> <span class="k">if</span> <span class="n">n_use</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="n">variants</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">product</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_use</span><span class="p">):</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_hidden</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combo</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="s">"**/.*"</span> <span class="k">if</span> <span class="n">use_hidden</span> <span class="k">else</span> <span class="s">"**"</span><span class="p">)</span> <span class="o">+</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">variants</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">variants</span>
-
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pathname</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">""</span><span class="p">:</span>
-            <span class="c1"># 빈 입력: 두 출력 모두 빈 형태
-</span>            <span class="k">return</span> <span class="p">([],</span> <span class="s">""</span><span class="p">)</span>
-
-        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">None</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_effective_pattern</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-
-        <span class="n">matches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-        <span class="c1"># 1) 기본 패턴
-</span>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">):</span>
-            <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-
-        <span class="c1"># 2) (레거시 호환) include_hidden=True + '**'일 때 변형 패턴도 검색
-</span>        <span class="k">if</span> <span class="n">include_hidden</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="p">(</span><span class="s">"**"</span> <span class="ow">in</span> <span class="n">pathname</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-                    <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-
-        <span class="c1"># 정렬(Windows는 대소문자 무시 정렬)
-</span>        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">"nt"</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">lower</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
-
-        <span class="n">joined</span> <span class="o">=</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">joined</span><span class="p">)</span>
-
-<span class="n">NODE_CLASS_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="n">HFFindPathnames</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="n">NODE_DISPLAY_NAME_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="s">"HF - Find Pathnames(glob)"</span><span class="p">,</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<hr />
-
-<h1 id="사용-팁">사용 팁</h1>
-
-<ul>
-  <li>
-    <p>워크플로에서 <strong>리스트 처리</strong> 는 1번 출력(<code class="language-plaintext highlighter-rouge">pathnames</code>)을 쓰고,</p>
-  </li>
-  <li>
-    <p>텍스트 파일 저장/로그 남길 때는 2번 출력(<code class="language-plaintext highlighter-rouge">joined_text</code>)를 연결하세요.<br />
-(예: Text Save, CLIPTextEncode 같은 문자열 단일 입력 노드)</p>
-  </li>
-</ul>
-
-<p>원하면 <code class="language-plaintext highlighter-rouge">\n</code> 대신 다른 구분자를 쓰도록 옵션을 추가하는 버전도 만들어 드릴게요.</p>]]></content><author><name>hvppycoding</name></author><category term="comfyui" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>If you want headless Chromium instead (to reduce processes) or need to auto-start with <code class="language-plaintext highlighter-rouge">--listen 0.0.0.0</code>, I can add toggles.</p>]]></content><author><name>hvppycoding</name></author><category term="comfyui" /><summary type="html"><![CDATA[]]></summary></entry></feed>
