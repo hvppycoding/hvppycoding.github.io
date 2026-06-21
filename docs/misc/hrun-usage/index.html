@@ -288,8 +288,11 @@ $HYPERRUN_DATA_DIR/env/profiles/&lt;profile&gt;.env
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 절대경로로 지정된 HYPERRUN_DATA_DIR
 2. HYPERRUN_DEFAULT_DATA_DIR
-3. $HOME/.hrun
+3. HYPERRUN_SHARED_DATA_ROOT/&lt;user&gt;/.hrun   (관리자가 컴파일로 켰을 때만)
+4. $HOME/.hrun
 </code></pre></div></div>
+
+<p>관리자가 <strong>공유 데이터 루트</strong>(<code class="language-plaintext highlighter-rouge">HYPERRUN_SHARED_DATA_ROOT</code>)를 켜 둔 사이트라면, 데이터가 공유 트리 아래 사용자별로 <code class="language-plaintext highlighter-rouge">&lt;root&gt;/&lt;user&gt;/.hrun</code>에 모이고, <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기를 가리키는 <strong>편의 심볼릭 링크</strong>로 만들어진다(기존 실디렉터리는 건드리지 않음). 명시적으로 <code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>을 주면 항상 그게 우선이라 언제든 빠져나올 수 있다.</p>
 
 <p>도구가 쓰기 가능한 공간이 필요하면 <strong>툴 홈</strong>을 쓴다.</p>
 
@@ -383,6 +386,46 @@ hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class=
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/misc/farad-usage-ledger/" rel="permalink">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-21T15:46:20+09:00">2026-06-21</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
+</p>
+  </article>
+</div>
+
     
       
       
@@ -499,46 +542,6 @@ hrun <span class="nb">env</span> &lt;<span class="nb">command</span><span class=
 
 
     <p class="archive__item-excerpt" itemprop="description">HyperRun(hrun) 스크립트 / 변수 맵
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/misc/farad-usage-ledger/" rel="permalink">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-21T00:00:00+09:00">2026-06-21</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기
 </p>
   </article>
 </div>

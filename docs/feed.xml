@@ -1,4 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T15:46:20+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">HyperRun(hrun) 관리자 가이드: 새 도구 추가하기</title><link href="https://hvppycoding.github.io/misc/hrun-add-tool/" rel="alternate" type="text/html" title="HyperRun(hrun) 관리자 가이드: 새 도구 추가하기" /><published>2026-06-21T15:40:04+09:00</published><updated>2026-06-21T15:40:04+09:00</updated><id>https://hvppycoding.github.io/misc/hrun-add-tool</id><content type="html" xml:base="https://hvppycoding.github.io/misc/hrun-add-tool/"><![CDATA[<h1 id="hyperrunhrun-관리자-가이드-새-도구-추가하기">HyperRun(hrun) 관리자 가이드: 새 도구 추가하기</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T15:58:24+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</title><link href="https://hvppycoding.github.io/misc/farad-usage-ledger/" rel="alternate" type="text/html" title="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기" /><published>2026-06-21T15:46:20+09:00</published><updated>2026-06-21T15:46:20+09:00</updated><id>https://hvppycoding.github.io/misc/farad-usage-ledger</id><content type="html" xml:base="https://hvppycoding.github.io/misc/farad-usage-ledger/"><![CDATA[<h1 id="farad에-토큰-사용량-원장과-greeting-대시보드-카드-붙이기">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</h1>
+
+<p>데스크톱 AI 에이전트 앱 <strong>Farad</strong>에 "내가 토큰을 얼마나 썼는지"를 보여주는 기능을
+넣었다. 빈 세션(Greeting) 화면에 GitHub 잔디 같은 활동 히트맵과 사용량 타일을 띄우는
+대시보드 카드가 목표였고, 그걸 떠받칠 <strong>토큰 사용량 원장(ledger)</strong> 을 데이터 기반부터
+새로 만들었다. 작업을 4개 단계로 나눠서 진행했다.</p>
+
+<p><img src="/assets/images/farad-usage-ledger/greeting-usage-light.png" alt="Greeting 사용량 카드 (라이트)" />
+<em>Greeting 화면에 붙은 사용량 카드 — 레인지 토글, 토큰 + 핵심 활동 타일, 일별 토큰 히트맵.</em></p>
+
+<h2 id="왜-원장이-따로-필요했나">왜 "원장"이 따로 필요했나</h2>
+
+<p>Farad에는 이미 컨텍스트 사용량(<code class="language-plaintext highlighter-rouge">context_usage</code>)이 있었다. 하지만 이건 <strong>지금/다음 호출에
+보낼 컨텍스트 창이 얼마나 찼는지</strong>(footer의 <code class="language-plaintext highlighter-rouge">Context: 18.2k / 128k</code>)를 보여주는 값이지,
+<strong>누적 사용량</strong>이 아니다. 두 개념은 절대 섞으면 안 된다.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">context_usage</code> — 컨텍스트 창 점유율. 호출 1회 시점의 스냅샷.</li>
+  <li><strong>token usage ledger</strong> — 매 LLM 호출의 input/output/reasoning/cache 토큰을 call 단위로
+누적한 원장. 세션별·일·월·년·전체·모델별 사용량의 source of truth. <strong>이번에 새로 만든 것.</strong></li>
+</ul>
+
+<p>다행히 좋은 소식이 있었다. 토큰 사용량은 이미 <strong>transcript(JSONL)에 정확값으로 영속화</strong>되어
+있었다. <code class="language-plaintext highlighter-rouge">char/4</code> 추정이 아니라 provider가 반환한 실제 <code class="language-plaintext highlighter-rouge">usage</code>다. 그래서 "기존 대화에서
+복원"은 추정이 아니라 <strong>정확 집계</strong>가 된다.</p>
+
+<h2 id="설계에서-갈린-지점들">설계에서 갈린 지점들</h2>
+
+<p><strong>저장 방식 — JSON 롤업 vs SQLite 원장.</strong> 레포의 기존 state는 전부 JSON이었지만, 이번
+원장은 per-event 식별·중복 제거(provider 값이 추정값을 덮어쓰기)·범위 질의(day/month/year/
+model)·streak/peak-hour 집계가 전부 필요했다. 전형적인 <em>원장</em>의 모양이라 <strong>SQLite</strong>(파이썬
+표준 라이브러리)를 선택했다. 단, 주 타깃이 NFS 공유 HPC라서 락 풋건을 피하려고
+<code class="language-plaintext highlighter-rouge">journal_mode=DELETE</code>(WAL 금지)·<code class="language-plaintext highlighter-rouge">busy_timeout</code>·단일 writer·짧은 트랜잭션으로 못박고,
+UI는 SQL을 모르게 <code class="language-plaintext highlighter-rouge">UsageService</code> 파사드 뒤에 숨겼다.</p>
+
+<p><strong>이중계산을 어떻게 막나.</strong> 라이브 기록과 과거 백필이 같은 호출을 두 번 셀 수 있다. 해결책은
+<strong>단일 소스 + 안정적 event_id</strong>다. assistant transcript 항목의 <code class="language-plaintext highlighter-rouge">metadata.provider_usage</code>
+딱 하나만 파싱하고, <code class="language-plaintext highlighter-rouge">event_id = llm_call_id</code>(없으면 <code class="language-plaintext highlighter-rouge">session_id:message_id</code>)로 upsert한다.
+그러면 라이브로 기록하든 나중에 백필로 다시 읽든 같은 행에 합쳐져서 절대 두 번 안 세진다.
+provider 값이 들어오면 추정값을 자동으로 승격(교체)하되, 추정값이 provider 값을 덮진 못하게
+했다.</p>
+
+<h2 id="4단계-구현">4단계 구현</h2>
+
+<p><strong>Phase 1 — 데이터 기반.</strong> 신규 <code class="language-plaintext highlighter-rouge">farad/usage/</code> 패키지(models / store(SQLite) / service /
+formatting). <code class="language-plaintext highlighter-rouge">completion_usage_meta()</code>에 <strong>reasoning 토큰 추출</strong>을 추가했고(그동안 필드만
+있고 안 채워지던 값), <code class="language-plaintext highlighter-rouge">AsyncSession</code>의 이벤트 디스패치에서 assistant 항목이 디스크에 저장될 때
+원장에 기록하도록 훅을 걸었다. <code class="language-plaintext highlighter-rouge">AppServices</code>에 <code class="language-plaintext highlighter-rouge">usage_service</code>를 배선.</p>
+
+<p><strong>Phase 2 — 백필.</strong> 기존 transcript를 훑어 과거 사용량을 채운다. 디렉터리를 직접 열거해서
+일반 세션·서브에이전트·<strong>스케줄 실행</strong>·그 서브에이전트까지 모두 포함했다(기존 세션 목록 API가
+스케줄 top-level run을 빠뜨리는 함정이 있었다). transcript 서명(청크 파일 크기/mtime)으로
+바뀐 세션만 다시 스캔하는 증분 방식이라, 매 실행마다 전체 스캔하지 않는다. provider 메타가
+있으면 정확값, 없는 옛 항목만 output-only로 추정하고 "추정"으로 표시한다. 앱 시작 시
+백그라운드 스레드로 1회 돈다.</p>
+
+<p><strong>Phase 3 — 컨텍스트 툴팁.</strong> footer에 보이는 텍스트는 그대로 두고(컨텍스트 창 점유율),
+툴팁에만 "이 세션 누적"(입력/출력/추론/캐시) 블록과 출처(provider/추정) 라벨을 더했다. UI는
+DB를 직접 읽지 않고 미리 계산된 값을 받는다.</p>
+
+<p><strong>Phase 4 — Greeting 카드.</strong> 이번 작업의 얼굴. 단일 <code class="language-plaintext highlighter-rouge">paintEvent</code>로 그리는 <strong>활동 히트맵</strong>
+위젯(셀 수백 개를 개별 위젯으로 두면 저사양에서 무겁다 — 데이터-viz 캔버스로 게이트 예외를
+문서에 명시)과, 헤더 레인지(All/30d/7d)·Overview/Models 토글·토큰 + 핵심 활동 타일 8개·
+히트맵·추정 푸터를 담은 <strong>사용량 카드</strong>. 빈 세션 화면에 <strong>인사말 → 카드</strong> 순으로 얹고,
+프롬프트 입력창은 다른 세션처럼 맨 아래에 둔다. 데이터가 없거나 화면이 짧으면 카드를 숨겨서
+미니멀한 인사말은 그대로 유지한다.</p>
+
+<p>색은 전부 팔레트 토큰으로만 칠해서 라이트/다크가 자동으로 따라온다. 히트맵 셀은
+<code class="language-plaintext highlighter-rouge">accent_solid</code> 한 토큰에서 alpha 0.30 / 0.55 / 0.78 / 1.0 램프로 강도를 표현한다.</p>
+
+<h2 id="도중에-만난-함정">도중에 만난 함정</h2>
+
+<ul>
+  <li><strong>Greeting 오버레이의 높이 = 타임라인 뷰포트</strong>, 윈도우 높이가 아니다. 프롬프트 입력창은
+그 아래 별도 영역이다. 처음엔 카드를 위에, 인사말을 프롬프트 바로 위에 붙이는 구조로 짰는데,
+새 세션 화면이 프롬프트를 화면 가운데로 띄우는 탓에 인사말이 사는 오버레이가 980px 창에서도
+~409px밖에 안 됐다(그래서 카드가 끼지 못하고 숨겨졌다). 결국 레이아웃 자체를 정리했다 —
+<strong>인사말을 맨 위, 그 아래 사용량 카드, 프롬프트는 다른 세션처럼 맨 아래로</strong>. 새 세션의
+프롬프트 가운데-띄우기를 걷어내니 타임라인이 풀-높이가 되면서 카드가 넉넉히 들어갔다.</li>
+  <li>스트리밍 usage는 누적 스냅샷이지 델타가 아니다 — 청크를 더하면 안 된다.</li>
+  <li>cache/reasoning 토큰은 입력/출력의 <em>세부값</em>이라 total에 다시 더하면 안 된다.</li>
+</ul>
+
+<h2 id="결과와-한계">결과와 한계</h2>
+
+<p>신규 테스트 30여 개 + 기존 영향분 갱신으로 통과한다. 라이트/다크 모두 카드가 깔끔하게
+렌더된다(시드 데이터 기준: 668K 전체 토큰, 입력/출력 분해, 세션·활동일·연속·피크 시간·주 사용
+모델 타일, 그리고 잔디 히트맵). 카드는 전체 폭을 차지하지 않고 콘텐츠에 맞춰 컴팩트하게 잡고,
+히트맵은 카드 폭을 채우도록 폭-반응형으로 그린다. 잔디 셀에 마우스를 올리면 그날 토큰 수가
+툴팁으로 뜬다("6월 21일 · 1.2K 토큰").</p>
+
+<p><img src="/assets/images/farad-usage-ledger/greeting-usage-dark.png" alt="다크 모드" />
+<em>다크 모드 — 색은 전부 팔레트 토큰이라 라이트에서 따로 손대지 않아도 자동으로 따라온다.</em></p>
+
+<p>남은 것:</p>
+
+<ul>
+  <li>추정 백필은 output-only다(입력은 추정 생략). 정확값은 provider 메타뿐이고, 추정분은 UI에
+"추정 포함"으로 표기한다.</li>
+  <li>히트맵은 레인지와 무관하게 최근 26주 고정(레인지 토글은 타일/모델에만 적용).</li>
+  <li>비용($) 표시는 스코프 밖 — 모델 단가 데이터가 앱에 아직 없어서 토큰만 다룬다. 나중에 단가만
+붙이면 환산되도록 자리는 비워뒀다.</li>
+</ul>
+
+<p>데이터 기반(원장 + 백필 + 서비스)을 제대로 깔아둔 덕에, Greeting 카드 말고도 컨텍스트 툴팁,
+나중에 만들 전용 사용량 패널까지 같은 <code class="language-plaintext highlighter-rouge">UsageService</code> 하나로 붙일 수 있게 됐다.</p>]]></content><author><name>hvppycoding</name></author><category term="misc" /><summary type="html"><![CDATA[Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기]]></summary></entry><entry><title type="html">HyperRun(hrun) 관리자 가이드: 새 도구 추가하기</title><link href="https://hvppycoding.github.io/misc/hrun-add-tool/" rel="alternate" type="text/html" title="HyperRun(hrun) 관리자 가이드: 새 도구 추가하기" /><published>2026-06-21T15:40:04+09:00</published><updated>2026-06-21T15:40:04+09:00</updated><id>https://hvppycoding.github.io/misc/hrun-add-tool</id><content type="html" xml:base="https://hvppycoding.github.io/misc/hrun-add-tool/"><![CDATA[<h1 id="hyperrunhrun-관리자-가이드-새-도구-추가하기">HyperRun(hrun) 관리자 가이드: 새 도구 추가하기</h1>
 
 <p><a href="/misc/hrun-usage/">사용자용 사용법</a>이 "이미 등록된 도구를 어떻게 실행하는가"였다면, 이 글은 <strong>관리자가 새 도구를 어떻게 등록·배포하는가</strong>를 다룬다.</p>
 
@@ -289,8 +394,11 @@ $HYPERRUN_DATA_DIR/env/profiles/&lt;profile&gt;.env
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 절대경로로 지정된 HYPERRUN_DATA_DIR
 2. HYPERRUN_DEFAULT_DATA_DIR
-3. $HOME/.hrun
+3. HYPERRUN_SHARED_DATA_ROOT/&lt;user&gt;/.hrun   (관리자가 컴파일로 켰을 때만)
+4. $HOME/.hrun
 </code></pre></div></div>
+
+<p>관리자가 <strong>공유 데이터 루트</strong>(<code class="language-plaintext highlighter-rouge">HYPERRUN_SHARED_DATA_ROOT</code>)를 켜 둔 사이트라면, 데이터가 공유 트리 아래 사용자별로 <code class="language-plaintext highlighter-rouge">&lt;root&gt;/&lt;user&gt;/.hrun</code>에 모이고, <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기를 가리키는 <strong>편의 심볼릭 링크</strong>로 만들어진다(기존 실디렉터리는 건드리지 않음). 명시적으로 <code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>을 주면 항상 그게 우선이라 언제든 빠져나올 수 있다.</p>
 
 <p>도구가 쓰기 가능한 공간이 필요하면 <strong>툴 홈</strong>을 쓴다.</p>
 
@@ -830,112 +938,7 @@ locator이므로, 에이전트는 반드시 <code class="language-plaintext high
 
 <blockquote>
   <p>툴별 쓰기 홈은 <code class="language-plaintext highlighter-rouge">HYPERRUN_TOOL_HOME = $HYPERRUN_DATA_DIR/tools/&lt;tool_id&gt;</code> 하나뿐이며, 래퍼가 <code class="language-plaintext highlighter-rouge">hrun_enter_tool</code> 호출 시 lazy 생성됩니다. 툴 고유 HOME 변수는 <code class="language-plaintext highlighter-rouge">env/tools/&lt;tool&gt;.env</code> 에서 <code class="language-plaintext highlighter-rouge">FOO_HOME=${HYPERRUN_TOOL_HOME}</code> 식으로 매핑합니다.</p>
-</blockquote>]]></content><author><name>hvppycoding</name></author><category term="misc" /><summary type="html"><![CDATA[HyperRun(hrun) 스크립트 / 변수 맵]]></summary></entry><entry><title type="html">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</title><link href="https://hvppycoding.github.io/misc/farad-usage-ledger/" rel="alternate" type="text/html" title="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기" /><published>2026-06-21T00:00:00+09:00</published><updated>2026-06-21T00:00:00+09:00</updated><id>https://hvppycoding.github.io/misc/farad-usage-ledger</id><content type="html" xml:base="https://hvppycoding.github.io/misc/farad-usage-ledger/"><![CDATA[<h1 id="farad에-토큰-사용량-원장과-greeting-대시보드-카드-붙이기">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</h1>
-
-<p>데스크톱 AI 에이전트 앱 <strong>Farad</strong>에 "내가 토큰을 얼마나 썼는지"를 보여주는 기능을
-넣었다. 빈 세션(Greeting) 화면에 GitHub 잔디 같은 활동 히트맵과 사용량 타일을 띄우는
-대시보드 카드가 목표였고, 그걸 떠받칠 <strong>토큰 사용량 원장(ledger)</strong> 을 데이터 기반부터
-새로 만들었다. 작업을 4개 단계로 나눠서 진행했다.</p>
-
-<p><img src="/assets/images/farad-usage-ledger/greeting-usage-light.png" alt="Greeting 사용량 카드 (라이트)" />
-<em>Greeting 화면에 붙은 사용량 카드 — 레인지 토글, 토큰 + 핵심 활동 타일, 일별 토큰 히트맵.</em></p>
-
-<h2 id="왜-원장이-따로-필요했나">왜 "원장"이 따로 필요했나</h2>
-
-<p>Farad에는 이미 컨텍스트 사용량(<code class="language-plaintext highlighter-rouge">context_usage</code>)이 있었다. 하지만 이건 <strong>지금/다음 호출에
-보낼 컨텍스트 창이 얼마나 찼는지</strong>(footer의 <code class="language-plaintext highlighter-rouge">Context: 18.2k / 128k</code>)를 보여주는 값이지,
-<strong>누적 사용량</strong>이 아니다. 두 개념은 절대 섞으면 안 된다.</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">context_usage</code> — 컨텍스트 창 점유율. 호출 1회 시점의 스냅샷.</li>
-  <li><strong>token usage ledger</strong> — 매 LLM 호출의 input/output/reasoning/cache 토큰을 call 단위로
-누적한 원장. 세션별·일·월·년·전체·모델별 사용량의 source of truth. <strong>이번에 새로 만든 것.</strong></li>
-</ul>
-
-<p>다행히 좋은 소식이 있었다. 토큰 사용량은 이미 <strong>transcript(JSONL)에 정확값으로 영속화</strong>되어
-있었다. <code class="language-plaintext highlighter-rouge">char/4</code> 추정이 아니라 provider가 반환한 실제 <code class="language-plaintext highlighter-rouge">usage</code>다. 그래서 "기존 대화에서
-복원"은 추정이 아니라 <strong>정확 집계</strong>가 된다.</p>
-
-<h2 id="설계에서-갈린-지점들">설계에서 갈린 지점들</h2>
-
-<p><strong>저장 방식 — JSON 롤업 vs SQLite 원장.</strong> 레포의 기존 state는 전부 JSON이었지만, 이번
-원장은 per-event 식별·중복 제거(provider 값이 추정값을 덮어쓰기)·범위 질의(day/month/year/
-model)·streak/peak-hour 집계가 전부 필요했다. 전형적인 <em>원장</em>의 모양이라 <strong>SQLite</strong>(파이썬
-표준 라이브러리)를 선택했다. 단, 주 타깃이 NFS 공유 HPC라서 락 풋건을 피하려고
-<code class="language-plaintext highlighter-rouge">journal_mode=DELETE</code>(WAL 금지)·<code class="language-plaintext highlighter-rouge">busy_timeout</code>·단일 writer·짧은 트랜잭션으로 못박고,
-UI는 SQL을 모르게 <code class="language-plaintext highlighter-rouge">UsageService</code> 파사드 뒤에 숨겼다.</p>
-
-<p><strong>이중계산을 어떻게 막나.</strong> 라이브 기록과 과거 백필이 같은 호출을 두 번 셀 수 있다. 해결책은
-<strong>단일 소스 + 안정적 event_id</strong>다. assistant transcript 항목의 <code class="language-plaintext highlighter-rouge">metadata.provider_usage</code>
-딱 하나만 파싱하고, <code class="language-plaintext highlighter-rouge">event_id = llm_call_id</code>(없으면 <code class="language-plaintext highlighter-rouge">session_id:message_id</code>)로 upsert한다.
-그러면 라이브로 기록하든 나중에 백필로 다시 읽든 같은 행에 합쳐져서 절대 두 번 안 세진다.
-provider 값이 들어오면 추정값을 자동으로 승격(교체)하되, 추정값이 provider 값을 덮진 못하게
-했다.</p>
-
-<h2 id="4단계-구현">4단계 구현</h2>
-
-<p><strong>Phase 1 — 데이터 기반.</strong> 신규 <code class="language-plaintext highlighter-rouge">farad/usage/</code> 패키지(models / store(SQLite) / service /
-formatting). <code class="language-plaintext highlighter-rouge">completion_usage_meta()</code>에 <strong>reasoning 토큰 추출</strong>을 추가했고(그동안 필드만
-있고 안 채워지던 값), <code class="language-plaintext highlighter-rouge">AsyncSession</code>의 이벤트 디스패치에서 assistant 항목이 디스크에 저장될 때
-원장에 기록하도록 훅을 걸었다. <code class="language-plaintext highlighter-rouge">AppServices</code>에 <code class="language-plaintext highlighter-rouge">usage_service</code>를 배선.</p>
-
-<p><strong>Phase 2 — 백필.</strong> 기존 transcript를 훑어 과거 사용량을 채운다. 디렉터리를 직접 열거해서
-일반 세션·서브에이전트·<strong>스케줄 실행</strong>·그 서브에이전트까지 모두 포함했다(기존 세션 목록 API가
-스케줄 top-level run을 빠뜨리는 함정이 있었다). transcript 서명(청크 파일 크기/mtime)으로
-바뀐 세션만 다시 스캔하는 증분 방식이라, 매 실행마다 전체 스캔하지 않는다. provider 메타가
-있으면 정확값, 없는 옛 항목만 output-only로 추정하고 "추정"으로 표시한다. 앱 시작 시
-백그라운드 스레드로 1회 돈다.</p>
-
-<p><strong>Phase 3 — 컨텍스트 툴팁.</strong> footer에 보이는 텍스트는 그대로 두고(컨텍스트 창 점유율),
-툴팁에만 "이 세션 누적"(입력/출력/추론/캐시) 블록과 출처(provider/추정) 라벨을 더했다. UI는
-DB를 직접 읽지 않고 미리 계산된 값을 받는다.</p>
-
-<p><strong>Phase 4 — Greeting 카드.</strong> 이번 작업의 얼굴. 단일 <code class="language-plaintext highlighter-rouge">paintEvent</code>로 그리는 <strong>활동 히트맵</strong>
-위젯(셀 수백 개를 개별 위젯으로 두면 저사양에서 무겁다 — 데이터-viz 캔버스로 게이트 예외를
-문서에 명시)과, 헤더 레인지(All/30d/7d)·Overview/Models 토글·토큰 + 핵심 활동 타일 8개·
-히트맵·추정 푸터를 담은 <strong>사용량 카드</strong>. 빈 세션 화면에 <strong>인사말 → 카드</strong> 순으로 얹고,
-프롬프트 입력창은 다른 세션처럼 맨 아래에 둔다. 데이터가 없거나 화면이 짧으면 카드를 숨겨서
-미니멀한 인사말은 그대로 유지한다.</p>
-
-<p>색은 전부 팔레트 토큰으로만 칠해서 라이트/다크가 자동으로 따라온다. 히트맵 셀은
-<code class="language-plaintext highlighter-rouge">accent_solid</code> 한 토큰에서 alpha 0.30 / 0.55 / 0.78 / 1.0 램프로 강도를 표현한다.</p>
-
-<h2 id="도중에-만난-함정">도중에 만난 함정</h2>
-
-<ul>
-  <li><strong>Greeting 오버레이의 높이 = 타임라인 뷰포트</strong>, 윈도우 높이가 아니다. 프롬프트 입력창은
-그 아래 별도 영역이다. 처음엔 카드를 위에, 인사말을 프롬프트 바로 위에 붙이는 구조로 짰는데,
-새 세션 화면이 프롬프트를 화면 가운데로 띄우는 탓에 인사말이 사는 오버레이가 980px 창에서도
-~409px밖에 안 됐다(그래서 카드가 끼지 못하고 숨겨졌다). 결국 레이아웃 자체를 정리했다 —
-<strong>인사말을 맨 위, 그 아래 사용량 카드, 프롬프트는 다른 세션처럼 맨 아래로</strong>. 새 세션의
-프롬프트 가운데-띄우기를 걷어내니 타임라인이 풀-높이가 되면서 카드가 넉넉히 들어갔다.</li>
-  <li>스트리밍 usage는 누적 스냅샷이지 델타가 아니다 — 청크를 더하면 안 된다.</li>
-  <li>cache/reasoning 토큰은 입력/출력의 <em>세부값</em>이라 total에 다시 더하면 안 된다.</li>
-</ul>
-
-<h2 id="결과와-한계">결과와 한계</h2>
-
-<p>신규 테스트 30여 개 + 기존 영향분 갱신으로 통과한다. 라이트/다크 모두 카드가 깔끔하게
-렌더된다(시드 데이터 기준: 668K 전체 토큰, 입력/출력 분해, 세션·활동일·연속·피크 시간·주 사용
-모델 타일, 그리고 잔디 히트맵). 카드는 전체 폭을 차지하지 않고 콘텐츠에 맞춰 컴팩트하게 잡고,
-히트맵은 카드 폭을 채우도록 폭-반응형으로 그린다. 잔디 셀에 마우스를 올리면 그날 토큰 수가
-툴팁으로 뜬다("6월 21일 · 1.2K 토큰").</p>
-
-<p><img src="/assets/images/farad-usage-ledger/greeting-usage-dark.png" alt="다크 모드" />
-<em>다크 모드 — 색은 전부 팔레트 토큰이라 라이트에서 따로 손대지 않아도 자동으로 따라온다.</em></p>
-
-<p>남은 것:</p>
-
-<ul>
-  <li>추정 백필은 output-only다(입력은 추정 생략). 정확값은 provider 메타뿐이고, 추정분은 UI에
-"추정 포함"으로 표기한다.</li>
-  <li>히트맵은 레인지와 무관하게 최근 26주 고정(레인지 토글은 타일/모델에만 적용).</li>
-  <li>비용($) 표시는 스코프 밖 — 모델 단가 데이터가 앱에 아직 없어서 토큰만 다룬다. 나중에 단가만
-붙이면 환산되도록 자리는 비워뒀다.</li>
-</ul>
-
-<p>데이터 기반(원장 + 백필 + 서비스)을 제대로 깔아둔 덕에, Greeting 카드 말고도 컨텍스트 툴팁,
-나중에 만들 전용 사용량 패널까지 같은 <code class="language-plaintext highlighter-rouge">UsageService</code> 하나로 붙일 수 있게 됐다.</p>]]></content><author><name>hvppycoding</name></author><category term="misc" /><summary type="html"><![CDATA[Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기]]></summary></entry><entry><title type="html">Codex Publish Test</title><link href="https://hvppycoding.github.io/misc/codex-publish-test/" rel="alternate" type="text/html" title="Codex Publish Test" /><published>2026-06-20T00:00:00+09:00</published><updated>2026-06-20T00:00:00+09:00</updated><id>https://hvppycoding.github.io/misc/codex-publish-test</id><content type="html" xml:base="https://hvppycoding.github.io/misc/codex-publish-test/"><![CDATA[<h1 id="codex-publish-test">Codex Publish Test</h1>
+</blockquote>]]></content><author><name>hvppycoding</name></author><category term="misc" /><summary type="html"><![CDATA[HyperRun(hrun) 스크립트 / 변수 맵]]></summary></entry><entry><title type="html">Codex Publish Test</title><link href="https://hvppycoding.github.io/misc/codex-publish-test/" rel="alternate" type="text/html" title="Codex Publish Test" /><published>2026-06-20T00:00:00+09:00</published><updated>2026-06-20T00:00:00+09:00</updated><id>https://hvppycoding.github.io/misc/codex-publish-test</id><content type="html" xml:base="https://hvppycoding.github.io/misc/codex-publish-test/"><![CDATA[<h1 id="codex-publish-test">Codex Publish Test</h1>
 
 <p>This is a temporary end-to-end publish test post.</p>
 
