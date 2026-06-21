@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T16:41:19+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</title><link href="https://hvppycoding.github.io/misc/farad-usage-ledger/" rel="alternate" type="text/html" title="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기" /><published>2026-06-21T16:41:18+09:00</published><updated>2026-06-21T16:41:18+09:00</updated><id>https://hvppycoding.github.io/misc/farad-usage-ledger</id><content type="html" xml:base="https://hvppycoding.github.io/misc/farad-usage-ledger/"><![CDATA[<h1 id="farad에-토큰-사용량-원장과-greeting-대시보드-카드-붙이기">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-06-21T16:48:28+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</title><link href="https://hvppycoding.github.io/misc/farad-usage-ledger/" rel="alternate" type="text/html" title="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기" /><published>2026-06-21T16:41:18+09:00</published><updated>2026-06-21T16:41:18+09:00</updated><id>https://hvppycoding.github.io/misc/farad-usage-ledger</id><content type="html" xml:base="https://hvppycoding.github.io/misc/farad-usage-ledger/"><![CDATA[<h1 id="farad에-토큰-사용량-원장과-greeting-대시보드-카드-붙이기">Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기</h1>
 
 <p>데스크톱 AI 에이전트 앱 <strong>Farad</strong>에 "내가 토큰을 얼마나 썼는지"를 보여주는 기능을
 넣었다. 빈 세션(Greeting) 화면에 GitHub 잔디 같은 활동 히트맵과 사용량 타일을 띄우는
@@ -318,11 +318,12 @@ hrun mycli a b c
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 내가 지정한 절대경로 HYPERRUN_DATA_DIR
 2. HYPERRUN_SHARED_DATA_ROOT/&lt;user&gt;/.hrun   (관리자가 컴파일로 켠 경우만)
-3. $HOME/.hrun
+3. ~/.hrun                                  (홈은 getent로 구함)
 </code></pre></div></div>
 
 <ul>
-  <li>전부 <strong>일반 폴더</strong>다(심볼릭 없음). 권한은 기본값(umask)을 따른다.</li>
+  <li>공유 루트가 켜진 경우, 실제 데이터는 <code class="language-plaintext highlighter-rouge">&lt;root&gt;/&lt;user&gt;/.hrun</code> 실폴더에 있고 <strong><code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기를 가리키는 심볼릭</strong>이라 양쪽 경로 다 쓸 수 있다(기존 실디렉터리 <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 보존). 안 켜졌으면 <code class="language-plaintext highlighter-rouge">~/.hrun</code> 자체가 데이터 폴더다.</li>
+  <li>권한은 기본값(umask)을 따른다.</li>
   <li>어디로 잡혔는지 확인:</li>
 </ul>
 
