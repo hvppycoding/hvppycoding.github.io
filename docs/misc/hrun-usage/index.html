@@ -287,6 +287,10 @@ $HYPERRUN_ROOT/env/profiles/&lt;profile&gt;.env  (시스템)
 $HYPERRUN_DATA_DIR/env/profiles/&lt;profile&gt;.env (나)
 </code></pre></div></div>
 
+<h3 id="네트워크가-넣어주는-값">네트워크가 넣어주는 값</h3>
+
+<p>내 env 파일 외에, 라우터가 선택한 네트워크 값도 환경에 들어와 있어 도구가 그대로 참고할 수 있다. 대표적으로 사이트가 API 기본값을 컴파일해 둔 경우 <strong><code class="language-plaintext highlighter-rouge">HYPERRUN_API_KEY</code> / <code class="language-plaintext highlighter-rouge">HYPERRUN_BASE_URL</code></strong> 가 주입된다(없을 수도 있음). 그 외 <code class="language-plaintext highlighter-rouge">HYPERRUN_NETWORK</code>, <code class="language-plaintext highlighter-rouge">HYPERRUN_ROOT</code>, <code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>, <code class="language-plaintext highlighter-rouge">HYPERRUN_TOOL_HOME</code> 등도 항상 제공된다.</p>
+
 <h2 id="프로파일">프로파일</h2>
 
 <p>기본은 <code class="language-plaintext highlighter-rouge">user</code>. 다른 프로파일로:</p>
