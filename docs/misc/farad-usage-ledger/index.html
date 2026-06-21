@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2026-06-21T15:02:23+09:00">
+  <meta property="article:published_time" content="2026-06-21T15:32:02+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기">
     <meta itemprop="description" content="Farad에 토큰 사용량 원장과 Greeting 대시보드 카드 붙이기">
-    <meta itemprop="datePublished" content="2026-06-21T15:02:23+09:00">
+    <meta itemprop="datePublished" content="2026-06-21T15:32:02+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2026-06-21T15:02:23+09:00">2026-06-21</time>
+        <time datetime="2026-06-21T15:32:02+09:00">2026-06-21</time>
       </span>
     
 
@@ -250,8 +250,9 @@ DB를 직접 읽지 않고 미리 계산된 값을 받는다.</p>
 <p><strong>Phase 4 — Greeting 카드.</strong> 이번 작업의 얼굴. 단일 <code class="language-plaintext highlighter-rouge">paintEvent</code>로 그리는 <strong>활동 히트맵</strong>
 위젯(셀 수백 개를 개별 위젯으로 두면 저사양에서 무겁다 — 데이터-viz 캔버스로 게이트 예외를
 문서에 명시)과, 헤더 레인지(All/30d/7d)·Overview/Models 토글·토큰 + 핵심 활동 타일 8개·
-히트맵·추정 푸터를 담은 <strong>사용량 카드</strong>. 빈 세션 화면에 통합하되, 데이터가 없거나 화면이
-짧으면 카드를 숨겨서 미니멀한 인사말은 그대로 유지한다.</p>
+히트맵·추정 푸터를 담은 <strong>사용량 카드</strong>. 빈 세션 화면에 <strong>인사말 → 카드</strong> 순으로 얹고,
+프롬프트 입력창은 다른 세션처럼 맨 아래에 둔다. 데이터가 없거나 화면이 짧으면 카드를 숨겨서
+미니멀한 인사말은 그대로 유지한다.</p>
 
 <p>색은 전부 팔레트 토큰으로만 칠해서 라이트/다크가 자동으로 따라온다. 히트맵 셀은
 <code class="language-plaintext highlighter-rouge">accent_solid</code> 한 토큰에서 alpha 0.30 / 0.55 / 0.78 / 1.0 램프로 강도를 표현한다.</p>
@@ -259,10 +260,12 @@ DB를 직접 읽지 않고 미리 계산된 값을 받는다.</p>
 <h2 id="도중에-만난-함정">도중에 만난 함정</h2>
 
 <ul>
-  <li><strong>Greeting 오버레이의 높이 = 타임라인 뷰포트(~409px)</strong>, 윈도우 높이가 아니다. 프롬프트
-입력창은 그 아래 별도 영역이라, 980px 창에서도 인사말이 사는 영역은 ~409px뿐이었다.
-처음엔 "충분히 크면 카드를 보여준다"는 게이트를 620px로 잡았다가 절대 안 떠서, 이 ~400px
-영역에 맞춰 게이트를 낮추고 카드를 압축했다.</li>
+  <li><strong>Greeting 오버레이의 높이 = 타임라인 뷰포트</strong>, 윈도우 높이가 아니다. 프롬프트 입력창은
+그 아래 별도 영역이다. 처음엔 카드를 위에, 인사말을 프롬프트 바로 위에 붙이는 구조로 짰는데,
+새 세션 화면이 프롬프트를 화면 가운데로 띄우는 탓에 인사말이 사는 오버레이가 980px 창에서도
+~409px밖에 안 됐다(그래서 카드가 끼지 못하고 숨겨졌다). 결국 레이아웃 자체를 정리했다 —
+<strong>인사말을 맨 위, 그 아래 사용량 카드, 프롬프트는 다른 세션처럼 맨 아래로</strong>. 새 세션의
+프롬프트 가운데-띄우기를 걷어내니 타임라인이 풀-높이가 되면서 카드가 넉넉히 들어갔다.</li>
   <li>스트리밍 usage는 누적 스냅샷이지 델타가 아니다 — 청크를 더하면 안 된다.</li>
   <li>cache/reasoning 토큰은 입력/출력의 <em>세부값</em>이라 total에 다시 더하면 안 된다.</li>
 </ul>
@@ -314,7 +317,7 @@ DB를 직접 읽지 않고 미리 계산된 값을 받는다.</p>
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-21T15:02:23+09:00">2026-06-21</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-21T15:32:02+09:00">2026-06-21</time></p>
 
       </footer>
 
@@ -323,10 +326,10 @@ DB를 직접 읽지 않고 미리 계산된 값을 받는다.</p>
       
   <nav class="pagination">
     
-      <a href="/misc/hyperrun-script-variable-map/" class="pagination--pager" title="HyperRun(hrun) 스크립트 / 변수 맵">Previous</a>
+      <a href="/misc/hrun-usage/" class="pagination--pager" title="HyperRun(hrun) 사용법">Previous</a>
     
     
-      <a href="/llm/hrag-cli-guide/" class="pagination--pager" title="hrag(hyperrag) 사용법 — Git처럼 쓰는 로컬 문서 검색(RAG) CLI">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
