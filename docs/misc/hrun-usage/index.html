@@ -206,12 +206,11 @@ hrun mycli a b c
 <p>내 모든 상태(<code class="language-plaintext highlighter-rouge">HYPERRUN_DATA_DIR</code>)가 들어가는 곳이다. 위치는 이 순서로 정해진다.</p>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 내가 지정한 절대경로 HYPERRUN_DATA_DIR
-2. HYPERRUN_SHARED_DATA_ROOT/&lt;user&gt;/.hrun   (관리자가 컴파일로 켠 경우만)
-3. ~/.hrun                                  (홈은 getent로 구함)
+2. ~/.hrun                                  (홈은 getent로 구함)
 </code></pre></div></div>
 
 <ul>
-  <li>공유 루트가 켜진 경우, 실제 데이터는 <code class="language-plaintext highlighter-rouge">&lt;root&gt;/&lt;user&gt;/.hrun</code> 실폴더에 있고 <strong><code class="language-plaintext highlighter-rouge">~/.hrun</code>은 거기를 가리키는 심볼릭</strong>이라 양쪽 경로 다 쓸 수 있다(기존 실디렉터리 <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 보존). 안 켜졌으면 <code class="language-plaintext highlighter-rouge">~/.hrun</code> 자체가 데이터 폴더다.</li>
+  <li>관리자가 공유 루트를 켜 둔 사이트라면 <code class="language-plaintext highlighter-rouge">~/.hrun</code>이 <strong>공유 폴더(<code class="language-plaintext highlighter-rouge">&lt;root&gt;/&lt;user&gt;/.hrun</code>)를 가리키는 심볼릭</strong>이라, 내가 <code class="language-plaintext highlighter-rouge">~/.hrun</code>에 쓰는 게 공유 폴더로 들어간다(릴리스 러너가 링크를 만들고, 기존 실디렉터리 <code class="language-plaintext highlighter-rouge">~/.hrun</code>은 보존). 안 켜졌으면 <code class="language-plaintext highlighter-rouge">~/.hrun</code> 자체가 데이터 폴더다.</li>
   <li>권한은 기본값(umask)을 따른다.</li>
   <li>어디로 잡혔는지 확인:</li>
 </ul>
@@ -233,7 +232,6 @@ hrun mycli a b c
     profiles/{user,agent}.env
     tools/&lt;tool&gt;.env
   tools/&lt;tool_id&gt;/     # 툴별 쓰기 공간(HYPERRUN_TOOL_HOME)
-  .hyperrun/           # 세션·로그·캐시
 </code></pre></div></div>
 
 <h2 id="내가-쓰는-내장-커맨드">내가 쓰는 내장 커맨드</h2>
