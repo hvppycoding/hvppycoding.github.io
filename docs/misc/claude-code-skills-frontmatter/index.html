@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2026-06-22T00:00:00+09:00">
+  <meta property="article:published_time" content="2026-06-22T13:05:13+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Claude Code Skills 완전 정리 — SKILL.md와 모든 프론트매터 필드">
     <meta itemprop="description" content="Claude Code Skills 완전 정리 — SKILL.md와 모든 프론트매터 필드">
-    <meta itemprop="datePublished" content="2026-06-22T00:00:00+09:00">
+    <meta itemprop="datePublished" content="2026-06-22T13:05:13+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2026-06-22T00:00:00+09:00">2026-06-22</time>
+        <time datetime="2026-06-22T13:05:13+09:00">2026-06-22</time>
       </span>
     
 
@@ -497,7 +497,18 @@
 "이런 문구가 나오면 발동" 같은 추가 신호를 적는다. <code class="language-plaintext highlighter-rouge">description</code> 뒤에 이어 붙고 위의 1,536자 cap에 함께 포함된다.</p>
 
 <p><strong><code class="language-plaintext highlighter-rouge">argument-hint</code> / <code class="language-plaintext highlighter-rouge">arguments</code> — 인자</strong>
-<code class="language-plaintext highlighter-rouge">argument-hint</code> 는 자동완성 UX용 힌트(<code class="language-plaintext highlighter-rouge">[filename] [format]</code>). <code class="language-plaintext highlighter-rouge">arguments</code> 는 본문에서 <code class="language-plaintext highlighter-rouge">$name</code> 으로 꺼내 쓸 named positional 인자를 선언한다(공백 구분 문자열 또는 YAML 리스트, 순서대로 위치에 매핑).</p>
+<code class="language-plaintext highlighter-rouge">argument-hint</code> 는 자동완성 UX용 힌트일 뿐 동작에 영향이 없다(<code class="language-plaintext highlighter-rouge">[filename] [format]</code>). <code class="language-plaintext highlighter-rouge">arguments</code> 는 본문에서 <code class="language-plaintext highlighter-rouge">$name</code> 으로 꺼내 쓸 <strong>named positional 인자</strong>를 선언한다(공백 구분 문자열 또는 YAML 리스트, 순서대로 위치에 매핑). 한마디로 위치 인자(<code class="language-plaintext highlighter-rouge">$0</code>, <code class="language-plaintext highlighter-rouge">$1</code>)에 <strong>의미 있는 별칭</strong>을 다는 기능이다.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">fix-issue</span>
+<span class="na">description</span><span class="pi">:</span> <span class="s">Fix a GitHub issue on a branch</span>
+<span class="na">arguments</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">issue</span><span class="pi">,</span> <span class="nv">branch</span><span class="pi">]</span>
+<span class="nn">---</span>
+
+<span class="s">Fix GitHub issue $issue on the $branch branch.</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">arguments: [issue, branch]</code> → 첫 인자 = <code class="language-plaintext highlighter-rouge">$issue</code>, 둘째 = <code class="language-plaintext highlighter-rouge">$branch</code>. <code class="language-plaintext highlighter-rouge">/fix-issue 123 hotfix</code> 호출 시 <code class="language-plaintext highlighter-rouge">$issue</code>=123, <code class="language-plaintext highlighter-rouge">$branch</code>=hotfix 로 치환된다. <code class="language-plaintext highlighter-rouge">$0</code>/<code class="language-plaintext highlighter-rouge">$1</code> 보다 본문이 훨씬 읽기 쉬워진다. 자세한 미스매치 동작은 <a href="#71-인자-미스매치는-막히지-않는다">§7.1</a> 참고.</p>
 
 <p><strong><code class="language-plaintext highlighter-rouge">disable-model-invocation</code> vs <code class="language-plaintext highlighter-rouge">user-invocable</code> — 호출 주체 제어</strong>
 이 둘이 자주 헷갈린다. 기본은 "Claude도, 사용자도" 모두 호출 가능이다.</p>
@@ -649,6 +660,53 @@ Skill(deploy *)   # deny
   </tbody>
 </table>
 
+<h3 id="71-인자-미스매치는-막히지-않는다">7.1 인자 미스매치는 "막히지 않는다"</h3>
+
+<p>가장 중요한 멘탈 모델: <strong>인자는 검증·강제되지 않는다.</strong> 스킬 호출은 함수 호출(타입·개수 체크)이 아니라 <strong>프롬프트 텍스트 치환</strong>이다. 그래서 선언한 인자를 안 맞춰도 호출이 거부되거나 에러로 끊기지 않고, 있는 값으로 치환한 뒤 나머지는 Claude(모델)가 읽고 판단한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>상황</th>
+      <th>결과</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>인자를 <strong>아예 안 넘김</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">$issue</code>·<code class="language-plaintext highlighter-rouge">$ARGUMENTS</code> 등이 <strong>빈 자리</strong>로 치환됨. 막히지 않고 그대로 실행 → 모델이 되묻거나 추정</td>
+    </tr>
+    <tr>
+      <td>인자는 넘겼는데 본문에 <strong>placeholder 없음</strong></td>
+      <td>Claude Code가 내용 끝에 <code class="language-plaintext highlighter-rouge">ARGUMENTS: &lt;입력&gt;</code> 을 <strong>자동으로 덧붙여</strong> 모델이 어쨌든 보게 함(입력이 사라지지 않음)</td>
+    </tr>
+    <tr>
+      <td>선언보다 <strong>적게</strong> 넘김</td>
+      <td>매핑 안 된 이름은 채울 값이 없어 빈 자리. 부족분의 정확한 치환 동작은 공식 문서에 명시되어 있지 않다</td>
+    </tr>
+    <tr>
+      <td>선언보다 <strong>많이</strong> 넘김</td>
+      <td>남는 인자는 이름엔 매핑 안 되지만 <code class="language-plaintext highlighter-rouge">$ARGUMENTS</code>(원문 전체)에는 그대로 포함됨</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>실무 함정 — 공백/따옴표.</strong> <code class="language-plaintext highlighter-rouge">$0</code>, <code class="language-plaintext highlighter-rouge">$1</code> 같은 위치 인자는 <strong>셸 스타일 따옴표</strong>를 쓴다. <code class="language-plaintext highlighter-rouge">/migrate-component hello world React</code> 처럼 띄어쓰면 <code class="language-plaintext highlighter-rouge">$0</code>=hello, <code class="language-plaintext highlighter-rouge">$1</code>=world 로 갈라져 "한 개 의도였는데 두 개로 잡히는" 미스매치가 난다. 여러 단어를 한 인자로 넘기려면 <code class="language-plaintext highlighter-rouge">"hello world"</code> 로 묶어야 한다. 반면 <code class="language-plaintext highlighter-rouge">$ARGUMENTS</code> 는 항상 입력 원문 전체로 확장된다.</p>
+
+<p><strong>그래서 권장 패턴 — 누락을 본문 지시문으로 방어한다.</strong> 검증이 없으니, 인자가 없을 때의 행동을 직접 적어 두는 게 정석이다.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">---</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">fix-issue</span>
+<span class="na">description</span><span class="pi">:</span> <span class="s">Fix a GitHub issue</span>
+<span class="na">arguments</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">issue</span><span class="pi">]</span>
+<span class="nn">---</span>
+
+<span class="s">Fix GitHub issue $issue.</span>
+<span class="s">If no issue number was provided, ask the user which issue to fix before proceeding.</span>
+</code></pre></div></div>
+
+<p>이러면 인자를 안 맞춰도 모델이 막무가내로 진행하지 않고 되묻는다(§4의 <code class="language-plaintext highlighter-rouge">summarize-changes</code> 예시 "If the diff is empty, say there are no uncommitted changes" 도 같은 방어 패턴이다). 정리하면 <strong>인자 미스매치는 "차단"이 아니라 "빈 값 / 원문 fallback"으로 흐르고, 최종 안전망은 본문 지시문</strong>이다.</p>
+
 <hr />
 
 <h2 id="8-라이프사이클--한-번-로드되면-계속-남는다">8. 라이프사이클 — 한 번 로드되면 계속 남는다</h2>
@@ -748,7 +806,7 @@ Skill(deploy *)   # deny
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-22T00:00:00+09:00">2026-06-22</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-22T13:05:13+09:00">2026-06-22</time></p>
 
       </footer>
 
