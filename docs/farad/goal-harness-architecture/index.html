@@ -1,0 +1,971 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Farad Goal 하네스 설계와 Query Loop 상호작용 - ARCHIVE</title>
+<meta name="description" content="&lt;!doctype html&gt;     Farad Goal Harness — Architecture &amp; Query-Loop Interaction       Farad · Architecture Review   The Goal Harness &amp; its interaction with the Query Loop   A long-lived, per-session objective that drives the agent across turns until it is   proven complete, blocked, or the user stops it. Architecturally it is an outer ralph loop wrapped   around the existing per-turn inner loop (query_loop) — adding turn-boundary hooks, never   touching the inner cycle. This page is written for code review: every claim is anchored to a symbol.        scope packages/farad/farad/goals + app/runtime + tools/builtin     truth source transcript meta marker     tools CreateGoal · UpdateGoal · SnoozeGoal">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Farad Goal 하네스 설계와 Query Loop 상호작용">
+<meta property="og:url" content="https://hvppycoding.github.io/farad/goal-harness-architecture/">
+
+
+  <meta property="og:description" content="&lt;!doctype html&gt;     Farad Goal Harness — Architecture &amp; Query-Loop Interaction       Farad · Architecture Review   The Goal Harness &amp; its interaction with the Query Loop   A long-lived, per-session objective that drives the agent across turns until it is   proven complete, blocked, or the user stops it. Architecturally it is an outer ralph loop wrapped   around the existing per-turn inner loop (query_loop) — adding turn-boundary hooks, never   touching the inner cycle. This page is written for code review: every claim is anchored to a symbol.        scope packages/farad/farad/goals + app/runtime + tools/builtin     truth source transcript meta marker     tools CreateGoal · UpdateGoal · SnoozeGoal">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-06-26T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/farad/goal-harness-architecture/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Farad Goal 하네스 설계와 Query Loop 상호작용">
+    <meta itemprop="description" content="&lt;!doctype html&gt;Farad Goal Harness — Architecture &amp; Query-Loop Interaction  Farad · Architecture Review  The Goal Harness &amp; its interaction with the Query Loop  A long-lived, per-session objective that drives the agent across turns until it is  proven complete, blocked, or the user stops it. Architecturally it is an outer ralph loop wrapped  around the existing per-turn inner loop (query_loop) — adding turn-boundary hooks, never  touching the inner cycle. This page is written for code review: every claim is anchored to a symbol.      scope packages/farad/farad/goals + app/runtime + tools/builtin    truth source transcript meta marker    tools CreateGoal · UpdateGoal · SnoozeGoal  ">
+    <meta itemprop="datePublished" content="2026-06-26T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/farad/goal-harness-architecture/" itemprop="url">Farad Goal 하네스 설계와 Query Loop 상호작용
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-26T00:00:00+09:00">2026-06-26</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>&lt;!doctype html&gt;</p>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Farad Goal Harness — Architecture &amp; Query-Loop Interaction</title>
+<style>
+  :root{
+    --bg:#fbfbfa; --panel:#ffffff; --ink:#1f2328; --muted:#6a737d; --faint:#8b949e;
+    --line:#e6e8eb; --accent:#3858e9; --accent-weak:#eef1fe; --on:#1a7f55; --on-weak:#e6f4ee;
+    --off:#9a3b3b; --off-weak:#fbecec; --warn:#8a6d00; --warn-weak:#fbf3d6; --code:#0b1021;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.62;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px 120px}
+  header.hero{padding:56px 28px 30px;max-width:1040px;margin:0 auto}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);font-weight:600}
+  h1{font-size:34px;line-height:1.18;margin:.35em 0 .25em;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:16.5px;max-width:74ch}
+  .meta{margin-top:18px;font-family:var(--mono);font-size:12.5px;color:var(--faint);
+    display:flex;gap:18px;flex-wrap:wrap}
+  .meta b{color:var(--muted);font-weight:600}
+  nav.toc{position:sticky;top:0;z-index:5;background:rgba(251,251,250,.92);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-bottom:30px}
+  nav.toc ul{max-width:1040px;margin:0 auto;padding:11px 28px;list-style:none;display:flex;
+    gap:6px 16px;flex-wrap:wrap;font-size:13px}
+  nav.toc a{color:var(--muted);text-decoration:none;font-family:var(--mono)}
+  nav.toc a:hover{color:var(--accent)}
+  section{margin:42px 0;scroll-margin-top:60px}
+  h2{font-size:23px;margin:0 0 6px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px}
+  h2 .n{font-family:var(--mono);font-size:14px;color:var(--accent);font-weight:600}
+  h3{font-size:17px;margin:26px 0 6px}
+  p{margin:.5em 0}
+  .lead{color:var(--muted)}
+  code{font-family:var(--mono);font-size:.88em;background:#f0f1f3;color:#24292f;
+    padding:.08em .36em;border-radius:5px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}.meta{gap:10px}}
+  .mermaid{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:18px;margin:14px 0;overflow-x:auto;text-align:center}
+  figcaption{font-size:13px;color:var(--faint);text-align:center;margin-top:-6px;
+    font-family:var(--mono)}
+  table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#f6f7f9;font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--muted)}
+  td code{white-space:nowrap}
+  .tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;
+    padding:1px 7px;border-radius:999px;border:1px solid transparent}
+  .t-on{background:var(--on-weak);color:var(--on);border-color:#bfe3d2}
+  .t-off{background:var(--off-weak);color:var(--off);border-color:#eccaca}
+  .t-warn{background:var(--warn-weak);color:var(--warn);border-color:#e7d79a}
+  .t-acc{background:var(--accent-weak);color:var(--accent);border-color:#c9d3fb}
+  .callout{border-left:3px solid var(--accent);background:var(--accent-weak);
+    border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .callout.inv{border-left-color:var(--on);background:var(--on-weak)}
+  .callout.warn{border-left-color:var(--warn);background:var(--warn-weak)}
+  .callout b{font-weight:600}
+  ul.tight{margin:.4em 0;padding-left:1.25em}
+  ul.tight li{margin:.2em 0}
+  .ref{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .chk{list-style:none;padding-left:0}
+  .chk li{padding-left:26px;position:relative;margin:.42em 0}
+  .chk li::before{content:"";position:absolute;left:0;top:.42em;width:15px;height:15px;
+    border:1.6px solid var(--on);border-radius:4px}
+  .chk li::after{content:"";position:absolute;left:5px;top:.46em;width:4px;height:8px;
+    border:solid var(--on);border-width:0 2px 2px 0;transform:rotate(40deg)}
+  footer{border-top:1px solid var(--line);margin-top:60px;padding-top:18px;color:var(--faint);
+    font-size:12.5px;font-family:var(--mono)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:6px 0 2px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  hr.soft{border:0;border-top:1px solid var(--line);margin:30px 0}
+  a.codelink{color:var(--accent);text-decoration:none;border-bottom:1px dotted #b9c4f7}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="kicker">Farad · Architecture Review</div>
+  <h1>The Goal Harness &amp; its interaction with the Query Loop</h1>
+  <p class="sub">A long-lived, per-session <b>objective</b> that drives the agent across turns until it is
+  proven complete, blocked, or the user stops it. Architecturally it is an <b>outer ralph loop wrapped
+  around the existing per-turn inner loop</b> (<code>query_loop</code>) — adding turn-boundary hooks, never
+  touching the inner cycle. This page is written for code review: every claim is anchored to a symbol.</p>
+  <div class="meta">
+    <span><b>scope</b> packages/farad/farad/goals + app/runtime + tools/builtin</span>
+    <span><b>truth source</b> transcript meta marker</span>
+    <span><b>tools</b> CreateGoal · UpdateGoal · SnoozeGoal</span>
+  </div>
+</header>
+
+<nav class="toc"><ul>
+  <li><a href="#tldr">0 · TL;DR</a></li>
+  <li><a href="#layers">1 · Layers</a></li>
+  <li><a href="#state">2 · State machine</a></li>
+  <li><a href="#twoloops">3 · Two loops</a></li>
+  <li><a href="#sequence">4 · Sequence</a></li>
+  <li><a href="#decision">5 · Continuation</a></li>
+  <li><a href="#snooze">6 · Snooze cadence</a></li>
+  <li><a href="#wire">7 · Wire &amp; truth</a></li>
+  <li><a href="#seams">8 · Integration seams</a></li>
+  <li><a href="#invariants">9 · Invariants</a></li>
+  <li><a href="#changelog">10 · Recent design</a></li>
+</ul></nav>
+
+<div class="wrap">
+
+<section id="tldr">
+  <h2><span class="n">0</span> TL;DR for the reviewer</h2>
+  <div class="grid2">
+    <div class="panel">
+      <h3 style="margin-top:0">What it is</h3>
+      <ul class="tight">
+        <li>One power axis: <span class="tag t-on">on</span> / <span class="tag t-off">off</span>.
+          The lifecycle meaning lives in <code>off_reason</code>.</li>
+        <li><code>revision</code> is the monotonic arbiter; the transcript
+          <code>{"type":"meta","kind":"goal"}</code> marker is truth, <code>session.meta.json</code> is a cache.</li>
+        <li>Three no-permission model tools; everything else is runtime/UI.</li>
+        <li>Cadence is <b>agent-driven</b>: grind by default, <code>SnoozeGoal</code> to wait. The runtime
+          never infers cadence from tool-call counts or background jobs.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">The one invariant to hold in mind</h3>
+      <div class="callout inv" style="margin:0">
+        <b>Containment.</b> Every Goal integration point is a strict no-op when
+        <code>config.goal_service is None</code>. The turn loop is byte-for-byte unchanged when the harness is
+        unwired (tests / headless). Review each seam by asking: <i>does it early-return on <code>None</code>?</i>
+      </div>
+    </div>
+  </div>
+  <div class="callout warn">
+    <b>Heads up — these landed this session (read §10 first if reviewing the diff):</b> the model/user-facing
+    turn/token <i>budget</i> was removed (replaced by a silent <code>HARD_TURN_CAP</code> backstop);
+    <code>SnoozeGoal</code> was added; and a runtime "defer while background work runs" heuristic was
+    <i>deliberately rejected</i> — cadence is the agent's call, not the runtime's.
+  </div>
+</section>
+
+<section id="layers">
+  <h2><span class="n">1</span> Layered architecture</h2>
+  <p class="lead">Four Qt-free layers under one Qt-facing surface. Mutations flow down; the only thing that
+  flows back up is a serialized snapshot via injected callbacks (no Qt import below the UI line).</p>
+  <table>
+    <thead><tr><th>Layer</th><th>Module</th><th>Responsibility</th><th>Knows about</th></tr></thead>
+    <tbody>
+      <tr><td><b>UI</b></td><td><code>ui/widgets/goal_status_strip.py</code></td>
+        <td>Live view + lifecycle controls (Pause/Run/Edit/Delete), docked inside the composer.
+          Binds to <code>goal_updated</code> snapshots only.</td><td>JSON snapshots</td></tr>
+      <tr><td><b>Tools</b></td><td><code>tools/builtin/goal_tools.py</code></td>
+        <td>Model-callable verbs: <code>CreateGoal</code>, <code>UpdateGoal</code>, <code>SnoozeGoal</code>.
+          Never build a <code>GoalState</code> — they call the service.</td><td>GoalService</td></tr>
+      <tr><td><b>Runtime</b></td><td><code>app/runtime/async_session.py</code></td>
+        <td>The <b>outer loop</b>: turn-boundary hooks, the continuation scheduler, snooze timer,
+          cold-open recovery, abort handling.</td><td>GoalService + query_loop</td></tr>
+      <tr><td><b>Service</b></td><td><code>goals/service.py</code></td>
+        <td>Sole authority for transitions. Builds the next immutable <code>GoalState</code> (rev++),
+          appends the marker (truth first), refreshes cache, emits snapshot.</td><td>Store, Models, Prompt</td></tr>
+      <tr><td><b>Store</b></td><td><code>goals/store.py</code></td>
+        <td>JSON I/O + <code>reconcile()</code> (cache vs transcript). The marker is canonical;
+          <code>load_cached()</code> is the fast path.</td><td>Transcript + meta files</td></tr>
+      <tr><td><b>Models</b></td><td><code>goals/models.py</code></td>
+        <td>Frozen <code>GoalState</code>, <code>GoalPowerState</code>, <code>off_reason</code> sets.
+          No storage, no Qt.</td><td>nothing</td></tr>
+    </tbody>
+  </table>
+  <p class="ref">Wire-prompt synthesis: <code>goals/prompt.py</code> (English-fixed, never i18n).
+  Composition root wiring: <code>app/services_factory.py</code> (<code>on_goal_updated → AppSignals.goal_updated.emit</code>).</p>
+</section>
+
+<section id="state">
+  <h2><span class="n">2</span> Goal state machine</h2>
+  <p class="lead">Two power states. <code>off_reason</code> partitions <span class="tag t-on">resumable</span>
+  (the strip shows <b>Run</b>) from <span class="tag t-off">terminal</span> (the strip hides). <code>revision</code>
+  increments on every appended marker so distinct lifecycle records never collapse.</p>
+  <div class="mermaid">
+stateDiagram-v2
+    direction LR
+    [*] --&gt; On: CreateGoal
+    On --&gt; On: progress · SnoozeGoal · edit_objective
+    On --&gt; Complete: UpdateGoal(complete) + evidence
+    On --&gt; Blocked: UpdateGoal(blocked) ×3 same blocker
+    On --&gt; Paused: user Pause · Esc/abort · cold-open · HARD_TURN_CAP
+    On --&gt; Cancelled: user Cancel
+    On --&gt; Deleted: user Delete
+    On --&gt; Replaced: replace_goal
+    Paused --&gt; On: Resume (auto-kicks loop, resets auto_turn_count)
+    Blocked --&gt; On: Resume
+    Complete --&gt; [*]
+    Cancelled --&gt; [*]
+    Deleted --&gt; [*]
+    Replaced --&gt; [*]
+    note right of Paused
+      resumable = {paused, blocked}
+      terminal  = {complete, deleted,
+                   cancelled, replaced}
+    end note
+  </div>
+  <figcaption>goals/models.py · OFF_REASONS_RESUMABLE / OFF_REASONS_TERMINAL</figcaption>
+  <div class="callout">
+    <b>Only the user resumes.</b> <code>UpdateGoal</code> can move <code>on→off</code> (complete/blocked) but
+    <i>cannot</i> pause/resume/cancel/redefine — those are user-only. <code>SnoozeGoal</code> keeps the Goal
+    <code>on</code>; it is a cadence hint, not a transition (no marker, no rev bump).
+  </div>
+</section>
+
+<section id="twoloops">
+  <h2><span class="n">3</span> The two nested loops — the load-bearing idea</h2>
+  <p class="lead">Farad already had a per-turn agent loop: <code>query_loop</code> cycles
+  <i>LLM → tools → LLM</i> within one turn until the model stops, returning <code>LoopTerminated</code>.
+  The Goal harness adds an <b>outer loop</b> that, at each turn boundary, decides whether to fire
+  <i>another</i> turn — the "ralph loop". The inner loop is untouched.</p>
+  <div class="mermaid">
+flowchart TB
+  subgraph OUTER["OUTER loop · Goal continuation (async_session.py)"]
+    direction TB
+    RT["_run_turn(trigger)"]
+    END["turn end · outcome"]
+    HOOK{"_schedule_goal_continuation_if_due"}
+    WAIT["arm _goal_snooze_task<br />(wait N min, preemptable)"]
+    STOP(["loop ends"])
+    END --&gt; HOOK
+    HOOK --&gt;|"snooze pending"| WAIT
+    HOOK --&gt;|"off / not due / abort"| STOP
+  end
+  subgraph INNER["INNER loop · query_loop (one turn)"]
+    direction TB
+    C["while True: cycle"] --&gt; L["stream_llm"]
+    L --&gt; T{"tool_calls?"}
+    T --&gt;|yes| X["execute_tool_calls<br />(CreateGoal / UpdateGoal /<br />SnoozeGoal / Bash / …)"]
+    X --&gt; C
+    T --&gt;|no| LT(["return LoopTerminated"])
+  end
+  RT --&gt; C
+  LT --&gt; END
+  HOOK --&gt;|"on &amp; due &amp; no snooze"| RT
+  WAIT --&gt; RT
+  </div>
+  <figcaption>inner: query_loop.py · while True (line ~368) → LoopTerminated · outer: async_session.py · _run_turn ↔ _schedule_goal_continuation_if_due</figcaption>
+  <div class="callout inv">
+    <b>Why this matters for review.</b> The Goal harness adds <i>no</i> branches inside <code>query_loop</code>.
+    All coupling is at the turn boundary in <code>async_session.py</code>. To audit the agent loop itself,
+    you can ignore Goal entirely; to audit Goal, you only read the outer hooks below.
+  </div>
+</section>
+
+<section id="sequence">
+  <h2><span class="n">4</span> End-to-end sequence — create → grind → snooze → complete</h2>
+  <div class="mermaid">
+sequenceDiagram
+    autonumber
+    actor U as User
+    participant UI as ChatPanel / Strip
+    participant AS as AsyncSession (outer)
+    participant QL as query_loop (inner)
+    participant SV as GoalService
+    participant M as Provider
+
+    U-&gt;&gt;UI: /goal [objective]
+    UI-&gt;&gt;AS: submit_user_text(creation prompt)
+    AS-&gt;&gt;QL: _run_turn(trigger=user_submit)
+    QL-&gt;&gt;M: stream completion
+    M--&gt;&gt;QL: tool_call CreateGoal
+    QL-&gt;&gt;SV: create_goal() → ON, rev++
+    QL--&gt;&gt;AS: LoopTerminated(completed)
+    Note over AS: turn-end hooks
+    AS-&gt;&gt;SV: note_turn_finished(trigger)
+    AS-&gt;&gt;SV: should_continue() → continue
+    AS-&gt;&gt;AS: _run_turn(trigger=goal)
+    rect rgb(238,241,254)
+    Note over AS,QL: OUTER ralph loop — repeats each turn
+    QL-&gt;&gt;M: …make concrete progress…
+    M--&gt;&gt;QL: tool_call SnoozeGoal(minutes=5)
+    QL-&gt;&gt;SV: request_snooze(300s) — stays ON, no marker
+    QL--&gt;&gt;AS: LoopTerminated(completed)
+    AS-&gt;&gt;AS: take_pending_snooze → arm _goal_snooze_task (5m)
+    Note over AS: no turn fires while waiting · HARD_TURN_CAP not spent
+    U--&gt;&gt;AS: (bg completion / reply preempts the wait early)
+    AS-&gt;&gt;AS: _delayed_goal_continuation → _run_turn(trigger=goal)
+    end
+    QL-&gt;&gt;M: …verify against worktree…
+    M--&gt;&gt;QL: tool_call UpdateGoal(complete, evidence)
+    QL-&gt;&gt;SV: mark_complete() → OFF(complete), rev++
+    AS-&gt;&gt;SV: should_continue() → stop (not on)
+    SV--&gt;&gt;UI: goal_updated snapshot → strip hides
+    Note over AS: outer loop ends
+  </div>
+  <figcaption>Each <code>_run_turn</code> is one full inner <code>query_loop</code>; the outer loop re-enters until UpdateGoal turns the Goal off.</figcaption>
+</section>
+
+<section id="decision">
+  <h2><span class="n">5</span> The continuation decision (turn boundary)</h2>
+  <p class="lead">Runs in <code>async_session._schedule_goal_continuation_if_due(outcome)</code>, invoked only for
+  <code>outcome ∈ {completed, loop_terminated}</code>. Aborts route to <code>_goal_pause_on_abort</code> instead.</p>
+  <div class="mermaid">
+flowchart TD
+  A["turn ended · outcome"] --&gt; G0{"goal_service wired?"}
+  G0 --&gt;|no| Z(["no-op (containment)"])
+  G0 --&gt;|yes| G1{"closed / in-flight /<br />compacting / live task /<br />postbox pending?"}
+  G1 --&gt;|yes| Z2(["defer — a wake will drive it"])
+  G1 --&gt;|no| SN["snooze = take_pending_snooze()<br />consumed here, exactly once"]
+  SN --&gt; D{"should_continue?<br />on · not abort · outcome==completed ·<br />auto_turn_count under HARD_TURN_CAP"}
+  D --&gt;|no| Z3(["drop snooze · loop ends"])
+  D --&gt;|yes| RV["snapshot _goal_scheduled_revision (D1)"]
+  RV --&gt; S{"snooze &gt; 0?"}
+  S --&gt;|yes| W["arm _goal_snooze_task<br />await sleep(N) · preemptable"]
+  S --&gt;|no| F["_run_turn(trigger=goal) now"]
+  W -.-&gt;|"timer fires &amp; still due"| F
+  classDef stop fill:#fbecec,stroke:#eccaca;
+  classDef go fill:#e6f4ee,stroke:#bfe3d2;
+  class Z,Z2,Z3 stop; class F,W go;
+  </div>
+  <figcaption>async_session.py · _schedule_goal_continuation_if_due + _delayed_goal_continuation</figcaption>
+  <div class="callout">
+    <b>D1 guard.</b> The next <code>trigger="goal"</code> turn re-checks <code>_goal_continuation_still_due()</code>
+    at the <i>top of</i> <code>_run_turn</code>: if the Goal turned off or its <code>revision</code> advanced
+    (pause, edit, new user turn) since the snapshot, the scheduled/snoozed turn is dropped before spending any
+    model call. This is what makes a stale snooze fire into a paused Goal safe.
+  </div>
+</section>
+
+<section id="snooze">
+  <h2><span class="n">6</span> SnoozeGoal — agent-controlled cadence</h2>
+  <p class="lead">The agent, not the runtime, decides when to wait. Default after a productive turn is to
+  continue immediately (grind). When the agent is only waiting on something — a background command it
+  launched, a rate limit, an external event — it calls <code>SnoozeGoal(minutes)</code> instead of ending an
+  idle turn that would just re-fire.</p>
+  <div class="grid2">
+    <div class="panel">
+      <h3 style="margin-top:0">Mechanics</h3>
+      <ul class="tight">
+        <li><code>request_snooze</code> records a <b>transient</b> per-session seconds value
+          (<code>GoalService._pending_snooze</code>). No marker, no rev bump — the Goal stays <code>on</code>.</li>
+        <li>The runtime consumes it once (<code>take_pending_snooze</code>) at the scheduling point and arms a
+          <b>separate</b> <code>_goal_snooze_task</code> (an <code>asyncio.sleep</code>), held apart from
+          <code>_current_turn_task</code> so user input can still run a turn.</li>
+        <li>Any real turn cancels the snooze at the top of <code>_run_turn</code> → a background completion /
+          user reply <b>preempts</b> the wait. A snoozing Goal fires no turn, so it <b>does not spend
+          <code>HARD_TURN_CAP</code></b>.</li>
+        <li>Any off-transition clears a stale snooze in <code>_commit</code>;
+          <code>request_abort</code> while snoozed cancels the wake and pauses the Goal (Case F).</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">Why not auto-detect background jobs?</h3>
+      <p style="margin-top:0">An earlier prototype deferred continuation whenever the session had a running
+      background shell or subagent. It was <b>removed on purpose</b>: the runtime cannot know a background
+      job's nature. You might launch a <i>server</i> in the background and keep interacting with it —
+      "wait until it finishes" is wrong there.</p>
+      <p>So cadence is the agent's call (<code>SnoozeGoal</code>), and the runtime never inspects background
+      state in the continuation path. A backstop (<code>HARD_TURN_CAP = 50</code>, resets on resume) catches a
+      runaway loop without being a tunable feature.</p>
+    </div>
+  </div>
+</section>
+
+<section id="wire">
+  <h2><span class="n">7</span> Wire context &amp; the truth source</h2>
+  <div class="grid2">
+    <div class="panel">
+      <h3 style="margin-top:0">What the model sees</h3>
+      <p style="margin-top:0">On every <code>on</code> turn, <code>_with_goal_context</code> attaches a wire-only
+      compact reminder (<code>goals/prompt.py · build_compact_reminder</code>): the objective (XML-escaped,
+      treated as data), the anti-shrink rule, evidence discipline, and the SnoozeGoal hint. It is built once
+      per <code>TurnContext</code> so reruns are identical.</p>
+      <p>A read-only <b>"Goal prompt" audit card</b> is appended once per on-turn
+      (<code>_append_goal_notice_if_due</code>), rendered exactly like the compaction / background-task cards
+      via <code>SYSTEM_NOTE_ROLE + presentation_kind="goal_prompt"</code>.</p>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">What never reaches the provider</h3>
+      <p style="margin-top:0"><code>normalize_for_api</code> drops every transcript envelope whose
+      <code>type ∉ {user, assistant, tool}</code>. So the Goal <code>meta</code> markers and the
+      <code>goal_notice</code> audit entries are <b>structurally wire-excluded</b> — the reminder is injected
+      separately and intentionally; the markers/notices never double-send.</p>
+      <div class="callout inv" style="margin:.6em 0 0">
+        <b>Truth vs cache.</b> The <code>{"type":"meta","kind":"goal"}</code> transcript marker is the source of
+        truth (survives crash); <code>session.meta.json</code> is a fast cache. <code>reconcile()</code> resolves
+        them at session-open and the continuation guard.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="seams">
+  <h2><span class="n">8</span> Integration seams — the review surface</h2>
+  <p class="lead">Every row below is a strict no-op when <code>goal_service is None</code>. These are the only
+  places the turn loop touches Goal — read them top to bottom to review the full coupling.</p>
+  <table>
+    <thead><tr><th>When</th><th>Seam (<code>async_session.py</code>)</th><th>Effect</th></tr></thead>
+    <tbody>
+      <tr><td>session open (once/process)</td><td><code>load_initial_state → _recover_goal_on_cold_open</code></td>
+        <td>An orphaned <code>on</code> Goal from a crashed session is auto-paused (Case D).</td></tr>
+      <tr><td>build turn context</td><td><code>_build_turn_context → _with_goal_context</code></td>
+        <td>Attach the wire-only reminder for an <code>on</code> Goal.</td></tr>
+      <tr><td>top of <code>_run_turn</code></td><td>D1 guard <code>_goal_continuation_still_due</code> + snooze cancel</td>
+        <td>Drop a stale <code>trigger="goal"</code> turn; preempt a pending snooze.</td></tr>
+      <tr><td>turn start</td><td><code>_goal_note_turn_started</code></td>
+        <td>Reconcile cache/transcript once at goal/resume boundaries.</td></tr>
+      <tr><td>after first drain</td><td><code>_append_goal_notice_if_due</code></td>
+        <td>Append the read-only "Goal prompt" audit card.</td></tr>
+      <tr><td>turn end (clean)</td><td><code>_goal_note_turn_finished → _schedule_goal_continuation_if_due</code></td>
+        <td>Bookkeeping (auto_turn_count, HARD_TURN_CAP) then schedule next turn / arm snooze / stop.</td></tr>
+      <tr><td>turn end (abort)</td><td><code>_goal_pause_on_abort</code></td>
+        <td>Esc/Stop durably pauses an <code>on</code> Goal (Case F).</td></tr>
+      <tr><td>snooze elapses</td><td><code>_delayed_goal_continuation</code></td>
+        <td>Fire the deferred turn (re-guarded by D1); preemptable; bounded by <code>MAX_SNOOZE_SECONDS</code>.</td></tr>
+      <tr><td>user Resume (strip)</td><td><code>kick_goal_continuation</code> (via handle proxy)</td>
+        <td>Auto-restart the loop after resume — no typed prompt needed.</td></tr>
+      <tr><td>Stop / shutdown</td><td><code>request_abort</code> / <code>shutdown</code></td>
+        <td>Cancel the snooze timer (and pause on abort) so no wake lingers.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="invariants">
+  <h2><span class="n">9</span> Architect review checklist</h2>
+  <div class="panel">
+    <ul class="chk">
+      <li><b>Containment</b> — every seam early-returns when <code>goal_service is None</code>; the unwired turn loop is unchanged.</li>
+      <li><b>Truth first</b> — service appends the transcript marker before refreshing the cache or emitting a snapshot (<code>_commit</code>).</li>
+      <li><b>Wire exclusion</b> — Goal markers and <code>goal_notice</code> never pass <code>normalize_for_api</code>; the reminder is the only thing that reaches the model.</li>
+      <li><b>Revision arbiter</b> — every state change bumps <code>revision</code>; the D1 guard compares against the scheduling snapshot, not "is it still on".</li>
+      <li><b>Exactly-once continuation</b> — turn spawns assign <code>_current_turn_task</code> synchronously on the single session loop (no await between done-check and create_task) → no double-fire / lost wake.</li>
+      <li><b>Snooze is free to wait</b> — snoozing fires no turn, so it never advances <code>auto_turn_count</code> / <code>HARD_TURN_CAP</code>; the wake is preemptable and cancelled by abort/shutdown/real-turn.</li>
+      <li><b>Cadence is the agent's</b> — the runtime never infers continuation timing from tool-call counts or background-job state.</li>
+      <li><b>Only-user lifecycle</b> — model tools can complete/block but cannot pause/resume/cancel/redefine.</li>
+      <li><b>English-fixed wire</b> — <code>goals/prompt.py</code> is never i18n; the strip's <code>Goal</code> label is a fixed product term.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="changelog">
+  <h2><span class="n">10</span> Recent design decisions (for the diff reviewer)</h2>
+  <table>
+    <thead><tr><th>Decision</th><th>Rationale</th><th>Where</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-off">removed</span> turn/token <b>budget</b> as a feature</td>
+        <td>The model set it poorly and "exhausted" was a confusing pause reason. Replaced by a silent
+          <code>HARD_TURN_CAP = 50</code> runaway backstop (resets on resume), not a tunable knob.</td>
+        <td><code>service.py</code>, <code>models.py</code>, <code>goal_tools.py</code></td></tr>
+      <tr><td><span class="tag t-acc">added</span> <code>SnoozeGoal</code> tool</td>
+        <td>Agent-controlled "I'm waiting" signal so an idle wait does not busy-spin turns and does not burn
+          the cap; preempted early by real events.</td>
+        <td><code>goal_tools.py</code>, <code>async_session.py</code>, <code>service.py</code></td></tr>
+      <tr><td><span class="tag t-off">rejected</span> auto-defer while background work runs</td>
+        <td>The runtime cannot know a background job's nature (a server you keep talking to vs a build you
+          wait on). Cadence belongs to the agent.</td>
+        <td>— (deliberately absent from the continuation path)</td></tr>
+      <tr><td><span class="tag t-on">kept</span> immediate ralph continuation + strip + resume + cold-open</td>
+        <td>Tight turn-to-turn grind for active work; persistent UI/state for control and crash recovery —
+          the value a bare scheduled loop cannot give.</td>
+        <td><code>async_session.py</code>, <code>goal_status_strip.py</code></td></tr>
+    </tbody>
+  </table>
+  <div class="legend" style="margin-top:14px">
+    <span><span class="dot" style="background:var(--on)"></span>resumable / kept</span>
+    <span><span class="dot" style="background:var(--off)"></span>off / removed</span>
+    <span><span class="dot" style="background:var(--accent)"></span>added</span>
+    <span><span class="dot" style="background:var(--warn)"></span>watch</span>
+  </div>
+</section>
+
+<footer>
+  Farad Goal Harness · architecture review build · diagrams: Mermaid · source of truth: the code, not this page.
+  Verify every symbol against packages/farad/farad before relying on a claim here.
+</footer>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad:true, theme:'base', securityLevel:'loose',
+    themeVariables:{
+      fontFamily:"'JetBrains Mono', ui-monospace, monospace", fontSize:'13px',
+      primaryColor:'#eef1fe', primaryBorderColor:'#c9d3fb', primaryTextColor:'#1f2328',
+      lineColor:'#8b949e', secondaryColor:'#e6f4ee', tertiaryColor:'#ffffff'
+    }
+  });
+</script>
+</body>
+</html>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#farad" class="page__taxonomy-item p-category" rel="tag">farad</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-26T00:00:00+09:00">2026-06-26</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/claude/claude-code-loop-functions/" class="pagination--pager" title="Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/claude/claude-code-loop-functions/" rel="permalink">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/farad-goal-harness-plan/" rel="permalink">Farad Goal Harness 설계 플랜 (Codex 작성) — 세션 스코프 goal 하네스
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-22T21:58:25+09:00">2026-06-22</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad Goal Harness 설계 플랜 (Codex 작성) — 세션 스코프 goal 하네스
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/agent-goal-loop-analysis-codex/" rel="permalink">Agent goal/loop Reference Analysis (by Codex) — Goal Persistence &amp; Auto-Loops in Codex &amp; Claude
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-22T21:25:39+09:00">2026-06-22</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Agent goal/loop Reference Analysis (by Codex) — Goal Persistence &amp; Auto-Loops in Codex &amp; Claude
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
