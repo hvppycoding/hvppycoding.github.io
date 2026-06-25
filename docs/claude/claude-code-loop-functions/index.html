@@ -1,0 +1,741 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor) - ARCHIVE</title>
+<meta name="description" content="Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)">
+<meta property="og:url" content="https://hvppycoding.github.io/claude/claude-code-loop-functions/">
+
+
+  <meta property="og:description" content="Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-06-25T22:08:45+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/claude/claude-code-loop-functions/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)">
+    <meta itemprop="description" content="Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)">
+    <meta itemprop="datePublished" content="2026-06-25T22:08:45+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/claude/claude-code-loop-functions/" itemprop="url">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="claude-code-loop-내부-동작--루프를-떠받치는-함수들-schedulewakeup--cron--monitor">Claude Code <code class="language-plaintext highlighter-rouge">/loop</code> 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)</h1>
+
+<p>Claude Code의 <code class="language-plaintext highlighter-rouge">/loop</code>은 "프롬프트를 주기적으로 / 또는 스스로 속도를 조절하며 반복"하게 해주는
+스킬이다. 겉보기엔 단순한 "N분마다 실행"이지만, 실제로는 <strong>세 가지 모드</strong>와 그 모드를 떠받치는
+<strong>여러 함수(tool)</strong>가 맞물려 돌아간다. 이 글은 실제 API 요청 캡처에서 <code class="language-plaintext highlighter-rouge">/loop</code> 스킬 본문과 관련
+tool 정의를 추려, 루프가 어떻게 스케줄링·웨이크업·종료되는지를 정리한 것이다.</p>
+
+<blockquote>
+  <p>출처: <code class="language-plaintext highlighter-rouge">/loop 1m 1분마다 ls 를 치자</code> 세션의 POST <code class="language-plaintext highlighter-rouge">/v1/messages</code> 요청 캡처 (model <code class="language-plaintext highlighter-rouge">claude-opus-4-8</code>,
+70개 tool 중 루프 관련 함수만 발췌).</p>
+</blockquote>
+
+<hr />
+
+<h2 id="한눈에-보기--루프를-구성하는-함수들">한눈에 보기 — 루프를 구성하는 함수들</h2>
+
+<table style="border-collapse:collapse; width:100%; margin:16px 0; font-size:0.95em;">
+  <thead>
+    <tr style="background:#0969da; color:white;">
+      <th style="padding:8px 12px; text-align:left;">함수</th>
+      <th style="padding:8px 12px; text-align:left;">역할</th>
+      <th style="padding:8px 12px; text-align:left;">언제 쓰이나</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;"><code>CronCreate</code></td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">고정 주기 스케줄 등록 (5-field cron)</td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">고정 간격 모드 (rule 1·2)</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;"><code>CronList</code> / <code>CronDelete</code></td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">등록된 cron 조회 / 취소</td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">관리·중단</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;"><code>ScheduleWakeup</code></td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">다음 깨어날 시점을 스스로 정함 (cache-aware)</td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">동적 모드 (rule 3)</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;"><code>Monitor</code></td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">이벤트 스트림으로 루프를 즉시 깨움</td>
+      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">이벤트 게이트 동적 모드</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 12px;"><code>PushNotification</code></td>
+      <td style="padding:8px 12px;">루프 종료 시 결과 한 줄 알림</td>
+      <td style="padding:8px 12px;">자리 비운 사용자에게 완료 통지</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="1-loop-스킬--입력-파싱과-모드-분기">1. <code class="language-plaintext highlighter-rouge">/loop</code> 스킬 — 입력 파싱과 모드 분기</h2>
+
+<p><code class="language-plaintext highlighter-rouge">/loop</code>은 입력을 <code class="language-plaintext highlighter-rouge">[interval] &lt;prompt…&gt;</code> 로 파싱한다. 우선순위는 다음과 같다.</p>
+
+<ol>
+  <li><strong>선두 토큰</strong>: 첫 토큰이 <code class="language-plaintext highlighter-rouge">^\d+[smhd]$</code>(예: <code class="language-plaintext highlighter-rouge">5m</code>, <code class="language-plaintext highlighter-rouge">2h</code>)에 맞으면 그게 간격, 나머지가 프롬프트.</li>
+  <li><strong>후행 "every" 절</strong>: 입력이 <code class="language-plaintext highlighter-rouge">every &lt;N&gt;&lt;unit&gt;</code>(예: <code class="language-plaintext highlighter-rouge">every 20m</code>, <code class="language-plaintext highlighter-rouge">every 5 minutes</code>)로 끝나면
+그걸 간격으로 떼어낸다. 단 <code class="language-plaintext highlighter-rouge">every</code> 뒤가 <strong>시간 표현일 때만</strong> — <code class="language-plaintext highlighter-rouge">check every PR</code>은 간격이 아니다.</li>
+  <li><strong>간격 없음</strong>: 그 외에는 입력 전체가 프롬프트이고, 스스로 속도를 정하는 <strong>동적 모드</strong>로 간다.</li>
+</ol>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5m /babysit-prs          → 간격 5m,  프롬프트 /babysit-prs        (rule 1)
+check the deploy every 20m → 간격 20m, 프롬프트 check the deploy   (rule 2)
+run tests every 5 minutes  → 간격 5m,  프롬프트 run tests          (rule 2)
+check the deploy         → 간격 없음 → 동적 모드                  (rule 3)
+check every PR           → 간격 없음 → 동적 모드 ("every"+비시간)  (rule 3)
+5m                       → 프롬프트 비어있음 → usage 출력
+</code></pre></div></div>
+
+<h3 id="클라우드-우선-제안-offer-cloud-first">클라우드 우선 제안 (Offer cloud first)</h3>
+
+<p>스케줄링 전에 <strong>간격이 60분 이상</strong>이거나 입력이 <strong>일 단위 표현</strong>("every morning", "daily",
+"each night" 등)이면, 로컬 세션 루프 대신 클라우드 스케줄을 먼저 권한다. 세션을 닫으면 로컬
+루프는 멈추기 때문이다. 사용자가 클라우드를 고르면 <code class="language-plaintext highlighter-rouge">CronCreate</code>가 아니라 <code class="language-plaintext highlighter-rouge">schedule</code> 스킬로
+넘긴다.</p>
+
+<hr />
+
+<h2 id="2-고정-간격-모드--croncreate">2. 고정 간격 모드 — <code class="language-plaintext highlighter-rouge">CronCreate</code></h2>
+
+<p>rule 1·2로 간격이 잡히면 그 간격을 cron 식으로 변환해 <code class="language-plaintext highlighter-rouge">CronCreate</code>에 등록한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>간격 패턴</th>
+      <th>Cron 식</th>
+      <th>비고</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Nm</code> (N ≤ 59)</td>
+      <td><code class="language-plaintext highlighter-rouge">*/N * * * *</code></td>
+      <td>N분마다</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Nm</code> (N ≥ 60)</td>
+      <td><code class="language-plaintext highlighter-rouge">0 */H * * *</code></td>
+      <td>시간으로 반올림 (H = N/60, 24를 나눠야)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Nh</code> (N ≤ 23)</td>
+      <td><code class="language-plaintext highlighter-rouge">0 */N * * *</code></td>
+      <td>N시간마다</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Nd</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0 0 */N * *</code></td>
+      <td>N일마다 자정(로컬)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Ns</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ceil(N/60)m</code> 취급</td>
+      <td>cron 최소 단위는 1분</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>간격이 단위를 깔끔히 나누지 못하면(<code class="language-plaintext highlighter-rouge">7m</code> → <code class="language-plaintext highlighter-rouge">:56→:00</code>에서 간격이 튐, <code class="language-plaintext highlighter-rouge">90m</code> → cron 표현 불가)
+가장 가까운 깔끔한 간격으로 반올림하고 <strong>무엇으로 바꿨는지 사용자에게 알린다.</strong></p>
+
+<h3 id="croncreate의-설계-포인트"><code class="language-plaintext highlighter-rouge">CronCreate</code>의 설계 포인트</h3>
+
+<ul>
+  <li><strong>로컬 타임존 5-field cron</strong> — <code class="language-plaintext highlighter-rouge">"0 9 * * *"</code> = 로컬 9am, 타임존 변환 불필요.</li>
+  <li><strong>one-shot 지원</strong> (<code class="language-plaintext highlighter-rouge">recurring: false</code>) — "2:30pm에 알려줘" 같은 1회성은 분/시/일/월을 고정값으로
+핀하고 한 번 발사 후 자동 삭제.</li>
+  <li><strong>:00·:30 분각을 피하라</strong> — "9am"을 요청한 전 세계 사용자가 모두 <code class="language-plaintext highlighter-rouge">0 9</code>로 몰리면 같은 순간 API에
+부하가 쏠린다. 요청이 근사치면 <code class="language-plaintext highlighter-rouge">57 8</code>이나 <code class="language-plaintext highlighter-rouge">3 9</code>처럼 어긋난 분을 고른다. ("hourly" → `7 * * * *")</li>
+  <li><strong>세션 한정</strong> — job은 이 Claude 세션 메모리에만 있고 디스크에 안 써진다. Claude 종료 시 사라짐.</li>
+  <li><strong>라이브 감시용 아님</strong> — 고정 벽시계 간격으로 재실행할 뿐. 로그/프로세스를 실시간 감시하려면
+<code class="language-plaintext highlighter-rouge">Monitor</code>를 쓴다.</li>
+  <li><strong>런타임 동작</strong> — REPL이 idle일 때만 발사. 작은 결정적 jitter가 더해지고(recurring은 주기의 최대
+10%, 최대 15분 늦게), <strong>recurring은 7일 후 자동 만료</strong>(마지막 1회 발사 후 삭제). 반환된 job ID는
+<code class="language-plaintext highlighter-rouge">CronDelete</code>로 취소.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">CronList</code>는 현재 세션의 cron job 목록, <code class="language-plaintext highlighter-rouge">CronDelete</code>는 job ID로 취소(인메모리 스토어에서 제거)다.</p>
+
+<hr />
+
+<h2 id="3-동적-모드--schedulewakeup-이-글의-핵심">3. 동적 모드 — <code class="language-plaintext highlighter-rouge">ScheduleWakeup</code> (이 글의 핵심)</h2>
+
+<p>간격이 없으면(rule 3) Claude가 <strong>스스로 다음 실행 시점을 정한다.</strong> 매 턴 마지막 행동으로
+<code class="language-plaintext highlighter-rouge">ScheduleWakeup</code>을 호출해 "몇 초 뒤에 다시 깨어날지"를 지정하고, 같은 <code class="language-plaintext highlighter-rouge">/loop</code> 프롬프트를 그대로
+넘겨 다음 발사가 이 스킬로 재진입하게 한다. 호출을 생략하면 루프가 끝난다.</p>
+
+<h3 id="스키마">스키마</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"delaySeconds"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number — 지금부터 몇 초 뒤 깨어날지. 런타임이 [60, 3600]으로 clamp"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"reason"</span><span class="p">:</span><span class="w">       </span><span class="s2">"string — 그 지연을 고른 이유 한 문장. 텔레메트리+사용자에게 노출"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w">       </span><span class="s2">"string — 깨어날 때 발사할 /loop 입력. 매 턴 같은 입력을 verbatim으로"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="delayseconds-고르기--프롬프트-캐시가-기준"><code class="language-plaintext highlighter-rouge">delaySeconds</code> 고르기 — 프롬프트 캐시가 기준</h3>
+
+<p>여기가 <code class="language-plaintext highlighter-rouge">/loop</code> 설계에서 가장 영리한 부분이다. Anthropic 프롬프트 캐시 TTL이 <strong>5분</strong>이라,
+300초를 넘겨 자면 다음 웨이크업이 전체 대화 컨텍스트를 <strong>캐시 미스로</strong> 읽는다 — 느리고 비싸다.
+그래서 자연스러운 분기점이 생긴다.</p>
+
+<ul>
+  <li><strong>5분 미만 (60–270s)</strong>: 캐시가 따뜻하게 유지됨. 하네스가 알려줄 수 없는 외부 상태(CI, 배포,
+원격 큐)를 능동적으로 폴링할 때 적합.</li>
+  <li><strong>5분–1시간 (300–3600s)</strong>: 캐시 미스를 감수. 더 일찍 볼 이유가 없을 때 — 분 단위로 바뀌는 걸
+기다리거나, 진짜 idle이거나, 다른 신호가 주 깨움이고 이건 긴 fallback heartbeat일 때.</li>
+</ul>
+
+<blockquote>
+  <p><strong>300초를 고르지 마라.</strong> worst-of-both — 캐시 미스를 내면서도 그걸 분할상환하지 못한다.
+"5분쯤 기다리자" 싶으면 270s로 내려 캐시에 머물거나, 1200s+로 올려 한 번의 캐시 미스로 훨씬 긴
+대기를 사라. 라운드 분 단위가 아니라 <strong>캐시 윈도우</strong>로 생각하라.</p>
+</blockquote>
+
+<p>특정 신호 없이 그냥 idle하게 도는 틱이면 기본값 <strong>1200–1800s(20–30분)</strong>. 8분짜리 CI를 폴링하는데
+60s마다 깨면 끝나기 전 캐시를 8번 태운다 — 270s로 두 번 자는 게 낫다.</p>
+
+<h3 id="폴링하지-말아야-할-것">폴링하지 말아야 할 것</h3>
+
+<blockquote>
+  <p>네가 띄운 background 작업을 폴링하려고 짧은 간격 웨이크업을 걸지 마라 — 하네스가 추적하는 작업이
+끝나면 <strong>자동으로 재호출</strong>되므로 폴링은 낭비다. 대신 작업이 멈추거나 알림이 안 와도 루프가
+살아남도록 긴 fallback(1200s+)을 건다. 예외는 하네스가 추적 못 하는 외부 작업(CI·배포·원격 큐).</p>
+</blockquote>
+
+<h3 id="자율-루프-sentinel">자율 루프 sentinel</h3>
+
+<p>사용자 프롬프트가 없는 자율 <code class="language-plaintext highlighter-rouge">/loop</code>에서는 <code class="language-plaintext highlighter-rouge">prompt</code>에 리터럴 <code class="language-plaintext highlighter-rouge">&lt;&lt;autonomous-loop-dynamic&gt;&gt;</code>을 넘긴다
+(런타임이 발사 시점에 자율 루프 지시문으로 치환). CronCreate용 <code class="language-plaintext highlighter-rouge">&lt;&lt;autonomous-loop&gt;&gt;</code>와 혼동 금지 —
+<code class="language-plaintext highlighter-rouge">ScheduleWakeup</code>은 항상 <code class="language-plaintext highlighter-rouge">-dynamic</code> 변종을 쓴다.</p>
+
+<h3 id="reason-필드"><code class="language-plaintext highlighter-rouge">reason</code> 필드</h3>
+
+<p>지연을 고른 이유 한 문장. 텔레메트리로 가고 사용자에게도 보인다. "watching CI run"이 "waiting"보다
+낫다 — 구체적으로.</p>
+
+<hr />
+
+<h2 id="4-이벤트-게이트--monitor">4. 이벤트 게이트 — <code class="language-plaintext highlighter-rouge">Monitor</code></h2>
+
+<p>동적 모드에서 다음 실행이 <strong>시간</strong>이 아니라 <strong>관측 가능한 이벤트</strong>(CI 완료, 로그 라인 매칭, 파일
+변경, PR 코멘트)에 걸려 있으면, <code class="language-plaintext highlighter-rouge">Monitor</code>를 <code class="language-plaintext highlighter-rouge">persistent: true</code>로 한 번 무장한다. 이벤트는
+<code class="language-plaintext highlighter-rouge">&lt;task-notification&gt;</code> 메시지로 도착해 <strong><code class="language-plaintext highlighter-rouge">ScheduleWakeup</code> 데드라인을 기다리지 않고 즉시</strong> 루프를
+깨운다. 이때 <code class="language-plaintext highlighter-rouge">ScheduleWakeup</code>의 <code class="language-plaintext highlighter-rouge">delaySeconds</code>는 "이벤트가 안 오면 얼마나 기다릴지"의
+<strong>fallback heartbeat</strong>(1200–1800s)가 된다.</p>
+
+<h3 id="알림-개수로-도구를-고른다">알림 개수로 도구를 고른다</h3>
+
+<ul>
+  <li><strong>한 번</strong> ("서버 뜨면/빌드 끝나면 알려줘") → Monitor가 아니라 <strong>Bash <code class="language-plaintext highlighter-rouge">run_in_background</code></strong> +
+조건 충족 시 종료하는 명령(<code class="language-plaintext highlighter-rouge">until grep -q "Ready in" dev.log; do sleep 0.5; done</code>). 종료 알림 1회.</li>
+  <li><strong>발생할 때마다 무한</strong> ("ERROR 뜰 때마다") → <code class="language-plaintext highlighter-rouge">tail -f</code>, <code class="language-plaintext highlighter-rouge">inotifywait -m</code>, <code class="language-plaintext highlighter-rouge">while true</code> 같은
+무한 명령으로 Monitor.</li>
+  <li><strong>발생할 때마다, 알려진 끝까지</strong> ("각 CI 스텝 결과, 런 완료되면 종료") → 라인을 emit하다 종료하는
+명령으로 Monitor.</li>
+</ul>
+
+<blockquote>
+  <p>단일 알림에 무한 명령(<code class="language-plaintext highlighter-rouge">tail -f</code> 등)을 쓰지 마라 — 이벤트가 발사된 뒤에도 timeout까지 무장 상태로
+남는다. <code class="language-plaintext highlighter-rouge">tail -f log | grep -m 1</code>도 해결책이 아니다(매칭 후 로그가 조용해지면 SIGPIPE가 안 와
+파이프라인이 hang). "X 준비되면 알려줘"는 Bash <code class="language-plaintext highlighter-rouge">run_in_background</code> + <code class="language-plaintext highlighter-rouge">until</code> 루프로.</p>
+</blockquote>
+
+<p>후속 반복에서는 <code class="language-plaintext highlighter-rouge">TaskList</code>를 먼저 확인해 이미 Monitor가 돌면 다시 무장하지 않는다.</p>
+
+<hr />
+
+<h2 id="5-루프-종료--pushnotification">5. 루프 종료 — <code class="language-plaintext highlighter-rouge">PushNotification</code></h2>
+
+<p>루프를 멈추려면 <code class="language-plaintext highlighter-rouge">ScheduleWakeup</code> 호출을 생략하고, 무장했던 Monitor를 <code class="language-plaintext highlighter-rouge">TaskStop</code>으로 정리한다
+(task ID는 <code class="language-plaintext highlighter-rouge">TaskList</code>로 찾는다). 멈추기 전에 <code class="language-plaintext highlighter-rouge">PushNotification</code>으로 <strong>결과 한 줄</strong>을 보낸다 —
+사용자가 자리를 비운 채 완료를 기다릴 수 있기 때문. 단, 사용자가 방금 멈추라고 해서 멈추는
+경우엔 생략(이미 여기 있으니까).</p>
+
+<hr />
+
+<h2 id="정리--루프의-두-축">정리 — 루프의 두 축</h2>
+
+<p><code class="language-plaintext highlighter-rouge">/loop</code>은 결국 <strong>"누가 다음 틱을 결정하는가"</strong> 로 갈린다.</p>
+
+<ul>
+  <li><strong>고정 간격 모드</strong>: 벽시계가 결정한다 → <code class="language-plaintext highlighter-rouge">CronCreate</code>(+<code class="language-plaintext highlighter-rouge">CronList</code>/<code class="language-plaintext highlighter-rouge">CronDelete</code>). 세션 한정,
+7일 만료, :00/:30 회피.</li>
+  <li><strong>동적 모드</strong>: Claude가 결정한다 → <code class="language-plaintext highlighter-rouge">ScheduleWakeup</code>(시간 기반, <strong>캐시 윈도우로 사고</strong>) +
+<code class="language-plaintext highlighter-rouge">Monitor</code>(이벤트 기반, 즉시 깨움). 종료 시 <code class="language-plaintext highlighter-rouge">PushNotification</code>으로 통지.</li>
+</ul>
+
+<p>핵심 통찰은 <code class="language-plaintext highlighter-rouge">ScheduleWakeup</code>의 <strong>캐시 인지 지연 선택</strong>이다 — "몇 분마다"라는 인간적 직관 대신
+프롬프트 캐시의 5분 TTL을 비용 모델로 삼아, 270s(캐시 유지) 또는 1200s+(미스를 긴 대기로 분할상환)
+중 하나로 수렴시킨다. 300초 같은 어중간한 값은 가장 비효율적이다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#claude" class="page__taxonomy-item p-category" rel="tag">claude</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-06-25T22:08:45+09:00">2026-06-25</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/test/html-passthrough-test/" class="pagination--pager" title="HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/farad-goal-harness-plan/" rel="permalink">Farad Goal Harness 설계 플랜 (Codex 작성) — 세션 스코프 goal 하네스
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-22T21:58:25+09:00">2026-06-22</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad Goal Harness 설계 플랜 (Codex 작성) — 세션 스코프 goal 하네스
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/agent-goal-loop-analysis-codex/" rel="permalink">Agent goal/loop Reference Analysis (by Codex) — Goal Persistence &amp; Auto-Loops in Codex &amp; Claude
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-22T21:25:39+09:00">2026-06-22</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Agent goal/loop Reference Analysis (by Codex) — Goal Persistence &amp; Auto-Loops in Codex &amp; Claude
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/agent-goal-loop-analysis-codex-ko/" rel="permalink">에이전트 goal/loop 레퍼런스 분석 (Codex 작성) — Codex·Claude의 목표 지속·자동 반복 메커니즘
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-22T21:25:31+09:00">2026-06-22</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">에이전트 goal/loop 레퍼런스 분석 (Codex 작성) — Codex·Claude의 목표 지속·자동 반복 메커니즘
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
