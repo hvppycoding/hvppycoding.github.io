@@ -1,0 +1,825 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview) - ARCHIVE</title>
+<meta name="description" content="경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)">
+<meta property="og:url" content="https://hvppycoding.github.io/farad/lightweight-html-viewer/">
+
+
+  <meta property="og:description" content="경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-07-04T13:21:02+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/farad/lightweight-html-viewer/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)">
+    <meta itemprop="description" content="경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)">
+    <meta itemprop="datePublished" content="2026-07-04T13:21:02+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/farad/lightweight-html-viewer/" itemprop="url">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="경량-html-뷰어-검토--에이전트-html-산출물용-별도-프로세스-뷰어-가칭-hview">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)</h1>
+
+<blockquote>
+  <p>2026-07-04. 발단: <a href="https://news.hada.io/topic?id=29347">GeekNews 29347</a> — "에이전트 산출물은
+Markdown보다 HTML이 낫다" (표·SVG·JS 인터랙션·일회용 도구). Farad가 이 방향을 쓰려면 HTML을
+여는 경로가 필요한데, <strong>Farad 내장(QWebEngineView in-process)은 성능 부담으로 배제</strong>(사용자 결정).
+별도 프로세스로 뜨는 경량 뷰어를 만들어 <code class="language-plaintext highlighter-rouge">hrun</code> 커맨드(<code class="language-plaintext highlighter-rouge">hrag</code> 패턴)로 배포하는 안을 검토한다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="tldr">TL;DR</h2>
+
+<ul>
+  <li><strong>엔진을 새로 만드는 선택지는 없다.</strong> HTML 산출물의 핵심 가치가 JS 인터랙션(탭·슬라이더·캔버스)
+이므로 진짜 엔진이 필요하고, no-JS 경량 렌더러(litehtml 등)는 목적 자체를 잃는다.
+"가벼운 브라우저를 만든다" = <strong>기존 엔진 + 미니멀 뷰어 셸 + 상태(프로필) 정책</strong>이 작업의 본체다.
+<strong>"가벼움"은 엔진이 아니라 셸·상태·수명주기에서 온다</strong> — 엔진 프로세스 비용은 어차피
+크롬급이다 (§4 "크롬급의 범위").</li>
+  <li><strong>권장: PySide6 + QtWebEngine 단일창 뷰어 <code class="language-plaintext highlighter-rouge">hview</code>.</strong> 결정적 이유는 배포 채널 적합성 —
+<strong>pip wheel만으로 완결되는 유일한 실엔진</strong>이라 hrun python toolkit + wheelhouse 모델에 그대로
+실리고, PySide6(Addons 포함) wheel은 farad 때문에 이미 망내에 반입돼 있어 새 외부 패키지
+승인·반입이 없다. 단 별도 venv 디스크(수백 MB)는 실비용 — farad 설치 머신에선 farad venv
+공유로 줄일 수 있다(최적화이지 전제는 아님). 스택이 같아 유지보수 지식도 재사용된다.</li>
+  <li><strong>Chrome/Firefox의 NFS 프로필 락 문제는 "상태를 없애서" 구조적으로 제거한다.</strong>
+off-the-record 프로필(디스크 무기록)이 기본 — 상태가 없으면 락도 없다. 상태가 꼭 필요해지면
+host-local(<code class="language-plaintext highlighter-rouge">$XDG_RUNTIME_DIR</code>, <code class="language-plaintext highlighter-rouge">/tmp</code>)에만 두고 NFS 홈에는 절대 두지 않는다.</li>
+  <li><strong>소스는 <code class="language-plaintext highlighter-rouge">hrag</code>처럼 독립 pip 패키지</strong>(farad·hrun 의존 없음), hrun 저장소에는
+<code class="language-plaintext highlighter-rouge">toolkits/hview/</code> 래퍼만 추가. farad는 detached 프로세스로 spawn.</li>
+  <li><strong>차별화 기능: <code class="language-plaintext highlighter-rouge">--watch</code> live-reload</strong> — 에이전트가 HTML을 고치는 동안 뷰어가 자동 갱신.
+기사에서 말하는 "spec 목업 반복", "일회용 도구" 워크플로우가 이걸로 완성된다.</li>
+  <li>Plan B: ① firefox 임시 프로필 래퍼(zero-install 폴백), ② pywebview(WebKitGTK) — 각각
+한계가 명확해 후순위 (§6).</li>
+</ul>
+
+<hr />
+
+<h2 id="1-문제-정의--기존-브라우저가-안-맞는-이유">1. 문제 정의 — 기존 브라우저가 안 맞는 이유</h2>
+
+<p>주 환경: 여러 사용자가 공유하는 저사양 HPC(RHEL 8.10, NFS 공유 홈, 원격 X11/VNC) + Windows.</p>
+
+<ol>
+  <li><strong>무게.</strong> Chrome/Firefox는 뷰어 용도 대비 과체중 — 다만 정확히 하면, 페이지 렌더링
+자체의 비용이 아니라 <strong>브라우저 인프라의 비용</strong>이다: 백그라운드 서비스·업데이터·확장·
+세션 복원·탭 프로세스 트리·프로필 초기화. 뷰어는 이 중 아무것도 필요 없는데 전부 딸려온다.
+공유 장비에서 사용자당 이 상주 비용이 크다. (렌더링 엔진 자체의 RAM은 어떤 선택을 해도
+비슷하다 — §4 "크롬급의 범위" 참고.)</li>
+  <li><strong>프로필 관리.</strong> 사용자의 "진짜" 브라우징 프로필과 에이전트 산출물 뷰잉이 섞인다.
+산출물 뷰잉은 세션성(열고-보고-닫기)인데 브라우저는 영속 프로필을 전제로 설계돼 있다.</li>
+  <li><strong>멀티호스트 프로필 락 (실제 겪은 pain).</strong> NFS 공유 홈에서 호스트 A에 firefox가 떠 있으면
+호스트 B에서 열 때 프로필 락(<code class="language-plaintext highlighter-rouge">~/.mozilla/.../lock</code>·<code class="language-plaintext highlighter-rouge">.parentlock</code>, Chrome은 <code class="language-plaintext highlighter-rouge">SingletonLock</code>)에
+걸려 "already running" 에러. 단일 머신 가정의 설계가 HPC 멀티호스트 사용과 충돌한다.</li>
+  <li><strong>Farad 내장 배제.</strong> QtWebEngine을 farad 프로세스에 올리면 상주 RAM·기동 시간이 늘고
+메인 UI 응답성 리스크가 생긴다. 뷰잉은 간헐적 작업이므로 별도 프로세스가 맞다 —
+닫으면 메모리가 온전히 반환된다.</li>
+</ol>
+
+<h2 id="2-요구사항">2. 요구사항</h2>
+
+<p><strong>기능</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">file://</code> HTML 렌더 (self-contained 파일이 기본 대상), 내부망 <code class="language-plaintext highlighter-rouge">http(s)</code> URL도 허용</li>
+  <li>최신 CSS + JS 실행 (인터랙션이 핵심 가치)</li>
+  <li>뷰어 UX: 명령 한 번에 창 하나, ESC/Ctrl+W로 닫기, zoom(Ctrl±), find(Ctrl+F)</li>
+  <li><code class="language-plaintext highlighter-rouge">--watch</code>: 파일 변경 감지 자동 reload (에이전트 반복 루프 지원)</li>
+</ul>
+
+<p><strong>비기능</strong></p>
+
+<ul>
+  <li>RHEL 8.10(glibc 2.28) + Windows, 동일 코드</li>
+  <li>저사양 공유 HPC — 상주 데몬 없음, 닫으면 자원 반환, 원격 X11/VNC에서 소프트웨어 렌더 동작</li>
+  <li>NFS 공유 홈 + 멀티호스트 동시 실행 안전 (락 파일 금지)</li>
+  <li>폐쇄망 — 외부 CDN 접근 불가 전제 (→ §5.5 self-contained 규약)</li>
+  <li>배포: hrun toolkit 커맨드 + pip 패키지 (Windows/개발 환경)</li>
+</ul>
+
+<h2 id="3-접근-재정의--만드는-것은-셸--상태-정책">3. 접근 재정의 — 만드는 것은 "셸 + 상태 정책"</h2>
+
+<p>렌더링 엔진(Chromium/WebKit) 개발·포크는 논외다. 실제로 만들 것은:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌───────────────────────────────────────────────┐
+│ hview 셸 (수백 줄 규모)                          │
+│  CLI 파싱 / 단일창 / 단축키 / watch-reload       │
+├───────────────────────────────────────────────┤
+│ 상태 정책 ← 여기가 기존 브라우저와의 진짜 차별점    │
+│  off-the-record 기본 (디스크 무기록 → 락 없음)    │
+│  잔여 상태는 host-local만, NFS 홈 금지            │
+├───────────────────────────────────────────────┤
+│ 렌더링 엔진 (기성품 선택)                         │
+│  QtWebEngine(Chromium) / WebKitGTK / 기성 브라우저│
+└───────────────────────────────────────────────┘
+</code></pre></div></div>
+
+<p>기존 브라우저의 문제(§1의 2·3번)는 엔진 문제가 아니라 <strong>영속 프로필 전제</strong>의 문제다.
+뷰어는 프로필이 필요 없으므로, 상태를 갖지 않는 셸을 만들면 문제가 소멸한다.</p>
+
+<h2 id="4-스택-옵션-비교">4. 스택 옵션 비교</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>옵션</th>
+      <th>렌더 충실도</th>
+      <th>RAM(추정)*</th>
+      <th>추가 배포 비용</th>
+      <th>멀티호스트</th>
+      <th>Windows</th>
+      <th>비고</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>A. PySide6 QtWebEngine</strong> ✅</td>
+      <td>Chromium 그대로</td>
+      <td>~200–350MB/창</td>
+      <td>pip wheel만 (이미 망내 반입); 전용 venv 디스크는 실비용</td>
+      <td>off-the-record로 해결</td>
+      <td>동일 코드</td>
+      <td>LGPL-3</td>
+    </tr>
+    <tr>
+      <td>B. pywebview (WebKitGTK/WebView2)</td>
+      <td>OS마다 다른 엔진</td>
+      <td>~150–300MB</td>
+      <td>GTK+PyGObject rpm 의존</td>
+      <td>해결 가능</td>
+      <td>엔진이 달라짐</td>
+      <td>렌더 결과 diverge</td>
+    </tr>
+    <tr>
+      <td>C. 기성 브라우저 래퍼 (firefox <code class="language-plaintext highlighter-rouge">-no-remote -profile &lt;tmp&gt;</code>)</td>
+      <td>최상</td>
+      <td>~400MB+</td>
+      <td>0 (설치돼 있으면)</td>
+      <td>임시 프로필로 우회</td>
+      <td>별도 처리</td>
+      <td>뷰어 UX 아님, 기동 느림</td>
+    </tr>
+    <tr>
+      <td>D. no-JS 렌더러 (QTextBrowser/litehtml)</td>
+      <td>CSS 부분집합, <strong>JS 없음</strong></td>
+      <td>&lt;50MB</td>
+      <td>0</td>
+      <td>해당 없음</td>
+      <td>동일</td>
+      <td><strong>목적 상실 — 탈락</strong></td>
+    </tr>
+    <tr>
+      <td>E. Electron / CEF / Tauri</td>
+      <td>Chromium/WebView</td>
+      <td>200MB+</td>
+      <td>별도 런타임 반입</td>
+      <td>해결 가능</td>
+      <td>가능</td>
+      <td>폐쇄망 배포·스택 이질성 — 탈락</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>* 실측 필요 항목 (§7). 다중 프로세스 합산 RSS 기준 추정치.</p>
+
+<p><strong>A를 권장하는 결정적 이유 — 선택의 주체는 PySide6가 아니라 엔진이다.</strong> hview는 별도
+프로세스이므로 farad와 UI 스택을 맞추는 것 자체에는 아무 가치가 없다(공유 위젯·테마 없음).
+결정 순서는 이렇다: ① 인터랙티브 HTML에는 실엔진(Chromium/WebKit)이 필요하고, ② 폐쇄망에서
+<strong>pip wheel만으로 반입되는 실엔진은 QtWebEngine이 유일</strong>하며(PySide6-Addons wheel이 Chromium을
+통째로 담고 있다), ③ QtWebEngine을 고르는 순간 셸은 Qt가 된다 — <strong>PySide6는 엔진의 배송 수단</strong>
+이다. 나머지 실엔진은 전부 pip 밖 반입 경로가 필요하다: WebKitGTK는 시스템 rpm(wheelhouse로
+못 나름), CEF 파이썬 바인딩(cefpython3)은 사실상 unmaintained, Electron/Tauri는 별도 런타임
+바이너리 반입. 부수 이점 — 같은 노드에서 farad가 같은 Qt 기반으로 이미 동작(플랫폼 리스크
+기검증), PySide6 wheel이 이미 망내 반입돼 신규 승인 불요, 팀 숙련도 — 은 보너스지 근거의
+본체가 아니다.</p>
+
+<p>B는 "가볍다"는 장점이 있지만 Linux(WebKitGTK)/Windows(WebView2) 엔진이 달라 에이전트가 만든
+HTML이 환경마다 다르게 깨질 수 있고, RHEL 8의 webkit2gtk3 버전 리스크 + GTK/PyGObject 의존이
+Qt 단일 스택에 이질 계층을 더한다. C는 폴백으로만 가치 있다(§6).</p>
+
+<p><strong>반입 vs 설치 — 진짜 제약의 위치.</strong> 폐쇄망 반입 자체는 일회성 작업이라 결정 게이트가 아니다
+(사용자 확인). 진짜 제약은 <strong>배포 모델</strong>: hrun은 NFS 공유 스토리지에 파일을 놓는 방식이라
+노드별 root 설치가 필요 없는데, pip wheel은 이 모델에 그대로 맞고 시스템 rpm(webkit2gtk3,
+gtk3 등)은 전 노드 설치가 필요하다(이미 깔려 있지 않는 한 — §7 확인 항목). 반입이 자유로워도
+이 구도는 유지되고, OS 간 엔진 일관성 논거도 그대로다.</p>
+
+<p><strong>"크롬급"의 범위 — 충실도와 무게 양쪽 다 크롬급이 맞다.</strong> QtWebEngine은 Chromium
+(Blink+V8) 그 자체다. 충실도: 렌더링·JS·Canvas·WebGL(원격에선 SwiftShader 소프트웨어 폴백)
+모두 Chrome과 동일 계열. 차이는 ① Chromium 버전이 Qt 릴리스에 고정된 스냅샷 + 보안 백포트라
+최신 Chrome 대비 1년 안팎 랙(표준 HTML/CSS/JS 리포트에는 실질 무영향), ② Google 서비스·확장·
+Widevine 없음, ③ 공식 바이너리에 독점 코덱(H.264/AAC) 미포함 — mp4 재생만 안 되고 WebM은
+된다. LLM이 생성하는 HTML은 사실상 Chrome 기준으로 만들어지므로 호환성 면에선 오히려 최적.
+무게: <strong>엔진 프로세스 비용도 크롬급이다</strong> — 창 하나가 Chrome 탭 몇 개 수준의 RAM(추정
+200–350MB)을 쓴다. 즉 hview의 "가벼움"은 더 가벼운 엔진에서 오는 게 아니라 <strong>브라우저
+인프라 제거</strong>(서비스·업데이터·확장·탭 트리·프로필 없음), <strong>수명주기</strong>(열고-보고-닫으면 0으로
+복귀), <strong>상태 정책</strong>(무기록)에서 온다. 엔진 자체까지 가볍길 원하면 선택지는 WebKitGTK(소폭)
+아니면 no-JS 렌더러(대폭, 목적 상실)뿐이라는 트레이드오프를 §4 표가 보여준다.</p>
+
+<h2 id="5-권장안--hview-설계">5. 권장안 — <code class="language-plaintext highlighter-rouge">hview</code> 설계</h2>
+
+<h3 id="51-프로세스상태-모델">5.1 프로세스·상태 모델</h3>
+
+<ul>
+  <li><strong>창 하나 = 프로세스 하나</strong> (MVP). 뷰어 시맨틱(evince처럼) — 닫으면 전부 반환.</li>
+  <li><strong>off-the-record 프로필 기본</strong>: <code class="language-plaintext highlighter-rouge">QWebEngineProfile()</code> 기본 생성자가 off-the-record —
+쿠키·캐시·스토리지 전부 메모리, 디스크 무기록. <strong>락 파일이 생길 곳이 없다.</strong></li>
+  <li>영속 상태(창 geometry, zoom 기억 등)는 MVP에서 넣지 않는다(YAGNI). 필요해지면
+<code class="language-plaintext highlighter-rouge">$XDG_RUNTIME_DIR</code>(host-local) 아래에만 — NFS 홈(<code class="language-plaintext highlighter-rouge">~/.hview</code> 같은 것) 금지.</li>
+  <li>상주 데몬·single-instance 서버 없음 (MVP). RAM 절약용 per-host 단일 인스턴스는 Phase 2(§8).</li>
+</ul>
+
+<h3 id="52-ux-최소-스펙">5.2 UX 최소 스펙</h3>
+
+<ul>
+  <li>창: 슬림 헤더 1줄(문서 <code class="language-plaintext highlighter-rouge">&lt;title&gt;</code> 또는 파일명, reload 버튼, watch 상태 표시) + WebView.
+탭·주소창·북마크·히스토리 <strong>없음</strong> — 브라우저가 아니라 뷰어다.</li>
+  <li>단축키: <code class="language-plaintext highlighter-rouge">ESC</code>/<code class="language-plaintext highlighter-rouge">Ctrl+W</code> 닫기, <code class="language-plaintext highlighter-rouge">Ctrl+R</code> reload, <code class="language-plaintext highlighter-rouge">Ctrl+F</code> find(QWebEnginePage.findText),
+<code class="language-plaintext highlighter-rouge">Ctrl+±/0</code> zoom, <code class="language-plaintext highlighter-rouge">Ctrl+P</code> PDF 저장(Phase 2, printToPdf).</li>
+  <li>링크: 같은 창에서 이동(문서 내 앵커·상대 경로), 외부 스킴은 무시 또는 명시 허용 목록.</li>
+</ul>
+
+<h3 id="53-cli">5.3 CLI</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hview report.html                 <span class="c"># 파일 열기</span>
+hview <span class="nt">--watch</span> report.html         <span class="c"># 변경 감지 자동 reload (mtime, QFileSystemWatcher)</span>
+hview http://internal-host/dash   <span class="c"># 내부망 URL</span>
+hview <span class="nt">--title</span> <span class="s2">"Review"</span> a.html     <span class="c"># 창 제목 오버라이드</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">--watch</code> reload 시 스크롤 위치 보존(reload 전 scrollY 저장 → 복원). 에이전트가 파일을
+수십 번 고쳐 쓰는 동안 사용자는 창을 띄워두기만 하면 된다 — 기사 활용처 5가지(스펙 목업,
+코드 리뷰 시각화, 프로토타입, 리포트, 일회용 편집기)를 그대로 커버.</p>
+
+<h3 id="54-배포--소스-위치와-hrun-통합">5.4 배포 — 소스 위치와 hrun 통합</h3>
+
+<ul>
+  <li><strong>소스: 독립 pip 패키지</strong> (hrag 패턴 — 자체 repo, <code class="language-plaintext highlighter-rouge">[project.scripts] hview = ...</code>,
+의존은 <code class="language-plaintext highlighter-rouge">PySide6&gt;=6.6</code> 하나). farad·hrun 어디에도 의존하지 않는다.
+    <ul>
+      <li>hrun repo에 소스를 넣지 않는 이유: hrun은 C++ 라우터 + POSIX 셸 인프라 저장소라
+Python GUI 앱이 들어가면 이질적이고, python·hrag도 toolkit 래퍼만 두는 기존 패턴과 어긋난다.</li>
+    </ul>
+  </li>
+  <li><strong>hrun 통합: <code class="language-plaintext highlighter-rouge">toolkits/hview/</code></strong> — <code class="language-plaintext highlighter-rouge">commands/hview</code> 래퍼가 <code class="language-plaintext highlighter-rouge">hrun_enter_tool hview</code> 후
+python toolkit 런타임 + wheelhouse로 설치/실행. env 오버라이드는
+<code class="language-plaintext highlighter-rouge">$HYPERRUN_DATA_DIR/env/tools/hview.env</code>.</li>
+  <li>Windows/개발 환경: farad venv에 pip 설치 → <code class="language-plaintext highlighter-rouge">hview</code> 콘솔 스크립트 또는 <code class="language-plaintext highlighter-rouge">python -m hview</code>.</li>
+</ul>
+
+<h3 id="55-farad-통합">5.5 farad 통합</h3>
+
+<ul>
+  <li><strong>실행 해석 순서</strong>: ① 같은 인터프리터에서 <code class="language-plaintext highlighter-rouge">hview</code> importable하면 <code class="language-plaintext highlighter-rouge">[sys.executable, "-m", "hview"]</code>
+(farad venv 재사용 — QtWebEngine 이미 있음) → ② PATH의 <code class="language-plaintext highlighter-rouge">hview</code> → ③ <code class="language-plaintext highlighter-rouge">hrun hview</code>.</li>
+  <li><strong>detached spawn</strong>: <code class="language-plaintext highlighter-rouge">QProcess.startDetached</code> — farad 수명과 무관, 종료 대기 없음.</li>
+  <li><strong>에이전트 산출물 계약 — self-contained HTML</strong>: 폐쇄망이라 CDN 참조는 그냥 깨진다.
+HTML 산출 스킬/프롬프트에 "인라인 CSS/JS, 외부 호스트 참조 금지, 이미지는 data: URI" 규약을
+명시한다 (Claude Code Artifact의 CSP 정책과 같은 원리). 산출 위치는 세션 아티팩트 폴더.</li>
+  <li>UI 아이디어(후속): 타임라인의 <code class="language-plaintext highlighter-rouge">.html</code> 파일 경로에 "Open in hview" 액션.</li>
+</ul>
+
+<h3 id="56-저사양원격-x11-대응">5.6 저사양·원격 X11 대응</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">QTWEBENGINE_CHROMIUM_FLAGS="--disable-gpu"</code> — 원격 X11/VNC에서 GPU 경로 차단,
+소프트웨어 래스터라이저 사용. 래퍼(<code class="language-plaintext highlighter-rouge">toolkits/hview/env/hview.env</code>)에 기본값으로 굽는다.</li>
+  <li>Chromium 샌드박스는 user namespaces 필요 — HPC 커널 설정에 따라 막혀 있으면
+<code class="language-plaintext highlighter-rouge">QTWEBENGINE_DISABLE_SANDBOX=1</code> 폴백 (내부 신뢰 콘텐츠 전용 뷰어이므로 수용 가능). §7 확인.</li>
+  <li>신뢰 모델: 에이전트가 만든 HTML의 JS를 로컬 실행하는 것은 에이전트가 만든 코드를 실행하는
+것과 동일한 신뢰 수준. off-the-record라 영속 흔적도 없다.</li>
+</ul>
+
+<h2 id="6-plan-b-상세">6. Plan B 상세</h2>
+
+<p><strong>B1. firefox 임시 프로필 래퍼 (zero-install 폴백)</strong></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">profile</span><span class="o">=</span><span class="si">$(</span><span class="nb">mktemp</span> <span class="nt">-d</span><span class="si">)</span> <span class="o">&amp;&amp;</span> firefox <span class="nt">-no-remote</span> <span class="nt">-profile</span> <span class="s2">"</span><span class="nv">$profile</span><span class="s2">"</span> <span class="s2">"file://</span><span class="nv">$PWD</span><span class="s2">/report.html"</span>
+</code></pre></div></div>
+
+<ul>
+  <li>장점: 설치할 것이 없다 (RHEL에 firefox ESR 기본 존재). 락 문제도 임시 프로필로 우회.</li>
+  <li>단점: 기동 느림(프로필 초기화 포함), RAM 큼, 브라우저 UI 그대로(뷰어 UX 아님),
+임시 프로필 정리 책임, Windows 별도 처리. → hview 배포 전 임시 브리지 스크립트로만 가치.</li>
+</ul>
+
+<p><strong>B2. pywebview</strong> — §4 참조. WebKitGTK(RHEL 8은 2.4x대 백포트)로 A보다 가볍지만,
+OS별 엔진 분화 + GTK 의존이 결정적 감점. QtWebEngine 배포가 불가능해질 때만 재검토.</p>
+
+<h2 id="7-리스크--확인-필요">7. 리스크 / 확인 필요</h2>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><strong>farad 실배포 환경에서 QtWebEngine import 확인</strong>:
+    <code class="language-plaintext highlighter-rouge">./.venv/bin/python -c "from PySide6.QtWebEngineWidgets import QWebEngineView"</code> —
+    메타패키지가 Addons를 실제로 끌고 왔는지, wheelhouse에 Addons wheel이 있는지.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />HPC 원격 X11/VNC에서 <code class="language-plaintext highlighter-rouge">--disable-gpu</code> 렌더 확인 (검은 화면·크래시 여부).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" /><code class="language-plaintext highlighter-rouge">sysctl user.max_user_namespaces</code> — Chromium 샌드박스 동작 여부, 폴백 필요성.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />off-the-record 실행 중 NFS 홈에 잔여 쓰기 없는지 확인 (fontconfig/dconf 캐시 등,
+    <code class="language-plaintext highlighter-rouge">strace -e trace=file</code> 샘플링).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />RAM 실측: 창 1개/3개 동시, 콜드 스타트 시간 (NFS 위 Python+PySide6 import 비용 포함 —
+    farad와 같은 조건이므로 대략 예측 가능하나 뷰어는 lazy import로 최소화).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />wheelhouse에 PySide6-Addons wheel 존재 확인 (farad용으로 이미 반입돼 있으면 신규 반입 0).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />QtWebEngine wheel의 시스템 라이브러리 전제(nss, libxkbcommon, xcb 계열) 노드 존재 확인 —
+    firefox가 깔린 노드면 대부분 충족. (참고: webkit2gtk3/gtk3 존재 여부도 확인해두면
+    Plan B 실현 가능성 판단에 유용.)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />hview 전용 venv 디스크 실측(수백 MB 예상) + farad 설치 머신에서 farad venv 공유 설치로
+    갈지 결정 (공유 시 디스크 절약 vs 버전 커플링).</li>
+</ul>
+
+<h2 id="8-로드맵">8. 로드맵</h2>
+
+<ul>
+  <li><strong>MVP</strong>: 단일창 뷰어 + off-the-record + <code class="language-plaintext highlighter-rouge">--watch</code> + 단축키(zoom/find/close) + hrun toolkit.</li>
+  <li><strong>Phase 2</strong>: per-host 단일 인스턴스(로컬 소켓 <code class="language-plaintext highlighter-rouge">$XDG_RUNTIME_DIR/hview.sock</code> — host-local이라
+멀티호스트 안전; 창 N개가 엔진 1개 공유 → RAM 절약), <code class="language-plaintext highlighter-rouge">Ctrl+P</code> PDF 내보내기(printToPdf),
+farad 타임라인 "Open in hview" 액션.</li>
+  <li><strong>Phase 3 (아이디어만)</strong>: QWebChannel 브릿지로 "회신 가능한 HTML" — 에이전트가 만든 폼에서
+사용자가 선택하면 JSON으로 저장 → 에이전트가 읽는 interactive AskUserQuestion식 워크플로우.</li>
+  <li><strong>Non-goals</strong>: 탭, 주소창, 북마크, 히스토리, 확장, 일반 웹 브라우징. 뷰어의 선을 지킨다.</li>
+</ul>
+
+<p><strong>유지보수 모델 — 일회성 빌드에 가깝다.</strong> 셸은 안정 API 위의 수백 줄이라 만들고 나면 손댈
+일이 거의 없다. 엔진 업데이트는 farad의 PySide6 범프에 편승하므로 별도 케이던스가 없고,
+폐쇄망에서 자기 에이전트 산출물만 여는 뷰어라 Chromium 보안 패치를 급하게 쫓을 이유도 없다.
+이 "일회성"이 유지되는 조건은 Non-goals를 지키는 것 — Phase 3 브릿지처럼 프로토콜 표면이
+생기는 기능은 필요가 증명될 때 별도 결정으로.</p>
+
+<h2 id="9-결론">9. 결론</h2>
+
+<p>"가벼운 브라우저"의 실체는 <strong>엔진 선택이 아니라 상태 정책</strong>이다. 엔진은 폐쇄망 pip 배포
+채널에 실리는 유일한 실엔진인 QtWebEngine으로 사실상 결정되고(PySide6는 그 배송 수단),
+off-the-record 셸로 감싸면 Chrome/Firefox의 무게·프로필·NFS 락 문제가 전부 설계 수준에서
+소거된다. <code class="language-plaintext highlighter-rouge">hrag</code> 패턴의 독립 pip 패키지 + hrun toolkit 래퍼로
+배포하면 HPC(<code class="language-plaintext highlighter-rouge">hrun hview</code>)와 Windows(farad venv) 양쪽을 같은 코드로 커버한다.
+MVP는 수백 줄 규모 — 가장 큰 선행 작업은 §7의 배포 환경 검증이다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#farad" class="page__taxonomy-item p-category" rel="tag">farad</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-07-04T13:21:02+09:00">2026-07-04</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/farad/farad-scheduled-run-permission-context/" class="pagination--pager" title="Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/farad-scheduled-run-permission-context/" rel="permalink">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-03T13:32:58+09:00">2026-07-03</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/goal-harness-architecture/" rel="permalink">Farad Goal 하네스 설계와 Query Loop 상호작용
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-26T00:05:22+09:00">2026-06-26</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+
+Farad Goal Harness — Architecture &amp; Query-Loop Interaction
+
+
+
+
+  Farad · Architecture Review
+  The Goal Harness &amp; its interaction with the Query ...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/claude/claude-code-loop-functions/" rel="permalink">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -719,14 +719,14 @@ python <span class="nt">-m</span> comfy.launch
 <ul>
   <li><strong>오버레이 파일 한 개</strong> 로 템플릿 레지스트리 최종 결과만 필터:
     <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># overlays/comfy_templates/hooks.py  (원본 import 후 후처리)
-</span><span class="kn">from</span> <span class="nn">comfy_templates</span> <span class="kn">import</span> <span class="n">registry</span>
+</span><span class="kn">from</span> <span class="n">comfy_templates</span> <span class="kn">import</span> <span class="n">registry</span>
     
 <span class="k">def</span> <span class="nf">apply_allowlist</span><span class="p">():</span>
-    <span class="kn">import</span> <span class="nn">os</span>
-    <span class="n">allow</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"COMFY_TEMPLATES_ALLOWLIST"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">p</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-        <span class="n">allow</span> <span class="o">=</span> <span class="p">{</span><span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">"#"</span><span class="p">)}</span>
+    <span class="kn">import</span> <span class="n">os</span>
+    <span class="n">allow</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMFY_TEMPLATES_ALLOWLIST</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="n">allow</span> <span class="o">=</span> <span class="p">{</span><span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nf">open</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">#</span><span class="sh">"</span><span class="p">)}</span>
     <span class="c1"># registry.templates 는 실제 컨테이너/리스트 이름에 맞게 조정
 </span>    <span class="n">registry</span><span class="p">.</span><span class="n">templates</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">registry</span><span class="p">.</span><span class="n">templates</span> <span class="k">if</span> <span class="n">t</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
 </code></pre></div>    </div>
@@ -744,8 +744,8 @@ python <span class="nt">-m</span> comfy.launch
   <li>혹은 <strong><code class="language-plaintext highlighter-rouge">sitecustomize.py</code></strong>(파이썬 표준)로 주입:
     <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># overlays/sitecustomize.py
 </span><span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">comfy_templates.hooks</span> <span class="kn">import</span> <span class="n">apply_allowlist</span>
-    <span class="n">apply_allowlist</span><span class="p">()</span>
+    <span class="kn">from</span> <span class="n">comfy_templates.hooks</span> <span class="kn">import</span> <span class="n">apply_allowlist</span>
+    <span class="nf">apply_allowlist</span><span class="p">()</span>
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
     <span class="k">pass</span>
 </code></pre></div>    </div>
@@ -942,19 +942,19 @@ git commit <span class="nt">-m</span> <span class="s2">"Pin ComfyUI and template
   </li>
   <li>예시 구현:
     <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># company_comfy_policies/sitecustomize.py
-</span><span class="kn">import</span> <span class="nn">os</span>
+</span><span class="kn">import</span> <span class="n">os</span>
     
 <span class="c1"># (예시) Comfy_templates 템플릿 레지스트리 필터
 </span><span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">comfy_templates</span> <span class="kn">import</span> <span class="n">registry</span>  <span class="c1"># 실제 레지스트리 경로/이름에 맞게 조정
-</span>    <span class="n">allowlist_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"COMFY_TEMPLATES_ALLOWLIST"</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
-    <span class="n">allow</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">allowlist_path</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">allowlist_path</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">allowlist_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="n">comfy_templates</span> <span class="kn">import</span> <span class="n">registry</span>  <span class="c1"># 실제 레지스트리 경로/이름에 맞게 조정
+</span>    <span class="n">allowlist_path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMFY_TEMPLATES_ALLOWLIST</span><span class="sh">"</span><span class="p">,</span> <span class="sh">""</span><span class="p">)</span>
+    <span class="n">allow</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">allowlist_path</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">allowlist_path</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">allowlist_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">"#"</span><span class="p">):</span>
-                    <span class="n">allow</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">#</span><span class="sh">"</span><span class="p">):</span>
+                    <span class="n">allow</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">allow</span><span class="p">:</span>
         <span class="c1"># registry.templates 의 실제 자료구조에 맞게 필터링
 </span>        <span class="n">registry</span><span class="p">.</span><span class="n">templates</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">registry</span><span class="p">.</span><span class="n">templates</span> <span class="k">if</span> <span class="n">t</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
@@ -1191,18 +1191,18 @@ pip <span class="nb">install</span> <span class="nt">--no-index</span> <span cla
 </code></pre></div></div>
 
 <h2 id="a-2-최소-pyprojecttoml-예시">A-2. 최소 pyproject.toml 예시</h2>
-<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
-<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
-</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">[</span><span class="n">build-system</span><span class="k">]</span>
+<span class="n">requires</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"setuptools&gt;=68"</span><span class="p">,</span> <span class="s">"wheel"</span><span class="p">,</span> <span class="s">"build"</span><span class="p">]</span>
+<span class="n">build-backend</span> <span class="o">=</span><span class="w"> </span><span class="s">"setuptools.build_meta"</span>
 
-<span class="nn">[project]</span>
-<span class="py">name</span> <span class="p">=</span> <span class="s">"comfyui-templates"</span>              <span class="c"># 업스트림과 '프로젝트명' 동일</span>
-<span class="py">version</span> <span class="p">=</span> <span class="s">"1.4.2+company.3"</span>             <span class="c"># 내부 식별자(+company.N)로 표기</span>
-<span class="py">description</span> <span class="p">=</span> <span class="s">"Company override for ComfyUI templates"</span>
-<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.10</span><span class="s">"</span><span class="err">
-</span>
-<span class="nn">[tool.setuptools.packages.find]</span>
-<span class="py">where</span> <span class="p">=</span> <span class="nn">["src"]</span>
+<span class="k">[</span><span class="n">project</span><span class="k">]</span>
+<span class="n">name</span> <span class="o">=</span><span class="w"> </span><span class="s">"comfyui-templates"</span>              <span class="c"># 업스트림과 '프로젝트명' 동일</span>
+<span class="n">version</span> <span class="o">=</span><span class="w"> </span><span class="s">"1.4.2+company.3"</span>             <span class="c"># 내부 식별자(+company.N)로 표기</span>
+<span class="n">description</span> <span class="o">=</span><span class="w"> </span><span class="s">"Company override for ComfyUI templates"</span>
+<span class="n">requires-python</span> <span class="o">=</span><span class="w"> </span><span class="s">"&gt;=3.10"</span>
+
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">.</span><span class="n">packages</span><span class="k">.</span><span class="n">find</span><span class="k">]</span>
+<span class="n">where</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"src"</span><span class="p">]</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -1270,38 +1270,38 @@ pip <span class="nb">install</span> <span class="nt">--no-index</span> <span cla
 </code></pre></div></div>
 
 <h2 id="b-2-pyprojecttoml-최소">B-2. pyproject.toml (최소)</h2>
-<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
-<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
-</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">[</span><span class="n">build-system</span><span class="k">]</span>
+<span class="n">requires</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"setuptools&gt;=68"</span><span class="p">,</span> <span class="s">"wheel"</span><span class="p">,</span> <span class="s">"build"</span><span class="p">]</span>
+<span class="n">build-backend</span> <span class="o">=</span><span class="w"> </span><span class="s">"setuptools.build_meta"</span>
 
-<span class="nn">[project]</span>
-<span class="py">name</span> <span class="p">=</span> <span class="s">"company-comfy-policies"</span>
-<span class="py">version</span> <span class="p">=</span> <span class="s">"1.0.0"</span>
-<span class="py">description</span> <span class="p">=</span> <span class="s">"Runtime policies for ComfyUI in company"</span>
+<span class="k">[</span><span class="n">project</span><span class="k">]</span>
+<span class="n">name</span> <span class="o">=</span><span class="w"> </span><span class="s">"company-comfy-policies"</span>
+<span class="n">version</span> <span class="o">=</span><span class="w"> </span><span class="s">"1.0.0"</span>
+<span class="n">description</span> <span class="o">=</span><span class="w"> </span><span class="s">"Runtime policies for ComfyUI in company"</span>
 
-<span class="nn">[tool.setuptools]</span>
-<span class="py">py-modules</span> <span class="p">=</span> <span class="nn">["sitecustomize"]</span>           <span class="c"># ← 최상위 모듈 설치</span>
-<span class="py">packages</span> <span class="p">=</span> <span class="nn">["company_comfy_policies"]</span>
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">]</span>
+<span class="n">py-modules</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"sitecustomize"</span><span class="p">]</span>           <span class="c"># ← 최상위 모듈 설치</span>
+<span class="n">packages</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"company_comfy_policies"</span><span class="p">]</span>
 </code></pre></div></div>
 
 <h2 id="b-3-sitecustomizepy-별도-설정-없이-기본-동작">B-3. sitecustomize.py (별도 설정 없이 기본 동작)</h2>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sitecustomize.py  (site가 파이썬 시작 시 자동 import)
-</span><span class="kn">import</span> <span class="nn">os</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">importlib</span>
+</span><span class="kn">import</span> <span class="n">os</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">importlib</span>
 
 <span class="c1"># 우리 구현 모듈(패키지) 이름; ENV로 교체 가능
-</span><span class="n">TARGET</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"COMPANY_TEMPLATES_MODULE"</span><span class="p">,</span> <span class="s">"company_templates"</span><span class="p">)</span>
-<span class="n">ALIAS</span>  <span class="o">=</span> <span class="s">"comfyui_templates"</span>
+</span><span class="n">TARGET</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMPANY_TEMPLATES_MODULE</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">company_templates</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">ALIAS</span>  <span class="o">=</span> <span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">target_mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">TARGET</span><span class="p">)</span>
+    <span class="n">target_mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="n">TARGET</span><span class="p">)</span>
     <span class="c1"># top-level alias: import comfyui_templates → company_templates 객체
-</span>    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ALIAS</span><span class="p">,</span> <span class="n">target_mod</span><span class="p">)</span>
+</span>    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">.</span><span class="nf">setdefault</span><span class="p">(</span><span class="n">ALIAS</span><span class="p">,</span> <span class="n">target_mod</span><span class="p">)</span>
 
     <span class="c1"># (선택) 버전/메타 노출
 </span>    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">importlib.metadata</span> <span class="k">as</span> <span class="n">im</span>
-        <span class="n">__version__</span> <span class="o">=</span> <span class="n">im</span><span class="p">.</span><span class="n">version</span><span class="p">(</span><span class="n">TARGET</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'.'</span><span class="p">,</span> <span class="s">'-'</span><span class="p">))</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="n">target_mod</span><span class="p">,</span> <span class="s">"__company_alias_version__"</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="n">importlib.metadata</span> <span class="k">as</span> <span class="n">im</span>
+        <span class="n">__version__</span> <span class="o">=</span> <span class="n">im</span><span class="p">.</span><span class="nf">version</span><span class="p">(</span><span class="n">TARGET</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s">.</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">))</span>
+        <span class="nf">setattr</span><span class="p">(</span><span class="n">target_mod</span><span class="p">,</span> <span class="sh">"</span><span class="s">__company_alias_version__</span><span class="sh">"</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
     <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
         <span class="k">pass</span>
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
@@ -1352,8 +1352,8 @@ python ./ComfyUI/main.py
 </code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">__init__.py</code>:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">importlib</span><span class="p">,</span> <span class="n">sys</span>
-<span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="n">import_module</span><span class="p">(</span><span class="s">"company_templates"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">importlib</span><span class="p">,</span> <span class="n">sys</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="sh">"</span><span class="s">company_templates</span><span class="sh">"</span><span class="p">)</span>
 <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod</span>  <span class="c1"># 자신을 대체
 </span></code></pre></div></div>
 
@@ -1528,21 +1528,21 @@ python ComfyUI/main.py
   <li><strong>pyproject.toml</strong></li>
 </ol>
 
-<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
-<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
-</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">[</span><span class="n">build-system</span><span class="k">]</span>
+<span class="n">requires</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"setuptools&gt;=68"</span><span class="p">,</span> <span class="s">"wheel"</span><span class="p">,</span> <span class="s">"build"</span><span class="p">]</span>
+<span class="n">build-backend</span> <span class="o">=</span><span class="w"> </span><span class="s">"setuptools.build_meta"</span>
 
-<span class="nn">[project]</span>
-<span class="py">name</span> <span class="p">=</span> <span class="s">"comfyui-templates"</span>          <span class="c"># 업스트림과 동일</span>
-<span class="py">version</span> <span class="p">=</span> <span class="s">"1.4.2+company.3"</span>         <span class="c"># 내부 식별자</span>
-<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.10</span><span class="s">"</span><span class="err">
-</span><span class="py">description</span> <span class="p">=</span> <span class="s">"Company override for ComfyUI templates"</span>
+<span class="k">[</span><span class="n">project</span><span class="k">]</span>
+<span class="n">name</span> <span class="o">=</span><span class="w"> </span><span class="s">"comfyui-templates"</span>          <span class="c"># 업스트림과 동일</span>
+<span class="n">version</span> <span class="o">=</span><span class="w"> </span><span class="s">"1.4.2+company.3"</span>         <span class="c"># 내부 식별자</span>
+<span class="n">requires-python</span> <span class="o">=</span><span class="w"> </span><span class="s">"&gt;=3.10"</span>
+<span class="n">description</span> <span class="o">=</span><span class="w"> </span><span class="s">"Company override for ComfyUI templates"</span>
 
-<span class="nn">[tool.setuptools.packages.find]</span>
-<span class="py">where</span> <span class="p">=</span> <span class="nn">["src"]</span>
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">.</span><span class="n">packages</span><span class="k">.</span><span class="n">find</span><span class="k">]</span>
+<span class="n">where</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"src"</span><span class="p">]</span>
 
-<span class="nn">[tool.setuptools.package-data]</span>
-<span class="py">comfyui_templates</span> <span class="p">=</span> <span class="p">[</span><span class="s">"**/*.json"</span><span class="p">,</span> <span class="s">"**/*.yaml"</span><span class="p">,</span> <span class="s">"**/*.txt"</span><span class="p">]</span>   <span class="c"># 템플릿 파일 포함</span>
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">.</span><span class="n">package-data</span><span class="k">]</span>
+<span class="n">comfyui_templates</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"**/*.json"</span><span class="p">,</span> <span class="s">"**/*.yaml"</span><span class="p">,</span> <span class="s">"**/*.txt"</span><span class="p">]</span>   <span class="c"># 템플릿 파일 포함</span>
 </code></pre></div></div>
 
 <ol>
@@ -1637,55 +1637,55 @@ python <span class="nt">-c</span> <span class="s2">"import comfyui_templates, im
 </code></pre></div></div>
 
 <h2 id="pyprojecttoml-요지"><code class="language-plaintext highlighter-rouge">pyproject.toml</code> (요지)</h2>
-<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
-<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">", "</span><span class="err">build</span><span class="s">"]</span><span class="err">
-</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">[</span><span class="n">build-system</span><span class="k">]</span>
+<span class="n">requires</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"setuptools&gt;=68"</span><span class="p">,</span> <span class="s">"wheel"</span><span class="p">,</span> <span class="s">"build"</span><span class="p">]</span>
+<span class="n">build-backend</span> <span class="o">=</span><span class="w"> </span><span class="s">"setuptools.build_meta"</span>
 
-<span class="nn">[project]</span>
-<span class="py">name</span> <span class="p">=</span> <span class="s">"company-comfy-policies"</span>
-<span class="py">version</span> <span class="p">=</span> <span class="s">"1.0.0"</span>
-<span class="py">description</span> <span class="p">=</span> <span class="s">"Runtime policies for ComfyUI"</span>
+<span class="k">[</span><span class="n">project</span><span class="k">]</span>
+<span class="n">name</span> <span class="o">=</span><span class="w"> </span><span class="s">"company-comfy-policies"</span>
+<span class="n">version</span> <span class="o">=</span><span class="w"> </span><span class="s">"1.0.0"</span>
+<span class="n">description</span> <span class="o">=</span><span class="w"> </span><span class="s">"Runtime policies for ComfyUI"</span>
 <span class="c"># sitecustomize만 설치해도 되므로 packages 대신 py-modules 사용 가능</span>
-<span class="nn">[tool.setuptools]</span>
-<span class="py">py-modules</span> <span class="p">=</span> <span class="nn">["sitecustomize"]</span>
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">]</span>
+<span class="n">py-modules</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"sitecustomize"</span><span class="p">]</span>
 </code></pre></div></div>
 
 <h2 id="sitecustomizepy-예시-템플릿-allowlist-필터--함수-래핑"><code class="language-plaintext highlighter-rouge">sitecustomize.py</code> (예시: 템플릿 allowlist 필터 + 함수 래핑)</h2>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sitecustomize.py  (파이썬이 시작할 때 자동 실행)
-</span><span class="kn">import</span> <span class="nn">os</span>
+</span><span class="kn">import</span> <span class="n">os</span>
 
 <span class="k">def</span> <span class="nf">_load_allowlist</span><span class="p">():</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"COMFY_TEMPLATES_ALLOWLIST"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">COMFY_TEMPLATES_ALLOWLIST</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">None</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">ln</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">if</span> <span class="n">ln</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ln</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">"#"</span><span class="p">)}</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">ln</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">if</span> <span class="n">ln</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ln</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="sh">"</span><span class="s">#</span><span class="sh">"</span><span class="p">)}</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="c1"># 1) 원본 모듈 "그대로" 로드
-</span>    <span class="kn">import</span> <span class="nn">comfyui_templates</span> <span class="k">as</span> <span class="n">ct</span>
+</span>    <span class="kn">import</span> <span class="n">comfyui_templates</span> <span class="k">as</span> <span class="n">ct</span>
 
     <span class="c1"># 2) 글로벌 레지스트리/리스트를 필터링 (데이터 구조에 맞게 수정)
-</span>    <span class="n">allow</span> <span class="o">=</span> <span class="n">_load_allowlist</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">allow</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="s">"registry"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">,</span> <span class="s">"templates"</span><span class="p">):</span>
-        <span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">.</span><span class="n">templates</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">.</span><span class="n">templates</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s">"name"</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
+</span>    <span class="n">allow</span> <span class="o">=</span> <span class="nf">_load_allowlist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">allow</span> <span class="ow">and</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="sh">"</span><span class="s">registry</span><span class="sh">"</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">,</span> <span class="sh">"</span><span class="s">templates</span><span class="sh">"</span><span class="p">):</span>
+        <span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">.</span><span class="n">templates</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ct</span><span class="p">.</span><span class="n">registry</span><span class="p">.</span><span class="n">templates</span> <span class="k">if</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
 
     <span class="c1"># 3) 특정 함수만 래핑(필요할 때만)
-</span>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="s">"build_index"</span><span class="p">):</span>
+</span>    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="sh">"</span><span class="s">build_index</span><span class="sh">"</span><span class="p">):</span>
         <span class="n">_orig_build_index</span> <span class="o">=</span> <span class="n">ct</span><span class="p">.</span><span class="n">build_index</span>
         <span class="k">def</span> <span class="nf">build_index</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">_orig_build_index</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">allow</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s">"templates"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-                <span class="n">res</span><span class="p">[</span><span class="s">"templates"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s">"templates"</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"name"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nf">_orig_build_index</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">allow</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="sh">"</span><span class="s">templates</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="sh">"</span><span class="s">templates</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="sh">"</span><span class="s">templates</span><span class="sh">"</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">name</span><span class="sh">"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">allow</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">res</span>
         <span class="n">ct</span><span class="p">.</span><span class="n">build_index</span> <span class="o">=</span> <span class="n">build_index</span>
 
     <span class="c1"># 4) 클래스 메서드만 부분 교체도 가능
-</span>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="s">"Template"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">.</span><span class="n">Template</span><span class="p">,</span> <span class="s">"render"</span><span class="p">):</span>
+</span>    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="sh">"</span><span class="s">Template</span><span class="sh">"</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">ct</span><span class="p">.</span><span class="n">Template</span><span class="p">,</span> <span class="sh">"</span><span class="s">render</span><span class="sh">"</span><span class="p">):</span>
         <span class="n">_orig_render</span> <span class="o">=</span> <span class="n">ct</span><span class="p">.</span><span class="n">Template</span><span class="p">.</span><span class="n">render</span>
-        <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
             <span class="c1"># 필요시 정책 체크/로깅 추가
-</span>            <span class="k">return</span> <span class="n">_orig_render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">)</span>
+</span>            <span class="k">return</span> <span class="nf">_orig_render</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">)</span>
         <span class="n">ct</span><span class="p">.</span><span class="n">Template</span><span class="p">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">render</span>
 
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
@@ -1725,28 +1725,28 @@ python ./ComfyUI/main.py
 <code class="language-plaintext highlighter-rouge">sys.modules['comfyui_templates']</code>에 꽂아 넣고, <strong>겹치는 심만 오버라이드</strong> ,<br />
 나머지 속성 접근은 <strong>원본으로 위임</strong> 하게 만들 수 있어요.</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># sitecustomize.py (프록시 버전 — 필요할 때만)
-</span><span class="kn">import</span> <span class="nn">types</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">importlib</span>
+</span><span class="kn">import</span> <span class="n">types</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">importlib</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">_orig</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="n">import_module</span><span class="p">(</span><span class="s">"comfyui_templates"</span><span class="p">)</span>  <span class="c1"># 원본 로드
-</span>    <span class="n">proxy</span> <span class="o">=</span> <span class="n">types</span><span class="p">.</span><span class="n">ModuleType</span><span class="p">(</span><span class="s">"comfyui_templates"</span><span class="p">)</span>
+    <span class="n">_orig</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 원본 로드
+</span>    <span class="n">proxy</span> <span class="o">=</span> <span class="n">types</span><span class="p">.</span><span class="nc">ModuleType</span><span class="p">(</span><span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span><span class="p">)</span>
 
     <span class="c1"># 1) 기본 위임(__getattr__)으로 모든 심을 원본으로 전달
 </span>    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_orig</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nf">getattr</span><span class="p">(</span><span class="n">_orig</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="n">proxy</span><span class="p">.</span><span class="n">__getattr__</span> <span class="o">=</span> <span class="n">__getattr__</span>
 
     <span class="c1"># 2) 여기서 필요한 것만 덮어쓰기
-</span>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_orig</span><span class="p">,</span> <span class="s">"build_index"</span><span class="p">):</span>
+</span>    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">_orig</span><span class="p">,</span> <span class="sh">"</span><span class="s">build_index</span><span class="sh">"</span><span class="p">):</span>
         <span class="n">_orig_build_index</span> <span class="o">=</span> <span class="n">_orig</span><span class="p">.</span><span class="n">build_index</span>
         <span class="k">def</span> <span class="nf">build_index</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">_orig_build_index</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nf">_orig_build_index</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">)</span>
             <span class="c1"># ...필터/추가정책...
 </span>            <span class="k">return</span> <span class="n">res</span>
         <span class="n">proxy</span><span class="p">.</span><span class="n">build_index</span> <span class="o">=</span> <span class="n">build_index</span>
 
     <span class="c1"># 3) 교체
-</span>    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="s">"comfyui_templates"</span><span class="p">]</span> <span class="o">=</span> <span class="n">proxy</span>
+</span>    <span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="sh">"</span><span class="s">comfyui_templates</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">proxy</span>
 
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
     <span class="k">pass</span>
@@ -1827,17 +1827,17 @@ python ./ComfyUI/main.py
 
 <p><strong>man.py</strong></p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">greet</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">"Hello, man"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, man</span><span class="sh">"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p><strong>main.py</strong> ← 수정 금지(여기서는 ‘hello’라는 모듈을 쓴다고 가정)</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello</span>
-<span class="n">hello</span><span class="p">.</span><span class="n">greet</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">hello</span>
+<span class="n">hello</span><span class="p">.</span><span class="nf">greet</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p><strong>sitecustomize.py</strong> ← 여기서 “hello”라는 이름을 “man”으로 바꿔치기</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">importlib</span><span class="p">,</span> <span class="n">sys</span>
-<span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="s">'hello'</span><span class="p">]</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="n">import_module</span><span class="p">(</span><span class="s">'man'</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">importlib</span><span class="p">,</span> <span class="n">sys</span>
+<span class="n">sys</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="sh">'</span><span class="s">hello</span><span class="sh">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">importlib</span><span class="p">.</span><span class="nf">import_module</span><span class="p">(</span><span class="sh">'</span><span class="s">man</span><span class="sh">'</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="실행">실행</h2>
@@ -1866,19 +1866,19 @@ python ./ComfyUI/main.py
 
 <p><strong>hello.py</strong> ← 원래 구현(건드리지 않는다고 가정)</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">greet</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">"Hello, world"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, world</span><span class="sh">"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p><strong>main.py</strong> ← 수정 금지</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello</span>
-<span class="n">hello</span><span class="p">.</span><span class="n">greet</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">hello</span>
+<span class="n">hello</span><span class="p">.</span><span class="nf">greet</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p><strong>sitecustomize.py</strong> ← 시작 시 원본을 로드해서 필요한 함수만 교체</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hello</span> <span class="k">as</span> <span class="n">_hello</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">hello</span> <span class="k">as</span> <span class="n">_hello</span>
 
 <span class="k">def</span> <span class="nf">_new_greet</span><span class="p">():</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">"Hello, company!"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, company!</span><span class="sh">"</span><span class="p">)</span>
 
 <span class="n">_hello</span><span class="p">.</span><span class="n">greet</span> <span class="o">=</span> <span class="n">_new_greet</span>
 </code></pre></div></div>
@@ -1972,6 +1972,46 @@ python ./ComfyUI/main.py
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
     
       
       
@@ -2097,46 +2137,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>

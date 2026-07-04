@@ -720,13 +720,13 @@ https://johnvansickle.com/ffmpeg/<br />
 <h3 id="1-pyautogui--imageio-스크립트-방식">1. <code class="language-plaintext highlighter-rouge">pyautogui</code> + <code class="language-plaintext highlighter-rouge">imageio</code> (스크립트 방식)</h3>
 
 <p>가장 직접적이고 가벼운 방법입니다. 특정 영역을 반복 캡처해 GIF로 저장하는 단순한 스크립트로, 사용자가 녹화 영역 좌표를 지정해야 합니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span><span class="p">,</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span><span class="p">,</span> <span class="n">pyautogui</span><span class="p">,</span> <span class="n">imageio</span>
-<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
-<span class="k">with</span> <span class="n">imageio</span><span class="p">.</span><span class="n">get_writer</span><span class="p">(</span><span class="s">'test.gif'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'I'</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">time</span><span class="p">,</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span><span class="p">,</span> <span class="n">pyautogui</span><span class="p">,</span> <span class="n">imageio</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">time</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">imageio</span><span class="p">.</span><span class="nf">get_writer</span><span class="p">(</span><span class="sh">'</span><span class="s">test.gif</span><span class="sh">'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="sh">'</span><span class="s">I</span><span class="sh">'</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
     <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">pyautogui</span><span class="p">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">))</span>
-        <span class="n">writer</span><span class="p">.</span><span class="n">append_data</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="nf">time</span><span class="p">()</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">pyautogui</span><span class="p">.</span><span class="nf">screenshot</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">800</span><span class="p">,</span><span class="mi">600</span><span class="p">))</span>
+        <span class="n">writer</span><span class="p">.</span><span class="nf">append_data</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">img</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">t1</span> <span class="o">-</span> <span class="n">t0</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># 예: 5초 녹화
 </span>            <span class="k">break</span>
 </code></pre></div></div>
@@ -1181,7 +1181,7 @@ PTS가 뭐야?
     <span class="nc">.box</span> <span class="p">{</span> <span class="nl">max-width</span><span class="p">:</span> <span class="m">480px</span><span class="p">;</span> <span class="p">}</span>
     <span class="nt">img</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span> <span class="nl">height</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span> <span class="nl">display</span><span class="p">:</span> <span class="nb">block</span><span class="p">;</span> <span class="p">}</span>
     <span class="c">/* 필요 시, 백그라운드와 경계 확인용 */</span>
-    <span class="nc">.checker</span> <span class="p">{</span> <span class="nl">background</span><span class="p">:</span> <span class="n">conic-gradient</span><span class="p">(</span><span class="m">#eee</span> <span class="m">0</span> <span class="m">25%</span><span class="p">,</span> <span class="m">#fff</span> <span class="m">0</span> <span class="m">50%</span><span class="p">)</span> <span class="m">0</span><span class="p">/</span><span class="m">20px</span> <span class="m">20px</span><span class="p">;</span> <span class="nl">padding</span><span class="p">:</span> <span class="m">12px</span><span class="p">;</span> <span class="p">}</span>
+    <span class="nc">.checker</span> <span class="p">{</span> <span class="nl">background</span><span class="p">:</span> <span class="nf">conic-gradient</span><span class="p">(</span><span class="nx">#eee</span> <span class="m">0</span> <span class="m">25%</span><span class="p">,</span> <span class="nx">#fff</span> <span class="m">0</span> <span class="m">50%</span><span class="p">)</span> <span class="m">0</span><span class="o">/</span><span class="m">20px</span> <span class="m">20px</span><span class="p">;</span> <span class="nl">padding</span><span class="p">:</span> <span class="m">12px</span><span class="p">;</span> <span class="p">}</span>
   <span class="nt">&lt;/style&gt;</span>
 <span class="nt">&lt;/head&gt;</span>
 <span class="nt">&lt;body&gt;</span>
@@ -2069,6 +2069,46 @@ PTS를 조정하면 fps도 바뀌어?
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/farad/farad-scheduled-run-permission-context/" rel="permalink">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
 </a>
       
@@ -2183,46 +2223,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>

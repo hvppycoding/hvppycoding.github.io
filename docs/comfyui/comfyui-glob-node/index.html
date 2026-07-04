@@ -270,133 +270,133 @@ Comfy가 이 리스트를 “여러 아이템”으로 다루도록 <code class=
 <h1 id="3-코드">3) 코드</h1>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># custom_nodes/hyperflow-core/hf_find_pathnames.py
 </span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="n">inspect</span>
+<span class="kn">from</span> <span class="n">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 
 <span class="k">class</span> <span class="nc">HFFindPathnames</span><span class="p">:</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     HF - Find Pathnames(glob)
     - Python glob과 유사한 패턴 매칭
     - include_hidden(True)일 때: Python 3.11+이면 glob의 include_hidden을 사용.
-      3.11 미만이면 '**' 패턴에 한해 숨김 포함 변형 패턴을 추가로 탐색(최대한의 호환).
-    """</span>
+      3.11 미만이면 </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s"> 패턴에 한해 숨김 포함 변형 패턴을 추가로 탐색(최대한의 호환).
+    </span><span class="sh">"""</span>
 
-    <span class="o">@</span><span class="nb">classmethod</span>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">INPUT_TYPES</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s">"required"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"pathname"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"예: **/*.png"</span>
+            <span class="sh">"</span><span class="s">required</span><span class="sh">"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">"</span><span class="s">pathname</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="sh">""</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">placeholder</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">예: **/*.png</span><span class="sh">"</span>
                 <span class="p">}),</span>
             <span class="p">},</span>
-            <span class="s">"optional"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"root_dir"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"비우면 현재 디렉토리"</span>
+            <span class="sh">"</span><span class="s">optional</span><span class="sh">"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">"</span><span class="s">root_dir</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="sh">""</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">placeholder</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">비우면 현재 디렉토리</span><span class="sh">"</span>
                 <span class="p">}),</span>
-                <span class="s">"recursive"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"recursive"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"not recursive"</span>
+                <span class="sh">"</span><span class="s">recursive</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">BOOLEAN</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_on</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">recursive</span><span class="sh">"</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_off</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">not recursive</span><span class="sh">"</span>
                 <span class="p">}),</span>
-                <span class="s">"include_hidden"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"include .dot files"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"exclude .dot files"</span>
+                <span class="sh">"</span><span class="s">include_hidden</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">BOOLEAN</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_on</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">include .dot files</span><span class="sh">"</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_off</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">exclude .dot files</span><span class="sh">"</span>
                 <span class="p">}),</span>
             <span class="p">}</span>
         <span class="p">}</span>
 
-    <span class="n">RETURN_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,)</span>
-    <span class="n">RETURN_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"pathnames"</span><span class="p">,)</span>
+    <span class="n">RETURN_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,)</span>
+    <span class="n">RETURN_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="sh">"</span><span class="s">pathnames</span><span class="sh">"</span><span class="p">,)</span>
     <span class="c1"># 리스트 출력임을 명시 (다음 노드가 리스트를 순차 처리하도록)
 </span>    <span class="n">OUTPUT_IS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="bp">True</span><span class="p">,)</span>
-    <span class="n">FUNCTION</span> <span class="o">=</span> <span class="s">"find"</span>
-    <span class="n">CATEGORY</span> <span class="o">=</span> <span class="s">"HyperFlow"</span>
+    <span class="n">FUNCTION</span> <span class="o">=</span> <span class="sh">"</span><span class="s">find</span><span class="sh">"</span>
+    <span class="n">CATEGORY</span> <span class="o">=</span> <span class="sh">"</span><span class="s">HyperFlow</span><span class="sh">"</span>
 
-    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># 환경변수/홈(~) 확장 + 정규화
-</span>        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+</span>        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expandvars</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
 
-    <span class="k">def</span> <span class="nf">_effective_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">pathname</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_effective_pattern</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">pathname</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_expand</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isabs</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">pathname</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">root_dir</span> <span class="k">else</span> <span class="n">os</span><span class="p">.</span><span class="n">getcwd</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">pathname</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_expand</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">root_dir</span> <span class="k">else</span> <span class="n">os</span><span class="p">.</span><span class="nf">getcwd</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">pathname</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_iglob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="s">"""Python 3.11+이면 include_hidden 사용, 아니면 호환 경로."""</span>
-        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="n">signature</span><span class="p">(</span><span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_iglob</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">Python 3.11+이면 include_hidden 사용, 아니면 호환 경로.</span><span class="sh">"""</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="nf">signature</span><span class="p">(</span><span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">)</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">parameters</span>
-        <span class="k">if</span> <span class="s">"include_hidden"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Python 3.11+
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">),</span> <span class="n">include_hidden</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">include_hidden</span><span class="p">))</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">include_hidden</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Python 3.11+
+</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="nf">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">),</span> <span class="n">include_hidden</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">include_hidden</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># 3.11 미만: 기본 동작(숨김 제외)만 제공
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">))</span>
+</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="nf">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
-        <span class="s">"""
-        3.11 미만 환경에서 include_hidden=True + '**' 패턴일 때,
-        '**'를 '**/.*'로 치환한 변형을 추가 생성해 숨김 파일/폴더를 최대한 포괄.
-        (첫 limit개 '**'에 대해서만 조합 생성하여 폭발 방지)
-        """</span>
-        <span class="k">if</span> <span class="s">"**"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">
+        3.11 미만 환경에서 include_hidden=True + </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s"> 패턴일 때,
+        </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s">를 </span><span class="sh">'</span><span class="s">**/.*</span><span class="sh">'</span><span class="s">로 치환한 변형을 추가 생성해 숨김 파일/폴더를 최대한 포괄.
+        (첫 limit개 </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s">에 대해서만 조합 생성하여 폭발 방지)
+        </span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"**"</span><span class="p">)</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">n_use</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">n_use</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
         <span class="n">prefix_parts</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[:</span><span class="n">n_use</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s">"**"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">n_use</span><span class="p">:])</span> <span class="k">if</span> <span class="n">n_use</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">n_use</span><span class="p">:])</span> <span class="k">if</span> <span class="n">n_use</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">variants</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">product</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_use</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="nf">product</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_use</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_hidden</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combo</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="s">"**/.*"</span> <span class="k">if</span> <span class="n">use_hidden</span> <span class="k">else</span> <span class="s">"**"</span><span class="p">)</span> <span class="o">+</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">variants</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_hidden</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">combo</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="sh">"</span><span class="s">**/.*</span><span class="sh">"</span> <span class="k">if</span> <span class="n">use_hidden</span> <span class="k">else</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">)</span> <span class="o">+</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">variants</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">variants</span>
 
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pathname</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">""</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">([],)</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">""</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pathname</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="o">==</span> <span class="sh">""</span><span class="p">:</span>
+            <span class="nf">return </span><span class="p">([],)</span>
 
-        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">None</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_effective_pattern</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">None</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_effective_pattern</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
 
-        <span class="n">matches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
 
         <span class="c1"># 1) 기본 패턴
-</span>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">):</span>
-            <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+</span>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">):</span>
+            <span class="n">matches</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
         <span class="c1"># 2) (레거시 호환) include_hidden=True + '**'일 때 변형 패턴도 검색
-</span>        <span class="k">if</span> <span class="n">include_hidden</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="p">(</span><span class="s">"**"</span> <span class="ow">in</span> <span class="n">pathname</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-                    <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+</span>        <span class="k">if</span> <span class="n">include_hidden</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="p">(</span><span class="sh">"</span><span class="s">**</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">pathname</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_iglob</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                    <span class="n">matches</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
         <span class="c1"># 정렬(Windows는 대소문자 무시 정렬)
-</span>        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">"nt"</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">lower</span><span class="p">())</span>
+</span>        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="sh">"</span><span class="s">nt</span><span class="sh">"</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="nf">lower</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span>
+        <span class="nf">return </span><span class="p">(</span><span class="n">result</span><span class="p">,)</span>
 
 <span class="n">NODE_CLASS_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="n">HFFindPathnames</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">HFFindPathnames</span><span class="sh">"</span><span class="p">:</span> <span class="n">HFFindPathnames</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">NODE_DISPLAY_NAME_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="s">"HF - Find Pathnames(glob)"</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">HFFindPathnames</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">HF - Find Pathnames(glob)</span><span class="sh">"</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -499,138 +499,138 @@ Comfy가 이 리스트를 “여러 아이템”으로 다루도록 <code class=
 <p>아래 내용을 기존 파일(<code class="language-plaintext highlighter-rouge">custom_nodes/hyperflow-core/hf_find_pathnames.py</code>)에 그대로 덮어쓰세요.</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># custom_nodes/hyperflow-core/hf_find_pathnames.py
 </span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="n">inspect</span>
+<span class="kn">from</span> <span class="n">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 
 <span class="k">class</span> <span class="nc">HFFindPathnames</span><span class="p">:</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     HF - Find Pathnames(glob)
     - Python glob과 유사한 패턴 매칭
     - include_hidden(True)일 때: Python 3.11+이면 glob의 include_hidden을 사용.
-      3.11 미만이면 '**' 패턴에 한해 숨김 포함 변형 패턴을 추가 탐색.
+      3.11 미만이면 </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s"> 패턴에 한해 숨김 포함 변형 패턴을 추가 탐색.
     - 출력:
       (1) pathnames: STRING 리스트 (OUTPUT_IS_LIST=True)
       (2) joined_text: 줄바꿈으로 합친 하나의 STRING
-    """</span>
+    </span><span class="sh">"""</span>
 
-    <span class="o">@</span><span class="nb">classmethod</span>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">INPUT_TYPES</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s">"required"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"pathname"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"예: **/*.png"</span>
+            <span class="sh">"</span><span class="s">required</span><span class="sh">"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">"</span><span class="s">pathname</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="sh">""</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">placeholder</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">예: **/*.png</span><span class="sh">"</span>
                 <span class="p">}),</span>
             <span class="p">},</span>
-            <span class="s">"optional"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s">"root_dir"</span><span class="p">:</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span>
-                    <span class="s">"placeholder"</span><span class="p">:</span> <span class="s">"비우면 현재 디렉토리"</span>
+            <span class="sh">"</span><span class="s">optional</span><span class="sh">"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="sh">"</span><span class="s">root_dir</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="sh">""</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">placeholder</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">비우면 현재 디렉토리</span><span class="sh">"</span>
                 <span class="p">}),</span>
-                <span class="s">"recursive"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"recursive"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"not recursive"</span>
+                <span class="sh">"</span><span class="s">recursive</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">BOOLEAN</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_on</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">recursive</span><span class="sh">"</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_off</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">not recursive</span><span class="sh">"</span>
                 <span class="p">}),</span>
-                <span class="s">"include_hidden"</span><span class="p">:</span> <span class="p">(</span><span class="s">"BOOLEAN"</span><span class="p">,</span> <span class="p">{</span>
-                    <span class="s">"default"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-                    <span class="s">"label_on"</span><span class="p">:</span> <span class="s">"include .dot files"</span><span class="p">,</span>
-                    <span class="s">"label_off"</span><span class="p">:</span> <span class="s">"exclude .dot files"</span>
+                <span class="sh">"</span><span class="s">include_hidden</span><span class="sh">"</span><span class="p">:</span> <span class="p">(</span><span class="sh">"</span><span class="s">BOOLEAN</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="sh">"</span><span class="s">default</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_on</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">include .dot files</span><span class="sh">"</span><span class="p">,</span>
+                    <span class="sh">"</span><span class="s">label_off</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">exclude .dot files</span><span class="sh">"</span>
                 <span class="p">}),</span>
             <span class="p">}</span>
         <span class="p">}</span>
 
     <span class="c1"># 출력 두 개: (리스트 STRING, 단일 STRING)
-</span>    <span class="n">RETURN_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"STRING"</span><span class="p">,</span> <span class="s">"STRING"</span><span class="p">)</span>
-    <span class="n">RETURN_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="s">"pathnames"</span><span class="p">,</span> <span class="s">"joined_text"</span><span class="p">)</span>
+</span>    <span class="n">RETURN_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">STRING</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">RETURN_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="sh">"</span><span class="s">pathnames</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">joined_text</span><span class="sh">"</span><span class="p">)</span>
     <span class="n">OUTPUT_IS_LIST</span> <span class="o">=</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-    <span class="n">FUNCTION</span> <span class="o">=</span> <span class="s">"find"</span>
-    <span class="n">CATEGORY</span> <span class="o">=</span> <span class="s">"HyperFlow"</span>
+    <span class="n">FUNCTION</span> <span class="o">=</span> <span class="sh">"</span><span class="s">find</span><span class="sh">"</span>
+    <span class="n">CATEGORY</span> <span class="o">=</span> <span class="sh">"</span><span class="s">HyperFlow</span><span class="sh">"</span>
 
-    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># 환경변수/홈(~) 확장 + 정규화
-</span>        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+</span>        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expandvars</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">expanduser</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
 
-    <span class="k">def</span> <span class="nf">_effective_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">pathname</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_effective_pattern</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">pathname</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_expand</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isabs</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">pathname</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_expand</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">root_dir</span> <span class="k">else</span> <span class="n">os</span><span class="p">.</span><span class="n">getcwd</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">pathname</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_expand</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">root_dir</span> <span class="k">else</span> <span class="n">os</span><span class="p">.</span><span class="nf">getcwd</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">pathname</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_iglob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="s">"""Python 3.11+이면 include_hidden 사용, 아니면 호환 경로."""</span>
-        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="n">signature</span><span class="p">(</span><span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_iglob</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">Python 3.11+이면 include_hidden 사용, 아니면 호환 경로.</span><span class="sh">"""</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="nf">signature</span><span class="p">(</span><span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">)</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">parameters</span>
-        <span class="k">if</span> <span class="s">"include_hidden"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Python 3.11+
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">),</span> <span class="n">include_hidden</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">include_hidden</span><span class="p">))</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">include_hidden</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>  <span class="c1"># Python 3.11+
+</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="nf">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">),</span> <span class="n">include_hidden</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">include_hidden</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># 3.11 미만: 기본 동작(숨김 제외)만 제공
-</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">))</span>
+</span>            <span class="k">return</span> <span class="n">glob</span><span class="p">.</span><span class="nf">iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="nf">bool</span><span class="p">(</span><span class="n">recursive</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
-        <span class="s">"""
-        3.11 미만 환경에서 include_hidden=True + '**' 패턴일 때,
-        '**'를 '**/.*'로 치환한 변형을 추가 생성해 숨김 파일/폴더를 최대한 포괄.
-        (첫 limit개 '**'에 대해서만 조합 생성하여 폭발 방지)
-        """</span>
-        <span class="k">if</span> <span class="s">"**"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="sh">"""</span><span class="s">
+        3.11 미만 환경에서 include_hidden=True + </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s"> 패턴일 때,
+        </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s">를 </span><span class="sh">'</span><span class="s">**/.*</span><span class="sh">'</span><span class="s">로 치환한 변형을 추가 생성해 숨김 파일/폴더를 최대한 포괄.
+        (첫 limit개 </span><span class="sh">'</span><span class="s">**</span><span class="sh">'</span><span class="s">에 대해서만 조합 생성하여 폭발 방지)
+        </span><span class="sh">"""</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"**"</span><span class="p">)</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">n_use</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">n_use</span> <span class="o">=</span> <span class="nf">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
         <span class="n">prefix_parts</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[:</span><span class="n">n_use</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s">"**"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">n_use</span><span class="p">:])</span> <span class="k">if</span> <span class="n">n_use</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">n_use</span><span class="p">:])</span> <span class="k">if</span> <span class="n">n_use</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="k">else</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">variants</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">product</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_use</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="nf">product</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_use</span><span class="p">):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_hidden</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combo</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="s">"**/.*"</span> <span class="k">if</span> <span class="n">use_hidden</span> <span class="k">else</span> <span class="s">"**"</span><span class="p">)</span> <span class="o">+</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">variants</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">use_hidden</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">combo</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="sh">"</span><span class="s">**/.*</span><span class="sh">"</span> <span class="k">if</span> <span class="n">use_hidden</span> <span class="k">else</span> <span class="sh">"</span><span class="s">**</span><span class="sh">"</span><span class="p">)</span> <span class="o">+</span> <span class="n">prefix_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">variants</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">variants</span>
 
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pathname</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s">""</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">""</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pathname</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="o">==</span> <span class="sh">""</span><span class="p">:</span>
             <span class="c1"># 빈 입력: 두 출력 모두 빈 형태
-</span>            <span class="k">return</span> <span class="p">([],</span> <span class="s">""</span><span class="p">)</span>
+</span>            <span class="nf">return </span><span class="p">([],</span> <span class="sh">""</span><span class="p">)</span>
 
-        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">None</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_effective_pattern</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">None</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_effective_pattern</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
 
-        <span class="n">matches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
 
         <span class="c1"># 1) 기본 패턴
-</span>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">):</span>
-            <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+</span>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_iglob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="p">):</span>
+            <span class="n">matches</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
         <span class="c1"># 2) (레거시 호환) include_hidden=True + '**'일 때 변형 패턴도 검색
-</span>        <span class="k">if</span> <span class="n">include_hidden</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="p">(</span><span class="s">"**"</span> <span class="ow">in</span> <span class="n">pathname</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">_iglob</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-                    <span class="n">matches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+</span>        <span class="k">if</span> <span class="n">include_hidden</span> <span class="ow">and</span> <span class="n">recursive</span> <span class="ow">and</span> <span class="p">(</span><span class="sh">"</span><span class="s">**</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">pathname</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_hidden_variants_for_legacy</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="nf">_iglob</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">recursive</span><span class="p">,</span> <span class="n">include_hidden</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                    <span class="n">matches</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">normpath</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
         <span class="c1"># 정렬(Windows는 대소문자 무시 정렬)
-</span>        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">"nt"</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">lower</span><span class="p">())</span>
+</span>        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="sh">"</span><span class="s">nt</span><span class="sh">"</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="nf">lower</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
 
-        <span class="n">joined</span> <span class="o">=</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">joined</span><span class="p">)</span>
+        <span class="n">joined</span> <span class="o">=</span> <span class="sh">"</span><span class="se">\n</span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="nf">return </span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">joined</span><span class="p">)</span>
 
 <span class="n">NODE_CLASS_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="n">HFFindPathnames</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">HFFindPathnames</span><span class="sh">"</span><span class="p">:</span> <span class="n">HFFindPathnames</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">NODE_DISPLAY_NAME_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">"HFFindPathnames"</span><span class="p">:</span> <span class="s">"HF - Find Pathnames(glob)"</span><span class="p">,</span>
+    <span class="sh">"</span><span class="s">HFFindPathnames</span><span class="sh">"</span><span class="p">:</span> <span class="sh">"</span><span class="s">HF - Find Pathnames(glob)</span><span class="sh">"</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -704,6 +704,46 @@ Comfy가 이 리스트를 “여러 아이템”으로 다루도록 <code class=
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
     
       
       
@@ -829,46 +869,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>

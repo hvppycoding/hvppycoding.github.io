@@ -229,38 +229,38 @@ pip <span class="nb">install</span> <span class="nt">-e</span> <span class="s1">
 
 <p><code class="language-plaintext highlighter-rouge">hrag init</code>이 생성하는 기본 <code class="language-plaintext highlighter-rouge">config.toml</code>:</p>
 
-<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="py">version</span> <span class="p">=</span> <span class="mi">1</span>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">version</span> <span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 
-<span class="nn">[embedding]</span>
-<span class="py">endpoint</span> <span class="p">=</span> <span class="s">"$HYPERRAG_EMBEDDING_ENDPOINT"</span>
-<span class="py">api_key</span> <span class="p">=</span> <span class="s">"$HYPERRAG_API_KEY"</span>
-<span class="py">model</span> <span class="p">=</span> <span class="s">"BAAI/bge-m3"</span>
-<span class="py">dim</span> <span class="p">=</span> <span class="mi">1024</span>
-<span class="py">batch_size</span> <span class="p">=</span> <span class="mi">64</span>
+<span class="k">[</span><span class="n">embedding</span><span class="k">]</span>
+<span class="n">endpoint</span> <span class="o">=</span><span class="w"> </span><span class="s">"$HYPERRAG_EMBEDDING_ENDPOINT"</span>
+<span class="n">api_key</span> <span class="o">=</span><span class="w"> </span><span class="s">"$HYPERRAG_API_KEY"</span>
+<span class="n">model</span> <span class="o">=</span><span class="w"> </span><span class="s">"BAAI/bge-m3"</span>
+<span class="n">dim</span> <span class="o">=</span><span class="w"> </span><span class="mi">1024</span>
+<span class="n">batch_size</span> <span class="o">=</span><span class="w"> </span><span class="mi">64</span>
 
-<span class="nn">[reranker]</span>
-<span class="py">endpoint</span> <span class="p">=</span> <span class="s">"$HYPERRAG_RERANKER_ENDPOINT"</span>
-<span class="py">api_key</span> <span class="p">=</span> <span class="s">"$HYPERRAG_API_KEY"</span>
-<span class="py">model</span> <span class="p">=</span> <span class="s">"BAAI/bge-reranker-v2-m3"</span>
+<span class="k">[</span><span class="n">reranker</span><span class="k">]</span>
+<span class="n">endpoint</span> <span class="o">=</span><span class="w"> </span><span class="s">"$HYPERRAG_RERANKER_ENDPOINT"</span>
+<span class="n">api_key</span> <span class="o">=</span><span class="w"> </span><span class="s">"$HYPERRAG_API_KEY"</span>
+<span class="n">model</span> <span class="o">=</span><span class="w"> </span><span class="s">"BAAI/bge-reranker-v2-m3"</span>
 
-<span class="nn">[chunking]</span>
-<span class="py">max_tokens</span> <span class="p">=</span> <span class="mi">800</span>
-<span class="py">overlap_tokens</span> <span class="p">=</span> <span class="mi">120</span>
+<span class="k">[</span><span class="n">chunking</span><span class="k">]</span>
+<span class="n">max_tokens</span> <span class="o">=</span><span class="w"> </span><span class="mi">800</span>
+<span class="n">overlap_tokens</span> <span class="o">=</span><span class="w"> </span><span class="mi">120</span>
 
-<span class="nn">[search]</span>
-<span class="py">bm25_top_k</span> <span class="p">=</span> <span class="mi">80</span>
-<span class="py">vector_top_k</span> <span class="p">=</span> <span class="mi">80</span>
-<span class="py">rerank_top_k</span> <span class="p">=</span> <span class="mi">50</span>
-<span class="py">return_top_k</span> <span class="p">=</span> <span class="mi">10</span>
-<span class="py">exclude_stale</span> <span class="p">=</span> <span class="kc">false</span>
+<span class="k">[</span><span class="n">search</span><span class="k">]</span>
+<span class="n">bm25_top_k</span> <span class="o">=</span><span class="w"> </span><span class="mi">80</span>
+<span class="n">vector_top_k</span> <span class="o">=</span><span class="w"> </span><span class="mi">80</span>
+<span class="n">rerank_top_k</span> <span class="o">=</span><span class="w"> </span><span class="mi">50</span>
+<span class="n">return_top_k</span> <span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="n">exclude_stale</span> <span class="o">=</span><span class="w"> </span><span class="kc">false</span>
 
-<span class="nn">[visual]</span>
-<span class="py">enabled</span> <span class="p">=</span> <span class="kc">true</span>
-<span class="py">page_renders</span> <span class="p">=</span> <span class="s">"lazy"</span>      <span class="c"># off | lazy | eager</span>
-<span class="py">page_render_dpi</span> <span class="p">=</span> <span class="mi">150</span>
-<span class="py">page_render_format</span> <span class="p">=</span> <span class="s">"png"</span>
-<span class="py">extract_images</span> <span class="p">=</span> <span class="kc">true</span>      <span class="c"># PDF 내부 이미지 추출</span>
-<span class="py">image_min_pixels</span> <span class="p">=</span> <span class="mi">0</span>       <span class="c"># width*height 가 이 값 미만이면 건너뜀 (0=전부)</span>
+<span class="k">[</span><span class="n">visual</span><span class="k">]</span>
+<span class="n">enabled</span> <span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">page_renders</span> <span class="o">=</span><span class="w"> </span><span class="s">"lazy"</span>      <span class="c"># off | lazy | eager</span>
+<span class="n">page_render_dpi</span> <span class="o">=</span><span class="w"> </span><span class="mi">150</span>
+<span class="n">page_render_format</span> <span class="o">=</span><span class="w"> </span><span class="s">"png"</span>
+<span class="n">extract_images</span> <span class="o">=</span><span class="w"> </span><span class="kc">true</span>      <span class="c"># PDF 내부 이미지 추출</span>
+<span class="n">image_min_pixels</span> <span class="o">=</span><span class="w"> </span><span class="mi">0</span>       <span class="c"># width*height 가 이 값 미만이면 건너뜀 (0=전부)</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -576,6 +576,46 @@ locator이므로, 에이전트는 반드시 <code class="language-plaintext high
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/farad/farad-scheduled-run-permission-context/" rel="permalink">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
 </a>
       
@@ -690,46 +730,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>

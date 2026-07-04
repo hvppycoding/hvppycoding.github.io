@@ -247,87 +247,87 @@ Everything is pure‑Python and uses only widely‑available open‑source packa
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################################################
 # 0. Imports &amp; global parameters
 ###############################################################################
-</span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
-<span class="kn">import</span> <span class="nn">yfinance</span> <span class="k">as</span> <span class="n">yf</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+</span><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="n">yfinance</span> <span class="k">as</span> <span class="n">yf</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
-<span class="n">ETF_LIST</span> <span class="o">=</span> <span class="p">[</span><span class="s">"QQQ"</span><span class="p">,</span> <span class="s">"QLD"</span><span class="p">,</span> <span class="s">"VOO"</span><span class="p">,</span> <span class="s">"SSO"</span><span class="p">]</span>
-<span class="n">START</span>      <span class="o">=</span> <span class="s">"2007-01-01"</span>        <span class="c1"># enough history to cover post‑GFC regime
+<span class="n">ETF_LIST</span> <span class="o">=</span> <span class="p">[</span><span class="sh">"</span><span class="s">QQQ</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">QLD</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">VOO</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">SSO</span><span class="sh">"</span><span class="p">]</span>
+<span class="n">START</span>      <span class="o">=</span> <span class="sh">"</span><span class="s">2007-01-01</span><span class="sh">"</span>        <span class="c1"># enough history to cover post‑GFC regime
 </span><span class="n">FEE_PCT</span>    <span class="o">=</span> <span class="mf">0.0003</span>              <span class="c1"># 0.03 %
-</span><span class="n">CASH_TICK</span>  <span class="o">=</span> <span class="s">"BIL"</span>               <span class="c1"># 1‑3 M T‑Bill ETF as cash proxy (optional)
+</span><span class="n">CASH_TICK</span>  <span class="o">=</span> <span class="sh">"</span><span class="s">BIL</span><span class="sh">"</span>               <span class="c1"># 1‑3 M T‑Bill ETF as cash proxy (optional)
 </span>
 <span class="c1">###############################################################################
 # 1. Data loader with lightweight local caching
 ###############################################################################
-</span><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">START</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="s">"cache"</span><span class="p">):</span>
-    <span class="s">"""
+</span><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">START</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="sh">"</span><span class="s">cache</span><span class="sh">"</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
     Download Adj Close &amp; Volume for tickers since `start`, return wide DataFrame.
     Cached locally (CSV) to avoid repeated network calls.
-    """</span>
-    <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="ow">or</span> <span class="n">datetime</span><span class="p">.</span><span class="n">today</span><span class="p">().</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y-%m-%d"</span><span class="p">)</span>
-    <span class="n">cache</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
-    <span class="n">cache</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    </span><span class="sh">"""</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="ow">or</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">today</span><span class="p">().</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">"</span><span class="s">%Y-%m-%d</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">cache</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
+    <span class="n">cache</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="n">all_df</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tickers</span><span class="p">:</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">cache</span> <span class="o">/</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">.csv"</span>
-        <span class="k">if</span> <span class="n">f</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">cache</span> <span class="o">/</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">.csv</span><span class="sh">"</span>
+        <span class="k">if</span> <span class="n">f</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="c1"># refresh the last 14 days to incorporate splits/divs
-</span>            <span class="k">if</span> <span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">2</span><span class="p">)):</span>
-                <span class="n">df_new</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)[[</span><span class="s">"Adj Close"</span><span class="p">,</span> <span class="s">"Volume"</span><span class="p">]]</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">df_new</span><span class="p">])</span>
-                <span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</span>            <span class="nf">if </span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pd</span><span class="p">.</span><span class="nf">to_datetime</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="nf">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">2</span><span class="p">)):</span>
+                <span class="n">df_new</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="nf">download</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)[[</span><span class="sh">"</span><span class="s">Adj Close</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Volume</span><span class="sh">"</span><span class="p">]]</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">([</span><span class="n">df</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">df_new</span><span class="p">])</span>
+                <span class="n">df</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)[[</span><span class="s">"Adj Close"</span><span class="p">,</span> <span class="s">"Volume"</span><span class="p">]]</span>
-            <span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">"Adj Close"</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s">"Volume"</span><span class="p">:</span> <span class="n">t</span><span class="o">+</span><span class="s">"_VOL"</span><span class="p">})</span>
-        <span class="n">all_df</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_df</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="nf">download</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)[[</span><span class="sh">"</span><span class="s">Adj Close</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Volume</span><span class="sh">"</span><span class="p">]]</span>
+            <span class="n">df</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="nf">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="sh">"</span><span class="s">Adj Close</span><span class="sh">"</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="sh">"</span><span class="s">Volume</span><span class="sh">"</span><span class="p">:</span> <span class="n">t</span><span class="o">+</span><span class="sh">"</span><span class="s">_VOL</span><span class="sh">"</span><span class="p">})</span>
+        <span class="n">all_df</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">(</span><span class="n">all_df</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">###############################################################################
 # 2. Feature engineering helpers
 ###############################################################################
 </span><span class="k">def</span> <span class="nf">add_features</span><span class="p">(</span><span class="n">price_df</span><span class="p">):</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     Given wide Px DF (Adj Close), return a DF of engineered features:
     - 5‑day momentum (%)
     - 20‑day SMA ratio
     - 20‑day historical volatility (daily %)
-    """</span>
-    <span class="n">feat</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">price_df</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+    </span><span class="sh">"""</span>
+    <span class="n">feat</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">price_df</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ETF_LIST</span><span class="p">:</span>
         <span class="n">px</span> <span class="o">=</span> <span class="n">price_df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_mom5"</span><span class="p">]</span>  <span class="o">=</span> <span class="n">px</span><span class="p">.</span><span class="n">pct_change</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_sma20"</span><span class="p">]</span> <span class="o">=</span> <span class="n">px</span> <span class="o">/</span> <span class="n">px</span><span class="p">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>          <span class="c1"># &gt;0 =&gt; above SMA
-</span>        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_vol20"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">px</span><span class="p">).</span><span class="n">diff</span><span class="p">().</span><span class="n">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_mom5</span><span class="sh">"</span><span class="p">]</span>  <span class="o">=</span> <span class="n">px</span><span class="p">.</span><span class="nf">pct_change</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_sma20</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">px</span> <span class="o">/</span> <span class="n">px</span><span class="p">.</span><span class="nf">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="nf">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>          <span class="c1"># &gt;0 =&gt; above SMA
+</span>        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_vol20</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="n">px</span><span class="p">).</span><span class="nf">diff</span><span class="p">().</span><span class="nf">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="nf">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">feat</span>
 
 <span class="c1">###############################################################################
 # 3. Baseline *paired‑switch* strategy
 ###############################################################################
 </span><span class="k">def</span> <span class="nf">baseline_weights</span><span class="p">(</span><span class="n">price_df</span><span class="p">,</span> <span class="n">feat_df</span><span class="p">):</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     Rule: For each underlying/leveraged pair,
     • If 5‑day momentum of the underlying ETF &gt; 0 ⇒ use its 2× leveraged sibling
     • Else ⇒ use the un‑levered ETF.
     We keep 50 % of the portfolio in the NASDAQ pair (QQQ/QLD)
     and 50 % in the S&amp;P‑500 pair (VOO/SSO).
     Output: daily weights DataFrame (rows = dates, cols = ETFs).
-    """</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">price_df</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">ETF_LIST</span><span class="p">)</span>
+    </span><span class="sh">"""</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">price_df</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">ETF_LIST</span><span class="p">)</span>
 
     <span class="c1"># condition booleans
-</span>    <span class="n">use_qld</span> <span class="o">=</span> <span class="n">feat_df</span><span class="p">[</span><span class="s">"QQQ_mom5"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="n">use_sso</span> <span class="o">=</span> <span class="n">feat_df</span><span class="p">[</span><span class="s">"VOO_mom5"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span>    <span class="n">use_qld</span> <span class="o">=</span> <span class="n">feat_df</span><span class="p">[</span><span class="sh">"</span><span class="s">QQQ_mom5</span><span class="sh">"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">use_sso</span> <span class="o">=</span> <span class="n">feat_df</span><span class="p">[</span><span class="sh">"</span><span class="s">VOO_mom5</span><span class="sh">"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
-    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">use_qld</span><span class="p">,</span> <span class="s">"QLD"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
-    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">use_qld</span><span class="p">,</span> <span class="s">"QQQ"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
+    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">use_qld</span><span class="p">,</span> <span class="sh">"</span><span class="s">QLD</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
+    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">use_qld</span><span class="p">,</span> <span class="sh">"</span><span class="s">QQQ</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
 
-    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">use_sso</span><span class="p">,</span> <span class="s">"SSO"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
-    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">use_sso</span><span class="p">,</span> <span class="s">"VOO"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
+    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">use_sso</span><span class="p">,</span> <span class="sh">"</span><span class="s">SSO</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
+    <span class="n">w</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">use_sso</span><span class="p">,</span> <span class="sh">"</span><span class="s">VOO</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.50</span>
 
     <span class="k">return</span> <span class="n">w</span>
 
@@ -335,58 +335,58 @@ Everything is pure‑Python and uses only widely‑available open‑source packa
 # 4. Vectorised back‑tester (daily rebalancing, fee‑aware)
 ###############################################################################
 </span><span class="k">def</span> <span class="nf">backtest</span><span class="p">(</span><span class="n">price_df</span><span class="p">,</span> <span class="n">weight_df</span><span class="p">,</span> <span class="n">fee_pct</span><span class="o">=</span><span class="n">FEE_PCT</span><span class="p">):</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     Assumes weights are *target* EOD allocations (fully invested).
     Implements next‑day‑open execution by shifting weights by 1.
-    """</span>
+    </span><span class="sh">"""</span>
     <span class="n">rebal_dates</span> <span class="o">=</span> <span class="n">weight_df</span><span class="p">.</span><span class="n">index</span>
     <span class="c1"># shift so that today's weights trade at tomorrow's open/close
-</span>    <span class="n">w</span> <span class="o">=</span> <span class="n">weight_df</span><span class="p">.</span><span class="n">shift</span><span class="p">().</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span>    <span class="n">w</span> <span class="o">=</span> <span class="n">weight_df</span><span class="p">.</span><span class="nf">shift</span><span class="p">().</span><span class="nf">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># daily returns
-</span>    <span class="n">rets</span> <span class="o">=</span> <span class="n">price_df</span><span class="p">[</span><span class="n">ETF_LIST</span><span class="p">].</span><span class="n">pct_change</span><span class="p">().</span><span class="n">loc</span><span class="p">[</span><span class="n">w</span><span class="p">.</span><span class="n">index</span><span class="p">]</span>
+</span>    <span class="n">rets</span> <span class="o">=</span> <span class="n">price_df</span><span class="p">[</span><span class="n">ETF_LIST</span><span class="p">].</span><span class="nf">pct_change</span><span class="p">().</span><span class="n">loc</span><span class="p">[</span><span class="n">w</span><span class="p">.</span><span class="n">index</span><span class="p">]</span>
     <span class="c1"># portfolio returns before cost
-</span>    <span class="n">port_ret_pre_cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">rets</span><span class="p">).</span><span class="nb">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span>    <span class="n">port_ret_pre_cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">rets</span><span class="p">).</span><span class="nf">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="c1"># turnover: |Δw| / 2 (two‑sided) — efficient vectorised calc
-</span>    <span class="n">dw</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="n">diff</span><span class="p">().</span><span class="nb">abs</span><span class="p">()</span>
-    <span class="n">daily_turnover</span> <span class="o">=</span> <span class="n">dw</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span>    <span class="n">dw</span> <span class="o">=</span> <span class="n">w</span><span class="p">.</span><span class="nf">diff</span><span class="p">().</span><span class="nf">abs</span><span class="p">()</span>
+    <span class="n">daily_turnover</span> <span class="o">=</span> <span class="n">dw</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">cost</span> <span class="o">=</span> <span class="n">daily_turnover</span> <span class="o">*</span> <span class="n">fee_pct</span>
 
     <span class="n">port_ret_after_cost</span> <span class="o">=</span> <span class="n">port_ret_pre_cost</span> <span class="o">-</span> <span class="n">cost</span>
 
-    <span class="n">nav</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">port_ret_after_cost</span><span class="p">).</span><span class="n">cumprod</span><span class="p">().</span><span class="n">rename</span><span class="p">(</span><span class="s">"NAV"</span><span class="p">)</span>
-    <span class="n">out_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">nav</span><span class="p">,</span> <span class="n">port_ret_after_cost</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="s">"ret"</span><span class="p">),</span> <span class="n">daily_turnover</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="s">"turnover"</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">nav</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">port_ret_after_cost</span><span class="p">).</span><span class="nf">cumprod</span><span class="p">().</span><span class="nf">rename</span><span class="p">(</span><span class="sh">"</span><span class="s">NAV</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">out_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">([</span><span class="n">nav</span><span class="p">,</span> <span class="n">port_ret_after_cost</span><span class="p">.</span><span class="nf">rename</span><span class="p">(</span><span class="sh">"</span><span class="s">ret</span><span class="sh">"</span><span class="p">),</span> <span class="n">daily_turnover</span><span class="p">.</span><span class="nf">rename</span><span class="p">(</span><span class="sh">"</span><span class="s">turnover</span><span class="sh">"</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out_df</span>
 
 <span class="c1">###############################################################################
 # 5. Performance summary
 ###############################################################################
 </span><span class="k">def</span> <span class="nf">perf_stats</span><span class="p">(</span><span class="n">nav_series</span><span class="p">):</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     Computes CAGR, annualised vol &amp; Sharpe, max DD.
-    """</span>
+    </span><span class="sh">"""</span>
     <span class="n">nav</span> <span class="o">=</span> <span class="n">nav_series</span>
-    <span class="n">daily_ret</span> <span class="o">=</span> <span class="n">nav</span><span class="p">.</span><span class="n">pct_change</span><span class="p">().</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">daily_ret</span> <span class="o">=</span> <span class="n">nav</span><span class="p">.</span><span class="nf">pct_change</span><span class="p">().</span><span class="nf">dropna</span><span class="p">()</span>
     <span class="n">yrs</span> <span class="o">=</span> <span class="p">(</span><span class="n">nav</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">nav</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">days</span> <span class="o">/</span> <span class="mf">365.25</span>
     <span class="n">cagr</span> <span class="o">=</span> <span class="n">nav</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">yrs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-    <span class="n">vol</span>  <span class="o">=</span> <span class="n">daily_ret</span><span class="p">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
+    <span class="n">vol</span>  <span class="o">=</span> <span class="n">daily_ret</span><span class="p">.</span><span class="nf">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
     <span class="n">sharpe</span> <span class="o">=</span> <span class="n">cagr</span> <span class="o">/</span> <span class="n">vol</span> <span class="k">if</span> <span class="n">vol</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="p">.</span><span class="n">nan</span>
-    <span class="n">dd</span> <span class="o">=</span> <span class="p">(</span><span class="n">nav</span> <span class="o">/</span> <span class="n">nav</span><span class="p">.</span><span class="n">cummax</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span><span class="nb">min</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="n">Series</span><span class="p">({</span><span class="s">"CAGR"</span><span class="p">:</span> <span class="n">cagr</span><span class="p">,</span> <span class="s">"Vol"</span><span class="p">:</span> <span class="n">vol</span><span class="p">,</span> <span class="s">"Sharpe"</span><span class="p">:</span> <span class="n">sharpe</span><span class="p">,</span> <span class="s">"MaxDD"</span><span class="p">:</span> <span class="n">dd</span><span class="p">})</span>
+    <span class="n">dd</span> <span class="o">=</span> <span class="p">(</span><span class="n">nav</span> <span class="o">/</span> <span class="n">nav</span><span class="p">.</span><span class="nf">cummax</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span><span class="nf">min</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="nc">Series</span><span class="p">({</span><span class="sh">"</span><span class="s">CAGR</span><span class="sh">"</span><span class="p">:</span> <span class="n">cagr</span><span class="p">,</span> <span class="sh">"</span><span class="s">Vol</span><span class="sh">"</span><span class="p">:</span> <span class="n">vol</span><span class="p">,</span> <span class="sh">"</span><span class="s">Sharpe</span><span class="sh">"</span><span class="p">:</span> <span class="n">sharpe</span><span class="p">,</span> <span class="sh">"</span><span class="s">MaxDD</span><span class="sh">"</span><span class="p">:</span> <span class="n">dd</span><span class="p">})</span>
 
 <span class="c1">###############################################################################
 # 6. End‑to‑end run (executed when script is run directly)
 ###############################################################################
-</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">price</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">ETF_LIST</span><span class="p">,</span> <span class="n">START</span><span class="p">)</span>
-    <span class="n">feats</span> <span class="o">=</span> <span class="n">add_features</span><span class="p">(</span><span class="n">price</span><span class="p">[</span><span class="n">ETF_LIST</span><span class="p">])</span>           <span class="c1"># only Adj Close cols
-</span>    <span class="n">weights</span> <span class="o">=</span> <span class="n">baseline_weights</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
-    <span class="n">bt</span> <span class="o">=</span> <span class="n">backtest</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
-    <span class="n">stats</span> <span class="o">=</span> <span class="n">perf_stats</span><span class="p">(</span><span class="n">bt</span><span class="p">[</span><span class="s">"NAV"</span><span class="p">])</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">"====== Baseline Back‑test Results ======"</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">stats</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="o">%</span><span class="si">}</span><span class="s">"</span> <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mi">1</span> <span class="k">else</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">))</span>
-    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Final NAV: </span><span class="si">{</span><span class="n">bt</span><span class="p">[</span><span class="s">'NAV'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">   |   Sample length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bt</span><span class="p">)</span><span class="si">:</span><span class="p">,</span><span class="si">}</span><span class="s"> trading days"</span><span class="p">)</span>
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">ETF_LIST</span><span class="p">,</span> <span class="n">START</span><span class="p">)</span>
+    <span class="n">feats</span> <span class="o">=</span> <span class="nf">add_features</span><span class="p">(</span><span class="n">price</span><span class="p">[</span><span class="n">ETF_LIST</span><span class="p">])</span>           <span class="c1"># only Adj Close cols
+</span>    <span class="n">weights</span> <span class="o">=</span> <span class="nf">baseline_weights</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+    <span class="n">bt</span> <span class="o">=</span> <span class="nf">backtest</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="nf">perf_stats</span><span class="p">(</span><span class="n">bt</span><span class="p">[</span><span class="sh">"</span><span class="s">NAV</span><span class="sh">"</span><span class="p">])</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">====== Baseline Back‑test Results ======</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">stats</span><span class="p">.</span><span class="nf">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="o">%</span><span class="si">}</span><span class="sh">"</span> <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="mi">1</span> <span class="k">else</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="sh">"</span><span class="p">))</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="se">\n</span><span class="s">Final NAV: </span><span class="si">{</span><span class="n">bt</span><span class="p">[</span><span class="sh">'</span><span class="s">NAV</span><span class="sh">'</span><span class="p">].</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">   |   Sample length: </span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">bt</span><span class="p">)</span><span class="si">:</span><span class="p">,</span><span class="si">}</span><span class="s"> trading days</span><span class="sh">"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h3 id="what-the-script-does">What the script does</h3>
@@ -541,7 +541,7 @@ Level 1 is the attribute names <code class="language-plaintext highlighter-rouge
 Always has an <code class="language-plaintext highlighter-rouge">"Adj Close"</code> field unless <code class="language-plaintext highlighter-rouge">auto_adjust=True</code>.| If you set <code class="language-plaintext highlighter-rouge">auto_adjust=True</code> (recommended) <strong>“Close” is already adjusted</strong> and <strong>“Adj  Close” disappears</strong>.</p>
 
 <p>Because the baseline loader grabbed</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">[[</span><span class="s">"Adj Close"</span><span class="p">,</span> <span class="s">"Volume"</span><span class="p">]]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span><span class="p">[[</span><span class="sh">"</span><span class="s">Adj Close</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Volume</span><span class="sh">"</span><span class="p">]]</span>
 </code></pre></div></div>
 
 <p>it choked: with the new schema there <strong>is no “Adj  Close”</strong> at level 1, hence the<br />
@@ -550,8 +550,8 @@ Always has an <code class="language-plaintext highlighter-rouge">"Adj Close"</co
 <hr />
 
 <h2 id="quick-oneline-fix-if-you-just-want-it-to-run">Quick one‑line fix (if you just want it to run)</h2>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="n">download</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">auto_adjust</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s">"Close"</span><span class="p">,</span> <span class="s">"Volume"</span><span class="p">]]</span>              <span class="c1"># ‘Close’ is now already adjusted
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="nf">download</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">auto_adjust</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="sh">"</span><span class="s">Close</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Volume</span><span class="sh">"</span><span class="p">]]</span>              <span class="c1"># ‘Close’ is now already adjusted
 </span></code></pre></div></div>
 
 <p>(Plus changing the rename that follows from <code class="language-plaintext highlighter-rouge">"Adj Close"</code> → <code class="language-plaintext highlighter-rouge">"Close"</code>.)</p>
@@ -564,48 +564,48 @@ Always has an <code class="language-plaintext highlighter-rouge">"Adj Close"</co
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################################################
 # 1. Data loader (version‑proof against yfinance 0.3+ changes)
 ###############################################################################
-</span><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">START</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="s">"cache"</span><span class="p">):</span>
-    <span class="s">"""
+</span><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">START</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="sh">"</span><span class="s">cache</span><span class="sh">"</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
     Download daily *adjusted* closing prices and volume for each symbol.
     Handles both single‑level and MultiIndex outputs from yfinance.
     Caches raw downloads to disk to save bandwidth.
-    """</span>
-    <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="ow">or</span> <span class="n">datetime</span><span class="p">.</span><span class="n">today</span><span class="p">().</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y-%m-%d"</span><span class="p">)</span>
-    <span class="n">cache</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">);</span> <span class="n">cache</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    </span><span class="sh">"""</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="ow">or</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">today</span><span class="p">().</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">"</span><span class="s">%Y-%m-%d</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">cache</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">);</span> <span class="n">cache</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tickers</span><span class="p">:</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">cache</span> <span class="o">/</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">.csv"</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">cache</span> <span class="o">/</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">.csv</span><span class="sh">"</span>
 
         <span class="c1"># ---------- 1. download (or refresh last 2 wks) ----------
-</span>        <span class="k">if</span> <span class="n">f</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">df_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span>        <span class="k">if</span> <span class="n">f</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="n">df_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="c1"># force refresh if the cached file is stale (&gt;2 days old market data)
-</span>            <span class="k">if</span> <span class="n">df_raw</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pd</span><span class="p">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="n">pd</span><span class="p">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-                <span class="n">df_new</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="n">download</span><span class="p">(</span>
+</span>            <span class="k">if</span> <span class="n">df_raw</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pd</span><span class="p">.</span><span class="nc">Timestamp</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="n">pd</span><span class="p">.</span><span class="nc">Timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+                <span class="n">df_new</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="nf">download</span><span class="p">(</span>
                     <span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">df_raw</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
                     <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">auto_adjust</span><span class="o">=</span><span class="bp">True</span>
                 <span class="p">)</span>
-                <span class="n">df_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_raw</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">df_new</span><span class="p">])</span>
-                <span class="n">df_raw</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">df_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">([</span><span class="n">df_raw</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">df_new</span><span class="p">])</span>
+                <span class="n">df_raw</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">df_raw</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="n">download</span><span class="p">(</span>
+            <span class="n">df_raw</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="nf">download</span><span class="p">(</span>
                 <span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
                 <span class="n">progress</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">auto_adjust</span><span class="o">=</span><span class="bp">True</span>
             <span class="p">)</span>
-            <span class="n">df_raw</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">df_raw</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="c1"># ---------- 2. flatten columns if MultiIndex ----------
-</span>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df_raw</span><span class="p">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">pd</span><span class="p">.</span><span class="n">MultiIndex</span><span class="p">):</span>
-            <span class="n">df_raw</span><span class="p">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df_raw</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span>        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">df_raw</span><span class="p">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">pd</span><span class="p">.</span><span class="n">MultiIndex</span><span class="p">):</span>
+            <span class="n">df_raw</span><span class="p">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df_raw</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="nf">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># At this point df_raw has columns: 'Open','High','Low','Close','Volume'
-</span>        <span class="n">px</span>  <span class="o">=</span> <span class="n">df_raw</span><span class="p">[</span><span class="s">"Close"</span><span class="p">].</span><span class="n">rename</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>            <span class="c1"># already split/div adjusted
-</span>        <span class="n">vol</span> <span class="o">=</span> <span class="n">df_raw</span><span class="p">[</span><span class="s">"Volume"</span><span class="p">].</span><span class="n">rename</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_VOL"</span><span class="p">)</span>
+</span>        <span class="n">px</span>  <span class="o">=</span> <span class="n">df_raw</span><span class="p">[</span><span class="sh">"</span><span class="s">Close</span><span class="sh">"</span><span class="p">].</span><span class="nf">rename</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>            <span class="c1"># already split/div adjusted
+</span>        <span class="n">vol</span> <span class="o">=</span> <span class="n">df_raw</span><span class="p">[</span><span class="sh">"</span><span class="s">Volume</span><span class="sh">"</span><span class="p">].</span><span class="nf">rename</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_VOL</span><span class="sh">"</span><span class="p">)</span>
 
-        <span class="n">frames</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">px</span><span class="p">,</span> <span class="n">vol</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">frames</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">([</span><span class="n">px</span><span class="p">,</span> <span class="n">vol</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h3 id="what-changed">What changed?</h3>
@@ -651,8 +651,8 @@ Always has an <code class="language-plaintext highlighter-rouge">"Adj Close"</co
 <hr />
 
 <h2 id="sanity-test-paste-into-a-notebook-cell">Sanity test (paste into a notebook cell)</h2>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">price</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">([</span><span class="s">"SSO"</span><span class="p">],</span> <span class="s">"2024-01-01"</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">price</span><span class="p">.</span><span class="n">head</span><span class="p">())</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">price</span> <span class="o">=</span> <span class="nf">get_data</span><span class="p">([</span><span class="sh">"</span><span class="s">SSO</span><span class="sh">"</span><span class="p">],</span> <span class="sh">"</span><span class="s">2024-01-01</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">price</span><span class="p">.</span><span class="nf">head</span><span class="p">())</span>
 </code></pre></div></div>
 
 <p>Expected output (single‑level columns, no MultiIndex):</p>
@@ -734,8 +734,8 @@ In your case the OHLCV names (<code class="language-plaintext highlighter-rouge"
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################################################
 # 1. Version‑proof Data loader (works for yfinance 0.2 and 0.3)
 ###############################################################################
-</span><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">START</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="s">"cache"</span><span class="p">):</span>
-    <span class="s">"""
+</span><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">START</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="sh">"</span><span class="s">cache</span><span class="sh">"</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
     Returns wide DataFrame with columns:
         &lt;TICKER&gt;         – adjusted close price (float)
         &lt;TICKER&gt;_VOL     – daily volume         (int)
@@ -744,60 +744,60 @@ In your case the OHLCV names (<code class="language-plaintext highlighter-rouge"
     • single vs. multiple tickers
     • MultiIndex columns in either order
     • yfinance auto‑adjust on/off
-    """</span>
-    <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="ow">or</span> <span class="n">datetime</span><span class="p">.</span><span class="n">today</span><span class="p">().</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y-%m-%d"</span><span class="p">)</span>
-    <span class="n">cache_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
-    <span class="n">cache_path</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    </span><span class="sh">"""</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="ow">or</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">today</span><span class="p">().</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">"</span><span class="s">%Y-%m-%d</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">cache_path</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
+    <span class="n">cache_path</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="n">out_frames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tickers</span><span class="p">:</span>
-        <span class="n">csv_f</span> <span class="o">=</span> <span class="n">cache_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">.csv"</span>
+        <span class="n">csv_f</span> <span class="o">=</span> <span class="n">cache_path</span> <span class="o">/</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">.csv</span><span class="sh">"</span>
 
         <span class="c1"># ---------------- download or refresh ----------------
-</span>        <span class="k">if</span> <span class="n">csv_f</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-            <span class="n">staleness</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]).</span><span class="n">days</span>
+</span>        <span class="k">if</span> <span class="n">csv_f</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">read_csv</span><span class="p">(</span><span class="n">csv_f</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">staleness</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="nc">Timestamp</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]).</span><span class="n">days</span>
             <span class="k">if</span> <span class="n">staleness</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>       <span class="c1"># refresh last 2 weeks
-</span>                <span class="n">df_new</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="n">download</span><span class="p">(</span>
+</span>                <span class="n">df_new</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="nf">download</span><span class="p">(</span>
                     <span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
                     <span class="n">auto_adjust</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span>
                 <span class="p">)</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">df_new</span><span class="p">])</span>
-                <span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_f</span><span class="p">)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">([</span><span class="n">df</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">],</span> <span class="n">df_new</span><span class="p">])</span>
+                <span class="n">df</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">csv_f</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="n">download</span><span class="p">(</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">yf</span><span class="p">.</span><span class="nf">download</span><span class="p">(</span>
                 <span class="n">t</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
                 <span class="n">auto_adjust</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="bp">False</span>
             <span class="p">)</span>
-            <span class="n">df</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_f</span><span class="p">)</span>
+            <span class="n">df</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">csv_f</span><span class="p">)</span>
 
         <span class="c1"># ---------------- flatten columns safely -------------
-</span>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">pd</span><span class="p">.</span><span class="n">MultiIndex</span><span class="p">):</span>
+</span>        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">pd</span><span class="p">.</span><span class="n">MultiIndex</span><span class="p">):</span>
             <span class="c1"># Which level contains the OHLCV words?
-</span>            <span class="n">lvl0</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">lvl1</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s">"Close"</span> <span class="ow">in</span> <span class="n">lvl0</span><span class="p">:</span>
+</span>            <span class="n">lvl0</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="nf">get_level_values</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">lvl1</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="nf">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="sh">"</span><span class="s">Close</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">lvl0</span><span class="p">:</span>
                 <span class="n">df</span><span class="p">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">lvl0</span>           <span class="c1"># keep level‑0
-</span>            <span class="k">elif</span> <span class="s">"Close"</span> <span class="ow">in</span> <span class="n">lvl1</span><span class="p">:</span>
+</span>            <span class="k">elif</span> <span class="sh">"</span><span class="s">Close</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">lvl1</span><span class="p">:</span>
                 <span class="n">df</span><span class="p">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">lvl1</span>           <span class="c1"># keep level‑1
 </span>            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Cannot locate 'Close' after yfinance download."</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sh">"</span><span class="s">Cannot locate </span><span class="sh">'</span><span class="s">Close</span><span class="sh">'</span><span class="s"> after yfinance download.</span><span class="sh">"</span><span class="p">)</span>
 
         <span class="c1"># ---------------- pick &amp; rename -----------------------
 </span>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">px</span>  <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">"Close"</span><span class="p">].</span><span class="n">rename</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">px</span>  <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="sh">"</span><span class="s">Close</span><span class="sh">"</span><span class="p">].</span><span class="nf">rename</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="k">except</span> <span class="nb">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>       <span class="c1"># yfinance &lt; 0.2 kept 'Adj Close'
-</span>            <span class="n">px</span>  <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">"Adj Close"</span><span class="p">].</span><span class="n">rename</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</span>            <span class="n">px</span>  <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="sh">"</span><span class="s">Adj Close</span><span class="sh">"</span><span class="p">].</span><span class="nf">rename</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
-        <span class="n">vol</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">"Volume"</span><span class="p">].</span><span class="n">rename</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_VOL"</span><span class="p">)</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="sh">"</span><span class="s">Volume</span><span class="sh">"</span><span class="p">].</span><span class="nf">rename</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_VOL</span><span class="sh">"</span><span class="p">)</span>
 
         <span class="c1"># guarantee numeric
-</span>        <span class="n">px</span>  <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">px</span><span class="p">,</span>  <span class="n">errors</span><span class="o">=</span><span class="s">"coerce"</span><span class="p">)</span>
-        <span class="n">vol</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">"coerce"</span><span class="p">)</span>
+</span>        <span class="n">px</span>  <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">to_numeric</span><span class="p">(</span><span class="n">px</span><span class="p">,</span>  <span class="n">errors</span><span class="o">=</span><span class="sh">"</span><span class="s">coerce</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">to_numeric</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="sh">"</span><span class="s">coerce</span><span class="sh">"</span><span class="p">)</span>
 
-        <span class="n">out_frames</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">px</span><span class="p">,</span> <span class="n">vol</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">out_frames</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">([</span><span class="n">px</span><span class="p">,</span> <span class="n">vol</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">(</span><span class="n">out_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">(</span><span class="n">out_frames</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p><strong>Remember:</strong><br />
@@ -807,21 +807,21 @@ Delete any stale files in <code class="language-plaintext highlighter-rouge">cac
 
 <h2 id="2-️⃣-safer-add_features">2 ️⃣ Safer <strong><code class="language-plaintext highlighter-rouge">add_features</code></strong></h2>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add_features</span><span class="p">(</span><span class="n">price_df</span><span class="p">):</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     Create 5‑day momentum, 20‑day SMA ratio and 20‑day log‑volatility.
     Future‑proof to pandas ≥ 3.0 (no implicit NA filling in pct_change).
-    """</span>
+    </span><span class="sh">"""</span>
     <span class="c1"># Convert everything to float and forward‑fill corporate‑action gaps
-</span>    <span class="n">px</span> <span class="o">=</span> <span class="n">price_df</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">"coerce"</span><span class="p">).</span><span class="n">ffill</span><span class="p">()</span>
+</span>    <span class="n">px</span> <span class="o">=</span> <span class="n">price_df</span><span class="p">.</span><span class="nf">apply</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="sh">"</span><span class="s">coerce</span><span class="sh">"</span><span class="p">).</span><span class="nf">ffill</span><span class="p">()</span>
 
-    <span class="n">feat</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">px</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">feat</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">px</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ETF_LIST</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">px</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_mom5"</span><span class="p">]</span>  <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">pct_change</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">fill_method</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_sma20"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span> <span class="o">/</span> <span class="n">s</span><span class="p">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_vol20"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">diff</span><span class="p">().</span><span class="n">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_mom5</span><span class="sh">"</span><span class="p">]</span>  <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">pct_change</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">fill_method</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_sma20</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span> <span class="o">/</span> <span class="n">s</span><span class="p">.</span><span class="nf">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="nf">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_vol20</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="nf">diff</span><span class="p">().</span><span class="nf">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="nf">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">feat</span><span class="p">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">min_periods</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>   <span class="c1"># drop warm‑up rows
+    <span class="k">return</span> <span class="n">feat</span><span class="p">.</span><span class="nf">dropna</span><span class="p">(</span><span class="n">min_periods</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>   <span class="c1"># drop warm‑up rows
 </span></code></pre></div></div>
 
 <p><em>The<code class="language-plaintext highlighter-rouge">fill_method=None</code> line removes the deprecation warning.</em></p>
@@ -835,15 +835,15 @@ Delete any stale files in <code class="language-plaintext highlighter-rouge">cac
 <hr />
 
 <h2 id="4-️⃣-quick-smoketest">4 ️⃣ Quick smoke‑test</h2>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
     <span class="c1"># 1. fresh download
-</span>    <span class="n">price</span>  <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">ETF_LIST</span><span class="p">,</span> <span class="n">START</span><span class="p">)</span>
+</span>    <span class="n">price</span>  <span class="o">=</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">ETF_LIST</span><span class="p">,</span> <span class="n">START</span><span class="p">)</span>
     <span class="c1"># 2. feature matrix
-</span>    <span class="n">feats</span>  <span class="o">=</span> <span class="n">add_features</span><span class="p">(</span><span class="n">price</span><span class="p">[</span><span class="n">ETF_LIST</span><span class="p">])</span>
+</span>    <span class="n">feats</span>  <span class="o">=</span> <span class="nf">add_features</span><span class="p">(</span><span class="n">price</span><span class="p">[</span><span class="n">ETF_LIST</span><span class="p">])</span>
     <span class="c1"># 3. weights &amp; back‑test
-</span>    <span class="n">w</span>      <span class="o">=</span> <span class="n">baseline_weights</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
-    <span class="n">bt</span>     <span class="o">=</span> <span class="n">backtest</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">perf_stats</span><span class="p">(</span><span class="n">bt</span><span class="p">[</span><span class="s">"NAV"</span><span class="p">]))</span>
+</span>    <span class="n">w</span>      <span class="o">=</span> <span class="nf">baseline_weights</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">feats</span><span class="p">)</span>
+    <span class="n">bt</span>     <span class="o">=</span> <span class="nf">backtest</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="nf">perf_stats</span><span class="p">(</span><span class="n">bt</span><span class="p">[</span><span class="sh">"</span><span class="s">NAV</span><span class="sh">"</span><span class="p">]))</span>
 </code></pre></div></div>
 
 <h3 id="expected-first-few-lines-of-pricehead">Expected first few lines of <code class="language-plaintext highlighter-rouge">price.head()</code></h3>
@@ -901,7 +901,7 @@ I fat‑fingered the call when I cleaned up the warm‑up rows.</p>
 <h3 id="twoline-hotfix">Two‑line hot‑fix</h3>
 
 <p>Open <strong><code class="language-plaintext highlighter-rouge">main.py</code> → <code class="language-plaintext highlighter-rouge">add_features</code></strong> and replace the last line:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">return</span> <span class="n">feat</span><span class="p">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">min_periods</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">return</span> <span class="n">feat</span><span class="p">.</span><span class="nf">dropna</span><span class="p">(</span><span class="n">min_periods</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>with either of the following, both functionally equivalent:</p>
@@ -921,23 +921,23 @@ return feat.dropna(how="any")
 <h3 id="full-corrected-add_features-for-copypaste">Full corrected <code class="language-plaintext highlighter-rouge">add_features</code> for copy‑paste</h3>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add_features</span><span class="p">(</span><span class="n">price_df</span><span class="p">):</span>
-    <span class="s">"""
+    <span class="sh">"""</span><span class="s">
     Create 5‑day momentum, 20‑day SMA ratio and 20‑day log‑volatility.
     Works on latest pandas (no deprecated defaults).
-    """</span>
+    </span><span class="sh">"""</span>
     <span class="c1"># 1. ensure numeric &amp; fill corporate‑action gaps
-</span>    <span class="n">px</span> <span class="o">=</span> <span class="n">price_df</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">"coerce"</span><span class="p">).</span><span class="n">ffill</span><span class="p">()</span>
+</span>    <span class="n">px</span> <span class="o">=</span> <span class="n">price_df</span><span class="p">.</span><span class="nf">apply</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="sh">"</span><span class="s">coerce</span><span class="sh">"</span><span class="p">).</span><span class="nf">ffill</span><span class="p">()</span>
 
     <span class="c1"># 2. build feature matrix
-</span>    <span class="n">feat</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">px</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+</span>    <span class="n">feat</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">px</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ETF_LIST</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">px</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_mom5"</span><span class="p">]</span>  <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">pct_change</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">fill_method</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_sma20"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span> <span class="o">/</span> <span class="n">s</span><span class="p">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_vol20"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">diff</span><span class="p">().</span><span class="n">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_mom5</span><span class="sh">"</span><span class="p">]</span>  <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">pct_change</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">fill_method</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_sma20</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span> <span class="o">/</span> <span class="n">s</span><span class="p">.</span><span class="nf">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="nf">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">feat</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s">_vol20</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="nf">diff</span><span class="p">().</span><span class="nf">rolling</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="nf">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
 
     <span class="c1"># 3. drop warm‑up rows and any residual NaNs
-</span>    <span class="k">return</span> <span class="n">feat</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">20</span><span class="p">:].</span><span class="n">dropna</span><span class="p">()</span>
+</span>    <span class="k">return</span> <span class="n">feat</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">20</span><span class="p">:].</span><span class="nf">dropna</span><span class="p">()</span>
 
 </code></pre></div></div>
 <h3 id="after-patching">After patching</h3>
@@ -2115,6 +2115,46 @@ detail_rl.to_csv("rl_nav_detail.csv", float_format="%.2f")</p>
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/farad/farad-scheduled-run-permission-context/" rel="permalink">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
 </a>
       
@@ -2229,46 +2269,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>

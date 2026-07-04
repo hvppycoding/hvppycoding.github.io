@@ -268,124 +268,124 @@
 <p>아래 두 파일만으로 동작합니다. (원하면 나중에 패키징 단계 참고)</p>
 
 <h2 id="simple_notice__main__py"><code class="language-plaintext highlighter-rouge">simple_notice/__main__.py</code></h2>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">platformdirs</span> <span class="kn">import</span> <span class="n">user_config_dir</span>
+<span class="kn">from</span> <span class="n">platformdirs</span> <span class="kn">import</span> <span class="n">user_config_dir</span>
 
-<span class="kn">from</span> <span class="nn">PySide6.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PySide6.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="n">PySide6.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="n">PySide6.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QMessageBox</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">PySide6.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
+<span class="kn">from</span> <span class="n">PySide6.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
 
-<span class="n">APP_NAME</span> <span class="o">=</span> <span class="s">"simple_notice"</span>
-<span class="n">ORG_NAME</span> <span class="o">=</span> <span class="s">"local"</span>  <span class="c1"># 원하면 회사/조직명으로 변경
+<span class="n">APP_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">simple_notice</span><span class="sh">"</span>
+<span class="n">ORG_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">local</span><span class="sh">"</span>  <span class="c1"># 원하면 회사/조직명으로 변경
 </span><span class="n">SNOOZE_DAYS</span> <span class="o">=</span> <span class="mi">7</span>
 
 <span class="k">def</span> <span class="nf">config_file_path</span><span class="p">():</span>
-    <span class="n">cfg_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">user_config_dir</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">ORG_NAME</span><span class="p">))</span>
-    <span class="n">cfg_dir</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cfg_dir</span> <span class="o">/</span> <span class="s">"prefs.json"</span>
+    <span class="n">cfg_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="nf">user_config_dir</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">ORG_NAME</span><span class="p">))</span>
+    <span class="n">cfg_dir</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg_dir</span> <span class="o">/</span> <span class="sh">"</span><span class="s">prefs.json</span><span class="sh">"</span>
 
 <span class="k">def</span> <span class="nf">load_prefs</span><span class="p">():</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">config_file_path</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nf">config_file_path</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">))</span>
         <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
             <span class="c1"># 손상시 초기화
 </span>            <span class="k">return</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="p">{}</span>
 
 <span class="k">def</span> <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="n">config_file_path</span><span class="p">().</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">prefs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">)</span>
+    <span class="nf">config_file_path</span><span class="p">().</span><span class="nf">write_text</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="nf">dumps</span><span class="p">(</span><span class="n">prefs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">should_skip</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="n">prefs</span> <span class="o">=</span> <span class="n">load_prefs</span><span class="p">()</span>
-    <span class="n">iso</span> <span class="o">=</span> <span class="n">prefs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">)</span>
+    <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+    <span class="n">iso</span> <span class="o">=</span> <span class="n">prefs</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">iso</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">saved</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
+        <span class="n">saved</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">fromisoformat</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
     <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>
-    <span class="k">return</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">saved</span> <span class="o">&lt;</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">SNOOZE_DAYS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">saved</span> <span class="o">&lt;</span> <span class="nf">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">SNOOZE_DAYS</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">html_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">html_path</span> <span class="o">=</span> <span class="n">html_path</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">html_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">html_path</span> <span class="o">=</span> <span class="n">html_path</span>
 
-        <span class="bp">self</span><span class="p">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s">"Notice"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowTitle</span><span class="p">(</span><span class="sh">"</span><span class="s">Notice</span><span class="sh">"</span><span class="p">)</span>
         <span class="c1"># 항상 위
-</span>        <span class="bp">self</span><span class="p">.</span><span class="n">setWindowFlag</span><span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowFlag</span><span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">resize</span><span class="p">(</span><span class="mi">900</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
 
-        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="nc">QVBoxLayout</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
 
         <span class="c1"># Web view
-</span>        <span class="bp">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">QWebEngineView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">setUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">.</span><span class="n">fromLocalFile</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)))</span>
-        <span class="n">layout</span><span class="p">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">view</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="nc">QWebEngineView</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="nf">setUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">.</span><span class="nf">fromLocalFile</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)))</span>
+        <span class="n">layout</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Buttons
-</span>        <span class="n">btn_row</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">btn_snooze</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s">"7일간 다시 열지 않음"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">btn_close</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s">"닫기"</span><span class="p">)</span>
-        <span class="n">btn_row</span><span class="p">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">btn_row</span><span class="p">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">btn_snooze</span><span class="p">)</span>
-        <span class="n">btn_row</span><span class="p">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">btn_close</span><span class="p">)</span>
-        <span class="n">layout</span><span class="p">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">btn_row</span><span class="p">)</span>
+</span>        <span class="n">btn_row</span> <span class="o">=</span> <span class="nc">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_snooze</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">7일간 다시 열지 않음</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_close</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">닫기</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">btn_snooze</span><span class="p">)</span>
+        <span class="n">btn_row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">btn_close</span><span class="p">)</span>
+        <span class="n">layout</span><span class="p">.</span><span class="nf">addLayout</span><span class="p">(</span><span class="n">btn_row</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="p">.</span><span class="n">btn_snooze</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">snooze_and_close</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">btn_close</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_snooze</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">snooze_and_close</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">btn_close</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">close</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">snooze_and_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">prefs</span> <span class="o">=</span> <span class="n">load_prefs</span><span class="p">()</span>
-        <span class="n">prefs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">).</span><span class="n">isoformat</span><span class="p">()</span>
-        <span class="n">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">snooze_and_close</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+        <span class="n">prefs</span><span class="p">[</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">).</span><span class="nf">isoformat</span><span class="p">()</span>
+        <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">argv</span> <span class="o">=</span> <span class="n">argv</span> <span class="ow">or</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">"Usage: simple_notice /absolute/or/relative/path/to/index.html"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Usage: simple_notice /absolute/or/relative/path/to/index.html</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="n">html_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">expanduser</span><span class="p">().</span><span class="n">resolve</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">html_path</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"HTML not found: </span><span class="si">{</span><span class="n">html_path</span><span class="si">}</span><span class="s">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">html_path</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="nf">expanduser</span><span class="p">().</span><span class="nf">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">html_path</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">HTML not found: </span><span class="si">{</span><span class="n">html_path</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="c1"># 스누즈 체크
-</span>    <span class="k">if</span> <span class="n">should_skip</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">html_path</span><span class="p">)):</span>
+</span>    <span class="k">if</span> <span class="nf">should_skip</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">html_path</span><span class="p">)):</span>
         <span class="c1"># 조용히 종료 (필요하면 메시지 출력 가능)
-</span>        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span>        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># Qt 앱 실행
-</span>    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
-    <span class="n">win</span> <span class="o">=</span> <span class="n">NoticeWindow</span><span class="p">(</span><span class="n">html_path</span><span class="p">)</span>
-    <span class="n">win</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="k">exec</span><span class="p">())</span>
+</span>    <span class="n">app</span> <span class="o">=</span> <span class="nc">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">html_path</span><span class="p">)</span>
+    <span class="n">win</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="nf">exec</span><span class="p">())</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
 </code></pre></div></div>
 
 <h2 id="pyprojecttoml-선택-콘솔-명령으로-설치실행하고-싶을-때"><code class="language-plaintext highlighter-rouge">pyproject.toml</code> (선택: 콘솔 명령으로 설치/실행하고 싶을 때)</h2>
-<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[project]</span>
-<span class="py">name</span> <span class="p">=</span> <span class="s">"simple-notice"</span>
-<span class="py">version</span> <span class="p">=</span> <span class="s">"0.1.0"</span>
-<span class="py">description</span> <span class="p">=</span> <span class="s">"Tiny always-on-top notice popup that loads local HTML (MkDocs etc.)"</span>
-<span class="py">readme</span> <span class="p">=</span> <span class="s">"README.md"</span>
-<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.9</span><span class="s">"</span><span class="err">
-</span><span class="py">dependencies</span> <span class="p">=</span> <span class="py">["PySide6&gt;</span><span class="p">=</span><span class="mf">6.7</span><span class="s">", "</span><span class="py">platformdirs&gt;</span><span class="p">=</span><span class="mf">4.0</span><span class="s">"]</span><span class="err">
-</span>
-<span class="nn">[project.scripts]</span>
-<span class="py">simple_notice</span> <span class="p">=</span> <span class="s">"simple_notice.__main__:main"</span>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">[</span><span class="n">project</span><span class="k">]</span>
+<span class="n">name</span> <span class="o">=</span><span class="w"> </span><span class="s">"simple-notice"</span>
+<span class="n">version</span> <span class="o">=</span><span class="w"> </span><span class="s">"0.1.0"</span>
+<span class="n">description</span> <span class="o">=</span><span class="w"> </span><span class="s">"Tiny always-on-top notice popup that loads local HTML (MkDocs etc.)"</span>
+<span class="n">readme</span> <span class="o">=</span><span class="w"> </span><span class="s">"README.md"</span>
+<span class="n">requires-python</span> <span class="o">=</span><span class="w"> </span><span class="s">"&gt;=3.9"</span>
+<span class="n">dependencies</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"PySide6&gt;=6.7"</span><span class="p">,</span> <span class="s">"platformdirs&gt;=4.0"</span><span class="p">]</span>
+
+<span class="k">[</span><span class="n">project</span><span class="k">.</span><span class="n">scripts</span><span class="k">]</span>
+<span class="n">simple_notice</span> <span class="o">=</span><span class="w"> </span><span class="s">"simple_notice.__main__:main"</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -1358,117 +1358,117 @@ xcb-util-cursor-0.1.3-4.fc38.x86_64 : Utility for managing cursors in XCB applic
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 </span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">json</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># ---- Qt5 바인딩: PyQt5 우선, 없으면 PySide2 폴백 ----
 </span><span class="n">qt_api</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
-    <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
-    <span class="kn">from</span> <span class="nn">PyQt5.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
-    <span class="n">qt_api</span> <span class="o">=</span> <span class="s">"PyQt5"</span>
+    <span class="kn">from</span> <span class="n">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
+    <span class="kn">from</span> <span class="n">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
+    <span class="kn">from</span> <span class="n">PyQt5.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
+    <span class="n">qt_api</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PyQt5</span><span class="sh">"</span>
 <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
-        <span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
-        <span class="kn">from</span> <span class="nn">PySide2.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
-        <span class="n">qt_api</span> <span class="o">=</span> <span class="s">"PySide2"</span>
+        <span class="kn">from</span> <span class="n">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QUrl</span><span class="p">,</span> <span class="n">Qt</span>
+        <span class="kn">from</span> <span class="n">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
+        <span class="kn">from</span> <span class="n">PySide2.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
+        <span class="n">qt_api</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PySide2</span><span class="sh">"</span>
     <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">"PyQt5(PyQtWebEngine) 또는 PySide2가 필요합니다."</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">PyQt5(PyQtWebEngine) 또는 PySide2가 필요합니다.</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="k">raise</span>
 
-<span class="kn">from</span> <span class="nn">platformdirs</span> <span class="kn">import</span> <span class="n">user_config_dir</span>
+<span class="kn">from</span> <span class="n">platformdirs</span> <span class="kn">import</span> <span class="n">user_config_dir</span>
 
-<span class="n">APP_NAME</span> <span class="o">=</span> <span class="s">"simple_notice"</span>
-<span class="n">ORG_NAME</span> <span class="o">=</span> <span class="s">"local"</span>
+<span class="n">APP_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">simple_notice</span><span class="sh">"</span>
+<span class="n">ORG_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">local</span><span class="sh">"</span>
 <span class="n">SNOOZE_DAYS</span> <span class="o">=</span> <span class="mi">7</span>
 
 <span class="k">def</span> <span class="nf">config_file_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-    <span class="n">cfg_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">user_config_dir</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">ORG_NAME</span><span class="p">))</span>
-    <span class="n">cfg_dir</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cfg_dir</span> <span class="o">/</span> <span class="s">"prefs.json"</span>
+    <span class="n">cfg_dir</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="nf">user_config_dir</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">ORG_NAME</span><span class="p">))</span>
+    <span class="n">cfg_dir</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg_dir</span> <span class="o">/</span> <span class="sh">"</span><span class="s">prefs.json</span><span class="sh">"</span>
 
 <span class="k">def</span> <span class="nf">load_prefs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">config_file_path</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nf">config_file_path</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">json</span><span class="p">.</span><span class="nf">loads</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="nf">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">))</span>
         <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="p">{}</span>
 
 <span class="k">def</span> <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
-    <span class="n">config_file_path</span><span class="p">().</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">prefs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="p">)</span>
+    <span class="nf">config_file_path</span><span class="p">().</span><span class="nf">write_text</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="nf">dumps</span><span class="p">(</span><span class="n">prefs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="sh">"</span><span class="s">utf-8</span><span class="sh">"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">should_skip</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="n">prefs</span> <span class="o">=</span> <span class="n">load_prefs</span><span class="p">()</span>
-    <span class="n">iso</span> <span class="o">=</span> <span class="n">prefs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">)</span>
+    <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+    <span class="n">iso</span> <span class="o">=</span> <span class="n">prefs</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">abs_html_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">iso</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">saved</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
+        <span class="n">saved</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">fromisoformat</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
     <span class="k">except</span> <span class="nb">Exception</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span>
-    <span class="k">return</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">saved</span> <span class="o">&lt;</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">SNOOZE_DAYS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">-</span> <span class="n">saved</span> <span class="o">&lt;</span> <span class="nf">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">SNOOZE_DAYS</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">html_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"User Guide"</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">html_path</span> <span class="o">=</span> <span class="n">html_path</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">html_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sh">"</span><span class="s">User Guide</span><span class="sh">"</span><span class="p">):</span>
+        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">()</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">html_path</span> <span class="o">=</span> <span class="n">html_path</span>
 
-        <span class="bp">self</span><span class="p">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">setWindowFlag</span><span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>  <span class="c1"># 항상 위
-</span>        <span class="bp">self</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowTitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">setWindowFlag</span><span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>  <span class="c1"># 항상 위
+</span>        <span class="n">self</span><span class="p">.</span><span class="nf">resize</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
 
-        <span class="n">root</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="nc">QVBoxLayout</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
 
         <span class="c1"># 중앙 WebView
-</span>        <span class="bp">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">QWebEngineView</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">setUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">.</span><span class="n">fromLocalFile</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)))</span>
-        <span class="n">root</span><span class="p">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">view</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="o">=</span> <span class="nc">QWebEngineView</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="nf">setUrl</span><span class="p">(</span><span class="n">QUrl</span><span class="p">.</span><span class="nf">fromLocalFile</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)))</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># 하단 버튼
-</span>        <span class="n">row</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">btn_snooze</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s">"7일간 다시 열지 않음"</span><span class="p">)</span>
-        <span class="n">btn_close</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s">"닫기"</span><span class="p">)</span>
-        <span class="n">row</span><span class="p">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">row</span><span class="p">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">btn_snooze</span><span class="p">)</span>
-        <span class="n">row</span><span class="p">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">btn_close</span><span class="p">)</span>
-        <span class="n">root</span><span class="p">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</span>        <span class="n">row</span> <span class="o">=</span> <span class="nc">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">btn_snooze</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">7일간 다시 열지 않음</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">btn_close</span> <span class="o">=</span> <span class="nc">QPushButton</span><span class="p">(</span><span class="sh">"</span><span class="s">닫기</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">.</span><span class="nf">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_snooze</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">.</span><span class="nf">addWidget</span><span class="p">(</span><span class="n">btn_close</span><span class="p">)</span>
+        <span class="n">root</span><span class="p">.</span><span class="nf">addLayout</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-        <span class="n">btn_snooze</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">snooze_and_close</span><span class="p">)</span>
-        <span class="n">btn_close</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="n">btn_snooze</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">snooze_and_close</span><span class="p">)</span>
+        <span class="n">btn_close</span><span class="p">.</span><span class="n">clicked</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">close</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">snooze_and_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">prefs</span> <span class="o">=</span> <span class="n">load_prefs</span><span class="p">()</span>
-        <span class="n">prefs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">).</span><span class="n">isoformat</span><span class="p">()</span>
-        <span class="n">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">snooze_and_close</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">prefs</span> <span class="o">=</span> <span class="nf">load_prefs</span><span class="p">()</span>
+        <span class="n">prefs</span><span class="p">[</span><span class="nf">str</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">html_path</span><span class="p">)]</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">(</span><span class="n">timezone</span><span class="p">.</span><span class="n">utc</span><span class="p">).</span><span class="nf">isoformat</span><span class="p">()</span>
+        <span class="nf">save_prefs</span><span class="p">(</span><span class="n">prefs</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">argv</span> <span class="o">=</span> <span class="n">argv</span> <span class="ow">or</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">"Usage: simple_notice_qt5 /absolute/or/relative/path/to/index.html"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Usage: simple_notice_qt5 /absolute/or/relative/path/to/index.html</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="n">html_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">expanduser</span><span class="p">().</span><span class="n">resolve</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">html_path</span><span class="p">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"HTML not found: </span><span class="si">{</span><span class="n">html_path</span><span class="si">}</span><span class="s">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">html_path</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="nf">expanduser</span><span class="p">().</span><span class="nf">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">html_path</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">HTML not found: </span><span class="si">{</span><span class="n">html_path</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">should_skip</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">html_path</span><span class="p">)):</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nf">should_skip</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">html_path</span><span class="p">)):</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
-    <span class="n">win</span> <span class="o">=</span> <span class="n">NoticeWindow</span><span class="p">(</span><span class="n">html_path</span><span class="p">)</span>
-    <span class="n">win</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="n">exec_</span><span class="p">())</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="nc">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="nc">NoticeWindow</span><span class="p">(</span><span class="n">html_path</span><span class="p">)</span>
+    <span class="n">win</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+    <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="n">app</span><span class="p">.</span><span class="nf">exec_</span><span class="p">())</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>사용:</p>
@@ -1596,6 +1596,46 @@ pyinstaller <span class="nt">-F</span> <span class="nt">-n</span> simple_notice_
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/farad/farad-scheduled-run-permission-context/" rel="permalink">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
 </a>
       
@@ -1710,46 +1750,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>

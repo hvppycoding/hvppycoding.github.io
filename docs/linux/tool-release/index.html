@@ -213,7 +213,7 @@
 </code></pre></div></div>
 
 <p>그리고 모든 사용자가 PATH 에서 접근할 수 있도록:</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span> <span class="o">-&gt;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sr">/usr/local/bin/mytool -&gt; /opt/mytool/current/bin/</span><span class="n">mytool</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -345,8 +345,8 @@ conf/secrets.env         <span class="c"># 환경 변수로 비밀 주입(파일
     </ul>
   </li>
   <li>헬스 체크
-    <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span> <span class="o">--</span><span class="n">version</span>
-<span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span> <span class="o">--</span><span class="n">check</span>
+    <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sr">/opt/mytool/releases/1.2.0/bin/</span><span class="n">mytool</span> <span class="o">--</span><span class="n">version</span>
+<span class="sr">/opt/mytool/releases/1.2.0/bin/</span><span class="n">mytool</span> <span class="o">--</span><span class="n">check</span>
 </code></pre></div>    </div>
   </li>
   <li>트래픽/사용 공지 후 <strong>심볼릭 링크 스위치(원자적)</strong>
@@ -380,7 +380,7 @@ conf/secrets.env         <span class="c"># 환경 변수로 비밀 주입(파일
 </ul>
 
 <h1 id="7-공용-path-연결">7) 공용 PATH 연결</h1>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/opt/mytool/current/bin/mytool /usr/local/bin/</span><span class="n">mytool</span>
 <span class="cp"># or /usr/bin if 정책상 허용</span>
 </code></pre></div></div>
 
@@ -439,7 +439,7 @@ python package 에 포함된 툴이고 cli script가 있어
 </code></pre></div></div>
 
 <p>모든 사용자가 PATH에서 접근할 수 있도록:</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span> <span class="o">-&gt;</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">venv</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sr">/usr/local/bin/mytool -&gt; /opt/mytool/current/venv/bin/</span><span class="n">mytool</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -910,7 +910,7 @@ installers에는 gcc.zip 같은 애들 들어있는 상태야. 새폴더를 만�
 </span><span class="err">├─</span> <span class="n">installers</span><span class="o">/</span>                         <span class="c1"># 아카이브/설치 원본(그대로 유지)
 </span><span class="err">│</span>  <span class="err">├─</span> <span class="n">gcc</span><span class="p">.</span><span class="nb">zip</span>
 <span class="err">│</span>  <span class="err">├─</span> <span class="n">mytool</span><span class="o">-</span><span class="mf">1.2</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="p">.</span><span class="n">whl</span>
-<span class="err">│</span>  <span class="err">└─</span> <span class="p">...</span>
+<span class="err">│</span>  <span class="err">└─</span> <span class="bp">...</span>
 <span class="err">├─</span> <span class="n">apps</span><span class="o">/</span>                               <span class="c1"># ← 새로 추가: 실제 “설치된” 툴들의 홈
 </span><span class="err">│</span>  <span class="err">├─</span> <span class="n">mytool</span><span class="o">/</span>
 <span class="err">│</span>  <span class="err">│</span>  <span class="err">├─</span> <span class="n">releases</span><span class="o">/</span>
@@ -926,7 +926,7 @@ installers에는 gcc.zip 같은 애들 들어있는 상태야. 새폴더를 만�
 </span><span class="err">└─</span> <span class="nb">bin</span><span class="o">/</span>
    <span class="err">├─</span> <span class="n">mytool</span>      <span class="o">-&gt;</span> <span class="p">..</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">mytool</span>
    <span class="err">├─</span> <span class="n">otherpython</span> <span class="o">-&gt;</span> <span class="p">..</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">otherpython</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">otherpython</span>
-   <span class="err">└─</span> <span class="p">...</span>
+   <span class="err">└─</span> <span class="bp">...</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -1183,61 +1183,61 @@ installers에는 gcc.zip 같은 애들 들어있는 상태야. 새폴더를 만�
 <p>CLI는 내부적으로 <code class="language-plaintext highlighter-rouge">…/current/share/examples</code> 를 탐색합니다.</p>
 
 <h4 id="python-click-예시-요지">Python (click 예시, 요지)</h4>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span><span class="p">,</span> <span class="n">shutil</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">click</span>
-<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">files</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span><span class="p">,</span> <span class="n">shutil</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">click</span>
+<span class="kn">from</span> <span class="n">importlib.resources</span> <span class="kn">import</span> <span class="n">files</span>
 
-<span class="n">EX_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">realpath</span><span class="p">(</span>
-    <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">executable</span><span class="p">),</span> <span class="s">'..'</span><span class="p">,</span> <span class="s">'..'</span><span class="p">,</span> <span class="s">'share'</span><span class="p">,</span> <span class="s">'examples'</span><span class="p">)</span>
+<span class="n">EX_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">realpath</span><span class="p">(</span>
+    <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">dirname</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">executable</span><span class="p">),</span> <span class="sh">'</span><span class="s">..</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">..</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">share</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">examples</span><span class="sh">'</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">group</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">cli</span><span class="p">():</span> <span class="p">...</span>
+<span class="nd">@click.group</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">cli</span><span class="p">():</span> <span class="bp">...</span>
 
-<span class="o">@</span><span class="n">cli</span><span class="p">.</span><span class="n">group</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">examples</span><span class="p">():</span> <span class="p">...</span>
+<span class="nd">@cli.group</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">examples</span><span class="p">():</span> <span class="bp">...</span>
 
-<span class="o">@</span><span class="n">examples</span><span class="p">.</span><span class="n">command</span><span class="p">(</span><span class="s">'list'</span><span class="p">)</span>
+<span class="nd">@examples.command</span><span class="p">(</span><span class="sh">'</span><span class="s">list</span><span class="sh">'</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">list_examples</span><span class="p">():</span>
-    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">walk</span><span class="p">(</span><span class="n">EX_DIR</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="nf">walk</span><span class="p">(</span><span class="n">EX_DIR</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="n">EX_DIR</span><span class="p">:</span> 
-            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dirs</span><span class="p">):</span>
-                <span class="n">click</span><span class="p">.</span><span class="n">echo</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">dirs</span><span class="p">):</span>
+                <span class="n">click</span><span class="p">.</span><span class="nf">echo</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
             <span class="k">break</span>
 
-<span class="o">@</span><span class="n">examples</span><span class="p">.</span><span class="n">command</span><span class="p">(</span><span class="s">'path'</span><span class="p">)</span>
-<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">argument</span><span class="p">(</span><span class="s">'name'</span><span class="p">)</span>
+<span class="nd">@examples.command</span><span class="p">(</span><span class="sh">'</span><span class="s">path</span><span class="sh">'</span><span class="p">)</span>
+<span class="nd">@click.argument</span><span class="p">(</span><span class="sh">'</span><span class="s">name</span><span class="sh">'</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">EX_DIR</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">click</span><span class="p">.</span><span class="n">echo</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">EX_DIR</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">click</span><span class="p">.</span><span class="nf">echo</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
-<span class="o">@</span><span class="n">examples</span><span class="p">.</span><span class="n">command</span><span class="p">(</span><span class="s">'run'</span><span class="p">)</span>
-<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">argument</span><span class="p">(</span><span class="s">'name'</span><span class="p">)</span>
-<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">'--workdir'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-<span class="o">@</span><span class="n">click</span><span class="p">.</span><span class="n">option</span><span class="p">(</span><span class="s">'--dry-run'</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nd">@examples.command</span><span class="p">(</span><span class="sh">'</span><span class="s">run</span><span class="sh">'</span><span class="p">)</span>
+<span class="nd">@click.argument</span><span class="p">(</span><span class="sh">'</span><span class="s">name</span><span class="sh">'</span><span class="p">)</span>
+<span class="nd">@click.option</span><span class="p">(</span><span class="sh">'</span><span class="s">--workdir</span><span class="sh">'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<span class="nd">@click.option</span><span class="p">(</span><span class="sh">'</span><span class="s">--dry-run</span><span class="sh">'</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">):</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">EX_DIR</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">runsh</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s">'run.sh'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">runsh</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="nb">SystemExit</span><span class="p">(</span><span class="sa">f</span><span class="s">'run.sh not found in </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">workdir</span> <span class="o">=</span> <span class="n">workdir</span> <span class="ow">or</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">'/tmp'</span><span class="p">,</span> <span class="sa">f</span><span class="s">'mytool-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">os</span><span class="p">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">EX_DIR</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">runsh</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="sh">'</span><span class="s">run.sh</span><span class="sh">'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">runsh</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nc">SystemExit</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">run.sh not found in </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">workdir</span> <span class="o">=</span> <span class="n">workdir</span> <span class="ow">or</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="sh">'</span><span class="s">/tmp</span><span class="sh">'</span><span class="p">,</span> <span class="sa">f</span><span class="sh">'</span><span class="s">mytool-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">os</span><span class="p">.</span><span class="nf">makedirs</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="c1"># 필요 파일 복사(원본 예제는 read-only 유지)
-</span>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">(</span><span class="s">'input'</span><span class="p">,</span> <span class="s">'config.yaml'</span><span class="p">):</span>
-        <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-            <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-                <span class="n">shutil</span><span class="p">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">'</span><span class="s">input</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">config.yaml</span><span class="sh">'</span><span class="p">):</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+            <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">workdir</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isdir</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+                <span class="n">shutil</span><span class="p">.</span><span class="nf">copytree</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">shutil</span><span class="p">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s">'bash'</span><span class="p">,</span> <span class="n">runsh</span><span class="p">]</span>
-    <span class="n">click</span><span class="p">.</span><span class="n">echo</span><span class="p">(</span><span class="sa">f</span><span class="s">'Working dir: </span><span class="si">{</span><span class="n">workdir</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
-    <span class="n">click</span><span class="p">.</span><span class="n">echo</span><span class="p">(</span><span class="sa">f</span><span class="s">'Command: </span><span class="si">{</span><span class="s">" "</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="p">.</span><span class="nf">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="sh">'</span><span class="s">bash</span><span class="sh">'</span><span class="p">,</span> <span class="n">runsh</span><span class="p">]</span>
+    <span class="n">click</span><span class="p">.</span><span class="nf">echo</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">Working dir: </span><span class="si">{</span><span class="n">workdir</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">click</span><span class="p">.</span><span class="nf">echo</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="s">Command: </span><span class="si">{</span><span class="sh">"</span><span class="s"> </span><span class="sh">"</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="si">}</span><span class="sh">'</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dry_run</span><span class="p">:</span>
-        <span class="n">subprocess</span><span class="p">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">workdir</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="p">.</span><span class="nf">check_call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">workdir</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
-    <span class="n">cli</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">'</span><span class="s">__main__</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">cli</span><span class="p">()</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -1245,7 +1245,7 @@ installers에는 gcc.zip 같은 애들 들어있는 상태야. 새폴더를 만�
 </blockquote>
 
 <h3 id="b-심볼릭-링크로-직접-노출">B) 심볼릭 링크로 직접 노출</h3>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">myteam</span><span class="o">/</span><span class="kt">RELEASE</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">examples</span> <span class="o">-&gt;</span> <span class="n">current</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">examples</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sr">/user/myteam/RELEASE/apps/mytool/examples -&gt; current/share/</span><span class="n">examples</span>
 </code></pre></div></div>
 
 <p>사용자가 <code class="language-plaintext highlighter-rouge">ls …/apps/mytool/examples</code> 로 빠르게 접근.</p>
@@ -1253,7 +1253,7 @@ installers에는 gcc.zip 같은 애들 들어있는 상태야. 새폴더를 만�
 <h3 id="c-readme에-실행-3줄">C) README에 “실행 3줄”</h3>
 
 <p>예:</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cd</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">myteam</span><span class="o">/</span><span class="kt">RELEASE</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">minimal</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cd</span> <span class="sr">/user/myteam/RELEASE/apps/mytool/current/share/examples/</span><span class="n">minimal</span>
 <span class="n">bash</span> <span class="n">run</span><span class="o">.</span><span class="n">sh</span>
 </code></pre></div></div>
 
@@ -1437,15 +1437,15 @@ whl을 모으는 폴더를 따로 파는건 어때
 <span class="err">├─</span> <span class="n">toolchains</span><span class="o">/</span>                   <span class="c1"># gcc 등
 </span><span class="err">├─</span> <span class="n">installers</span><span class="o">/</span>                   <span class="c1"># 설치 스크립트, zip, tar.gz, 기타 빌드 자원
 </span><span class="err">│</span>  <span class="err">├─</span> <span class="n">gcc</span><span class="p">.</span><span class="nb">zip</span>
-<span class="err">│</span>  <span class="err">└─</span> <span class="p">...</span>
+<span class="err">│</span>  <span class="err">└─</span> <span class="bp">...</span>
 <span class="err">├─</span> <span class="n">wheels</span><span class="o">/</span>                       <span class="c1"># ← 새 폴더: 파이썬 wheel 아카이브만 모아둠
 </span><span class="err">│</span>  <span class="err">├─</span> <span class="n">mytool</span><span class="o">-</span><span class="mf">1.2</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="p">.</span><span class="n">whl</span>
 <span class="err">│</span>  <span class="err">├─</span> <span class="n">mytool</span><span class="o">-</span><span class="mf">1.1</span><span class="p">.</span><span class="mi">3</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="p">.</span><span class="n">whl</span>
 <span class="err">│</span>  <span class="err">├─</span> <span class="n">othertool</span><span class="o">-</span><span class="mf">0.9</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="p">.</span><span class="n">whl</span>
 <span class="err">│</span>  <span class="err">└─</span> <span class="n">constraints</span><span class="o">-</span><span class="mf">1.2</span><span class="p">.</span><span class="mf">0.</span><span class="n">txt</span>      <span class="c1"># (선택) 의존성 고정용 constraints 파일
 </span><span class="err">├─</span> <span class="n">apps</span><span class="o">/</span>                         <span class="c1"># 실제 배포된 실행환경 (venv + current)
-</span><span class="err">│</span>  <span class="err">├─</span> <span class="n">mytool</span><span class="o">/</span><span class="p">...</span>
-<span class="err">│</span>  <span class="err">└─</span> <span class="n">othertool</span><span class="o">/</span><span class="p">...</span>
+</span><span class="err">│</span>  <span class="err">├─</span> <span class="n">mytool</span><span class="o">/</span><span class="bp">...</span>
+<span class="err">│</span>  <span class="err">└─</span> <span class="n">othertool</span><span class="o">/</span><span class="bp">...</span>
 <span class="err">└─</span> <span class="nb">bin</span><span class="o">/</span>                          <span class="c1"># PATH에 추가되는 실행파일 링크 모음
 </span></code></pre></div></div>
 
@@ -1580,34 +1580,34 @@ whl을 모으는 폴더를 따로 파는건 어때
 <h1 id="1-최소-구성-준비-pyprojecttoml">1) 최소 구성 준비 (pyproject.toml)</h1>
 
 <p>프로젝트 루트에 <code class="language-plaintext highlighter-rouge">pyproject.toml</code> 파일을 만듭니다. (예시는 <code class="language-plaintext highlighter-rouge">mytool</code>이라는 CLI를 만든다고 가정)</p>
-<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[build-system]</span>
-<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mi">68</span><span class="s">", "</span><span class="err">wheel</span><span class="s">"]     # 빌드에 필요한 툴</span><span class="err">
-</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">[</span><span class="n">build-system</span><span class="k">]</span>
+<span class="n">requires</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"setuptools&gt;=68"</span><span class="p">,</span> <span class="s">"wheel"</span><span class="p">]</span>     <span class="c"># 빌드에 필요한 툴</span>
+<span class="n">build-backend</span> <span class="o">=</span><span class="w"> </span><span class="s">"setuptools.build_meta"</span>
 
-<span class="nn">[project]</span>
-<span class="py">name</span> <span class="p">=</span> <span class="s">"mytool"</span>                             <span class="c"># 패키지 이름 (pip에서 보이는 이름)</span>
-<span class="py">version</span> <span class="p">=</span> <span class="s">"1.2.0"</span>                           <span class="c"># 버전</span>
-<span class="py">description</span> <span class="p">=</span> <span class="s">"My awesome CLI"</span>
-<span class="py">readme</span> <span class="p">=</span> <span class="s">"README.md"</span>
-<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.9</span><span class="s">"</span><span class="err">
-</span><span class="py">dependencies</span> <span class="p">=</span> <span class="p">[</span>
-  <span class="py">"click&gt;</span><span class="p">=</span><span class="mf">8.1</span><span class="err">.</span><span class="mi">0</span><span class="s">",</span><span class="err">
-</span><span class="p">]</span>
+<span class="k">[</span><span class="n">project</span><span class="k">]</span>
+<span class="n">name</span> <span class="o">=</span><span class="w"> </span><span class="s">"mytool"</span>                             <span class="c"># 패키지 이름 (pip에서 보이는 이름)</span>
+<span class="n">version</span> <span class="o">=</span><span class="w"> </span><span class="s">"1.2.0"</span>                           <span class="c"># 버전</span>
+<span class="n">description</span> <span class="o">=</span><span class="w"> </span><span class="s">"My awesome CLI"</span>
+<span class="n">readme</span> <span class="o">=</span><span class="w"> </span><span class="s">"README.md"</span>
+<span class="n">requires-python</span> <span class="o">=</span><span class="w"> </span><span class="s">"&gt;=3.9"</span>
+<span class="n">dependencies</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span>
+  <span class="s">"click&gt;=8.1.0"</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="c"># console_scripts: 설치 시 생성될 CLI 진입점</span>
-<span class="nn">[project.scripts]</span>
-<span class="py">mytool</span> <span class="p">=</span> <span class="s">"mytool.cli:main"</span>                  <span class="c"># mytool/cli.py 안의 main 함수를 실행</span>
+<span class="k">[</span><span class="n">project</span><span class="k">.</span><span class="n">scripts</span><span class="k">]</span>
+<span class="n">mytool</span> <span class="o">=</span><span class="w"> </span><span class="s">"mytool.cli:main"</span>                  <span class="c"># mytool/cli.py 안의 main 함수를 실행</span>
 
-<span class="nn">[tool.setuptools]</span>
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">]</span>
 <span class="c"># 패키지 자동 탐색</span>
-<span class="nn">packages</span> <span class="o">=</span> <span class="p">{</span> <span class="nn">find</span> <span class="o">=</span> <span class="p">{</span> <span class="py">where</span> <span class="p">=</span> <span class="nn">["src"]</span> <span class="p">}</span> <span class="p">}</span>
+<span class="n">packages</span> <span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">find</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">where</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s">"src"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-<span class="nn">[tool.setuptools.package-dir]</span>
-<span class="py">""</span> <span class="p">=</span> <span class="s">"src"</span>                                  <span class="c"># 소스 루트: src/</span>
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">.</span><span class="n">package-dir</span><span class="k">]</span>
+<span class="s">""</span> <span class="o">=</span><span class="w"> </span><span class="s">"src"</span>                                  <span class="c"># 소스 루트: src/</span>
 
 <span class="c"># 패키지 데이터(예제/템플릿 등) 포함하려면</span>
-<span class="nn">[tool.setuptools.package-data]</span>
-<span class="py">"mytool"</span> <span class="p">=</span> <span class="p">[</span><span class="s">"share/examples/**/*"</span><span class="p">,</span> <span class="s">"py.typed"</span><span class="p">]</span>
+<span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">.</span><span class="n">package-data</span><span class="k">]</span>
+<span class="s">"mytool"</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"share/examples/**/*"</span><span class="p">,</span> <span class="s">"py.typed"</span><span class="p">]</span>
 </code></pre></div></div>
 
 <p>디렉터리 구조 예:</p>
@@ -1742,8 +1742,8 @@ mytool <span class="nt">--help</span>
 
 <ul>
   <li><strong>패키지 내에</strong> <code class="language-plaintext highlighter-rouge">share/examples/...</code>를 두고, 위 <code class="language-plaintext highlighter-rouge">pyproject.toml</code>의
-    <div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[tool.setuptools.package-data]</span>
-<span class="py">"mytool"</span> <span class="p">=</span> <span class="nn">["share/examples/**/*"]</span>
+    <div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">[</span><span class="n">tool</span><span class="k">.</span><span class="n">setuptools</span><span class="k">.</span><span class="n">package-data</span><span class="k">]</span>
+<span class="s">"mytool"</span> <span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">"share/examples/**/*"</span><span class="p">]</span>
 </code></pre></div>    </div>
   </li>
 </ul>
@@ -1752,9 +1752,9 @@ mytool <span class="nt">--help</span>
 
 <ul>
   <li>코드에서 <code class="language-plaintext highlighter-rouge">importlib.resources</code>로 접근하면 설치 위치와 무관하게 읽을 수 있어요:
-    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">files</span>
-<span class="n">ex_dir</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="s">"mytool"</span><span class="p">).</span><span class="n">joinpath</span><span class="p">(</span><span class="s">"share/examples"</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">ex_dir</span><span class="p">)</span>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">importlib.resources</span> <span class="kn">import</span> <span class="n">files</span>
+<span class="n">ex_dir</span> <span class="o">=</span> <span class="nf">files</span><span class="p">(</span><span class="sh">"</span><span class="s">mytool</span><span class="sh">"</span><span class="p">).</span><span class="nf">joinpath</span><span class="p">(</span><span class="sh">"</span><span class="s">share/examples</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">ex_dir</span><span class="p">)</span>
 </code></pre></div>    </div>
   </li>
 </ul>
@@ -1841,8 +1841,8 @@ othertool&gt;<span class="o">=</span>0.9
 </ul>
 
 <p>예시 (<code class="language-plaintext highlighter-rouge">pip.conf</code>):</p>
-<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[global]</span>
-<span class="py">find-links</span> <span class="p">=</span> <span class="s">/user/myteam/RELEASE/wheels</span>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[global]</span><span class="w">
+</span><span class="py">find-links</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/user/myteam/RELEASE/wheels</span>
 </code></pre></div></div>
 
 <p>이렇게 해 두면 모든 pip install 시 자동으로 내부 wheels 경로를 먼저 탐색합니다.</p>
@@ -2153,7 +2153,7 @@ apps 구조 추천
 <h2 id="path-연결팀-공용-실행">PATH 연결(팀 공용 실행)</h2>
 
 <p>팀이 PATH에 추가하는 상위 <code class="language-plaintext highlighter-rouge">bin/</code>에서 각 앱의 엔트리포인트로 링크:</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">myteam</span><span class="o">/</span><span class="kt">RELEASE</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span> <span class="o">-&gt;</span> <span class="o">../</span><span class="n">apps</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">venv</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mytool</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sr">/user/myteam/RELEASE/bin/mytool -&gt; ../apps/mytool/current/venv/bin/</span><span class="n">mytool</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -2409,7 +2409,7 @@ apps 구조 추천
 </span>   <span class="err">│</span>  <span class="err">│</span>  <span class="err">├─</span> <span class="n">share</span><span class="o">/</span>           <span class="c1"># 사용자 자료(예제 등) - 버전 고정
 </span>   <span class="err">│</span>  <span class="err">│</span>  <span class="err">│</span>  <span class="err">└─</span> <span class="n">examples</span><span class="o">/</span>
    <span class="err">│</span>  <span class="err">│</span>  <span class="err">└─</span> <span class="n">docs</span><span class="o">/</span>            <span class="c1"># (선택) 릴리스 노트/가이드
-</span>   <span class="err">│</span>  <span class="err">└─</span> <span class="mf">1.1</span><span class="p">.</span><span class="mi">3</span><span class="o">/</span> <span class="p">...</span>
+</span>   <span class="err">│</span>  <span class="err">└─</span> <span class="mf">1.1</span><span class="p">.</span><span class="mi">3</span><span class="o">/</span> <span class="bp">...</span>
    <span class="err">├─</span> <span class="n">current</span> <span class="o">-&gt;</span> <span class="n">releases</span><span class="o">/</span><span class="mf">1.2</span><span class="p">.</span><span class="mi">0</span>  <span class="c1"># 활성 버전(심볼릭 링크)
 </span>   <span class="err">├─</span> <span class="n">conf</span><span class="o">/</span>                      <span class="c1"># 환경 오버라이드(버전 바뀌어도 유지)
 </span>   <span class="err">├─</span> <span class="n">logs</span><span class="o">/</span>                      <span class="c1"># 로그(쓰기 가능)
@@ -2750,28 +2750,28 @@ SGID가 뭐야? 그리고 conf는 어떻게 읽어?
 </code></pre></div></div>
 
 <p>앱 코드에서는:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span><span class="p">,</span> <span class="n">yaml</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">os</span><span class="p">,</span> <span class="n">yaml</span>
 
-<span class="n">conf_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"MYTOOL_CONFIG_DIR"</span><span class="p">)</span>
-<span class="n">defaults_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"MYTOOL_DEFAULTS_DIR"</span><span class="p">)</span>
+<span class="n">conf_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">MYTOOL_CONFIG_DIR</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">defaults_dir</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">MYTOOL_DEFAULTS_DIR</span><span class="sh">"</span><span class="p">)</span>
 
 <span class="c1"># 1) defaults 읽기
 </span><span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">defaults_dir</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">fname</span><span class="p">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">".yaml"</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">defaults_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">config</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">yaml</span><span class="p">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="nf">listdir</span><span class="p">(</span><span class="n">defaults_dir</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">fname</span><span class="p">.</span><span class="nf">endswith</span><span class="p">(</span><span class="sh">"</span><span class="s">.yaml</span><span class="sh">"</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">defaults_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">yaml</span><span class="p">.</span><span class="nf">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
 
 <span class="c1"># 2) conf 읽어서 덮어쓰기
-</span><span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">conf_dir</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">fname</span><span class="p">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">".yaml"</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">conf_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">config</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">yaml</span><span class="p">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+</span><span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="p">.</span><span class="nf">listdir</span><span class="p">(</span><span class="n">conf_dir</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">fname</span><span class="p">.</span><span class="nf">endswith</span><span class="p">(</span><span class="sh">"</span><span class="s">.yaml</span><span class="sh">"</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">conf_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">yaml</span><span class="p">.</span><span class="nf">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
 </code></pre></div></div>
 
 <h3 id="b-cli-옵션으로-직접-지정">B) CLI 옵션으로 직접 지정</h3>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mytool</span> <span class="o">--</span><span class="n">conf</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">myteam</span><span class="o">/</span><span class="kt">RELEASE</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">conf</span> <span class="p">\</span>
-       <span class="o">--</span><span class="n">defaults</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">myteam</span><span class="o">/</span><span class="kt">RELEASE</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">mytool</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">conf</span><span class="o">.</span><span class="n">defaults</span>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mytool</span> <span class="o">--</span><span class="n">conf</span> <span class="sr">/user/myteam/RELEASE/apps/mytool/</span><span class="n">conf</span> <span class="p">\</span>
+       <span class="o">--</span><span class="n">defaults</span> <span class="sr">/user/myteam/RELEASE/apps/mytool/current/</span><span class="n">conf</span><span class="o">.</span><span class="n">defaults</span>
 </code></pre></div></div>
 
 <h3 id="c-라이브러리-지원">C) 라이브러리 지원</h3>
@@ -3017,130 +3017,130 @@ tcsh 대신 파이썬을 쓰는건 어떻게 생각해?
 <p><code class="language-plaintext highlighter-rouge">/user/myteam/RELEASE/bin/mytool</code> 파일로 저장하고 실행권한 주세요.</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-</span><span class="s">"""
+</span><span class="sh">"""</span><span class="s">
 mytool Python wrapper with version selection and optional toolchains injection.
 
 Place at: /user/myteam/RELEASE/bin/mytool
 chmod +x /user/myteam/RELEASE/bin/mytool
-"""</span>
+</span><span class="sh">"""</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="n">argparse</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">sys</span>
 
 <span class="c1"># ----- configurable -----
-</span><span class="n">BASE</span> <span class="o">=</span> <span class="s">"/user/myteam/RELEASE"</span>
-<span class="n">TOOL</span> <span class="o">=</span> <span class="s">"mytool"</span>
-<span class="n">APP_HOME</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="s">"apps"</span><span class="p">,</span> <span class="n">TOOL</span><span class="p">)</span>
+</span><span class="n">BASE</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/user/myteam/RELEASE</span><span class="sh">"</span>
+<span class="n">TOOL</span> <span class="o">=</span> <span class="sh">"</span><span class="s">mytool</span><span class="sh">"</span>
+<span class="n">APP_HOME</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="sh">"</span><span class="s">apps</span><span class="sh">"</span><span class="p">,</span> <span class="n">TOOL</span><span class="p">)</span>
 
 <span class="c1"># 필요 시 toolchains 경로 주입 (예: gcc)
 </span><span class="n">INJECT_TOOLCHAINS</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">GCC_VERSION</span> <span class="o">=</span> <span class="s">"gcc-12.3.0"</span>
+<span class="n">GCC_VERSION</span> <span class="o">=</span> <span class="sh">"</span><span class="s">gcc-12.3.0</span><span class="sh">"</span>
 <span class="c1"># ------------------------
 </span>
 <span class="k">def</span> <span class="nf">list_versions</span><span class="p">():</span>
-    <span class="n">rel</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="s">"releases"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">rel</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"No releases dir: </span><span class="si">{</span><span class="n">rel</span><span class="si">}</span><span class="s">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">rel</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="sh">"</span><span class="s">releases</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isdir</span><span class="p">(</span><span class="n">rel</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">No releases dir: </span><span class="si">{</span><span class="n">rel</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">1</span>
     <span class="c1"># 파일명 기준 정렬
-</span>    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">rel</span><span class="p">)):</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">rel</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span>    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="nf">listdir</span><span class="p">(</span><span class="n">rel</span><span class="p">)):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">rel</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="nf">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">return</span> <span class="mi">0</span>
 
 <span class="k">def</span> <span class="nf">resolve_target</span><span class="p">(</span><span class="n">requested_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">requested_version</span><span class="p">:</span>
-        <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="s">"current"</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="sh">"</span><span class="s">current</span><span class="sh">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">requested_version</span> <span class="ow">in</span> <span class="p">(</span><span class="s">"latest"</span><span class="p">,</span> <span class="s">"current"</span><span class="p">):</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="s">"current"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">requested_version</span> <span class="ow">in</span> <span class="p">(</span><span class="sh">"</span><span class="s">latest</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">current</span><span class="sh">"</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="sh">"</span><span class="s">current</span><span class="sh">"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="s">"releases"</span><span class="p">,</span> <span class="n">requested_version</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="nb">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s">"Selected version path not found: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="sh">"</span><span class="s">releases</span><span class="sh">"</span><span class="p">,</span> <span class="n">requested_version</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isdir</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nc">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Selected version path not found: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">target</span>
 
 <span class="k">def</span> <span class="nf">find_executable</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="s">"""Prefer Python console_script in venv; fallback to lib/&lt;tool&gt; for non-Python apps."""</span>
-    <span class="n">exe</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">"venv"</span><span class="p">,</span> <span class="s">"bin"</span><span class="p">,</span> <span class="n">TOOL</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">exe</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">access</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">X_OK</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">Prefer Python console_script in venv; fallback to lib/&lt;tool&gt; for non-Python apps.</span><span class="sh">"""</span>
+    <span class="n">exe</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="sh">"</span><span class="s">venv</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">bin</span><span class="sh">"</span><span class="p">,</span> <span class="n">TOOL</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">exe</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="nf">access</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">X_OK</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">exe</span>
-    <span class="n">alt</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">"lib"</span><span class="p">,</span> <span class="n">TOOL</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="n">access</span><span class="p">(</span><span class="n">alt</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">X_OK</span><span class="p">):</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="sh">"</span><span class="s">lib</span><span class="sh">"</span><span class="p">,</span> <span class="n">TOOL</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="p">.</span><span class="nf">access</span><span class="p">(</span><span class="n">alt</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">X_OK</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">alt</span>
-    <span class="k">raise</span> <span class="nb">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s">"Executable not found: </span><span class="si">{</span><span class="n">exe</span><span class="si">}</span><span class="s"> (or </span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="nc">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Executable not found: </span><span class="si">{</span><span class="n">exe</span><span class="si">}</span><span class="s"> (or </span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">build_env</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">copy</span><span class="p">()</span>
 
     <span class="c1"># 앱 공용/버전별 경로 주입
-</span>    <span class="n">env</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">TOOL</span><span class="p">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s">_CONFIG_DIR"</span><span class="p">]</span>   <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="s">"conf"</span><span class="p">)</span>
-    <span class="n">env</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">TOOL</span><span class="p">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s">_DEFAULTS_DIR"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">"conf.defaults"</span><span class="p">)</span>
-    <span class="n">env</span><span class="p">[</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">TOOL</span><span class="p">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s">_LOG_DIR"</span><span class="p">]</span>      <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="s">"logs"</span><span class="p">)</span>
-    <span class="n">env</span><span class="p">[</span><span class="s">"TMPDIR"</span><span class="p">]</span>                       <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="s">"tmp"</span><span class="p">)</span>
+</span>    <span class="n">env</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">TOOL</span><span class="p">.</span><span class="nf">upper</span><span class="p">()</span><span class="si">}</span><span class="s">_CONFIG_DIR</span><span class="sh">"</span><span class="p">]</span>   <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="sh">"</span><span class="s">conf</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">env</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">TOOL</span><span class="p">.</span><span class="nf">upper</span><span class="p">()</span><span class="si">}</span><span class="s">_DEFAULTS_DIR</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="sh">"</span><span class="s">conf.defaults</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">env</span><span class="p">[</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">TOOL</span><span class="p">.</span><span class="nf">upper</span><span class="p">()</span><span class="si">}</span><span class="s">_LOG_DIR</span><span class="sh">"</span><span class="p">]</span>      <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="sh">"</span><span class="s">logs</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">env</span><span class="p">[</span><span class="sh">"</span><span class="s">TMPDIR</span><span class="sh">"</span><span class="p">]</span>                       <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">APP_HOME</span><span class="p">,</span> <span class="sh">"</span><span class="s">tmp</span><span class="sh">"</span><span class="p">)</span>
 
     <span class="c1"># 필요 시 toolchains 주입 (전역 오염 방지: 이 프로세스에서만 반영)
 </span>    <span class="k">if</span> <span class="n">INJECT_TOOLCHAINS</span><span class="p">:</span>
-        <span class="n">gcc_bin</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="s">"toolchains"</span><span class="p">,</span> <span class="n">GCC_VERSION</span><span class="p">,</span> <span class="s">"bin"</span><span class="p">)</span>
-        <span class="n">gcc_lib</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="s">"toolchains"</span><span class="p">,</span> <span class="n">GCC_VERSION</span><span class="p">,</span> <span class="s">"lib64"</span><span class="p">)</span>
-        <span class="n">env</span><span class="p">[</span><span class="s">"PATH"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">gcc_bin</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'PATH'</span><span class="p">,</span><span class="s">''</span><span class="p">)</span><span class="si">}</span><span class="s">"</span>
-        <span class="n">env</span><span class="p">[</span><span class="s">"LD_LIBRARY_PATH"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">gcc_lib</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'LD_LIBRARY_PATH'</span><span class="p">,</span><span class="s">''</span><span class="p">)</span><span class="si">}</span><span class="s">"</span>
+        <span class="n">gcc_bin</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="sh">"</span><span class="s">toolchains</span><span class="sh">"</span><span class="p">,</span> <span class="n">GCC_VERSION</span><span class="p">,</span> <span class="sh">"</span><span class="s">bin</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">gcc_lib</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="sh">"</span><span class="s">toolchains</span><span class="sh">"</span><span class="p">,</span> <span class="n">GCC_VERSION</span><span class="p">,</span> <span class="sh">"</span><span class="s">lib64</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">env</span><span class="p">[</span><span class="sh">"</span><span class="s">PATH</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">gcc_bin</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">env</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">PATH</span><span class="sh">'</span><span class="p">,</span><span class="sh">''</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">env</span><span class="p">[</span><span class="sh">"</span><span class="s">LD_LIBRARY_PATH</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">gcc_lib</span><span class="si">}</span><span class="s">:</span><span class="si">{</span><span class="n">env</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">LD_LIBRARY_PATH</span><span class="sh">'</span><span class="p">,</span><span class="sh">''</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span>
 
     <span class="k">return</span> <span class="n">env</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">(</span>
         <span class="n">prog</span><span class="o">=</span><span class="n">TOOL</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s">"mytool launcher with version selection"</span>
+        <span class="n">description</span><span class="o">=</span><span class="sh">"</span><span class="s">mytool launcher with version selection</span><span class="sh">"</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-h"</span><span class="p">,</span> <span class="s">"--help"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">"store_true"</span><span class="p">)</span>
-    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-L"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">"List available versions"</span><span class="p">)</span>
-    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-P"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">"Print selected executable path and exit"</span><span class="p">)</span>
-    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-v"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">"VERSION"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">"Use specific version (e.g., 1.2.0). 'latest' or 'current' allowed"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-h</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">--help</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">store_true</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-L</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">store_true</span><span class="sh">"</span><span class="p">,</span> <span class="nb">help</span><span class="o">=</span><span class="sh">"</span><span class="s">List available versions</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-P</span><span class="sh">"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">"</span><span class="s">store_true</span><span class="sh">"</span><span class="p">,</span> <span class="nb">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Print selected executable path and exit</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">"</span><span class="s">-v</span><span class="sh">"</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="sh">"</span><span class="s">VERSION</span><span class="sh">"</span><span class="p">,</span> <span class="nb">help</span><span class="o">=</span><span class="sh">"</span><span class="s">Use specific version (e.g., 1.2.0). </span><span class="sh">'</span><span class="s">latest</span><span class="sh">'</span><span class="s"> or </span><span class="sh">'</span><span class="s">current</span><span class="sh">'</span><span class="s"> allowed</span><span class="sh">"</span><span class="p">)</span>
     <span class="c1"># 나머지 인자는 실제 mytool에 그대로 전달
-</span>    <span class="n">args</span><span class="p">,</span> <span class="n">passthrough</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_known_args</span><span class="p">()</span>
+</span>    <span class="n">args</span><span class="p">,</span> <span class="n">passthrough</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="nf">parse_known_args</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">help</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s">"Usage: </span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> [-v &lt;version&gt;] [--] &lt;args...&gt;</span><span class="se">\n</span><span class="s">"</span>
-            <span class="sa">f</span><span class="s">"       </span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> -L        # list versions</span><span class="se">\n</span><span class="s">"</span>
-            <span class="sa">f</span><span class="s">"       </span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> -P [-v &lt;version&gt;]  # print resolved executable path</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
-            <span class="n">end</span><span class="o">=</span><span class="s">""</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="nb">help</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="sh">"</span><span class="s">Usage: </span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> [-v &lt;version&gt;] [--] &lt;args...&gt;</span><span class="se">\n</span><span class="sh">"</span>
+            <span class="sa">f</span><span class="sh">"</span><span class="s">       </span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> -L        # list versions</span><span class="se">\n</span><span class="sh">"</span>
+            <span class="sa">f</span><span class="sh">"</span><span class="s">       </span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> -P [-v &lt;version&gt;]  # print resolved executable path</span><span class="se">\n</span><span class="sh">"</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="sh">""</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="mi">0</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">L</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">list_versions</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nf">list_versions</span><span class="p">()</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">target</span> <span class="o">=</span> <span class="n">resolve_target</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="nf">resolve_target</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">v</span><span class="p">)</span>
     <span class="k">except</span> <span class="nb">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
-        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Use '</span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> -L' to list available versions."</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Use </span><span class="sh">'</span><span class="si">{</span><span class="n">TOOL</span><span class="si">}</span><span class="s"> -L</span><span class="sh">'</span><span class="s"> to list available versions.</span><span class="sh">"</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">3</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">exe</span> <span class="o">=</span> <span class="n">find_executable</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">exe</span> <span class="o">=</span> <span class="nf">find_executable</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
     <span class="k">except</span> <span class="nb">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">4</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">P</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">exe</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">exe</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">0</span>
 
-    <span class="n">env</span> <span class="o">=</span> <span class="n">build_env</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="nf">build_env</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
     <span class="c1"># 실제 실행(현재 프로세스를 교체)
-</span>    <span class="n">os</span><span class="p">.</span><span class="n">execvpe</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="p">[</span><span class="n">exe</span><span class="p">]</span> <span class="o">+</span> <span class="n">passthrough</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+</span>    <span class="n">os</span><span class="p">.</span><span class="nf">execvpe</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="p">[</span><span class="n">exe</span><span class="p">]</span> <span class="o">+</span> <span class="n">passthrough</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="nf">main</span><span class="p">())</span>
     <span class="k">except</span> <span class="nb">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
+        <span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="설치사용-방법-step-by-step">설치/사용 방법 (step-by-step)</h2>
@@ -3301,12 +3301,12 @@ mytool -L
 <p>Python wrapper (앞서 만든 스크립트) 상단에서 <code class="language-plaintext highlighter-rouge">venv/base/bin/python</code> 을 강제 지정하면 됩니다.</p>
 
 <p>예:</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BASE</span> <span class="o">=</span> <span class="s">"/user/myteam/RELEASE"</span>
-<span class="n">PY_BASE</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="s">"venv"</span><span class="p">,</span> <span class="s">"base"</span><span class="p">,</span> <span class="s">"bin"</span><span class="p">,</span> <span class="s">"python3"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BASE</span> <span class="o">=</span> <span class="sh">"</span><span class="s">/user/myteam/RELEASE</span><span class="sh">"</span>
+<span class="n">PY_BASE</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">BASE</span><span class="p">,</span> <span class="sh">"</span><span class="s">venv</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">base</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">bin</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">python3</span><span class="sh">"</span><span class="p">)</span>
 
 <span class="c1"># wrapper가 다른 앱 실행 전에 항상 base venv에서 동작
 </span><span class="k">if</span> <span class="n">sys</span><span class="p">.</span><span class="n">executable</span> <span class="o">!=</span> <span class="n">PY_BASE</span><span class="p">:</span>
-    <span class="n">os</span><span class="p">.</span><span class="n">execv</span><span class="p">(</span><span class="n">PY_BASE</span><span class="p">,</span> <span class="p">[</span><span class="n">PY_BASE</span><span class="p">]</span> <span class="o">+</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">os</span><span class="p">.</span><span class="nf">execv</span><span class="p">(</span><span class="n">PY_BASE</span><span class="p">,</span> <span class="p">[</span><span class="n">PY_BASE</span><span class="p">]</span> <span class="o">+</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>→ 이렇게 하면 어떤 셸에서 실행해도 항상 같은 깨끗한 Python을 wrapper가 사용.</p>
@@ -3385,6 +3385,46 @@ mytool -L
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
     
       
       
@@ -3510,46 +3550,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>

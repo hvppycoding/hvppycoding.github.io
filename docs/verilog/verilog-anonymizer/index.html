@@ -216,85 +216,85 @@
 <p>이를 수행하는 pyverilog 기반 스크립트를 아래에 작성해 드리겠습니다. Pyverilog의 AST를 활용하여 구문을 파싱하고 이름을
 재매핑합니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">from</span> <span class="nn">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="n">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
+<span class="kn">from</span> <span class="n">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="n">os</span>
 
 <span class="k">class</span> <span class="nc">VerilogAnonymizer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s">"MODULE</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="s">"</span>
+    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="s">MODULE</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="sh">"</span>
 
-    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="bp">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="n">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"net</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">net</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"inst</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">inst</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
         <span class="n">description</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">description</span>
 
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">description</span><span class="p">.</span><span class="n">definitions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_module_name</span><span class="p">()</span>
-            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_module_name</span><span class="p">()</span>
+            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="s">'direction'</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="sh">'</span><span class="s">direction</span><span class="sh">'</span><span class="p">):</span>
                         <span class="n">direction</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">direction</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">direction</span> <span class="o">=</span> <span class="s">'in'</span>  <span class="c1"># fallback
-</span>                    <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
-                    <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                        <span class="n">direction</span> <span class="o">=</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span>  <span class="c1"># fallback
+</span>                    <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+                    <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">'name'</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">'portlist'</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">name</span><span class="sh">'</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">portlist</span><span class="sh">'</span><span class="p">):</span>
                         <span class="c1"># Instance
-</span>                        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_instance_name</span><span class="p">()</span>
-                        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
-                    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">'width'</span><span class="p">):</span>
+</span>                        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_instance_name</span><span class="p">()</span>
+                        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">width</span><span class="sh">'</span><span class="p">):</span>
                         <span class="c1"># Net
-</span>                        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_net_name</span><span class="p">()</span>
-                        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+</span>                        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_net_name</span><span class="p">()</span>
+                        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
-        <span class="n">codegen</span> <span class="o">=</span> <span class="n">ASTCodeGenerator</span><span class="p">()</span>
-        <span class="n">anonymized_code</span> <span class="o">=</span> <span class="n">codegen</span><span class="p">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+        <span class="n">codegen</span> <span class="o">=</span> <span class="nc">ASTCodeGenerator</span><span class="p">()</span>
+        <span class="n">anonymized_code</span> <span class="o">=</span> <span class="n">codegen</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">anonymized_code</span>
 
 <span class="c1"># 사용 예시
-</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="s">"input.v"</span>  <span class="c1"># 원본 Verilog 파일
-</span>    <span class="n">anonymizer</span> <span class="o">=</span> <span class="n">VerilogAnonymizer</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="n">anonymize</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="sh">"</span><span class="s">input.v</span><span class="sh">"</span>  <span class="c1"># 원본 Verilog 파일
+</span>    <span class="n">anonymizer</span> <span class="o">=</span> <span class="nc">VerilogAnonymizer</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="nf">anonymize</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"anonymized.v"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="sh">"</span><span class="s">anonymized.v</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -476,122 +476,122 @@ VerilogAnonymizer 수정해줘. 포트 방향이 portlist가 아니라 내부에
 
 <p>아래는 그런 케이스를 포함해 <strong>module 포트 direction을 추적</strong> 하고 난독화하는 수정된 코드입니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">from</span> <span class="nn">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
-<span class="kn">from</span> <span class="nn">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">,</span> <span class="n">Port</span><span class="p">,</span> <span class="n">Portlist</span><span class="p">,</span> <span class="n">Identifier</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="n">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
+<span class="kn">from</span> <span class="n">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">,</span> <span class="n">Port</span><span class="p">,</span> <span class="n">Portlist</span><span class="p">,</span> <span class="n">Identifier</span>
+<span class="kn">import</span> <span class="n">os</span>
 
 <span class="k">class</span> <span class="nc">VerilogAnonymizer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s">"MODULE</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="s">"</span>
+    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="s">MODULE</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="sh">"</span>
 
-    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="bp">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="n">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"net</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">net</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"inst</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">inst</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">collect_port_directions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">collect_port_directions</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
         <span class="n">port_dir_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
-                <span class="n">direction</span> <span class="o">=</span> <span class="s">'in'</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Input</span><span class="p">)</span> <span class="k">else</span> <span class="s">'out'</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Output</span><span class="p">)</span> <span class="k">else</span> <span class="s">'io'</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+                <span class="n">direction</span> <span class="o">=</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Input</span><span class="p">)</span> <span class="k">else</span> <span class="sh">'</span><span class="s">out</span><span class="sh">'</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Output</span><span class="p">)</span> <span class="k">else</span> <span class="sh">'</span><span class="s">io</span><span class="sh">'</span>
                 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
                     <span class="n">port_dir_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">direction</span>
         <span class="k">return</span> <span class="n">port_dir_map</span>
 
-    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
         <span class="n">description</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">description</span>
 
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">description</span><span class="p">.</span><span class="n">definitions</span><span class="p">:</span>
             <span class="c1"># 모듈 이름 변경
 </span>            <span class="n">orig_module_name</span> <span class="o">=</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span>
-            <span class="k">if</span> <span class="n">orig_module_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_module_name</span><span class="p">()</span>
-            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">orig_module_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_module_name</span><span class="p">()</span>
+            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span>
 
             <span class="c1"># 포트 방향 수집
-</span>            <span class="n">port_directions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">collect_port_directions</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">)</span>
+</span>            <span class="n">port_directions</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">collect_port_directions</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">)</span>
 
             <span class="c1"># 포트 이름 변경
 </span>            <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="n">orig_port_name</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span>
-                    <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="s">'in'</span><span class="p">)</span>  <span class="c1"># default 'in'
-</span>                    <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
-                    <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+                    <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># default 'in'
+</span>                    <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                        <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+                    <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
                     <span class="c1"># Port 인자 Identifier 도 바꿔야 함
-</span>                    <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
-                        <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+</span>                    <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                        <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
             <span class="c1"># 내부 선언 및 인스턴스 이름, net 이름 등 처리
 </span>            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">:</span>
                 <span class="c1"># 포트 선언부 이름 변경
-</span>                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+</span>                <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
                     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                            <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                            <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
                 <span class="c1"># net 이름 (wire, reg 등)
-</span>                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">'name'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_net_name</span><span class="p">()</span>
-                    <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+</span>                <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">name</span><span class="sh">'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                        <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_net_name</span><span class="p">()</span>
+                    <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
                 <span class="c1"># 인스턴스 이름
-</span>                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">'instances'</span><span class="p">):</span>
+</span>                <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">instances</span><span class="sh">'</span><span class="p">):</span>
                     <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">instances</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_instance_name</span><span class="p">()</span>
-                        <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_instance_name</span><span class="p">()</span>
+                        <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
                         <span class="c1"># 포트 연결 이름 변경
 </span>                        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">inst</span><span class="p">.</span><span class="n">portlist</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
                                 <span class="n">old</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span>
-                                <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
-                                <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                                <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                                <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
 
         <span class="c1"># 결과 출력
-</span>        <span class="n">codegen</span> <span class="o">=</span> <span class="n">ASTCodeGenerator</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">codegen</span><span class="p">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+</span>        <span class="n">codegen</span> <span class="o">=</span> <span class="nc">ASTCodeGenerator</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">codegen</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
 
 <span class="c1"># 사용 예시
-</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">input_file</span> <span class="o">=</span> <span class="s">"input.v"</span>
-    <span class="n">output_file</span> <span class="o">=</span> <span class="s">"anonymized.v"</span>
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">input_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">input.v</span><span class="sh">"</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">anonymized.v</span><span class="sh">"</span>
 
-    <span class="n">anonymizer</span> <span class="o">=</span> <span class="n">VerilogAnonymizer</span><span class="p">()</span>
-    <span class="n">anonymized_code</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="n">anonymize</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+    <span class="n">anonymizer</span> <span class="o">=</span> <span class="nc">VerilogAnonymizer</span><span class="p">()</span>
+    <span class="n">anonymized_code</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="nf">anonymize</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">anonymized_code</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">anonymized_code</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -652,16 +652,16 @@ Portlist object is not iterable
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 포트 이름 변경
 </span><span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span> <span class="ow">and</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
             <span class="n">orig_port_name</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span>
-            <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="s">'in'</span><span class="p">)</span>  <span class="c1"># default 'in'
-</span>            <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
-            <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># default 'in'
+</span>            <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+            <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
             <span class="c1"># Port 인자 Identifier 도 바꿔야 함
-</span>            <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
-                <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+</span>            <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 </code></pre></div></div>
 
 <hr />
@@ -711,41 +711,41 @@ Portlist object is not iterable
 
 <h3 id="-수정-코드-부분-예시-anonymize-함수-내부">✅ 수정 코드 부분 예시 (<code class="language-plaintext highlighter-rouge">anonymize()</code> 함수 내부)</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="n">InstanceList</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="n">InstanceList</span>
 
 <span class="c1"># 내부 선언 및 인스턴스 이름, net 이름 등 처리
 </span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">:</span>
     <span class="c1"># 포트 선언부 이름 변경
-</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+</span>    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
     <span class="c1"># net 이름 (wire, reg 등)
-</span>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">'name'</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-            <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_net_name</span><span class="p">()</span>
-        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+</span>    <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sh">'</span><span class="s">name</span><span class="sh">'</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_net_name</span><span class="p">()</span>
+        <span class="n">item</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
     <span class="c1"># 인스턴스 리스트 처리
-</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
+</span>    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
         <span class="c1"># 여기에서 instance.module 은 문자열
-</span>        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
-            <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">module</span><span class="p">]</span>
+</span>        <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+            <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">module</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">instances</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_instance_name</span><span class="p">()</span>
-            <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_instance_name</span><span class="p">()</span>
+            <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
             <span class="c1"># 포트 연결 이름 변경
 </span>            <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">inst</span><span class="p">.</span><span class="n">portlist</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
                     <span class="n">old</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span>
-                    <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                        <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
-                    <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                        <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                        <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                        <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
 </code></pre></div></div>
 
 <hr />
@@ -839,134 +839,134 @@ Portlist object is not iterable
 
 <h3 id="-전체-코드">📜 전체 코드</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">from</span> <span class="nn">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
-<span class="kn">from</span> <span class="nn">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="p">(</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="n">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
+<span class="kn">from</span> <span class="n">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">,</span> <span class="n">Port</span><span class="p">,</span> <span class="n">Portlist</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">,</span>
     <span class="n">InstanceList</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Decl</span><span class="p">,</span> <span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span>
 <span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">VerilogAnonymizer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s">"MODULE</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="s">"</span>
+    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="s">MODULE</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="sh">"</span>
 
-    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="bp">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="n">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"net</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">net</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"inst</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">inst</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">collect_port_directions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">collect_port_directions</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
         <span class="n">port_dir_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
-                <span class="n">direction</span> <span class="o">=</span> <span class="s">'in'</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Input</span><span class="p">)</span> <span class="k">else</span> <span class="s">'out'</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Output</span><span class="p">)</span> <span class="k">else</span> <span class="s">'io'</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+                <span class="n">direction</span> <span class="o">=</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Input</span><span class="p">)</span> <span class="k">else</span> <span class="sh">'</span><span class="s">out</span><span class="sh">'</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Output</span><span class="p">)</span> <span class="k">else</span> <span class="sh">'</span><span class="s">io</span><span class="sh">'</span>
                 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
                     <span class="n">port_dir_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">direction</span>
         <span class="k">return</span> <span class="n">port_dir_map</span>
 
-    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
         <span class="n">description</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">description</span>
 
         <span class="c1"># 1차: 모든 모듈 이름 미리 변경
 </span>        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">description</span><span class="p">.</span><span class="n">definitions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_module_name</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_module_name</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">description</span><span class="p">.</span><span class="n">definitions</span><span class="p">:</span>
             <span class="n">orig_module_name</span> <span class="o">=</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span>
-            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span>
+            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span>
 
             <span class="c1"># 포트 방향 수집
-</span>            <span class="n">port_directions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">collect_port_directions</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">)</span>
+</span>            <span class="n">port_directions</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">collect_port_directions</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">)</span>
 
             <span class="c1"># 포트 이름 변경
 </span>            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span> <span class="ow">and</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
                         <span class="n">orig_port_name</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span>
-                        <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="s">'in'</span><span class="p">)</span>  <span class="c1"># 기본값 in
-</span>                        <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
-                        <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+                        <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># 기본값 in
+</span>                        <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+                        <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
                         <span class="c1"># 연결된 식별자도 변경
-</span>                        <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
-                            <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+</span>                        <span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                            <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
             <span class="c1"># 내부 선언 처리
 </span>            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">:</span>
                 <span class="c1"># input/output/inout 포트 이름 변경
-</span>                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+</span>                <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
                     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                            <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                            <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
                 <span class="c1"># wire, reg 등 net 이름 변경
-</span>                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Decl</span><span class="p">):</span>
+</span>                <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Decl</span><span class="p">):</span>
                     <span class="k">for</span> <span class="n">decl</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="nb">list</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span><span class="p">)):</span>
-                            <span class="k">if</span> <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                                <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_net_name</span><span class="p">()</span>
-                            <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span><span class="p">)):</span>
+                            <span class="k">if</span> <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                                <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_net_name</span><span class="p">()</span>
+                            <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
                 <span class="c1"># 인스턴스 모듈명 및 인스턴스 이름 변경
-</span>                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
-                        <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">module</span><span class="p">]</span>
+</span>                <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+                        <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">module</span><span class="p">]</span>
                     <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">instances</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_instance_name</span><span class="p">()</span>
-                        <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_instance_name</span><span class="p">()</span>
+                        <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
                         <span class="c1"># 포트 연결 이름 변경
 </span>                        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">inst</span><span class="p">.</span><span class="n">portlist</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
                                 <span class="n">old</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span>
-                                <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
-                                <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                                <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                                <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
 
         <span class="c1"># 최종 코드 생성
-</span>        <span class="n">codegen</span> <span class="o">=</span> <span class="n">ASTCodeGenerator</span><span class="p">()</span>
-        <span class="n">anonymized_code</span> <span class="o">=</span> <span class="n">codegen</span><span class="p">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+</span>        <span class="n">codegen</span> <span class="o">=</span> <span class="nc">ASTCodeGenerator</span><span class="p">()</span>
+        <span class="n">anonymized_code</span> <span class="o">=</span> <span class="n">codegen</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">anonymized_code</span>
 
 <span class="c1"># 예제 실행
-</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">input_file</span> <span class="o">=</span> <span class="s">"input.v"</span>          <span class="c1"># 원본 Verilog
-</span>    <span class="n">output_file</span> <span class="o">=</span> <span class="s">"anonymized.v"</span>    <span class="c1"># 결과 저장
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">input_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">input.v</span><span class="sh">"</span>          <span class="c1"># 원본 Verilog
+</span>    <span class="n">output_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">anonymized.v</span><span class="sh">"</span>    <span class="c1"># 결과 저장
 </span>
-    <span class="n">anonymizer</span> <span class="o">=</span> <span class="n">VerilogAnonymizer</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="n">anonymize</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+    <span class="n">anonymizer</span> <span class="o">=</span> <span class="nc">VerilogAnonymizer</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="nf">anonymize</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Anonymized Verilog written to: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Anonymized Verilog written to: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -1032,8 +1032,8 @@ Port object has no attribute first
 
 <h3 id="-문제-원인-정리">🔍 문제 원인 정리</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
-    <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+    <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 </code></pre></div></div>
 
 <p>이 코드는 <strong><code class="language-plaintext highlighter-rouge">.first</code>가 없는 <code class="language-plaintext highlighter-rouge">Port</code> 객체에 접근</strong>하면서 에러가 발생하는 것입니다.</p>
@@ -1061,10 +1061,10 @@ Port object has no attribute first
 
 <h3 id="-안전한-수정-코드">✅ 안전한 수정 코드</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="s">"first"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="sh">"</span><span class="s">first</span><span class="sh">"</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
     <span class="n">old</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span>
-    <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-        <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+        <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
 </code></pre></div></div>
 
 <p>또는 더 확실하게 하려면, <code class="language-plaintext highlighter-rouge">.first</code> 있는 경우만 수정하도록 조건 분기:</p>
@@ -1072,16 +1072,16 @@ Port object has no attribute first
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 포트 이름 변경
 </span><span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span> <span class="ow">and</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
             <span class="n">orig_port_name</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span>
-            <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="s">'in'</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
-            <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+            <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
             <span class="c1"># first 필드가 Identifier일 때만 수정
-</span>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="s">"first"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
-                <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+</span>            <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="sh">"</span><span class="s">first</span><span class="sh">"</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 </code></pre></div></div>
 
 <hr />
@@ -1150,19 +1150,19 @@ Port object has no attribute first
 
 <h3 id="-수정-코드-포트-선언부-제대로-바꾸기">✅ 수정 코드: 포트 선언부 제대로 바꾸기</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Decl</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Decl</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">decl</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="nb">list</span><span class="p">:</span>
         <span class="c1"># 포트 선언
-</span>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+</span>        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">decl</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                    <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                    <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
         <span class="c1"># net 선언 (wire, reg 등)
-</span>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_net_name</span><span class="p">()</span>
-            <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+</span>        <span class="k">elif</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_net_name</span><span class="p">()</span>
+            <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 </code></pre></div></div>
 
 <hr />
@@ -1244,131 +1244,131 @@ Port object has no attribute first
 
 <h2 id="-전체-코드-1">📜 전체 코드</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">from</span> <span class="nn">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
-<span class="kn">from</span> <span class="nn">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="p">(</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pyverilog.vparser.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="n">pyverilog.ast_code_generator.codegen</span> <span class="kn">import</span> <span class="n">ASTCodeGenerator</span>
+<span class="kn">from</span> <span class="n">pyverilog.vparser.ast</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">,</span> <span class="n">Port</span><span class="p">,</span> <span class="n">Portlist</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">,</span>
     <span class="n">InstanceList</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Decl</span><span class="p">,</span> <span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span>
 <span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">VerilogAnonymizer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s">"MODULE</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="s">"</span>
+    <span class="k">def</span> <span class="nf">get_new_module_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">module_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="s">MODULE</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">module_count</span><span class="si">:</span><span class="mi">02</span><span class="n">d</span><span class="si">}</span><span class="sh">"</span>
 
-    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="bp">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">direction</span><span class="si">}{</span><span class="n">self</span><span class="p">.</span><span class="n">port_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">port_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"net</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_net_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">net</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">net_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">net_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"inst</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="s">"</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">def</span> <span class="nf">get_new_instance_name</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">inst</span><span class="si">{</span><span class="n">self</span><span class="p">.</span><span class="n">instance_count</span><span class="si">}</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">collect_port_directions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">collect_port_directions</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
         <span class="n">port_dir_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
-                <span class="n">direction</span> <span class="o">=</span> <span class="s">'in'</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Input</span><span class="p">)</span> <span class="k">else</span> <span class="s">'out'</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Output</span><span class="p">)</span> <span class="k">else</span> <span class="s">'io'</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+                <span class="n">direction</span> <span class="o">=</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Input</span><span class="p">)</span> <span class="k">else</span> <span class="sh">'</span><span class="s">out</span><span class="sh">'</span> <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Output</span><span class="p">)</span> <span class="k">else</span> <span class="sh">'</span><span class="s">io</span><span class="sh">'</span>
                 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
                     <span class="n">port_dir_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">direction</span>
         <span class="k">return</span> <span class="n">port_dir_map</span>
 
-    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">anonymize</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">ast</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">parse</span><span class="p">([</span><span class="n">filename</span><span class="p">])</span>
         <span class="n">description</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">description</span>
 
         <span class="c1"># 모든 모듈 이름 미리 mapping
 </span>        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">description</span><span class="p">.</span><span class="n">definitions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_module_name</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+                <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">module</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_module_name</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">description</span><span class="p">.</span><span class="n">definitions</span><span class="p">:</span>
             <span class="n">orig_module_name</span> <span class="o">=</span> <span class="n">module</span><span class="p">.</span><span class="n">name</span>
-            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span>
+            <span class="n">module</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">orig_module_name</span><span class="p">]</span>
 
             <span class="c1"># 포트 방향 수집
-</span>            <span class="n">port_directions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">collect_port_directions</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">)</span>
+</span>            <span class="n">port_directions</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">collect_port_directions</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">)</span>
 
             <span class="c1"># 포트 이름 변경
 </span>            <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span> <span class="ow">and</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">portlist</span><span class="p">.</span><span class="n">ports</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">Port</span><span class="p">)</span> <span class="ow">and</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span><span class="p">:</span>
                         <span class="n">orig_port_name</span> <span class="o">=</span> <span class="n">port</span><span class="p">.</span><span class="n">name</span>
-                        <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="s">'in'</span><span class="p">)</span>  <span class="c1"># default 'in'
-</span>                        <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
-                        <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+                        <span class="n">direction</span> <span class="o">=</span> <span class="n">port_directions</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">orig_port_name</span><span class="p">,</span> <span class="sh">'</span><span class="s">in</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># default 'in'
+</span>                        <span class="k">if</span> <span class="n">orig_port_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_port_name</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+                        <span class="n">port</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
-                        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="s">"first"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
-                            <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nf">hasattr</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="sh">"</span><span class="s">first</span><span class="sh">"</span><span class="p">)</span> <span class="ow">and</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                            <span class="n">port</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">orig_port_name</span><span class="p">]</span>
 
             <span class="c1"># 내부 선언 및 인스턴스 처리
 </span>            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">module</span><span class="p">.</span><span class="n">items</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Decl</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Decl</span><span class="p">):</span>
                     <span class="k">for</span> <span class="n">decl</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="nb">list</span><span class="p">:</span>
                         <span class="c1"># 포트 선언 변경
-</span>                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
+</span>                        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">Inout</span><span class="p">)):</span>
                             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">decl</span><span class="p">.</span><span class="n">names</span><span class="p">:</span>
-                                <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                                    <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                                <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                                    <span class="n">name</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">name</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
                         <span class="c1"># wire, reg 등 net 이름 변경
-</span>                        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span><span class="p">)):</span>
-                            <span class="k">if</span> <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                                <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_net_name</span><span class="p">()</span>
-                            <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+</span>                        <span class="k">elif</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">decl</span><span class="p">,</span> <span class="p">(</span><span class="n">Wire</span><span class="p">,</span> <span class="n">Reg</span><span class="p">)):</span>
+                            <span class="k">if</span> <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                                <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_net_name</span><span class="p">()</span>
+                            <span class="n">decl</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">decl</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">InstanceList</span><span class="p">):</span>
                     <span class="c1"># 인스턴스 대상 모듈 이름 변경
-</span>                    <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
-                        <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">module</span><span class="p">]</span>
+</span>                    <span class="k">if</span> <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">:</span>
+                        <span class="n">item</span><span class="p">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">module_map</span><span class="p">[</span><span class="n">item</span><span class="p">.</span><span class="n">module</span><span class="p">]</span>
 
                     <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">item</span><span class="p">.</span><span class="n">instances</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_new_instance_name</span><span class="p">()</span>
-                        <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">:</span>
+                            <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">get_new_instance_name</span><span class="p">()</span>
+                        <span class="n">inst</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">inst_map</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">name</span><span class="p">]</span>
 
                         <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">inst</span><span class="p">.</span><span class="n">portlist</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">):</span>
                                 <span class="n">old</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span>
-                                <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
-                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
-                                <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
-                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                                <span class="k">if</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">:</span>
+                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">port_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
+                                <span class="k">elif</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">:</span>
+                                    <span class="n">conn</span><span class="p">.</span><span class="n">argname</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">net_map</span><span class="p">[</span><span class="n">old</span><span class="p">]</span>
 
         <span class="c1"># 최종 코드 출력
-</span>        <span class="n">codegen</span> <span class="o">=</span> <span class="n">ASTCodeGenerator</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">codegen</span><span class="p">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+</span>        <span class="n">codegen</span> <span class="o">=</span> <span class="nc">ASTCodeGenerator</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">codegen</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
 
 <span class="c1"># 사용 예시
-</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">input_file</span> <span class="o">=</span> <span class="s">"input.v"</span>           <span class="c1"># 원본 Verilog 파일
-</span>    <span class="n">output_file</span> <span class="o">=</span> <span class="s">"anonymized.v"</span>     <span class="c1"># 결과 파일
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="sh">"</span><span class="s">__main__</span><span class="sh">"</span><span class="p">:</span>
+    <span class="n">input_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">input.v</span><span class="sh">"</span>           <span class="c1"># 원본 Verilog 파일
+</span>    <span class="n">output_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">anonymized.v</span><span class="sh">"</span>     <span class="c1"># 결과 파일
 </span>
-    <span class="n">anonymizer</span> <span class="o">=</span> <span class="n">VerilogAnonymizer</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="n">anonymize</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+    <span class="n">anonymizer</span> <span class="o">=</span> <span class="nc">VerilogAnonymizer</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">anonymizer</span><span class="p">.</span><span class="nf">anonymize</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="sh">"</span><span class="s">w</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Anonymized Verilog written to: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Anonymized Verilog written to: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -1478,6 +1478,46 @@ Port object has no attribute first
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
     
       
       
@@ -1603,46 +1643,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
 
     <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/test/html-passthrough-test/" rel="permalink">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T11:53:05+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기
 </p>
   </article>
 </div>
