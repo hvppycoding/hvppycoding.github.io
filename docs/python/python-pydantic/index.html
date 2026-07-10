@@ -203,14 +203,14 @@ pydantic이 뭔지, 왜 쓰는건지 장단점 등을 설명해줘
 <p><code class="language-plaintext highlighter-rouge">Pydantic</code>은 Python의 <code class="language-plaintext highlighter-rouge">dataclass</code>와 비슷한 구조를 가지고 있지만, <strong>입력 데이터의 타입을 강제하고 유효성을 검사</strong>
 합니다. 핵심은 "type hints를 이용해서 런타임에서 실제로 검사한다"는 점입니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="n">u</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">123</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>  <span class="c1"># id는 str이지만 int로 자동 변환됨
-</span><span class="nf">print</span><span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>  <span class="c1"># 123
+<span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'123'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'Alice'</span><span class="p">)</span>  <span class="c1"># id는 str이지만 int로 자동 변환됨
+</span><span class="k">print</span><span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>  <span class="c1"># 123
 </span></code></pre></div></div>
 
 <hr />
@@ -319,13 +319,13 @@ pydantic이 뭔지, 왜 쓰는건지 장단점 등을 설명해줘
 
 <h2 id="-예시-타입이-안-맞을-때">❌ 예시: 타입이 안 맞을 때</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">abc</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'abc'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이렇게 실행하면 아래와 같은 <code class="language-plaintext highlighter-rouge">ValidationError</code>가 발생합니다:</p>
@@ -345,9 +345,9 @@ name
 
 <h2 id="-예시-자동-변환이-가능한-경우">✅ 예시: 자동 변환이 가능한 경우</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">42</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Alice</span><span class="sh">'</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>    <span class="c1"># 42 (str → int 자동 변환)
-</span><span class="nf">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># 'Alice'
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'42'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'Alice'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nb">id</span><span class="p">)</span>    <span class="c1"># 42 (str → int 자동 변환)
+</span><span class="k">print</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># 'Alice'
 </span></code></pre></div></div>
 
 <p>자동 형변환이 가능한 경우에는 문제없이 처리됩니다. 하지만 <strong>불가능한 경우는 예외 발생</strong>.</p>
@@ -358,12 +358,12 @@ name
 
 <p>물론 try-except로 예외를 잡을 수도 있습니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="nc">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sh">'</span><span class="s">xyz</span><span class="sh">'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">Bob</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">'xyz'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'Bob'</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="nf">json</span><span class="p">())</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">json</span><span class="p">())</span>
 </code></pre></div></div>
 
 <p>출력 예시:</p>
@@ -455,6 +455,46 @@ name
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/gpt-5-6-api-guide/" rel="permalink">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-10T16:37:24+09:00">2026-07-10</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</p>
+  </article>
+</div>
+
     
       
       
@@ -581,46 +621,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
   Farad · Architecture Review
   The Goal Harness &amp; its interaction with the Query ...</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/claude/claude-code-loop-functions/" rel="permalink">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
   </article>
 </div>
 

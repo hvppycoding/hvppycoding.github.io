@@ -221,16 +221,16 @@ python dotenv가 뭐야?
 </code></pre></div>    </div>
   </li>
   <li>Python 코드에서 사용:
-    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">import</span> <span class="n">os</span>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span> <span class="nn">os</span>
      
-<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># .env 파일을 불러옴
+<span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># .env 파일을 불러옴
 </span>     
-<span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">SECRET_KEY</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_HOST</span><span class="sh">"</span><span class="p">)</span>
-<span class="n">db_port</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">DB_PORT</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"SECRET_KEY"</span><span class="p">)</span>
+<span class="n">db_host</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"DB_HOST"</span><span class="p">)</span>
+<span class="n">db_port</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"DB_PORT"</span><span class="p">)</span>
      
-<span class="nf">print</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">db_host</span><span class="p">,</span> <span class="n">db_port</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">db_host</span><span class="p">,</span> <span class="n">db_port</span><span class="p">)</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -268,7 +268,7 @@ python dotenv가 뭐야?
 
 <h3 id="디폴트-동작">디폴트 동작</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">load_dotenv</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">load_dotenv</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>아무 인자 없이 호출하면, <strong>현재 작업 디렉토리(working directory)</strong>에서 <code class="language-plaintext highlighter-rouge">.env</code> 파일을 찾습니다. 즉,
@@ -287,8 +287,8 @@ python dotenv가 뭐야?
 
 <p>만약 <code class="language-plaintext highlighter-rouge">.env</code> 파일이 다른 위치에 있다면 이렇게 명시할 수 있습니다:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="nf">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="sh">"</span><span class="s">/absolute/or/relative/path/to/.env</span><span class="sh">"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s">"/absolute/or/relative/path/to/.env"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <hr />
@@ -337,7 +337,7 @@ python dotenv가 뭐야?
 
 <p>예: 당신이 만든 패키지가 환경변수로부터 API 키를 받도록 설계되어 있다면,</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">MY_API_KEY</span><span class="sh">"</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"MY_API_KEY"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이건 결국 유저가 <code class="language-plaintext highlighter-rouge">.env</code>에 그 값을 넣거나, 직접 환경변수를 설정해야 한다는 뜻입니다.</p>
@@ -395,16 +395,16 @@ with the following:
 </ul>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ❌ 이렇게 하면 안 됩니다 (라이브러리 내부에 hardcoded)
-</span><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="nf">load_dotenv</span><span class="p">()</span>
+</span><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
 
 <span class="c1"># ✅ 이렇게 하세요 (환경변수는 바깥에서 정해진다고 가정)
-</span><span class="kn">import</span> <span class="n">os</span>
+</span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="k">def</span> <span class="nf">connect</span><span class="p">():</span>
-    <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">MY_API_KEY</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"MY_API_KEY"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="nc">RuntimeError</span><span class="p">(</span><span class="sh">"</span><span class="s">MY_API_KEY not set in environment</span><span class="sh">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="nb">RuntimeError</span><span class="p">(</span><span class="s">"MY_API_KEY not set in environment"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>유저가 환경변수를 직접 설정할 수 있도록 문서에만 안내하면 됩니다.</p>
@@ -632,11 +632,11 @@ with the following:
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app.py
-</span><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="nf">load_dotenv</span><span class="p">()</span>  <span class="c1"># 실행 시점에서 한 번만 호출
+</span><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># 실행 시점에서 한 번만 호출
 </span>
-<span class="kn">import</span> <span class="n">os</span>
-<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="nf">getenv</span><span class="p">(</span><span class="sh">"</span><span class="s">API_KEY</span><span class="sh">"</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"API_KEY"</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>이건 <code class="language-plaintext highlighter-rouge">my_app</code>이라는 <strong>애플리케이션을 실행</strong> 하는 입장이므로 <code class="language-plaintext highlighter-rouge">.env</code> 사용이 매우 적절합니다.</p>
@@ -646,8 +646,8 @@ with the following:
 <h2 id="-예-pypi-패키지로-배포되는-코드">❌ 예: PyPI 패키지로 배포되는 코드</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># wrong_package/init.py
-</span><span class="kn">from</span> <span class="n">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>  <span class="c1"># ❌ 하지 말아야 함
-</span><span class="nf">load_dotenv</span><span class="p">()</span>
+</span><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>  <span class="c1"># ❌ 하지 말아야 함
+</span><span class="n">load_dotenv</span><span class="p">()</span>
 </code></pre></div></div>
 
 <p>이러면 라이브러리를 쓰는 유저 입장에서 <strong>자기 코드도 안 썼는데 이상하게<code class="language-plaintext highlighter-rouge">.env</code>를 요구</strong>하는 상황이 발생할 수 있습니다.<br />
@@ -718,6 +718,46 @@ with the following:
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/gpt-5-6-api-guide/" rel="permalink">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-10T16:37:24+09:00">2026-07-10</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</p>
+  </article>
+</div>
+
     
       
       
@@ -844,46 +884,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
   Farad · Architecture Review
   The Goal Harness &amp; its interaction with the Query ...</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/claude/claude-code-loop-functions/" rel="permalink">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
   </article>
 </div>
 

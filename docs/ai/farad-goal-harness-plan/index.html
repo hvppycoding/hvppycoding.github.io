@@ -266,7 +266,7 @@ turn/token/time budget이 끝나면 자동 continuation을 멈추거나 pause/ex
 
 <p>초기 dataclass:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GoalState</span><span class="p">:</span>
     <span class="n">schema_version</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">goal_id</span><span class="p">:</span> <span class="nb">str</span>
@@ -283,10 +283,10 @@ turn/token/time budget이 끝나면 자동 continuation을 멈추거나 pause/ex
     <span class="n">auto_turn_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">total_turn_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">blocked_streak</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">blocked_fingerprint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">""</span>
-    <span class="n">blocked_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">""</span>
-    <span class="n">last_evidence_summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">""</span>
-    <span class="n">last_status_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">""</span>
+    <span class="n">blocked_fingerprint</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="n">blocked_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="n">last_evidence_summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="n">last_status_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">""</span>
 </code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">GoalStatus</code>:</p>
@@ -392,7 +392,7 @@ per-session lock으로 보호한다.</li>
 
 <p>Extend <code class="language-plaintext highlighter-rouge">AsyncSession._run_turn(trigger=...)</code> literal with:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sh">"</span><span class="s">goal</span><span class="sh">"</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"goal"</span>
 </code></pre></div></div>
 
 <p>Meaning: the run was started by the Goal harness without a new human message.</p>
@@ -496,9 +496,9 @@ system/control text stays English per project convention.</p>
 
 <p>After <code class="language-plaintext highlighter-rouge">AgentRunEnded</code> bookkeeping, <code class="language-plaintext highlighter-rouge">AsyncSession</code> asks:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">decision</span> <span class="o">=</span> <span class="n">goal_service</span><span class="p">.</span><span class="nf">should_continue</span><span class="p">(</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">decision</span> <span class="o">=</span> <span class="n">goal_service</span><span class="p">.</span><span class="n">should_continue</span><span class="p">(</span>
     <span class="n">session_id</span><span class="p">,</span>
-    <span class="n">has_pending_user_input</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="nf">_postbox_pending_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">has_pending_user_input</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">_postbox_pending_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">last_outcome</span><span class="o">=</span><span class="n">outcome</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div></div>
@@ -666,8 +666,8 @@ immediate continuation, not a durable future job.</li>
 
 <p>Add app signals:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">goal_updated</span> <span class="o">=</span> <span class="nc">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>      <span class="c1"># session_id, serialized GoalState
-</span><span class="n">goal_continuation</span> <span class="o">=</span> <span class="nc">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="c1"># session_id, decision/status metadata
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">goal_updated</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>      <span class="c1"># session_id, serialized GoalState
+</span><span class="n">goal_continuation</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="c1"># session_id, decision/status metadata
 </span></code></pre></div></div>
 
 <p>Use <code class="language-plaintext highlighter-rouge">goal_updated</code> for UI projection and history/sidebar refresh.</p>
@@ -889,6 +889,46 @@ Recommendation: require <code class="language-plaintext highlighter-rouge">evide
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/ai/gpt-5-6-api-guide/" rel="permalink">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-10T16:37:24+09:00">2026-07-10</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
 </a>
       
@@ -1004,46 +1044,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
   Farad · Architecture Review
   The Goal Harness &amp; its interaction with the Query ...</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/claude/claude-code-loop-functions/" rel="permalink">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
   </article>
 </div>
 

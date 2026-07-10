@@ -537,36 +537,36 @@ from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 <h3 id="2-링크-클릭-정책을-담당하는-page-클래스-추가">2) 링크 클릭 정책을 담당하는 Page 클래스 추가</h3>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BrowserPage</span><span class="p">(</span><span class="n">QWebEnginePage</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
 
-    <span class="k">def</span> <span class="nf">acceptNavigationRequest</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">nav_type</span><span class="p">,</span> <span class="n">isMainFrame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">acceptNavigationRequest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">nav_type</span><span class="p">,</span> <span class="n">isMainFrame</span><span class="p">):</span>
         <span class="c1"># 페이지 안에서 실제로 사용자가 링크를 클릭했을 때만 관여
 </span>        <span class="k">if</span> <span class="n">nav_type</span> <span class="o">==</span> <span class="n">QWebEnginePage</span><span class="p">.</span><span class="n">NavigationTypeLinkClicked</span><span class="p">:</span>
-            <span class="n">mods</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">.</span><span class="nf">keyboardModifiers</span><span class="p">()</span>
+            <span class="n">mods</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">.</span><span class="n">keyboardModifiers</span><span class="p">()</span>
             <span class="c1"># Ctrl(Win/Linux) 또는 Cmd(macOS) 눌린 상태면 "새 탭(백그라운드)"로 열기
 </span>            <span class="k">if</span> <span class="n">mods</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">ControlModifier</span> <span class="o">|</span> <span class="n">Qt</span><span class="p">.</span><span class="n">MetaModifier</span><span class="p">):</span>
-                <span class="n">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">.</span><span class="nf">add_new_tab</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">switch_to</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>  <span class="c1"># 백그라운드
+                <span class="bp">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">.</span><span class="n">add_new_tab</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">switch_to</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>  <span class="c1"># 백그라운드
 </span>                <span class="k">return</span> <span class="bp">False</span>  <span class="c1"># 현재 탭 내비게이션은 막음
-</span>        <span class="k">return</span> <span class="nf">super</span><span class="p">().</span><span class="nf">acceptNavigationRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">nav_type</span><span class="p">,</span> <span class="n">isMainFrame</span><span class="p">)</span>
+</span>        <span class="k">return</span> <span class="nb">super</span><span class="p">().</span><span class="n">acceptNavigationRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">nav_type</span><span class="p">,</span> <span class="n">isMainFrame</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h3 id="3-webview에-우리-page를-붙이고-createwindow-정책도-맞추기">3) WebView에 우리 Page를 붙이고, createWindow 정책도 맞추기</h3>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BrowserWebView</span><span class="p">(</span><span class="n">QWebEngineView</span><span class="p">):</span>
-    <span class="sh">"""</span><span class="s">새 창 요청(=새 탭 열기)과 Ctrl/Cmd 클릭 정책을 처리</span><span class="sh">"""</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
-        <span class="nf">super</span><span class="p">().</span><span class="nf">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">main_window</span><span class="p">)</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
+    <span class="s">"""새 창 요청(=새 탭 열기)과 Ctrl/Cmd 클릭 정책을 처리"""</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">main_window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
         <span class="c1"># 이 뷰는 항상 우리가 정의한 Page를 사용
-</span>        <span class="n">self</span><span class="p">.</span><span class="nf">setPage</span><span class="p">(</span><span class="nc">BrowserPage</span><span class="p">(</span><span class="n">main_window</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">self</span><span class="p">))</span>
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">setPage</span><span class="p">(</span><span class="n">BrowserPage</span><span class="p">(</span><span class="n">main_window</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">createWindow</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">createWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">):</span>
         <span class="c1"># target=_blank, window.open(), (환경에 따라) Ctrl/Cmd+클릭 등으로 새 창 요청이 올 때
-</span>        <span class="n">mods</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">.</span><span class="nf">keyboardModifiers</span><span class="p">()</span>
+</span>        <span class="n">mods</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">.</span><span class="n">keyboardModifiers</span><span class="p">()</span>
         <span class="c1"># Ctrl/Cmd가 눌리면 백그라운드, 아니면 포그라운드로 전환
 </span>        <span class="n">switch_to</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">mods</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Qt</span><span class="p">.</span><span class="n">ControlModifier</span> <span class="o">|</span> <span class="n">Qt</span><span class="p">.</span><span class="n">MetaModifier</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">.</span><span class="nf">add_blank_tab</span><span class="p">(</span><span class="n">switch_to</span><span class="o">=</span><span class="n">switch_to</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">main_window</span><span class="p">.</span><span class="n">add_blank_tab</span><span class="p">(</span><span class="n">switch_to</span><span class="o">=</span><span class="n">switch_to</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h3 id="4-새-탭을-만들-때-page-시그널은-기존대로-연결하면-됩니다">4) 새 탭을 만들 때 Page 시그널은 기존대로 연결하면 됩니다</h3>
@@ -664,6 +664,46 @@ from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
   
   <h2 class="page__related-title">You may also enjoy</h2>
   <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai/gpt-5-6-api-guide/" rel="permalink">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-10T16:37:24+09:00">2026-07-10</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</p>
+  </article>
+</div>
+
     
       
       
@@ -790,46 +830,6 @@ Farad Goal Harness — Architecture &amp; Query-Loop Interaction
 
   Farad · Architecture Review
   The Goal Harness &amp; its interaction with the Query ...</p>
-  </article>
-</div>
-
-    
-      
-      
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/claude/claude-code-loop-functions/" rel="permalink">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</a>
-      
-    </h2>
-    
-
-  <p class="page__meta">
-    
-      
-      <span class="page__meta-date">
-        <!-- hvppycoding: remove date icon
-        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
-        -->
-        
-        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
-      </span>
-    
-
-    
-
-    
-  </p>
-
-
-    <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
-</p>
   </article>
 </div>
 

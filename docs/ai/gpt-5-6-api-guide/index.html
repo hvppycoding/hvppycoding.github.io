@@ -1,0 +1,602 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략 - ARCHIVE</title>
+<meta name="description" content="GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략">
+<meta property="og:url" content="https://hvppycoding.github.io/ai/gpt-5-6-api-guide/">
+
+
+  <meta property="og:description" content="GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-07-10T16:37:24+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/ai/gpt-5-6-api-guide/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략">
+    <meta itemprop="description" content="GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략">
+    <meta itemprop="datePublished" content="2026-07-10T16:37:24+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/ai/gpt-5-6-api-guide/" itemprop="url">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-10T16:37:24+09:00">2026-07-10</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="gpt-56-api-모델-가이드-핵심-기능과-마이그레이션-전략">GPT-5.6 API 모델 가이드: 핵심 기능과 마이그레이션 전략</h1>
+
+<blockquote>
+  <p>이 글은 OpenAI의 <a href="https://developers.openai.com/api/docs/guides/latest-model">GPT-5.6 모델 가이드</a>를 바탕으로, API를 운영하는 개발자가 빠르게 적용 판단을 내릴 수 있도록 핵심을 한국어로 재구성한 실무 요약입니다. 원문은 수시로 변경될 수 있으므로 실제 도입 전에는 공식 문서를 확인하세요.</p>
+</blockquote>
+
+<h2 id="한눈에-보기">한눈에 보기</h2>
+
+<p>GPT-5.6은 복잡한 프로덕션 워크플로를 겨냥한 최신 모델 계열이다. OpenAI는 고난도 작업에서의 품질과 토큰 효율을 함께 높였으며, 특히 웹·앱 UI를 만들 때 레이아웃, 정보 위계, 시각적 판단이 좋아졌다고 안내한다.</p>
+
+<p>API에서 <code class="language-plaintext highlighter-rouge">gpt-5.6</code> 별칭은 최상위 성능의 <code class="language-plaintext highlighter-rouge">gpt-5.6-sol</code>로 연결된다. 비용과 처리량 요구가 다르면 다음 계열 중 하나를 고르면 된다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>모델</th>
+      <th>권장 용도</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gpt-5.6-sol</code></td>
+      <td>가장 높은 품질이 필요한 복잡한 작업</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gpt-5.6-terra</code></td>
+      <td>지능과 비용의 균형이 필요한 일반 프로덕션 작업</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gpt-5.6-luna</code></td>
+      <td>대량 처리와 효율이 중요한 워크로드</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>모델 문자열만 바꾸는 방식은 충분하지 않다. 기존 GPT-5.5 또는 GPT-5.4 설정을 출발점으로 삼되, 대표 업무에서 같은 추론 수준과 한 단계 낮은 수준을 함께 평가하는 것이 좋다. 더 적은 토큰으로 같은 품질을 내는 경우가 많지만, 최적점은 업무마다 다르다.</p>
+
+<h2 id="새로-검토할-기능">새로 검토할 기능</h2>
+
+<h3 id="프로그램-방식-도구-호출">프로그램 방식 도구 호출</h3>
+
+<p>Programmatic Tool Calling(PTC)은 모델이 호스팅된 실행 환경에서 JavaScript를 작성해, 허용된 도구를 호출하고 결과를 가공·전달하도록 한다. 많은 도구 결과를 필터링, 조인, 정렬, 중복 제거, 집계하거나 검증한 뒤 작은 구조화 결과만 돌려줘야 할 때 특히 적합하다.</p>
+
+<p>다만 여러 번의 도구 호출이 있다는 이유만으로 PTC를 선택할 필요는 없다. 호출 결과가 작거나, 매 결과마다 모델의 다음 판단이 달라지거나, 승인 절차가 포함되거나, 최종 결과에 원본 인용·아티팩트를 보존해야 한다면 일반적인 직접 도구 호출이 더 명확하다. PTC를 쓴다면 허용 도구, 출력 스키마, 재시도·중단 한계, 직접 호출로 남길 단계를 프롬프트에 구체적으로 적는다.</p>
+
+<h3 id="멀티에이전트-베타">멀티에이전트 베타</h3>
+
+<p>Responses API의 멀티에이전트 기능은 하나의 GPT-5.6 인스턴스가 독립적인 하위 작업을 병렬로 조율하고 결과를 합치도록 돕는다. 조사, 비교, 코드·문서 검토처럼 분리 가능한 작업 흐름에서 응답 시간을 줄이고 결과 품질을 높일 여지가 있다. 베타 기능이므로 실제 서비스에 적용하기 전에는 실패 처리, 비용, 관측성을 포함해 충분히 검증해야 한다.</p>
+
+<h3 id="프롬프트-캐시와-추론-문맥">프롬프트 캐시와 추론 문맥</h3>
+
+<p>프롬프트 캐시는 자동 모드로도 계속 사용할 수 있다. GPT-5.6에서는 재사용할 프롬프트 접두부를 명시적으로 표시하는 방식도 지원한다. 캐시 읽기는 할인되지만 캐시 쓰기는 일반 입력보다 높은 단가가 적용될 수 있으므로, <code class="language-plaintext highlighter-rouge">cached_tokens</code>와 <code class="language-plaintext highlighter-rouge">cache_write_tokens</code>를 함께 관찰해 전체 비용이 실제로 줄었는지 확인한다. 기존 <code class="language-plaintext highlighter-rouge">prompt_cache_retention</code>을 사용했다면 <code class="language-plaintext highlighter-rouge">prompt_cache_options.ttl</code>로 옮기는 계획도 세운다.</p>
+
+<p>여러 턴에 걸친 작업이라면 <code class="language-plaintext highlighter-rouge">reasoning.context</code>를 검토한다. 목표와 가정, 우선순위가 계속 유지될 때는 <code class="language-plaintext highlighter-rouge">all_turns</code>와 <code class="language-plaintext highlighter-rouge">previous_response_id</code> 조합이 이전 추론을 활용하는 데 유용하다. 이전 판단이 더 이상 맞지 않는 업무라면 <code class="language-plaintext highlighter-rouge">current_turn</code>이 더 안전하다. 수동으로 히스토리를 관리하거나 저장을 끈 환경에서는, 필요한 입력과 응답 항목 및 암호화된 추론 항목을 빠짐없이 다시 보내는 설계가 필요하다.</p>
+
+<h3 id="추론-수준과-pro-모드">추론 수준과 Pro 모드</h3>
+
+<p>GPT-5.6은 <code class="language-plaintext highlighter-rouge">none</code>, <code class="language-plaintext highlighter-rouge">low</code>, <code class="language-plaintext highlighter-rouge">medium</code>, <code class="language-plaintext highlighter-rouge">high</code>, <code class="language-plaintext highlighter-rouge">xhigh</code>, <code class="language-plaintext highlighter-rouge">max</code> 추론 수준을 지원한다. 일반적으로 <code class="language-plaintext highlighter-rouge">medium</code>은 균형 잡힌 시작점이고, 지연 시간이 중요한 경우 <code class="language-plaintext highlighter-rouge">low</code>, 검증과 탐색이 실질적인 품질 향상을 만드는 경우 <code class="language-plaintext highlighter-rouge">high</code> 또는 <code class="language-plaintext highlighter-rouge">xhigh</code>를 평가한다. <code class="language-plaintext highlighter-rouge">max</code>는 가장 어려운 품질 우선 업무에만 두고 <code class="language-plaintext highlighter-rouge">xhigh</code>와 직접 비교하는 편이 좋다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">reasoning.mode: "pro"</code>는 별도 모델명이 아니라 Responses API의 실행 모드다. 어려운 최적화, 고가치 코드 작업, 심층 분석처럼 품질 향상이 결과에 크게 영향을 주는 경우에 고려한다. 응답은 하나의 최종 답으로 돌아오며 지연 시간과 사용 토큰이 늘어날 수 있다. Pro 모드와 추론 수준은 독립적이므로, 표준 모드의 기준 구성과 같은 모델·수준부터 비교한다. 프롬프트에서 “더 오래 생각하라”고 요구하기보다 API 요청에서 모드를 설정하고 목표·근거·성공 기준을 명확히 쓰는 편이 낫다.</p>
+
+<h2 id="프롬프트를-가볍게-만드는-방법">프롬프트를 가볍게 만드는 방법</h2>
+
+<p>GPT-5.6은 장황한 시스템 프롬프트보다 필요한 제약만 남긴 짧은 프롬프트에서 좋은 결과를 낼 수 있다. 오래된 지시와 예시를 계속 누적하면, 불필요한 탐색과 반복 검증으로 지연·비용이 오히려 커질 수 있다.</p>
+
+<ul>
+  <li>작업을 안정적으로 끝내는 최소 프롬프트와 최소 도구 집합에서 시작한다.</li>
+  <li>평가에서 드러난 구체적 실패를 해결할 때만 지시, 도구, 예시를 추가한다.</li>
+  <li>도구 설명은 반환 형식과 오류 처리를 알 수 있을 만큼만 간결하고 정확하게 유지한다.</li>
+  <li>프론트엔드·형식·문체 지시는 제품 고유의 요구일 때만 둔다.</li>
+  <li>시작 문맥뿐 아니라 턴이 쌓인 뒤의 문맥 크기도 측정한다.</li>
+</ul>
+
+<p>특히 “짧게 답하라” 같은 일반적인 축약 지시는 필요한 산출물까지 줄일 수 있다. 분량을 강제하기보다, 결론을 먼저 제시하고 근거·중요한 주의점·다음 행동은 유지하되 인사말, 반복, 선택적 배경 설명부터 덜어 내도록 지시하는 편이 안전하다.</p>
+
+<h2 id="자율성과-권한을-명확히-정하기">자율성과 권한을 명확히 정하기</h2>
+
+<p>GPT-5.6은 적극적으로 작업을 이어갈 수 있으므로, 요청이 허용하는 행동 범위를 간단히 선언하는 것이 중요하다. 예를 들어 답변·분석·검토·계획 요청에서는 자료를 조사하고 결과만 보고하며, 변경·구현·수정 요청에서는 범위 안의 로컬 변경과 비파괴 검증을 수행하도록 구분할 수 있다. 외부 쓰기, 파괴적 작업, 구매, 범위의 큰 확장은 확인을 요구한다.</p>
+
+<p>파일 읽기, 로그 확인, 검색, 범위 안 코드 편집, 비파괴 테스트처럼 별도 승인 없이 가능한 행동도 분명히 적어 둔다. 반대로 “먼저 물어봐”나 “변경하지 마” 같은 문구를 여러 곳에서 되풀이하면, 안전한 일반 작업까지 불필요하게 멈출 수 있다.</p>
+
+<h2 id="운영안전성-고려-사항">운영·안전성 고려 사항</h2>
+
+<p>실시간 사이버·생물학 오용 분류기가 응답 생성 중 작동할 수 있다. 이 때문에 일부 요청은 거절되거나, 생성 중 검토 시간만큼 지연될 수 있다. 방어적 보안 연구나 디버깅처럼 정당한 작업에도 드물게 영향을 줄 수 있으므로, 제품의 오류 안내와 재시도 경험을 설계할 때 이를 고려한다.</p>
+
+<p>개별 최종 사용자를 상대하는 서비스라면 요청마다 안정적이고 개인정보를 직접 드러내지 않는 <code class="language-plaintext highlighter-rouge">safety_identifier</code>를 보내는 방식을 검토한다.</p>
+
+<h2 id="마이그레이션-체크리스트">마이그레이션 체크리스트</h2>
+
+<ol>
+  <li>대표적인 실제 업무와 성공 기준을 정한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">sol</code>·<code class="language-plaintext highlighter-rouge">terra</code>·<code class="language-plaintext highlighter-rouge">luna</code> 중 목표 품질, 비용, 처리량에 맞는 모델을 고른다.</li>
+  <li>기존 추론 수준을 기준선으로 두고, 한 단계 낮은 수준과 함께 비교한다.</li>
+  <li>추론·도구·다중 턴 흐름에는 Responses API를 사용한다.</li>
+  <li>캐시 읽기·쓰기 토큰, 전체 토큰, 지연 시간, 비용을 함께 기록한다.</li>
+  <li>작업 성공률, 최종 답의 완결성, 요구된 근거 충족 여부를 측정한다.</li>
+  <li>필요한 경우에만 Pro 모드, PTC, 멀티에이전트를 단계적으로 켠다.</li>
+  <li>줄어든 호출 수나 중간 결과가 사용자에게 보이는 품질을 낮추지 않았는지 마지막으로 확인한다.</li>
+</ol>
+
+<h2 id="참고-자료">참고 자료</h2>
+
+<ul>
+  <li><a href="https://developers.openai.com/api/docs/guides/latest-model">OpenAI 공식 GPT-5.6 모델 가이드</a></li>
+  <li><a href="https://developers.openai.com/api/docs/guides/migrate-to-responses">Responses API 소개</a></li>
+  <li><a href="https://developers.openai.com/api/docs/guides/reasoning">추론 가이드</a></li>
+  <li><a href="https://developers.openai.com/api/docs/guides/prompt-caching">프롬프트 캐싱 가이드</a></li>
+  <li><a href="https://developers.openai.com/api/docs/guides/tools-programmatic-tool-calling">Programmatic Tool Calling 가이드</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#ai" class="page__taxonomy-item p-category" rel="tag">ai</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-07-10T16:37:24+09:00">2026-07-10</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/farad/lightweight-html-viewer/" class="pagination--pager" title="경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/lightweight-html-viewer/" rel="permalink">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 <code class="language-plaintext highlighter-rouge">hview</code>)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-04T13:21:02+09:00">2026-07-04</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">경량 HTML 뷰어 검토 — 에이전트 HTML 산출물용 별도 프로세스 뷰어 (가칭 hview)
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/farad-scheduled-run-permission-context/" rel="permalink">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-03T13:32:58+09:00">2026-07-03</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/goal-harness-architecture/" rel="permalink">Farad Goal 하네스 설계와 Query Loop 상호작용
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-26T00:05:22+09:00">2026-06-26</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+
+Farad Goal Harness — Architecture &amp; Query-Loop Interaction
+
+
+
+
+  Farad · Architecture Review
+  The Goal Harness &amp; its interaction with the Query ...</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/claude/claude-code-loop-functions/" rel="permalink">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-06-25T22:08:45+09:00">2026-06-25</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
