@@ -388,4 +388,10 @@ var store = [{
         "tags": [],
         "url": "/farad/claude-code-workflow-vs-farad-orchestrate-workflow/",
         "teaser": null
+      },{
+        "title": "OpenCode · Claude Code · Codex · Farad 아키텍처 비교 조사 방법론",
+        "excerpt":"OpenCode · Claude Code · Codex · Farad 아키텍처 비교 조사 방법론      전체 보고서 인덱스    목표   네 제품을 기능 체크리스트가 아니라 다음 질문으로 비교한다.      제품이 최적화하는 사용 환경과 핵심 루프는 무엇인가?   상태와 변경 권위는 어느 계층·프로세스·스레드가 소유하는가?   모델 호출, 컨텍스트 조립, 도구 실행, 권한, 세션 영속화의 데이터 흐름은 무엇인가?   MCP·skills·plugins·agents 등 확장은 어느 경계에서 발견·로딩·실행되는가?   실패·취소·재개·압축·동시성·격리·관측성을 어떻게 다루는가?   규모가 커질 때 hot path와 운영 비용은 어떤 구조적 한계를 갖는가?   Farad가 다른 제품에서 배워야 할 것과 의도적으로 달라야 할 것은 무엇인가?   공통 평가축      제품 경계와 배포 형태   프로세스·스레드·클라이언트/서버 토폴로지   에이전트 루프와 상태 머신   컨텍스트·transcript·compaction   도구·MCP·권한·sandbox   세션·resume·branch/fork   멀티에이전트·background work·동시성   configuration·instruction·memory   확장 모델(skills, plugins, hooks, custom agents)   UI/UX와 human-in-the-loop   모델/provider 결합도   장애 경계·취소·재시도·관측성   보안·신뢰 경계   성능·대규모 상태·원격/NFS 운영   테스트 가능성·모듈 경계·변경 용이성   증거 규칙      A — 1차 구현 증거: 공개 소스의 특정 파일·타입·함수, Farad 현재 소스와 테스트.   B — 1차 문서 증거: 제품 공식 문서, 공식 저장소 문서, 공식 변경 이력.   C — 관찰 증거: 저장된 요청/응답 캡처나 재현 가능한 실행 관찰. 구현 세부의 확정 근거로는 제한한다.   D — 추론: A~C에서 도출한 해석. 보고서에서 사실과 분리하고 반증 가능성을 적는다.   문서의 마케팅 표현은 런타임 보장으로 승격하지 않는다. 비공개 구현은 관찰 가능한 계약까지만 서술한다. 공개 소스 제품도 현재 브랜치의 구현과 안정된 사용자 계약을 구분한다.   시간·버전 기준      조사 기준일: 2026-07-13 (Asia/Seoul)   웹 자료는 가능한 한 공식 도메인과 공식 GitHub 저장소를 사용한다.   공개 저장소 분석에는 확인한 commit/tag를 기록한다.   Farad는 사용자 변경을 포함한 현재 worktree를 기준으로 하되, 기존 변경을 수정하지 않는다.   판정 원칙      기능 수보다 핵심 use case에서의 응집도와 실패 시 예측 가능성을 높게 평가한다.   서로 다른 제품 형태(CLI, client/server TUI, 데스크톱 앱)를 동일 UX 잣대로 억지 환산하지 않는다.   Farad 권고는 authority → thread/process → flow → hot path → persistence → failure boundary 순서로 검토한다.   Farad의 explicit refresh, NFS 비용, 누적 10,000개, transcript 재현성, UI/async 경계 계약은 편의 기능보다 우선하는 설계 제약으로 취급한다.  ","categories": ["research"],
+        "tags": [],
+        "url": "/research/coding-agent-comparison-methodology/",
+        "teaser": null
       }]
