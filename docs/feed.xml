@@ -1,4 +1,1110 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-14T00:05:57+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Claude Code 제품·런타임·아키텍처 심층 분석</title><link href="https://hvppycoding.github.io/research/claude-code-architecture-analysis/" rel="alternate" type="text/html" title="Claude Code 제품·런타임·아키텍처 심층 분석" /><published>2026-07-13T23:52:00+09:00</published><updated>2026-07-13T23:52:00+09:00</updated><id>https://hvppycoding.github.io/research/claude-code-architecture-analysis</id><content type="html" xml:base="https://hvppycoding.github.io/research/claude-code-architecture-analysis/"><![CDATA[<h1 id="claude-code-제품런타임아키텍처-심층-분석">Claude Code 제품·런타임·아키텍처 심층 분석</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-14T00:06:05+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Codex 제품·런타임·아키텍처 심층 분석</title><link href="https://hvppycoding.github.io/research/codex-architecture-analysis/" rel="alternate" type="text/html" title="Codex 제품·런타임·아키텍처 심층 분석" /><published>2026-07-13T23:53:00+09:00</published><updated>2026-07-13T23:53:00+09:00</updated><id>https://hvppycoding.github.io/research/codex-architecture-analysis</id><content type="html" xml:base="https://hvppycoding.github.io/research/codex-architecture-analysis/"><![CDATA[<h1 id="codex-제품런타임아키텍처-심층-분석">Codex 제품·런타임·아키텍처 심층 분석</h1>
+
+<blockquote>
+  <p><a href="https://hvppycoding.github.io/research/coding-agent-architecture-comparison/">전체 보고서 인덱스</a></p>
+</blockquote>
+
+<blockquote>
+  <p>조사 기준일: 2026-07-13 (Asia/Seoul)<br />
+공개 소스 스냅샷: <code class="language-plaintext highlighter-rouge">openai/codex@2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8</code><br />
+로컬 실행 관찰: 설치된 <code class="language-plaintext highlighter-rouge">codex-cli</code> 0.144.1<br />
+분석 범위: Codex CLI/core, app-server, non-interactive interface, 로컬 sandbox,
+subagent/thread, tools/MCP/skills/plugins, 저장·복구 구조. 호스티드 Codex 내부 구현은
+공개 계약 이상으로 추정하지 않는다.</p>
+</blockquote>
+
+<h2 id="1-결론부터">1. 결론부터</h2>
+
+<p>Codex의 핵심은 “좋은 터미널 UI”보다 훨씬 아래에 있다. 공개 Rust 구현에서 확인되는 본체는
+다음 네 가지가 결합된 <strong>이벤트 기반 thread/turn 실행 커널</strong>이다.</p>
+
+<ol>
+  <li>클라이언트가 <code class="language-plaintext highlighter-rouge">Submission</code>을 넣고 <code class="language-plaintext highlighter-rouge">Event</code>를 받는 queue-pair 계약</li>
+  <li>thread마다 한 번에 하나의 active task만 허용하면서 interrupt/steer/approval을 같은 순서열로
+직렬화하는 session authority</li>
+  <li>모델에 노출할 tool schema와 실제 dispatch registry를 분리한 per-step tool plan</li>
+  <li>JSONL을 durable replay 원본으로, SQLite를 조회용 metadata projection으로 두는 저장 경계</li>
+</ol>
+
+<p>이 설계 덕분에 TUI, IDE, app-server, <code class="language-plaintext highlighter-rouge">codex exec</code>가 같은 엔진을 서로 다른 표면으로 사용할 수
+있다. 동시에 운영 복잡도도 높다. core에 auth, model/provider, MCP, extensions, hooks, skills,
+permissions, sandbox, telemetry, storage, subagent graph가 한 session 수명 안에서 만나므로, 강한 타입과
+세밀한 concurrency protocol이 없으면 유지하기 어려운 구조다.</p>
+
+<p>한 문장으로 평가하면 다음과 같다.</p>
+
+<blockquote>
+  <p><strong>Codex는 공개 로컬 구현에서 surface-agnostic agent runtime과 OS-enforced execution boundary,
+replay 가능한 thread protocol을 특히 강하게 결합한다. 대신 OpenAI 제품 생태계와 거대한 Rust workspace에
+최적화되어 있어, Farad가 통째로 모방할 대상이 아니라 경계와 불변식만 선별할 대상이다.</strong></p>
+</blockquote>
+
+<p>위 결론과 뒤의 판정표는 공개 구현 <code class="language-plaintext highlighter-rouge">A</code>와 공식 계약 <code class="language-plaintext highlighter-rouge">B</code>에서 도출한 <code class="language-plaintext highlighter-rouge">D</code> 등급의 비교 평가다.
+메커니즘의 존재를 실제 운영 품질, 특정 규모의 성능, 비공개 제품 surface의 구현 동일성으로
+승격하지 않는다.</p>
+
+<h2 id="2-증거-등급과-분석-한계">2. 증거 등급과 분석 한계</h2>
+
+<p>이 보고서는 <a href="https://hvppycoding.github.io/research/coding-agent-comparison-methodology/">공통 방법론</a>의 등급을 따른다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>근거</th>
+      <th style="text-align: right">등급</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CLI/core/app-server 내부 구조</td>
+      <td>고정 commit의 공개 Rust 소스</td>
+      <td style="text-align: right">A</td>
+    </tr>
+    <tr>
+      <td>sandbox, cloud task, subagent의 사용자 계약</td>
+      <td>공식 Codex 문서</td>
+      <td style="text-align: right">B</td>
+    </tr>
+    <tr>
+      <td>로컬 설치 버전</td>
+      <td><code class="language-plaintext highlighter-rouge">codex --version</code> 실행 관찰</td>
+      <td style="text-align: right">C</td>
+    </tr>
+    <tr>
+      <td>ChatGPT/Codex 호스티드 backend 내부</td>
+      <td>공개되지 않음</td>
+      <td style="text-align: right">판단 보류</td>
+    </tr>
+    <tr>
+      <td>Farad에 미치는 함의</td>
+      <td>A/B 근거에서 도출한 분석</td>
+      <td style="text-align: right">D</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>중요한 제한은 두 가지다.</p>
+
+<ul>
+  <li>공개 저장소는 매우 빠르게 변한다. 여기서 말하는 class/module 이름과 line anchor는 위 commit에
+고정한다.</li>
+  <li>로컬 <code class="language-plaintext highlighter-rouge">codex-cli</code> 0.144.1은 실행 환경의 버전 표지일 뿐이며, 위 source commit과 binary가 byte-level
+동일 build라고 단정하지 않는다.</li>
+  <li>Codex App/Web의 모든 backend가 이 로컬 core와 동일하게 동작한다고 단정하지 않는다. 공식 문서가
+명시한 컨테이너·권한·task 계약만 제품 사실로 취급한다.</li>
+</ul>
+
+<h2 id="3-제품-표면과-공유-코어">3. 제품 표면과 공유 코어</h2>
+
+<p>공개 README는 Codex CLI를 로컬 coding agent로 정의하고 IDE, desktop app, Codex Web을 별도
+surface로 안내한다. 로컬 쪽에서 가장 중요한 통합 경계는 <code class="language-plaintext highlighter-rouge">codex-core</code>와 <code class="language-plaintext highlighter-rouge">app-server</code>다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>표면</th>
+      <th>주 사용 방식</th>
+      <th>실행 위치</th>
+      <th>자동화/통합 경계</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CLI/TUI</td>
+      <td>대화형 로컬 작업</td>
+      <td>사용자 호스트</td>
+      <td>core queue/event + TUI</td>
+    </tr>
+    <tr>
+      <td>IDE</td>
+      <td>편집기 안 대화·diff·승인</td>
+      <td>사용자 호스트</td>
+      <td>app-server protocol</td>
+    </tr>
+    <tr>
+      <td>custom rich client / remote TUI</td>
+      <td>자체 client 또는 원격 TUI</td>
+      <td>local/remote host</td>
+      <td>experimental JSON-RPC app-server</td>
+    </tr>
+    <tr>
+      <td>Codex app</td>
+      <td>데스크톱 planning·review·interactive work</td>
+      <td>desktop product</td>
+      <td>공개 문서만으로 내부 app-server topology 미확인</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">codex exec</code></td>
+      <td>CI·script·pipeline</td>
+      <td>사용자/CI host</td>
+      <td>stdout/stderr 또는 JSONL</td>
+    </tr>
+    <tr>
+      <td>Codex cloud</td>
+      <td>branch checkout 기반 task</td>
+      <td>관리형 container</td>
+      <td>호스티드 task 계약</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>공식 문서는 app-server를 인증, 대화 이력, 승인, streamed agent event까지 필요한 rich client용
+interface로 설명한다. wire는 JSON-RPC 2.0 계열이며 <code class="language-plaintext highlighter-rouge">thread/start</code>, <code class="language-plaintext highlighter-rouge">turn/start</code> 같은 명시적
+method와 server notification을 갖는다. 공개 protocol은 client request, server request,
+notification을 타입으로 생성한다. 다만 <code class="language-plaintext highlighter-rouge">codex app-server</code> 명령 자체는 local development/debugging
+용 experimental surface이고 변경될 수 있다. 기본 transport는 JSONL-over-stdio이며 WebSocket
+transport는 구현되어 있어도 공식 README가 <strong>experimental/unsupported</strong>로 명시한다. 따라서 이를
+production remote API 안정성 보장으로 읽으면 안 된다.
+<a href="https://learn.chatgpt.com/docs/app-server.md">App server</a> <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">B</code></p>
+
+<p>VS Code extension 같은 app-server client 경로와 custom client 계약은 공개되어 있지만, Codex
+desktop app이 정확히 같은 app-server topology를 쓴다는 근거는 확인하지 못했다. 아래 그림도 공개
+local core와 app-server만 나타내며 비공개 desktop/cloud 내부를 설명하지 않는다.</p>
+
+<p>이것은 UI가 runtime 객체를 직접 잡는 구조가 아니다. <strong>프로토콜이 surface와 runtime 사이의
+anti-corruption layer</strong> 역할을 한다.</p>
+
+<h3 id="31-ui와-human-in-the-loop-계약">3.1 UI와 human-in-the-loop 계약</h3>
+
+<p>공개 app-server protocol은 rich client가 임의의 core 객체를 해석하지 않게 UI projection을
+구체화한다. turn/item lifecycle은 <code class="language-plaintext highlighter-rouge">started → delta* → completed</code>로 흐르고, <code class="language-plaintext highlighter-rouge">turn/diff/updated</code>는
+aggregated unified diff, <code class="language-plaintext highlighter-rouge">turn/plan/updated</code>는 plan state를 전달한다. command/file change/permission
+승인은 server-initiated request와 client decision으로 왕복하고, tool user-input과 MCP elicitation도
+별도 typed request다. terminal <code class="language-plaintext highlighter-rouge">item/completed</code>가 최종 실행 상태의 권위다. <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">B</code></p>
+
+<p>이 계약은 approval card, live output, diff, plan, reconnecting client를 만들기 좋은 기반이다.
+그러나 proprietary Codex app의 widget/state-store/threading 구조, optimistic UI, offline cache가
+이 protocol과 어떻게 연결되는지는 공개 근거가 없다. 따라서 여기서 평가하는 것은 protocol-level
+HITL completeness이지 desktop UI 내부 아키텍처나 실제 UX latency가 아니다. <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h2 id="4-전체-런타임-아키텍처">4. 전체 런타임 아키텍처</h2>
+
+<pre class="mermaid">
+flowchart TB
+    subgraph Surface[Client surfaces]
+        TUI[CLI / TUI]
+        IDE[IDE extension]
+        APP[Custom rich client / remote TUI]
+        EXEC[codex exec]
+    end
+
+    TUI --&gt; CORE
+    EXEC --&gt; CORE
+    IDE --&gt; RPC
+    APP --&gt; RPC
+
+    RPC[app-server\nJSON-RPC typed protocol] --&gt; TM[ThreadManager]
+    TM --&gt; CORE[Codex queue pair\nSubmission in / Event out]
+    CORE --&gt; SL[submission_loop]
+    SL --&gt; SESS[Session\none active task]
+    SESS --&gt; TURN[run_turn sampling loop]
+
+    TURN --&gt; MODEL[Model client]
+    TURN --&gt; PLAN[Per-step Tool Plan]
+    PLAN --&gt; SPECS[Model-visible specs]
+    PLAN --&gt; REG[Dispatch registry]
+    REG --&gt; EXECUTOR[Tool runtimes]
+    EXECUTOR --&gt; SBX[Sandbox + approval + exec policy]
+    EXECUTOR --&gt; MCP[MCP / extension / hosted tools]
+
+    SESS --&gt; EVT[Typed Event stream]
+    EVT --&gt; Surface
+
+    SESS --&gt; STORE[ThreadStore]
+    STORE --&gt; JSONL[Canonical rollout JSONL]
+    STORE --&gt; SQL[Queryable SQLite projection]
+
+</pre>
+
+<h3 id="41-authority">4.1 Authority</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Codex</code> 자체는 <a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/mod.rs#L387-L398"><code class="language-plaintext highlighter-rouge">Submission</code> sender와 <code class="language-plaintext highlighter-rouge">Event</code> receiver를 가진 queue pair</a>다.
+실제 mutable authority는 <code class="language-plaintext highlighter-rouge">Session</code>에 있다. 소스 주석은 session에 동시에 최대 한 개의 running task만
+존재하며 user input으로 interrupt될 수 있다고 명시한다.</p>
+
+<p>이 단일 active-task 규칙은 단순한 구현 편의가 아니다. 다음 순서를 보장하는 핵심 불변식이다.</p>
+
+<ul>
+  <li>turn 시작 전에 model/permissions/environment 같은 live settings 적용</li>
+  <li>active turn이 있으면 새 입력을 steer 또는 pending input으로 처리</li>
+  <li>approval response와 interrupt가 해당 turn보다 뒤집히지 않음</li>
+  <li>종료 시 task cancellation, event flush, persistence teardown 순서 유지</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">SessionState</code>는 대화 history/context manager, rate limit, 이전 turn settings, auto-compaction window,
+active connector selection, permissions, first-turn 상태를 가진다. 반면 <code class="language-plaintext highlighter-rouge">SessionServices</code>는 auth,
+models, MCP runtime snapshot, exec manager, hooks, approval store, skills/plugins, telemetry, state DB,
+thread store 같은 장수 서비스를 모은다. 즉 <strong>대화 상태와 서비스 수명은 타입 수준에서 분리</strong>되어
+있지만 한 <code class="language-plaintext highlighter-rouge">Session</code>이 이들을 조정한다.</p>
+
+<h3 id="42-thread-ownership과-process-경계">4.2 Thread ownership과 process 경계</h3>
+
+<p><code class="language-plaintext highlighter-rouge">ThreadManager</code>는 새 thread, resume, fork, 메모리 내 thread tracking을 소유한다. parent에서
+subagent를 spawn할 때 parent rollout을 flush하고 fork snapshot을 읽어 child history를 만든다.
+이 때문에 multi-agent가 단순히 같은 transcript list를 공유하지 않는다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">codex app-server</code>는 이 runtime을 stdio·WebSocket·Unix socket transport로 노출하는 <strong>별도 OS
+process 경계</strong>다. TUI/exec가 core library를 직접 쓰는 것과 app-server client가 protocol을
+통해 접근하는 것은 다른 topology다. protocol에는
+initialize handshake, thread lifecycle, turn lifecycle, approval/elicitation, MCP, skills/plugins,
+model/environment method가 분리되어 있다. 이 구조의 가치:</p>
+
+<ul>
+  <li>app-server를 client와 독립 daemon으로 운영할 때 UI crash와 runtime lifetime을 분리할 수 있음</li>
+  <li>여러 surface가 동일한 의미론을 재사용</li>
+  <li>schema generation으로 TypeScript/JSON client contract 생성 가능</li>
+  <li>server request로 승인처럼 runtime→client→runtime 왕복이 가능</li>
+</ul>
+
+<p>protocol이 있다고 수명 분리가 자동 보장되지는 않는다. client가 app-server child process의 수명을
+소유하면 함께 종료될 수 있고, 독립 daemon·reconnect·thread recovery를 실제로 배치해야 분리가
+성립한다. 반대 비용도 분명하다. versioning, experimental capability negotiation, backpressure,
+인증, 연결별 초기화 상태, reconnect semantics가 모두 제품 코드가 된다. 특히 WebSocket listener는
+인증이 기본 강제되지 않으므로 remote 노출 시 bearer auth와 TLS termination을 별도로 구성해야 한다.
+단일 데스크톱 앱만 있는 제품에는 과할 수 있다. <code class="language-plaintext highlighter-rouge">B</code>, <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h3 id="43-process와-resource-topology">4.3 Process와 resource topology</h3>
+
+<p>공개 local topology에서 app-server의 <code class="language-plaintext highlighter-rouge">ThreadManager</code>는 여러 loaded thread/session actor를 같은
+host process에서 추적한다. thread마다 active task는 하나지만 thread마다 OS process를 하나씩
+만드는 구조는 아니다. shell·sandbox·MCP/remote execution은 필요에 따라 child/external process
+경계를 만든다. 이 선택은 shared auth/model catalog/MCP/store service를 재사용해 active thread당
+process overhead를 줄이는 대신, host process crash와 unbounded event accumulation의 blast radius를
+여러 loaded thread가 공유하게 한다.</p>
+
+<p>고정 소스에는 agent thread limit과 nesting guard가 있지만 전체 app-server RSS ceiling, loaded
+thread eviction 정책, 10,000 active thread 보장은 확인하지 못했다. 따라서 process-per-session인
+다른 runtime보다 가볍다고 추론할 수는 있어도 실제 memory curve나 저사양 HPC 적합성은 benchmark
+없이 확정할 수 없다. <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h2 id="5-turn-실행-로직">5. Turn 실행 로직</h2>
+
+<p><code class="language-plaintext highlighter-rouge">run_turn</code>의 공식 소스 주석은 loop의 의미를 직접 설명한다. 모델이 function call을 반환하면 실행
+결과를 다음 sampling request에 넣고, assistant message만 반환하면 history에 기록하고 turn을
+완료한다 (<a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/turn.rs#L129-L149">source</a>).</p>
+
+<p>실제 흐름은 더 넓다.</p>
+
+<pre class="mermaid">
+sequenceDiagram
+    participant C as Client
+    participant Q as submission_loop
+    participant S as Session
+    participant T as run_turn
+    participant M as Model
+    participant R as ToolRouter
+    participant P as Persistence/Event
+
+    C-&gt;&gt;Q: Submission(UserInput + TurnSettings)
+    Q-&gt;&gt;S: apply settings / start-or-steer
+    S-&gt;&gt;T: spawn active task
+    T-&gt;&gt;T: context + world state + skills/plugins + compaction check
+    loop until final assistant message
+        T-&gt;&gt;M: prompt/history/tool specs
+        M--&gt;&gt;T: stream items
+        alt tool call
+            T-&gt;&gt;R: typed ToolCall
+            R--&gt;&gt;T: tool output / model-visible error
+            T-&gt;&gt;P: rollout items + events
+        else assistant only
+            T-&gt;&gt;P: assistant item + turn complete
+        else context threshold
+            T-&gt;&gt;T: compact and continue
+        end
+    end
+    P--&gt;&gt;C: typed streamed Events
+
+</pre>
+
+<p>Turn 시작 시 context/world-state를 준비하고, skills/plugins를 선택적으로 주입하고 lifecycle hook을
+실행하며, context limit 전후로 compaction을 수행한다. 여기에는 서로 다른 두 수명이 있다.
+<code class="language-plaintext highlighter-rouge">TurnContext</code>는 user-visible turn 전체에서 공유되는 model/provider, approval policy, permission
+profile, collaboration mode, dynamic tools/extensions, config 등의 turn-scoped 값이다. 반면
+<code class="language-plaintext highlighter-rouge">StepContext</code>는 <strong>각 model sampling request마다</strong> 캡처되는 request-scoped view다. 후자는
+<code class="language-plaintext highlighter-rouge">Arc&lt;TurnContext&gt;</code>와 함께 environment snapshot, 선택 capability roots, exact MCP runtime/tool list,
+관찰된 <code class="language-plaintext highlighter-rouge">AGENTS.md</code>를 고정한다.</p>
+
+<p>따라서 “한 sampling step이 <code class="language-plaintext highlighter-rouge">TurnContext</code> snapshot 하나를 쓴다”보다 “turn 설정은 <code class="language-plaintext highlighter-rouge">TurnContext</code>,
+매 request의 동적 capability view는 <code class="language-plaintext highlighter-rouge">StepContext</code>”라고 구분하는 편이 정확하다. request 조립과
+그 request가 광고한 tool의 실행이 같은 <code class="language-plaintext highlighter-rouge">StepContext</code>를 공유하므로 step consistency를 얻는다.
+<code class="language-plaintext highlighter-rouge">DeferredExecutor</code>가 켜지면 다음 sampling request의 <code class="language-plaintext highlighter-rouge">StepContext</code>를 캡처하면서 filesystem-derived
+environment/<code class="language-plaintext highlighter-rouge">AGENTS.md</code>/MCP state를 다시 관찰할 수 있다. 이 refresh 의미는 §11에서 따로 평가한다.
+<a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/step_context.rs">StepContext source</a> <code class="language-plaintext highlighter-rouge">A</code></p>
+
+<h3 id="interrupt와-steer">Interrupt와 steer</h3>
+
+<p><code class="language-plaintext highlighter-rouge">submission_loop</code>는 user input만 받는 loop가 아니다. interrupt, approval answer, MCP refresh,
+configuration reload, compact, rollback, review, shell, shutdown을 같은 control plane에서 분기한다.
+특히 settings mutation도 submission queue를 통과하도록 한 이유가 source comment에 “후속 user input과의
+ordering 보존”으로 명시돼 있다.</p>
+
+<p>이것은 async agent runtime에서 매우 중요한 선택이다. UI가 session field를 직접 바꾸고 별도로 message를
+보내면 어떤 설정으로 그 turn이 시작됐는지 재현하기 어렵다. Codex는 <code class="language-plaintext highlighter-rouge">Op</code> 자체를 ordered command로
+만든다.</p>
+
+<h2 id="6-tool-architecture">6. Tool architecture</h2>
+
+<h3 id="61-schema-exposure와-dispatch-분리">6.1 Schema exposure와 dispatch 분리</h3>
+
+<p><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/tools/router.rs#L35-L45"><code class="language-plaintext highlighter-rouge">ToolRouter</code></a>는
+<code class="language-plaintext highlighter-rouge">ToolRegistry</code>와 <code class="language-plaintext highlighter-rouge">model_visible_specs</code>를 별도 field로 가진다. 따라서 “실행할 수 있는 도구”와 “이번
+step에서 모델에게 광고하는 도구”가 동일 집합일 필요가 없다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">spec_plan</code>은 tool runtime과 hosted spec을 먼저 계획한 뒤, exposure를 <code class="language-plaintext highlighter-rouge">Direct</code>, <code class="language-plaintext highlighter-rouge">Deferred</code>,
+<code class="language-plaintext highlighter-rouge">DirectModelOnly</code>, <code class="language-plaintext highlighter-rouge">Hidden</code> 네 상태로 적용하고 per-step router를 조립한다.
+<code class="language-plaintext highlighter-rouge">DirectModelOnly</code>는 일반 model-visible list에는 넣되 code-mode-only session의 nested code-mode
+surface에서는 제외한다. 이 분리는 다음을 가능하게 한다.</p>
+
+<ul>
+  <li>deferred tool search: 수백 개 schema를 prompt에 항상 넣지 않음</li>
+  <li>code mode와 일반 function-call mode의 다른 노출</li>
+  <li>MCP, extension, dynamic tool을 같은 dispatch contract로 수렴</li>
+  <li>모델/기능 flag/multi-agent version에 따른 schema 선택</li>
+  <li>실제 handler는 등록돼 있으나 모델에는 숨기는 내부 control tool</li>
+</ul>
+
+<p>Farad 관점에서 이 패턴의 핵심은 enum 이름이 아니라 <strong>catalog/dispatch capability와 prompt exposure를
+별도 projection으로 유지하는 것</strong>이다.</p>
+
+<h3 id="62-typed-dispatch와-hook-envelope">6.2 Typed dispatch와 hook envelope</h3>
+
+<p>registry는 duplicate tool name을 거부하고, payload를 tool 종류에 맞게 decode한 뒤 runtime executor를
+호출한다. 공통 경계는 lifecycle accounting, pre/post hook, telemetry, terminal notification,
+model-visible error 변환을 묶는다. 승인·sandbox·denial retry의 공통 순서는 generic registry가 아니라
+<code class="language-plaintext highlighter-rouge">ToolRuntime</code>을 사용하는 shell/apply-patch 계열의 <code class="language-plaintext highlighter-rouge">ToolOrchestrator</code>가 담당한다. 그 순서는
+approval → sandbox 선택 → 실행 attempt → denial 시 escalated sandbox retry이며 approval cache로
+불필요한 재승인을 피한다. MCP·hosted tool 등 다른 runtime은 별도 policy adapter와 실행 경로를 쓴다.
+따라서 <strong>registry lifecycle envelope가 모든 tool의 approval을 보장한다</strong>고 일반화하면 안 되고,
+적용 가능한 execution runtime에서는 <code class="language-plaintext highlighter-rouge">ToolOrchestrator</code>, 나머지는 각 adapter의 fail-closed 계약을
+따로 검증해야 한다.
+<a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/tools/orchestrator.rs">ToolOrchestrator source</a> <code class="language-plaintext highlighter-rouge">A</code></p>
+
+<h3 id="63-병렬-실행">6.3 병렬 실행</h3>
+
+<p>tool-call runtime은 parallel-safe tool에는 read lock, 직렬화가 필요한 tool에는 write lock을 사용한다.
+cancellation token과 dispatch를 race해 중단된 call도 protocol상 결과로 닫는다. “여러 tool call이 한
+model response에 왔다”는 이유만으로 무조건 병렬화하지 않는다는 점이 중요하다.</p>
+
+<p>평가:</p>
+
+<ul>
+  <li>강점: schema budget, 확장성, tool policy, observability가 한 경계에서 만난다.</li>
+  <li>위험: <code class="language-plaintext highlighter-rouge">spec_plan</code>이 feature matrix의 집결지가 되어 조합 폭발을 일으킬 수 있다.</li>
+  <li>필요한 검증: tool exposure snapshot test, duplicate/unknown tool fail-closed test, cancellation 뒤
+terminal event 보장, unsafe tool serialization test.</li>
+</ul>
+
+<h2 id="7-권한과-sandbox">7. 권한과 sandbox</h2>
+
+<p>Codex는 <strong>정책적 승인(approval)</strong>과 <strong>기술적 격리(sandbox)</strong>를 별개 층으로 정의한다. 공식 문서는
+local CLI/IDE에서 기본적으로 network를 끄고, OS-enforced sandbox로 writable 범위를 workspace로
+제한한다고 설명한다. macOS는 Seatbelt, Linux/WSL2는 bubblewrap 계열, Windows는 native sandbox를
+사용한다 (<a href="https://learn.chatgpt.com/docs/agent-approvals-security.md">Agent approvals &amp; security</a>,
+<a href="https://learn.chatgpt.com/docs/sandboxing.md">Sandbox</a>).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>층</th>
+      <th>질문</th>
+      <th>대표 상태</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>sandbox</td>
+      <td>command가 기술적으로 무엇에 접근 가능한가?</td>
+      <td>read-only, workspace-write, danger-full-access</td>
+    </tr>
+    <tr>
+      <td>approval policy</td>
+      <td>경계를 넘기 전 누구에게 물을 것인가?</td>
+      <td>untrusted/on-request/never/granular</td>
+    </tr>
+    <tr>
+      <td>exec policy</td>
+      <td>특정 command pattern을 허용·질문·차단할 것인가?</td>
+      <td>rule evaluation</td>
+    </tr>
+    <tr>
+      <td>tool annotation</td>
+      <td>shell 외 app/MCP side effect인가?</td>
+      <td>read-only/destructive 등</td>
+    </tr>
+    <tr>
+      <td>network policy</td>
+      <td>허용된 network가 어디로 나갈 수 있는가?</td>
+      <td>domain/socket allow/deny proxy</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>중요한 세부 계약:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">workspace-write</code> 안에서도 <code class="language-plaintext highlighter-rouge">.git</code>, <code class="language-plaintext highlighter-rouge">.agents</code>, <code class="language-plaintext highlighter-rouge">.codex</code> 같은 protected path는 재귀 read-only다.</li>
+  <li>non-interactive flow에서 새 승인을 표시할 수 없으면 해당 행동은 실패하여 parent workflow로 돌아간다.</li>
+  <li>subagent는 parent turn의 live permission/sandbox override를 상속한다.</li>
+  <li>cloud는 setup과 agent phase를 나누고, secrets는 setup에만 제공한 뒤 agent phase 전에 제거한다.</li>
+  <li>network enable과 destination policy는 별개이며, allowlist/deny 및 private destination 제약을 둘 수 있다.</li>
+</ul>
+
+<p>현재 확인 범위에서 이 영역은 Codex의 큰 구조적 강점이다. “모델이 허용된다고 판단했다”가 보안
+경계가 아니라 실제 child process가 OS boundary 안에서 실행된다. Claude Code도 permission과 OS
+sandbox를 분리하므로, 최종 비교에서는 기본 활성화 여부·플랫폼 범위·degraded fallback·shell 외
+도구의 적용 범위를 같은 조건에서 따로 판정한다.</p>
+
+<p>한계도 있다.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">danger-full-access</code>는 이 방어선을 의도적으로 제거한다.</li>
+  <li>sandbox는 외부 도구의 논리적 오용, 허용된 파일 안의 파괴적 수정, prompt injection을 모두 해결하지
+않는다.</li>
+  <li>플랫폼별 kernel/OS 기능 차이와 HPC 정책(user namespace, bubblewrap 설치 제한)이 실제 가용성을
+좌우한다.</li>
+</ul>
+
+<h2 id="8-context-transcript-compaction">8. Context, transcript, compaction</h2>
+
+<p>Codex의 rollout은 단순 <code class="language-plaintext highlighter-rouge">[{role, content}]</code> 배열이 아니다. protocol의 <code class="language-plaintext highlighter-rouge">RolloutItem</code>에는 session
+metadata, model response item, inter-agent communication, turn context, world state, compacted item,
+<code class="language-plaintext highlighter-rouge">EventMsg</code>가 <strong>같은 enum과 rollout stream 안의 typed variant</strong>로 구분되어 저장된다. 따라서 UI event와
+model replay가 별도 stream이라고 말할 수는 없다. 장점은 한 durable sequence에서 provenance를
+보존하면서 consumer가 variant별로 필터링할 수 있다는 것이고, 위험은 replay/context 조립 코드가
+<code class="language-plaintext highlighter-rouge">EventMsg</code>를 model-visible item으로 잘못 승격하지 않도록 invariant를 계속 지켜야 한다는 점이다.
+<a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/protocol/src/protocol.rs#L3141-L3154">RolloutItem source</a> <code class="language-plaintext highlighter-rouge">A</code></p>
+
+<h3 id="compaction-계약">Compaction 계약</h3>
+
+<p><code class="language-plaintext highlighter-rouge">CompactedItem</code>은 단순 summary 문자열뿐 아니라 replacement history와 chain/window 식별 정보를
+가질 수 있다. turn loop는 sampling 전에 threshold를 검사하고, model token limit에 닿으면 mid-turn
+compaction 후 이어갈 수 있다.</p>
+
+<p>이 설계가 지키려는 것은 세 가지다.</p>
+
+<ol>
+  <li>현재 모델에 넣는 context가 window를 넘지 않음</li>
+  <li>durable rollout과 현재 compacted prompt가 어떻게 연결되는지 추적 가능</li>
+  <li>resume/fork가 단순 최종 텍스트보다 풍부한 history·window·fork provenance를 복원</li>
+</ol>
+
+<p>그러나 이것은 실행 세계 전체의 checkpoint가 아니다. resume/fork가 in-flight approval, 실행 중인
+child process/tool call, 외부 MCP side effect, 현재 filesystem을 원자적으로 되살린다는 보장은 없다.
+위험은 compaction implementation이 prompt replay semantics의 일부가 된다는 점이다. summary 품질뿐
+아니라 tool call/result pairing, event filtering, subagent message, world-state 기준선과 window chain을
+테스트해야 한다. <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h2 id="9-저장과-조회">9. 저장과 조회</h2>
+
+<p><code class="language-plaintext highlighter-rouge">ThreadStore</code>는 create/resume/append/flush/load/read/list/search/update metadata/archive/delete를 제공하는
+storage-neutral trait이다. local 구현의 주석은 저장 전략을 명확히 선언한다.</p>
+
+<blockquote>
+  <p>rollout JSONL은 SQLite 없이도 읽을 수 있는 durable replay format이고, SQLite는 빠른 list/read를
+위한 queryable metadata index다.</p>
+</blockquote>
+
+<p>(<a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/thread-store/src/local/mod.rs#L45-L63">source</a>)</p>
+
+<pre class="mermaid">
+flowchart LR
+    TURN[Turn / rollout append] --&gt; REC[Live recorder]
+    REC --&gt; JSONL[Canonical JSONL]
+    TURN --&gt; META[Metadata patch]
+    META --&gt; DB[(SQLite projection)]
+    DB --&gt; LIST[list / search / fast read]
+    JSONL --&gt; RESUME[resume / replay / repair]
+    DB -. unavailable or stale .-&gt; REPAIR[rebuild/compat path]
+    JSONL --&gt; REPAIR
+
+</pre>
+
+<p>이중화처럼 보이지만 authority는 비대칭이다.</p>
+
+<ul>
+  <li>대화 실행 사실: JSONL canonical</li>
+  <li>목록/검색/정렬 metadata: SQLite projection</li>
+  <li>SQLite 부재·손상·구버전: JSONL/name-index compatibility path</li>
+</ul>
+
+<p>이는 append-heavy transcript를 유지하면서 목록·검색 때 전량 JSONL scan을 피하기 위한 합리적
+구조다. 하지만 구조만으로 N=10,000 latency, projection lag, crash 후 repair 비용이 입증되지는
+않는다. 두 projection의 consistency와 bounded rebuild가 새 운영 책임이 된다. SQLite를 원격 NFS
+canonical store로 그대로 쓰는 것이 안전하다는 뜻도 아니다. Farad에 적용한다면 로컬 derived index
+여부와 NFS locking, rebuild bound를 별도로 설계하고 계측해야 한다.</p>
+
+<p>구체적으로 SQLite-backed state는 기본적으로 <code class="language-plaintext highlighter-rouge">CODEX_HOME</code> 아래에 있고 <code class="language-plaintext highlighter-rouge">CODEX_SQLITE_HOME</code> 또는
+<code class="language-plaintext highlighter-rouge">sqlite_home</code>으로 별도 위치에 둘 수 있다. source는 SQLite에 WAL mode와 busy timeout을 설정한다.
+따라서 NFS home 사용자가 SQLite만 node-local path로 분리하는 것은 가능하지만 canonical rollout
+JSONL까지 자동으로 옮겨지는 것은 아니다. state-DB-only list path도 존재하지만 일반 list/read에는
+JSONL compatibility·metadata repair path가 남는다. 공식 문서와 source에는 NFS consistency 보장,
+파일당 round-trip 상한, 10,000개 rebuild 시간, crash 중 projection lag의 최대치가 없다. <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">B</code>, <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h2 id="10-multi-agent-구조">10. Multi-agent 구조</h2>
+
+<p>공식 문서는 subagent를 별도 agent thread로 정의하며, main thread가 결과 요약을 수집한다. 현재 local
+release는 직접 요청 또는 AGENTS/skill 지시로 delegate할 수 있고, agent마다 model/reasoning/instruction을
+달리 설정할 수 있다. child는 기본적으로 parent permission mode를 상속한다
+(<a href="https://learn.chatgpt.com/docs/agent-configuration/subagents.md">Subagents</a>).</p>
+
+<p>공개 core에서 중요한 것은 UI의 “agent 카드”가 아니라 다음 구조다.</p>
+
+<ul>
+  <li>agent graph가 parent/child thread 관계를 추적</li>
+  <li>spawn 전 parent rollout flush</li>
+  <li>child는 fork된 history snapshot에서 시작</li>
+  <li>inter-agent communication도 <code class="language-plaintext highlighter-rouge">Op</code>/rollout item으로 기록</li>
+  <li>thread limit와 nesting depth로 자원 폭발 제한</li>
+  <li>완료/interrupt/close가 명시적인 lifecycle operation</li>
+</ul>
+
+<p>장점:</p>
+
+<ul>
+  <li>noisy exploration을 main context에서 격리</li>
+  <li>parallel read/test/review latency 단축</li>
+  <li>결과와 child transcript를 별도 감사 가능</li>
+</ul>
+
+<p>비용:</p>
+
+<ul>
+  <li>token/compute 증가</li>
+  <li>동시 write conflict와 shared workspace race</li>
+  <li>child approval이 inactive thread에서 발생할 수 있음</li>
+  <li>parent summary가 child evidence를 손실할 수 있음</li>
+  <li>graph shutdown, orphan recovery, max concurrency가 runtime correctness가 됨</li>
+</ul>
+
+<p>따라서 “subagent 수가 많다”는 것 자체는 성숙도 지표가 아니다. isolation, ownership, completion
+protocol, budget, artifact merge가 더 중요하다.</p>
+
+<h2 id="11-확장-모델-agents-skills-plugins-mcp-hooks">11. 확장 모델: AGENTS, skills, plugins, MCP, hooks</h2>
+
+<p>Codex는 여러 확장 메커니즘을 서로 다른 역할로 둔다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>메커니즘</th>
+      <th>주 역할</th>
+      <th>runtime 영향</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AGENTS.md</code></td>
+      <td>directory-scoped project instruction</td>
+      <td>prompt/context assembly</td>
+    </tr>
+    <tr>
+      <td>skill</td>
+      <td>반복 가능한 지식·workflow·script/assets</td>
+      <td>선택적 instruction/resource 주입</td>
+    </tr>
+    <tr>
+      <td>plugin</td>
+      <td>skill/MCP/app/hook 등의 배포 묶음</td>
+      <td>discovery/install/trust surface</td>
+    </tr>
+    <tr>
+      <td>MCP</td>
+      <td>외부 tool/resource/prompt 연결</td>
+      <td>tool registry + connection lifecycle</td>
+    </tr>
+    <tr>
+      <td>hook</td>
+      <td>lifecycle 전후 정책·automation</td>
+      <td>dispatch/session envelope</td>
+    </tr>
+    <tr>
+      <td>extension/dynamic tool</td>
+      <td>typed runtime 확장</td>
+      <td>per-step tool plan</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>turn loop는 user mention, skill snapshot, plugin snapshot, MCP tools, extension contributors를 바탕으로
+이번 turn에 넣을 대상을 결정하고 실제 주입된 항목을 기록한다. tool spec planner는 direct/deferred
+노출까지 조절한다. 즉 discovery, selection, prompt exposure, dispatch가 하나의 list로 뭉개져 있지
+않다.</p>
+
+<p>보안상 주의할 점:</p>
+
+<ul>
+  <li>skill script와 plugin은 사실상 code execution/supply-chain surface다.</li>
+  <li>MCP OAuth credential과 app-server client auth는 다른 trust boundary다.</li>
+  <li>tool schema의 annotation을 신뢰하더라도 실제 sandbox/approval enforcement가 최종 경계여야 한다.</li>
+  <li>file watcher/hot reload가 실행 중 snapshot을 깨뜨리지 않도록 publish 시점이 필요하다.</li>
+</ul>
+
+<h3 id="111-configinstructionmemory-경계">11.1 Config·instruction·memory 경계</h3>
+
+<p>공식 계약에서 <code class="language-plaintext highlighter-rouge">AGENTS.md</code>는 global → repository root → cwd 방향으로 합쳐지고 가까운 directory
+guidance가 뒤에 와 override한다. 각 directory에서는 <code class="language-plaintext highlighter-rouge">AGENTS.override.md</code>가 우선하며 합산 기본 한도는
+32 KiB다. 일반 제품 문서는 이 instruction chain을 CLI run/TUI session 시작에 한 번 만든다고
+설명한다. mandatory rule은 memory가 아니라 checked-in <code class="language-plaintext highlighter-rouge">AGENTS.md</code>나 문서에 둬야 한다.
+<a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md.md">AGENTS.md</a> <code class="language-plaintext highlighter-rouge">B</code></p>
+
+<p>local Codex memories는 별도 local store이며 현재 공식 계약상 opt-in/experimental이다. prior task에서
+추출한 recall을 future session에 주입할 수 있지만 generation이 즉시 일어나지 않을 수 있고, 외부
+context 사용 task를 제외하는 정책도 있다. ChatGPT web memory, ChatGPT Work memory, local Codex
+memory가 같은 authority라고 보면 안 된다. 이 보고서는 local memory file의 내부 ranking·consolidation
+정확도나 장기 schema 호환성은 평가하지 않는다.
+<a href="https://learn.chatgpt.com/docs/customization/memories.md">Memories</a> <code class="language-plaintext highlighter-rouge">B</code></p>
+
+<h3 id="112-refresh와-snapshot-경계">11.2 Refresh와 snapshot 경계</h3>
+
+<p>고정 소스의 기본 경로와 feature-gated 경로가 다르다. explicit config reload와 MCP refresh는 ordered
+submission으로 들어가며 publish된 service snapshot을 바꾼다. 한편 under-development이고 기본 off인
+<code class="language-plaintext highlighter-rouge">DeferredExecutor</code>가 켜지면 매 sampling request의 <code class="language-plaintext highlighter-rouge">StepContext</code>를 캡처할 때 environment snapshot과
+filesystem-derived <code class="language-plaintext highlighter-rouge">AGENTS.md</code>, capability roots, MCP runtime/tool list를 다시 관찰할 수 있다. request
+안에서는 fixed snapshot을 공유하지만 turn 전체가 frozen이라는 뜻은 아니다. <code class="language-plaintext highlighter-rouge">A</code></p>
+
+<p>이는 Farad의 explicit refresh 계약과 직접 다르다. NFS 홈에서 이 feature path를 모방하면 한 turn의
+반복 sampling 횟수만큼 filesystem/network discovery 비용이 들어갈 수 있으므로, Farad에는 request
+consistency만 가져오고 per-request refresh는 가져오지 않는 편이 맞다. 실제 Codex의 해당 경로에 대한
+NFS round-trip bound는 공개 benchmark로 확인하지 못했다. <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h2 id="12-provider와-모델-계층">12. Provider와 모델 계층</h2>
+
+<p>공개 config와 core에는 <code class="language-plaintext highlighter-rouge">model_provider</code>, model catalog, OpenAI-compatible base URL, OSS provider 같은
+abstraction이 있다. 하지만 제품 경험, 인증, 기능 최적화는 OpenAI/ChatGPT가 중심이다. 따라서
+“provider interface가 존재한다”와 “모든 near-frontier provider가 동등한 first-class experience다”는
+다른 주장이다.</p>
+
+<p>Codex가 모델 특성에 따라 다르게 처리하는 예:</p>
+
+<ul>
+  <li>context window와 auto-compact threshold</li>
+  <li>reasoning effort/summary/verbosity</li>
+  <li>tool mode와 supported feature</li>
+  <li>collaboration mode와 agent role/model override</li>
+  <li>model upgrade/compatibility handling</li>
+</ul>
+
+<p>이 정도의 model capability matrix는 강력하지만, feature condition이 turn/tool planner 전역으로
+퍼지면 testing burden도 크게 늘어난다.</p>
+
+<h2 id="13-성능과-concurrency">13. 성능과 concurrency</h2>
+
+<h3 id="확인되는-구조적-장치">확인되는 구조적 장치</h3>
+
+<ul>
+  <li>bounded submission queue로 producer 폭주에 backpressure</li>
+  <li>thread당 하나의 active task로 대화 순서 안정화</li>
+  <li>event channel로 UI와 model loop decoupling. 다만 현재 core event channel은
+<a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/mod.rs#L538-L540"><code class="language-plaintext highlighter-rouge">async_channel::unbounded()</code></a>이므로
+submission 입력의 backpressure가 end-to-end event backpressure를 뜻하지는 않음</li>
+  <li>service snapshot을 <code class="language-plaintext highlighter-rouge">ArcSwap</code>으로 publish하여 MCP/hooks 등의 read path 경량화</li>
+  <li>per-tool parallel-safety lock</li>
+  <li>cancellation token을 turn/tool/process lifecycle에 전달</li>
+  <li>state-DB-only metadata path로 전체 JSONL scan을 피할 수 있는 list/search 경로</li>
+  <li>tool schema direct/deferred 분리로 context cost 제어</li>
+  <li>app-server WebSocket ingress에 bounded queue</li>
+</ul>
+
+<h3 id="여전히-검증이-필요한-hot-path">여전히 검증이 필요한 hot path</h3>
+
+<ul>
+  <li>매우 긴 rollout의 resume/compaction 비용</li>
+  <li>수천 thread와 깊은 agent graph에서 list/search/shutdown bound</li>
+  <li>MCP server가 많을 때 refresh/reconcile 비용</li>
+  <li>deferred tool search 자체의 latency와 정확도</li>
+  <li>core의 unbounded event channel과 app-server slow client 사이의 memory bound, drop/reconnect semantics</li>
+  <li>parallel subagent가 같은 worktree를 수정할 때 충돌 제어</li>
+</ul>
+
+<p>Rust와 Tokio 선택은 이 구조에 적합하지만, 언어만으로 bounded behavior가 보장되지는 않는다. queue
+capacity, lock granularity, store index, lifecycle invariant가 실질적인 성능 설계다.</p>
+
+<h3 id="131-테스트-가능성과-변경-용이성">13.1 테스트 가능성과 변경 용이성</h3>
+
+<p>공개 source에는 tool exposure의 <code class="language-plaintext highlighter-rouge">spec_plan_tests.rs</code>, dispatch의 <code class="language-plaintext highlighter-rouge">router_tests.rs</code>, session/approval/
+sandbox tests, thread-store list/search/metadata-sync tests, app-server protocol schema와 integration
+suite가 분리되어 있다. typed protocol code generation, storage-neutral <code class="language-plaintext highlighter-rouge">ThreadStore</code>, tool runtime
+trait, in-memory test stores는 변화 지점을 격리하는 좋은 seam이다. <code class="language-plaintext highlighter-rouge">A</code></p>
+
+<p>다만 test file의 존재는 production quality의 충분조건이 아니다. 이 조사에서는 전체 coverage,
+mutation/fuzz 결과, production provider backend, hosted surface와 local core의 conformance, 10,000
+thread 부하, crash/rebuild chaos test 결과를 확인하지 않았다. 큰 feature matrix와 central
+<code class="language-plaintext highlighter-rouge">SessionServices</code> composition root 때문에 cross-product regression 비용은 여전히 높다. <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h3 id="132-observabilityprivacycost-경계">13.2 Observability·privacy·cost 경계</h3>
+
+<p>local core와 app-server에는 typed lifecycle event, structured tracing, configurable OpenTelemetry,
+token/rate-limit update가 있다. 이는 turn/tool/thread correlation과 UI 진행 상태, 운영 계측을 만들기
+좋은 instrumentation이다. 그러나 exporter 설정, prompt/tool payload 기록 범위, redaction, retention,
+hosted product의 데이터 처리 정책은 서로 다른 계약이다. 공개 Rust source만으로 hosted request가
+어디에 얼마나 저장되는지 또는 privacy가 보장된다고 추론하지 않는다. <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">B</code></p>
+
+<p>token usage는 비용 관찰에는 유용하지만 stable한 per-thread hard budget으로 확인되지 않았다.
+source의 rollout-budget 기능은 under-development/default-off이므로 비용 폭주 방지의 보편 계약으로
+평가하지 않는다. 실제 provider pricing과 organization quota도 runtime architecture 밖의 변동 요소다.
+<code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">D</code></p>
+
+<h2 id="14-failure와-recovery-boundary">14. Failure와 recovery boundary</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>실패</th>
+      <th>containment/recovery 단위</th>
+      <th>평가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>model stream 오류</td>
+      <td>sampling/turn retry 또는 terminal error event</td>
+      <td>turn 경계가 명시적</td>
+    </tr>
+    <tr>
+      <td>tool 오류</td>
+      <td>model-visible tool result/error</td>
+      <td>대화 loop를 반드시 crash시키지 않음</td>
+    </tr>
+    <tr>
+      <td>command cancellation</td>
+      <td>cancellation token + aborted terminal result</td>
+      <td>dangling call 방지 필요</td>
+    </tr>
+    <tr>
+      <td>client disconnect</td>
+      <td>app-server connection/thread 분리</td>
+      <td>reconnect 계약이 중요</td>
+    </tr>
+    <tr>
+      <td>SQLite 부재/손상</td>
+      <td>canonical JSONL compatibility/repair</td>
+      <td>좋은 authority 분리</td>
+    </tr>
+    <tr>
+      <td>MCP startup 실패</td>
+      <td>required 여부에 따라 fail/continue</td>
+      <td>policy가 명시적</td>
+    </tr>
+    <tr>
+      <td>subagent 실패</td>
+      <td>child terminal state → parent summary</td>
+      <td>parent가 부분 실패를 보존해야 함</td>
+    </tr>
+    <tr>
+      <td>approval 불가</td>
+      <td>noninteractive에서는 action fail</td>
+      <td>암묵적 승인보다 안전</td>
+    </tr>
+    <tr>
+      <td>process crash</td>
+      <td>append된 rollout에서 resume</td>
+      <td>마지막 partially written record 처리 필요</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>가장 좋은 점은 실패가 대부분 typed event/item 또는 thread state로 표면화된다는 것이다. 가장 어려운
+점은 경계 수가 많아 “정상 종료의 정확한 순서” 자체가 correctness가 된다는 것이다.</p>
+
+<h2 id="15-공식-cloud-실행-계약">15. 공식 cloud 실행 계약</h2>
+
+<p>공식 문서가 공개한 cloud task 흐름은 다음과 같다.</p>
+
+<ol>
+  <li>container 생성과 선택 branch/commit checkout</li>
+  <li>setup script 및 cache resume 시 maintenance script</li>
+  <li>agent phase internet policy 적용</li>
+  <li>AGENTS.md를 포함한 repository instruction 아래 command/edit/test loop</li>
+  <li>final answer와 diff, 이후 PR 또는 follow-up</li>
+</ol>
+
+<p>setup phase에는 dependency 설치를 위한 network를 허용할 수 있고, secret은 setup에만 제공한 뒤 agent
+phase 전에 제거한다. container cache는 후속 task latency를 줄인다
+(<a href="https://learn.chatgpt.com/docs/environments/cloud-environment.md">Cloud environments</a>).</p>
+
+<p>이 계약은 로컬 thread runtime과 다른 deployment boundary다. cloud backend 내부 class 구조나 queue가
+공개 core와 같다고 추정하지 않는다.</p>
+
+<h2 id="16-아키텍처-판정표">16. 아키텍처 판정표</h2>
+
+<p>숫자 점수는 메커니즘의 존재를 실제 품질이나 특정 규모의 성능 입증으로 오해하게 만들 수 있어 쓰지
+않는다. 아래 <code class="language-plaintext highlighter-rouge">판정</code> 열 전체는 고정 source <code class="language-plaintext highlighter-rouge">A</code>와 공식 계약 <code class="language-plaintext highlighter-rouge">B</code>를 비교 기준에 적용한 <strong><code class="language-plaintext highlighter-rouge">D</code> 등급
+평가</strong>다. 확인된 구조와 아직 별도 부하·장애 검증이 필요한 부분을 분리한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>축</th>
+      <th>확인된 구조</th>
+      <th>미검증·제약</th>
+      <th>판정</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>runtime/surface 분리</td>
+      <td>queue/event core + typed app-server</td>
+      <td>app-server는 experimental, WebSocket unsupported; desktop/hosted 내부 미확인</td>
+      <td>강한 local 기반, public API 안정성 조건부</td>
+    </tr>
+    <tr>
+      <td>turn ordering/ownership</td>
+      <td>submission 순서열 + single active task</td>
+      <td>steer·cancel·approval race의 전체 상태공간</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>tool exposure/dispatch</td>
+      <td>per-step plan, direct/deferred/direct-model-only/hidden</td>
+      <td>feature 조합 폭발과 tool별 enforcement 편차</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>OS execution containment</td>
+      <td>approval과 별도인 platform sandbox</td>
+      <td>플랫폼·kernel별 degraded 동작, full-access 선택</td>
+      <td>강하지만 환경 의존</td>
+    </tr>
+    <tr>
+      <td>durable replay</td>
+      <td>typed rollout JSONL canonical</td>
+      <td>partial record·schema migration·repair bound</td>
+      <td>강한 기반</td>
+    </tr>
+    <tr>
+      <td>대규모 metadata 조회</td>
+      <td>storage-neutral store + SQLite projection</td>
+      <td>N=10,000 latency·projection lag·rebuild 계측 없음</td>
+      <td>좋은 기반, 성능 미입증</td>
+    </tr>
+    <tr>
+      <td>multi-agent lifecycle</td>
+      <td>thread graph, fork/flush/limits/control</td>
+      <td>큰 graph와 공유 worktree 충돌 비용</td>
+      <td>강한 기반</td>
+    </tr>
+    <tr>
+      <td>provider 중립성</td>
+      <td>provider/model abstraction</td>
+      <td>제품과 semantics는 OpenAI 중심</td>
+      <td>중간</td>
+    </tr>
+    <tr>
+      <td>확장 생태계</td>
+      <td>skills/plugins/MCP/hooks/extensions</td>
+      <td>공급망·조합 복잡도와 신뢰 경계 확대</td>
+      <td>강하지만 복잡</td>
+    </tr>
+    <tr>
+      <td>구현 단순성</td>
+      <td>강한 타입과 명시적 protocol</td>
+      <td>매우 큰 Rust workspace와 feature matrix</td>
+      <td>낮음</td>
+    </tr>
+    <tr>
+      <td>저사양/HPC 적합성</td>
+      <td>native binary, bounded submission</td>
+      <td>sandbox 가용성·서비스 수·event memory bound 불확실</td>
+      <td>조건부</td>
+    </tr>
+    <tr>
+      <td>local UX surface</td>
+      <td>TUI/IDE와 typed app-server HITL contract</td>
+      <td>proprietary app 내부와 실제 UX latency는 공개 소스로 평가 불가</td>
+      <td>protocol은 강, desktop 내부 판정 제한</td>
+    </tr>
+    <tr>
+      <td>관측성</td>
+      <td>typed event, tracing/OTel/telemetry 경계</td>
+      <td>운영 audit 완결성·privacy는 별도 검증</td>
+      <td>강한 instrumentation</td>
+    </tr>
+    <tr>
+      <td>architecture auditability</td>
+      <td>핵심 local runtime 공개</td>
+      <td>hosted backend와 일부 surface는 비공개</td>
+      <td>local core는 강</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="17-가장-강한-설계-결정">17. 가장 강한 설계 결정</h2>
+
+<ol>
+  <li><strong>Ordered command plane</strong>: user input, settings, interrupt, approval을 같은 submission ordering에 둔다.</li>
+  <li><strong>Single active turn per thread</strong>: mutable conversation authority를 명확히 한다.</li>
+  <li><strong>Turn/step context 분리</strong>: turn-scoped 설정과 request-scoped capability snapshot을 구분한다.</li>
+  <li><strong>Schema exposure ≠ dispatch registry</strong>: prompt cost와 capability를 독립적으로 관리한다.</li>
+  <li><strong>Sandbox ≠ approval</strong>: UX 정책과 OS security boundary를 혼동하지 않는다.</li>
+  <li><strong>JSONL canonical + query index projection</strong>: replay를 보존하면서 목록 조회의 전량 scan을 피할
+구조다. N=10,000 성능은 별도 검증 대상이다.</li>
+  <li><strong>Typed app protocol</strong>: surface가 runtime 내부 객체에 종속되지 않는다.</li>
+  <li><strong>Subagent as thread, not callback</strong>: 별도 history/lifecycle/permission을 가진 실행 단위다.</li>
+</ol>
+
+<h2 id="18-주요-약점과-설계-부채-위험">18. 주요 약점과 설계 부채 위험</h2>
+
+<h3 id="181-거대한-composition-root">18.1 거대한 composition root</h3>
+
+<p><code class="language-plaintext highlighter-rouge">SessionServices</code>와 spawn arguments가 수많은 subsystem을 한 session에 조립한다. 명시적 dependency라는
+장점과 동시에, session creation이 모든 feature 조합을 아는 central composition root가 되는 위험이
+있다.</p>
+
+<h3 id="182-feature-matrix-폭발">18.2 feature matrix 폭발</h3>
+
+<p>model capability × client surface × sandbox platform × tool mode × MCP/plugin/skill × collaboration mode의
+조합이 크다. type safety만으로 의미적 조합 버그를 막지는 못한다.</p>
+
+<h3 id="183-projection-consistency">18.3 projection consistency</h3>
+
+<p>JSONL과 SQLite가 분리되어 있는 만큼 stale index, crash 중 metadata patch, repair 시 bound, schema
+migration이 운영 책임이다.</p>
+
+<h3 id="184-protocol-evolution-cost">18.4 protocol evolution cost</h3>
+
+<p>app-server가 좋아질수록 experimental negotiation, old client compatibility, notification ordering,
+connection authentication이 복잡해진다.</p>
+
+<h3 id="185-생태계-trust-surface">18.5 생태계 trust surface</h3>
+
+<p>plugin/skill/MCP/hook/connector가 늘수록 discovery UX보다 provenance, permission, credential separation,
+side-effect annotation의 신뢰가 더 중요해진다.</p>
+
+<h3 id="186-제품-중심-provider-abstraction">18.6 제품 중심 provider abstraction</h3>
+
+<p>OpenAI 외 provider hook이 존재해도 최신 model behavior와 hosted surface는 OpenAI 중심으로 진화한다.
+다중 provider가 제품의 핵심인 Farad에는 그대로 적용할 수 없다.</p>
+
+<h3 id="187-명시적-미확인-경계">18.7 명시적 미확인 경계</h3>
+
+<p>다음은 이 보고서에서 확정하지 않는다.</p>
+
+<ul>
+  <li>Codex app/Web/cloud backend가 고정 commit의 local core 또는 app-server를 그대로 사용하는지</li>
+  <li>proprietary desktop의 process/IPC, state store, Qt/Electron/native UI threading topology</li>
+  <li>app-server experimental protocol과 WebSocket transport의 장기 compatibility/SLA</li>
+  <li>모든 MCP/hosted/dynamic tool에 shell과 동일한 approval·OS sandbox가 적용되는지</li>
+  <li>resume/fork가 in-flight process, approval, external side effect를 복원하는지</li>
+  <li>10,000 thread의 list/open/search/rebuild latency, RSS curve, loaded-thread eviction 상한</li>
+  <li>NFS 위 JSONL·SQLite의 consistency, lock, round-trip, crash recovery 보장</li>
+  <li>local memory ranking/consolidation 품질과 장기 file schema</li>
+  <li>hosted request의 retention/privacy 또는 local test suite와 production backend의 conformance</li>
+</ul>
+
+<p>이 항목들은 “공개 소스가 없으니 약하다”는 점수가 아니라 <strong>판정 범위 밖</strong>이다. 교차 비교에서는
+공식 행동 계약 또는 재현 가능한 benchmark가 생길 때만 승격해야 한다.</p>
+
+<h2 id="19-farad가-가져갈-것과-가져가지-말-것">19. Farad가 가져갈 것과 가져가지 말 것</h2>
+
+<p>이 절은 비교 결론이 아니라 Codex 단독 분석에서 보이는 후보이며, 최종 우선순위는
+<a href="https://hvppycoding.github.io/research/farad-architecture-roadmap/">Farad 판정 및 로드맵</a>에서 다른 제품과 함께 결정한다.</p>
+
+<h3 id="가져갈-가치가-큰-불변식">가져갈 가치가 큰 불변식</h3>
+
+<ul>
+  <li>turn 설정 변경과 user input의 ordered command contract</li>
+  <li><code class="language-plaintext highlighter-rouge">TurnContext</code>의 per-turn 설정과 <code class="language-plaintext highlighter-rouge">StepContext</code>의 per-request capability snapshot 분리</li>
+  <li>prompt exposure와 dispatch registry의 분리</li>
+  <li>transcript canonical + bounded metadata projection</li>
+  <li>UI/runtime 사이 typed application event protocol</li>
+  <li>subagent parent flush/fork/lifecycle state와 permission inheritance</li>
+  <li>cancellation 뒤에도 terminal event/result를 반드시 남기는 규칙</li>
+  <li>policy approval과 OS enforcement를 별도 계층으로 두는 보안 모델</li>
+</ul>
+
+<h3 id="조건부로-가져갈-것">조건부로 가져갈 것</h3>
+
+<ul>
+  <li>app-server: 두 번째 surface나 remote/headless 요구가 구체화될 때</li>
+  <li>SQLite projection: local derived index + NFS authority/repair 계약을 먼저 설계한 뒤</li>
+  <li>tool deferred search: schema 수가 실제 prompt budget을 압박할 때</li>
+  <li>깊은 multi-agent graph: 실제 workflow가 artifact-aware orchestration으로 부족할 때</li>
+</ul>
+
+<h3 id="그대로-가져오면-안-되는-것">그대로 가져오면 안 되는 것</h3>
+
+<ul>
+  <li>Rust workspace의 crate 분할 수를 architecture maturity로 모방</li>
+  <li>OpenAI model capability matrix를 Farad provider 정책으로 hardcode</li>
+  <li>Linux bubblewrap 전제를 RHEL/HPC 운영에 검증 없이 강제</li>
+  <li>desktop-only 제품에 protocol/server/daemon을 선제 도입</li>
+  <li>SQLite를 NFS canonical state로 사용</li>
+</ul>
+
+<h2 id="20-재현-절차와-출처">20. 재현 절차와 출처</h2>
+
+<h3 id="공개-소스-재현">공개 소스 재현</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/openai/codex.git
+git <span class="nt">-C</span> codex checkout 2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8
+git <span class="nt">-C</span> codex show <span class="nt">-s</span> <span class="nt">--format</span><span class="o">=</span><span class="s1">'%H %cI %s'</span>
+</code></pre></div></div>
+
+<p>핵심 source entry:</p>
+
+<ul>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/mod.rs#L387-L449">Codex queue-pair/session spawn</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/session.rs#L25-L48">Session authority</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/state/service.rs#L50-L104">Session services</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/turn.rs#L129-L460">Turn loop</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/step_context.rs">Request-scoped StepContext</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/session/mod.rs#L533-L540">Bounded submission and unbounded event channels</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/tools/router.rs#L35-L263">Tool router</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/tools/spec_plan.rs#L103-L271">Per-step tool plan</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/tools/src/tool_executor.rs#L13-L43">Tool exposure states</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/core/src/tools/orchestrator.rs">Approval/sandbox ToolOrchestrator</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/protocol/src/protocol.rs">Protocol operations/events</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/protocol/src/protocol.rs#L3141-L3154">RolloutItem variants</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/thread-store/src/store.rs">ThreadStore trait</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/thread-store/src/local/mod.rs#L45-L63">Local JSONL/SQLite store</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/thread-store/src/local/list_threads.rs#L112-L194">Thread list DB/compatibility paths</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/state/src/runtime.rs#L365-L382">SQLite WAL runtime configuration</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/app-server-protocol/src/protocol/common.rs">App-server typed protocol</a></li>
+  <li><a href="https://github.com/openai/codex/blob/2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8/codex-rs/app-server/README.md">App-server transport and protocol guide</a></li>
+</ul>
+
+<p>공식 제품 계약:</p>
+
+<ul>
+  <li><a href="https://learn.chatgpt.com/docs">Codex documentation</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/agent-configuration/subagents.md">Subagents</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md.md">AGENTS.md</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/customization/memories.md">Memories</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/config-file/config-advanced">Configuration</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/agent-approvals-security.md">Agent approvals &amp; security</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/sandboxing.md">Sandbox</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/app-server.md">App server</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/non-interactive-mode.md">Non-interactive mode</a></li>
+  <li><a href="https://learn.chatgpt.com/docs/environments/cloud-environment.md">Cloud environments</a></li>
+</ul>
+
+<h2 id="21-최종-판정">21. 최종 판정</h2>
+
+<p>Codex의 설계 수준을 결정하는 것은 기능 개수가 아니다. <strong>실행 순서, state ownership, OS boundary,
+tool exposure, durable replay, client protocol을 각각 독립 계약으로 만든 뒤 한 turn에 조립했다는 점</strong>이
+핵심이다.</p>
+
+<p>Farad가 Codex와 경쟁하려면 Codex의 모든 surface를 따라갈 필요는 없다. 오히려 Farad가 이미 강한
+provider 중립성, native desktop UX, scheduler, HPC/NFS 운영 계약을 유지하면서 다음 세 축만 Codex
+수준으로 끌어올리는 편이 논리적이다.</p>
+
+<ol>
+  <li>runtime command/event와 per-turn/per-request snapshot 수명의 명문화</li>
+  <li>policy 승인 밖의 실제 command containment</li>
+  <li>canonical transcript와 대규모 query projection의 검증 가능한 복구 계약</li>
+</ol>
+
+<p>이 세 축은 “나중에 기능을 더 넣기 위한 추상화”가 아니라, 현재 agent가 실제 파일과 프로세스를
+다루고 session이 누적되는 순간부터 필요한 production foundation이다. 이 최종 권고는 <code class="language-plaintext highlighter-rouge">A/B</code> 근거를
+Farad 조건에 적용한 <code class="language-plaintext highlighter-rouge">D</code> 등급의 판단이며, §18.7의 미확인 항목을 성능·제품 사실로 간주하지 않는다.</p>
+
+<style>pre.mermaid{overflow-x:auto;background:transparent;border:0;padding:0}.mermaid svg{max-width:100%;height:auto}</style>
+
+<script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({startOnLoad:true,securityLevel:"strict"});
+</script>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[Codex 제품·런타임·아키텍처 심층 분석]]></summary></entry><entry><title type="html">Claude Code 제품·런타임·아키텍처 심층 분석</title><link href="https://hvppycoding.github.io/research/claude-code-architecture-analysis/" rel="alternate" type="text/html" title="Claude Code 제품·런타임·아키텍처 심층 분석" /><published>2026-07-13T23:52:00+09:00</published><updated>2026-07-13T23:52:00+09:00</updated><id>https://hvppycoding.github.io/research/claude-code-architecture-analysis</id><content type="html" xml:base="https://hvppycoding.github.io/research/claude-code-architecture-analysis/"><![CDATA[<h1 id="claude-code-제품런타임아키텍처-심층-분석">Claude Code 제품·런타임·아키텍처 심층 분석</h1>
 
 <blockquote>
   <p><a href="https://hvppycoding.github.io/research/coding-agent-architecture-comparison/">전체 보고서 인덱스</a></p>
@@ -6551,60 +7657,4 @@ check every PR           → 간격 없음 → 동적 모드 ("every"+비시간)
 
 <p>핵심 통찰은 <code class="language-plaintext highlighter-rouge">ScheduleWakeup</code>의 <strong>캐시 인지 지연 선택</strong>이다 — "몇 분마다"라는 인간적 직관 대신
 프롬프트 캐시의 5분 TTL을 비용 모델로 삼아, 270s(캐시 유지) 또는 1200s+(미스를 긴 대기로 분할상환)
-중 하나로 수렴시킨다. 300초 같은 어중간한 값은 가장 비효율적이다.</p>]]></content><author><name>hvppycoding</name></author><category term="claude" /><summary type="html"><![CDATA[Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)]]></summary></entry><entry><title type="html">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기</title><link href="https://hvppycoding.github.io/test/html-passthrough-test/" rel="alternate" type="text/html" title="HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기" /><published>2026-06-25T11:53:05+09:00</published><updated>2026-06-25T11:53:05+09:00</updated><id>https://hvppycoding.github.io/test/html-passthrough-test</id><content type="html" xml:base="https://hvppycoding.github.io/test/html-passthrough-test/"><![CDATA[<h1 id="html-passthrough-테스트--마크다운-파일-안에-순수-html-넣기">HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기</h1>
-
-<p>이 글은 Jekyll(kramdown)이 마크다운 파일 안의 <strong>raw HTML을 그대로 통과</strong>시키는지
-검증하기 위한 테스트 포스트입니다. 아래부터는 마크다운 문법 대신 HTML을 직접 썼습니다.</p>
-
-<div style="border:1px solid #d0d7de; border-radius:12px; padding:20px 24px; margin:24px 0; background:#f6f8fa;">
-  <h2 style="margin-top:0; color:#0969da;">커스텀 HTML 카드</h2>
-  <p style="margin:8px 0; color:#24292f;">
-    이 박스 전체는 마크다운이 아니라 <code>&lt;div&gt;</code> 블록입니다.
-    inline style, 색상, 둥근 모서리가 그대로 렌더되면 통과입니다.
-  </p>
-  <ul style="color:#24292f;">
-    <li>raw HTML 블록 통과 ✔</li>
-    <li>inline style 적용 ✔</li>
-    <li>중첩 요소 렌더 ✔</li>
-  </ul>
-</div>
-
-<table style="border-collapse:collapse; width:100%; margin:16px 0;">
-  <thead>
-    <tr style="background:#0969da; color:white;">
-      <th style="padding:8px 12px; text-align:left;">항목</th>
-      <th style="padding:8px 12px; text-align:left;">결과</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">HTML table</td>
-      <td style="padding:8px 12px; border-bottom:1px solid #d0d7de;">정상</td>
-    </tr>
-    <tr>
-      <td style="padding:8px 12px;">인라인 스타일</td>
-      <td style="padding:8px 12px;">정상</td>
-    </tr>
-  </tbody>
-</table>
-
-<details style="margin:16px 0;">
-  <summary style="cursor:pointer; font-weight:600;">접고 펼치는 &lt;details&gt; 요소</summary>
-  <p style="margin-top:8px;">이 줄은 펼쳐야 보입니다 — 브라우저 네이티브 토글이 동작하는지 확인.</p>
-</details>
-
-<h2 id="다시-마크다운으로">다시 마크다운으로</h2>
-
-<p>위 HTML 블록들 사이/아래에서 일반 <strong>마크다운</strong>도 계속 동작합니다.</p>
-
-<ul>
-  <li>리스트 항목 1</li>
-  <li>리스트 항목 2</li>
-</ul>
-
-<blockquote>
-  <p>인용문도 마크다운 그대로.</p>
-</blockquote>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"코드 블록도 정상"</span><span class="p">)</span>
-</code></pre></div></div>]]></content><author><name>hvppycoding</name></author><category term="test" /><summary type="html"><![CDATA[HTML Passthrough 테스트 — 마크다운 파일 안에 순수 HTML 넣기]]></summary></entry></feed>
+중 하나로 수렴시킨다. 300초 같은 어중간한 값은 가장 비효율적이다.</p>]]></content><author><name>hvppycoding</name></author><category term="claude" /><summary type="html"><![CDATA[Claude Code /loop 내부 동작 — 루프를 떠받치는 함수들 (ScheduleWakeup · Cron · Monitor)]]></summary></entry></feed>
