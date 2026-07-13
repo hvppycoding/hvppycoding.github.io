@@ -1,4 +1,1249 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-14T00:06:14+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 현재 구현 아키텍처 심층 감사</title><link href="https://hvppycoding.github.io/research/farad-architecture-audit/" rel="alternate" type="text/html" title="Farad 현재 구현 아키텍처 심층 감사" /><published>2026-07-13T23:54:00+09:00</published><updated>2026-07-13T23:54:00+09:00</updated><id>https://hvppycoding.github.io/research/farad-architecture-audit</id><content type="html" xml:base="https://hvppycoding.github.io/research/farad-architecture-audit/"><![CDATA[<h1 id="farad-현재-구현-아키텍처-심층-감사">Farad 현재 구현 아키텍처 심층 감사</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-14T00:06:21+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">OpenCode · Claude Code · Codex · Farad 아키텍처 교차 비교</title><link href="https://hvppycoding.github.io/research/opencode-claude-code-codex-farad-comparison/" rel="alternate" type="text/html" title="OpenCode · Claude Code · Codex · Farad 아키텍처 교차 비교" /><published>2026-07-13T23:55:00+09:00</published><updated>2026-07-13T23:55:00+09:00</updated><id>https://hvppycoding.github.io/research/opencode-claude-code-codex-farad-comparison</id><content type="html" xml:base="https://hvppycoding.github.io/research/opencode-claude-code-codex-farad-comparison/"><![CDATA[<h1 id="opencode--claude-code--codex--farad-아키텍처-교차-비교">OpenCode · Claude Code · Codex · Farad 아키텍처 교차 비교</h1>
+
+<blockquote>
+  <p><a href="https://hvppycoding.github.io/research/coding-agent-architecture-comparison/">전체 보고서 인덱스</a></p>
+</blockquote>
+
+<blockquote>
+  <p>조사 기준일: 2026-07-13<br />
+전제: 이 문서는 네 제품을 한 줄짜리 기능표로 환산하지 않는다. 각 제품의 최적화 대상,
+state authority, 실행 경계, 저장 비용이 다르므로 “어디에 쓰느냐”를 포함해 판정한다.<br />
+세부 근거: <a href="https://hvppycoding.github.io/research/opencode-architecture-analysis/">OpenCode</a> · <a href="https://hvppycoding.github.io/research/claude-code-architecture-analysis/">Claude Code</a> ·
+<a href="https://hvppycoding.github.io/research/codex-architecture-analysis/">Codex</a> · <a href="https://hvppycoding.github.io/research/farad-architecture-audit/">Farad</a></p>
+</blockquote>
+
+<h2 id="1-최종-요약">1. 최종 요약</h2>
+
+<p>네 제품은 같은 “coding agent”라는 이름 아래 서로 다른 시스템을 만들었다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>제품</th>
+      <th>실제 정체성</th>
+      <th>가장 강한 축</th>
+      <th>가장 큰 구조 리스크</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenCode</td>
+      <td>provider-neutral HTTP agent server와 여러 client surface</td>
+      <td>개방형 provider·server/API·SDK·확장성</td>
+      <td>V1/V2 이중 구조, 현 V1의 history read amplification, host-level 격리 부재</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td>여러 surface를 가진 Claude 중심 workflow 제품; local CLI/SDK는 process-local runtime</td>
+      <td>agent loop 완성도, context/permission/hook, 장기 자율 workflow</td>
+      <td>Claude 결합, local surface의 process/file affinity, opt-in sandbox, 공개되지 않은 current 내부</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td>typed thread/turn kernel과 여러 OpenAI client surface</td>
+      <td>ordered command/event protocol, OS sandbox, replay/index, subagent lifecycle</td>
+      <td>매우 큰 Rust composition/feature matrix, OpenAI 중심, protocol 운영 복잡도</td>
+    </tr>
+    <tr>
+      <td>Farad</td>
+      <td>provider-neutral native desktop agent application</td>
+      <td>native Qt product와 엄격한 explicit-refresh/HPC/NFS 설계 계약; 구현 위반 존재</td>
+      <td>command containment 부재, runtime/UI hotspot, 확인된 문서-실행 drift와 hot-path 위반</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이 결과는 “Codex 1등, Claude 2등” 같은 단일 순위로 요약할 수 없다.</p>
+
+<ul>
+  <li><strong>provider와 embeddable server가 우선</strong>이면 OpenCode가 가장 자연스럽다.</li>
+  <li><strong>개발자 개인의 가장 깊은 terminal workflow</strong>는 Claude Code가 강하다.</li>
+  <li><strong>지원 플랫폼의 기본 local command containment와 surface-independent runtime protocol</strong>은 Codex가
+기준점이다. 이것이 remote MCP나 모든 side effect까지 자동 격리한다는 뜻은 아니다.</li>
+  <li><strong>멀티 provider native desktop, scheduler, shared HPC/NFS 운영</strong>은 Farad가 가장 명시적인 설계 대상으로
+삼았지만, current hot path가 그 목표를 아직 모두 충족하지 않는다.</li>
+</ul>
+
+<p>Farad에 대한 결론도 “다 갈아엎어야 한다”가 아니다. Farad는 이미 callback-inverted async loop,
+Qt/async 분리, per-turn snapshot, append-oriented transcript, capability exposure, explicit refresh를 갖고
+있다. 부족한 것은 agent loop 자체보다 <strong>OS enforcement, 몇 개 authority 경계의 구현 일치성,
+누적 hot path의 실증, 거대 session projection 책임 분해</strong>다.</p>
+
+<h2 id="2-비교-전제와-버전-경계">2. 비교 전제와 버전 경계</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>제품</th>
+      <th>분석 기준</th>
+      <th>구현 투명성</th>
+      <th>주의할 점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenCode</td>
+      <td><code class="language-plaintext highlighter-rouge">anomalyco/opencode@b3a012c…</code>, package 1.17.18</td>
+      <td>공개 MIT 소스</td>
+      <td>V1 primary path와 진행 중 V2를 분리</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td>조사 당시 npm <code class="language-plaintext highlighter-rouge">latest</code> 2.1.207의 공식 계약 + 로컬 설치 2.1.206 + 로컬 2.1.88 sourcemap 복원</td>
+      <td>제품 비공개, 복원본은 관찰 증거</td>
+      <td>공식 표면의 동작 계약과 서로 다른 버전의 내부 구현을 동일시하지 않음</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td><code class="language-plaintext highlighter-rouge">openai/codex@2b0b37a…</code> + 공식 문서</td>
+      <td>local core/app-server 공개 Apache-2.0</td>
+      <td>호스티드 backend를 local core와 동일시하지 않음</td>
+    </tr>
+    <tr>
+      <td>Farad</td>
+      <td>2026-07-13 현재 dirty worktree</td>
+      <td>현재 소스·테스트·문서 직접 확인</td>
+      <td>설계 문서와 실제 반복 경로가 다르면 소스를 우선</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Claude Code만 구현 증거의 등급이 다르다. 따라서 내부 모듈 품질 비교에서 Claude의 내부 구현 평가는 현재
+공개 제품 계약보다 불확실성이 크다. 반대로 OpenCode와 Codex의 공개 소스가 있다는 이유만으로
+호스티드 서비스까지 공개됐다고 보지 않는다.</p>
+
+<h2 id="3-네-아키텍처를-한-그림에-놓으면">3. 네 아키텍처를 한 그림에 놓으면</h2>
+
+<pre class="mermaid">
+flowchart TB
+    subgraph OC[OpenCode]
+        OCC[&quot;TUI/Web/Desktop/IDE/SDK&quot;] --&gt; OAPI[&quot;transport-independent HTTP app&lt;br/&gt;Worker direct fetch 또는 real HTTP&quot;]
+        OAPI --&gt; OINST[&quot;directory-scoped Effect instance&quot;]
+        OINST --&gt; OLOOP[&quot;V1 SessionPrompt — current primary&quot;]
+        OINST -.-&gt;|migration| OV2[&quot;V2 typed runner/API — incomplete&quot;]
+        OLOOP --&gt; OE[(&quot;shared durable EventV2 log + projector&quot;)]
+        OV2 --&gt; OE
+        OE --&gt; ODB[(&quot;V1 JSON rows / V2 typed projection&quot;)]
+        OLOOP -.-&gt;|high-frequency live delta| OSSE[&quot;legacy bus/SSE — non-durable&quot;]
+    end
+
+    subgraph CC[Claude Code]
+        CCLOCAL[&quot;CLI/IDE/Remote Control&quot;] --&gt; CCP[&quot;local session process&quot;]
+        CCSDK[&quot;Agent SDK host&quot;] --&gt; CCSUB[&quot;CLI subprocess per live SDK session&quot;]
+        CCDW[&quot;Desktop/Web&quot;] --&gt; CCUNK[&quot;official behavior contract&lt;br/&gt;internal topology unknown&quot;]
+        CCP --&gt; CCLOOP[&quot;query loop&lt;br/&gt;(내부명은 2.1.88 관찰)&quot;]
+        CCSUB --&gt; CCLOOP
+        CCLOOP --&gt; CCFS[&quot;working tree + JSONL&quot;]
+        CCLOOP --&gt; CCT[&quot;tools/hooks/MCP/sandbox&quot;]
+    end
+
+    subgraph CX[Codex]
+        CXC[&quot;TUI/IDE/custom client/exec&quot;] --&gt; CXRPC[&quot;core queue or experimental app-server RPC&quot;]
+        CXRPC --&gt; CXTH[&quot;ThreadManager + Session&quot;]
+        CXTH --&gt; CXTURN[&quot;single active turn + ToolRouter&quot;]
+        CXTURN --&gt; CXJ[(&quot;canonical JSONL&quot;)]
+        CXTURN --&gt; CXS[(&quot;SQLite metadata projection&quot;)]
+    end
+
+    subgraph FA[Farad]
+        FUI[&quot;PySide6 UI / UiSession&quot;] --&gt;|typed proxy| FAS[&quot;AsyncSession&quot;]
+        FAS -.-&gt;|AgentEvent| FUI
+        FAS --&gt; FQL[&quot;callback-inverted query_loop&quot;]
+        FQL --&gt; FCAP[&quot;CapabilityCatalog / tools / permission / MCP&quot;]
+        FAS --&gt; FTR[(&quot;chunked append transcript&quot;)]
+        FUI --&gt; FIDX[(&quot;session metadata/index&quot;)]
+    end
+
+</pre>
+
+<p>이 그림에서 가장 큰 차이는 UI toolkit이 아니다. 아래의 “권위”는 저장·filesystem까지 포괄하는
+전역 권위가 아니라 <strong>실행 중인 한 run/turn을 순서화하는 active-run authority</strong>를 뜻한다.</p>
+
+<ul>
+  <li>OpenCode는 active run을 server/session runtime이, conversation을 SQLite가, 실제 side effect를
+filesystem/host process가 소유한다.</li>
+  <li>Claude Code의 확인 가능한 local CLI/SDK에서는 current turn을 session process가, conversation을
+JSONL이, code state를 working tree가 소유한다. Desktop/Web 내부 authority는 판단 보류다.</li>
+  <li>Codex는 active turn을 thread/session queue consumer가, conversation을 JSONL rollout이, 목록 조회를
+SQLite projection이 소유한다.</li>
+  <li>Farad는 async active-run authority와 Qt projection authority를 나누고, transcript와 session index에
+서로 다른 영속 책임을 둔다.</li>
+</ul>
+
+<h2 id="4-공통-아키텍처-매트릭스">4. 공통 아키텍처 매트릭스</h2>
+
+<p><code class="language-plaintext highlighter-rouge">강/중/약</code>은 공통 evidence에서 도출한 <strong>D급 압축 판정</strong>이다. 메커니즘 존재를 운영 품질로
+승격하거나 제품 간 산술 점수로 읽으면 안 된다. <code class="language-plaintext highlighter-rouge">조건부</code>는 기능은 있으나 opt-in, 전환 중, 공개
+증거 부족, 또는 운영자가 별도 경계를 제공해야 함을 뜻한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>축</th>
+      <th>OpenCode</th>
+      <th>Claude Code</th>
+      <th>Codex</th>
+      <th>Farad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>주 제품 형태</td>
+      <td>server + clients</td>
+      <td>multi-surface Claude workflow; local CLI/SDK process runtime 확인</td>
+      <td>runtime kernel + clients</td>
+      <td>native desktop app</td>
+    </tr>
+    <tr>
+      <td>core/surface 분리</td>
+      <td>강</td>
+      <td>official behavior 공통, current 내부 split 미공개</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>한 session active-run authority</td>
+      <td>강</td>
+      <td>local CLI/SDK 강, Desktop/Web 미공개</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>ordered control command</td>
+      <td>중</td>
+      <td>local interactive contract, current 내부 ordering 미공개</td>
+      <td>매우 강</td>
+      <td>중~강</td>
+    </tr>
+    <tr>
+      <td>typed streamed event schema</td>
+      <td>강</td>
+      <td>강</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>event delivery/backpressure</td>
+      <td>legacy SSE/PubSub unbounded; V2 replay route 별도</td>
+      <td>streamed contract 존재, current queue bound 미공개</td>
+      <td>submission 512 bounded, core event unbounded</td>
+      <td>Qt queued delivery, end-to-end bound 미감사</td>
+    </tr>
+    <tr>
+      <td>검증된 provider breadth</td>
+      <td>매우 강</td>
+      <td>중, Claude 배포 경로 중심</td>
+      <td>중, OpenAI 중심</td>
+      <td>중, GLM/Kimi 중심</td>
+    </tr>
+    <tr>
+      <td>core의 provider semantic 결합도</td>
+      <td>낮음</td>
+      <td>높음</td>
+      <td>중~높음</td>
+      <td>낮음</td>
+    </tr>
+    <tr>
+      <td>tool schema/dispatch 분리</td>
+      <td>중~강</td>
+      <td>중(2.1.88 Tool 결합 관찰)</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>deferred capability exposure</td>
+      <td>일부/진행</td>
+      <td>강</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>permission policy</td>
+      <td>강한 설정력·기본 permissive</td>
+      <td>매우 강</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>OS command sandbox</td>
+      <td>약</td>
+      <td>지원 OS 강·opt-in, native Windows 없음</td>
+      <td>강한 기본 구조이나 platform/kernel/profile/full-access 조건부</td>
+      <td>약</td>
+    </tr>
+    <tr>
+      <td>canonical conversation replay</td>
+      <td>lifecycle durable log 존재; legacy SSE 약, V2 replay API 강</td>
+      <td>강</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>query index/projection</td>
+      <td>event-projected SQLite rows; updated-order index·10k 실증 부족</td>
+      <td>약~중</td>
+      <td>강한 구조, 실증 필요</td>
+      <td>session index 강; transcript rewind·repair gap 확인</td>
+    </tr>
+    <tr>
+      <td>context compaction</td>
+      <td>강</td>
+      <td>매우 강</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>subagent lifecycle</td>
+      <td>중~강</td>
+      <td>매우 강</td>
+      <td>매우 강</td>
+      <td>강</td>
+    </tr>
+    <tr>
+      <td>interactive background delegation</td>
+      <td>중, experimental/process-local</td>
+      <td>강, surface별 제약</td>
+      <td>강, child thread lifecycle</td>
+      <td>강, 앱 runtime</td>
+    </tr>
+    <tr>
+      <td>durable scheduled execution</td>
+      <td>근거 없음</td>
+      <td>local <code class="language-plaintext highlighter-rouge">/loop</code>는 process-bound; cloud 별도</td>
+      <td>본 조사 증거로 판단 보류</td>
+      <td>강한 제품 domain, hot-path 감사 필요</td>
+    </tr>
+    <tr>
+      <td>skill/procedural context</td>
+      <td>강</td>
+      <td>매우 강</td>
+      <td>강</td>
+      <td>강, lazy body와 exposure</td>
+    </tr>
+    <tr>
+      <td>plugin/hook execution</td>
+      <td>강, host JS trust surface</td>
+      <td>매우 강, 넓은 hook trust surface</td>
+      <td>중~강, extension별 계약</td>
+      <td>조건부, data plugin은 강하나 plugin-hook executable wiring 미확인</td>
+    </tr>
+    <tr>
+      <td>MCP lifecycle</td>
+      <td>강</td>
+      <td>강</td>
+      <td>강</td>
+      <td>강, workspace server는 미완</td>
+    </tr>
+    <tr>
+      <td>desktop surface/features·감사 가능성</td>
+      <td>Electron beta·public client source</td>
+      <td>기능 강, current 내부 비공개</td>
+      <td>기능 강, 일부 내부 비공개</td>
+      <td>native Qt 기능 강, local source 감사 가능</td>
+    </tr>
+    <tr>
+      <td>headless automation</td>
+      <td>매우 강</td>
+      <td>강, subprocess SDK</td>
+      <td>매우 강</td>
+      <td>약~중</td>
+    </tr>
+    <tr>
+      <td>embedding surface 존재</td>
+      <td>HTTP/OpenAPI/SDK</td>
+      <td>CLI subprocess hosting</td>
+      <td>experimental app-server/custom client</td>
+      <td>in-process app 중심</td>
+    </tr>
+    <tr>
+      <td>public stability</td>
+      <td>강한 surface, V1/V2 drift 조건부</td>
+      <td>공식 SDK 계약, process hosting 비용</td>
+      <td>app-server experimental</td>
+      <td>별도 public application protocol 없음</td>
+    </tr>
+    <tr>
+      <td>local-store topology fit</td>
+      <td>SQLite/WAL, benchmark 별도</td>
+      <td>JSONL/file affinity, current scale 미공개</td>
+      <td>JSONL+SQLite, 10k 미실증</td>
+      <td>chunk/index, 실제 hot-path 위반 확인</td>
+    </tr>
+    <tr>
+      <td>NFS/shared HPC 계약</td>
+      <td>약</td>
+      <td>약</td>
+      <td>명시 계약 없음, 별도 검증</td>
+      <td>매우 강(설계), 반복 경로 위반 확인</td>
+    </tr>
+    <tr>
+      <td>N=10,000 명시적 계약</td>
+      <td>약</td>
+      <td>약</td>
+      <td>중(구조 유리, 실증 미확인)</td>
+      <td>매우 강(설계), 구현 위반 확인</td>
+    </tr>
+    <tr>
+      <td>구현 단순성</td>
+      <td>약~중</td>
+      <td>current 판단 보류; 2.1.88 복잡도 관찰</td>
+      <td>약</td>
+      <td>중</td>
+    </tr>
+    <tr>
+      <td>구현 감사 가능성</td>
+      <td>매우 강, public</td>
+      <td>약, 제품 비공개</td>
+      <td>매우 강, local core public</td>
+      <td>매우 강, 현재 local source</td>
+    </tr>
+    <tr>
+      <td>배포·license posture</td>
+      <td>MIT 공개 소스</td>
+      <td>proprietary 제품</td>
+      <td>local core Apache-2.0, hosted 별도</td>
+      <td>현재 worktree에 배포 license 선언 미확인</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="5-active-run-authority와-threadprocess-ownership">5. Active-run authority와 thread/process ownership</h2>
+
+<p>여기서 active-run owner와 저장 자원을 혼동하면 “세션 10,000개 = 프로세스 10,000개” 같은 잘못된
+비교가 생긴다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>제품</th>
+      <th>historical persisted</th>
+      <th>loaded/runtime-resident</th>
+      <th>concurrently active execution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenCode</td>
+      <td>SQLite session/message/part</td>
+      <td>directory-scoped instance cache와 session state</td>
+      <td>같은 session의 run state 하나</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td>JSONL session 파일</td>
+      <td>재개하거나 열린 session state</td>
+      <td>실행 중 Agent SDK/agent-view session별 local process</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td>JSONL rollout + SQLite metadata projection</td>
+      <td>ThreadManager가 연 thread/session</td>
+      <td>thread별 active task 최대 하나</td>
+    </tr>
+    <tr>
+      <td>Farad</td>
+      <td>chunked transcript + session metadata/index</td>
+      <td>앱이 연 UiSession/AsyncSession projection</td>
+      <td>session별 turn task 최대 하나</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이 표의 loaded 비용과 historical 목록 비용, active CPU/process 비용은 각각 따로 측정해야 한다.</p>
+
+<h3 id="51-opencode-directory-scoped-server-authority">5.1 OpenCode: directory-scoped server authority</h3>
+
+<p>OpenCode client는 directory/session을 지정하고 server가 해당 normalized directory의 Effect service
+graph를 선택한다. 같은 session의 run은 <code class="language-plaintext highlighter-rouge">SessionRunState</code>가 하나로 직렬화한다. 장점은 client를
+추가해도 runtime이 하나라는 점이다. 단점은 server credential이 사실상 해당 OS user가 볼 수 있는
+directory와 command 전반의 capability가 된다는 점과, long-lived instance cache에 명시적 LRU/TTL이
+없다는 점이다.</p>
+
+<h3 id="52-claude-code-local-clisdk-process-isolation으로-단순화">5.2 Claude Code local CLI/SDK: process isolation으로 단순화</h3>
+
+<p>확인 가능한 local CLI는 conversation owner와 cwd, tools, state를 한 local process에 묶는다. SDK도
+가벼운 in-process library라기보다 session별 CLI subprocess를 띄우는 방식이다. 이 선택은 singleton과
+ambient state를 process boundary로 격리해 개인 workflow를 단순화한다. 하지만 <strong>동시에 실행 중인</strong>
+SDK/agent-view session 수만큼 memory, process tree, routing, local disk affinity가 늘어난다. 과거에
+저장된 session 수가 process 수로 직결되는 것은 아니다. process-global state의 세부 구현은 2.1.88
+sourcemap 관찰(C)이며 현재 2.1.207 내부나 Desktop/Web topology와 같다고 단정하지 않는다.</p>
+
+<h3 id="53-codex-ordered-queue를-소비하는-threadsession">5.3 Codex: ordered queue를 소비하는 thread/session</h3>
+
+<p>Codex의 <code class="language-plaintext highlighter-rouge">Submission in / Event out</code>은 가장 명확한 control plane이다. settings update, input,
+interrupt, approval, refresh가 같은 queue ordering을 타며 session에는 active task가 하나뿐이다.
+client가 mutable session field를 직접 고치지 않으므로 “어떤 설정으로 이 turn이 시작했는가”를
+replay하기 쉽다.</p>
+
+<h3 id="54-farad-ui-projection과-async-execution-분리">5.4 Farad: UI projection과 async execution 분리</h3>
+
+<p>Farad는 <code class="language-plaintext highlighter-rouge">UiSession</code>이 Qt-thread 화면 상태와 signal을, <code class="language-plaintext highlighter-rouge">AsyncSession</code>이 transcript projection,
+turn task, permission rendezvous, tool cancellation을 소유한다. proxy와 queued signal이 두 thread를
+연결한다. 이는 native GUI에 적합한 명시적 ownership이다. current Claude Code 전체 제품과 내부
+응집도를 직접 우열 비교할 공개 근거는 없다. 단, boundary를 우회해 Qt가 async-side mutable object를
+직접 읽거나, async loop가 동기 disk I/O를 수행하면 장점이 즉시
+사라진다. 따라서 문서가 아니라 각 call path의 thread ownership test가 중요하다.</p>
+
+<h3 id="판정">판정</h3>
+
+<ul>
+  <li>가장 명시적 ordering: <strong>Codex</strong></li>
+  <li>다중 client 권위: <strong>OpenCode</strong></li>
+  <li>확인 가능한 local surface에서 가장 단순한 process isolation: <strong>Claude Code</strong></li>
+  <li>rich desktop에 맞는 이중 projection: <strong>Farad</strong></li>
+</ul>
+
+<p>Farad는 Codex queue를 그대로 복제할 필요는 없다. 다만 <code class="language-plaintext highlighter-rouge">submit/start/steer/cancel/approve/settings
+snapshot</code>의 ordering을 현재 proxy/event contract에 명시하고 테스트할 필요가 있다.</p>
+
+<h2 id="6-agent-loop와-상태-머신">6. Agent loop와 상태 머신</h2>
+
+<p>네 제품의 기본 loop는 모두 <code class="language-plaintext highlighter-rouge">model stream → tool decision → execute → append result → continue</code>다.
+차이는 loop가 무엇까지 소유하느냐다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>제품</th>
+      <th>loop owner</th>
+      <th>iteration state</th>
+      <th>terminal/recovery 특징</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenCode</td>
+      <td><code class="language-plaintext highlighter-rouge">SessionPrompt</code> + <code class="language-plaintext highlighter-rouge">SessionProcessor</code></td>
+      <td>DB message/parts + run state</td>
+      <td>compaction/subtask/plugin/tool을 중앙 조정; V2로 이전 중</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td>query loop (<code class="language-plaintext highlighter-rouge">QueryEngine/queryLoop</code>는 2.1.88 관찰 C)</td>
+      <td>message state, compact/recovery/turn/budget</td>
+      <td>공식 행동 계약은 세밀, 내부명은 현재 미확인</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td><code class="language-plaintext highlighter-rouge">Session/run_turn</code></td>
+      <td>turn-scoped <code class="language-plaintext highlighter-rouge">TurnContext</code> + request-scoped <code class="language-plaintext highlighter-rouge">StepContext</code>, history, active task</td>
+      <td>ordered Op, compaction, tool routing, typed events</td>
+    </tr>
+    <tr>
+      <td>Farad</td>
+      <td><code class="language-plaintext highlighter-rouge">AsyncSession/query_loop</code></td>
+      <td><code class="language-plaintext highlighter-rouge">TurnState</code>, <code class="language-plaintext highlighter-rouge">TurnContext</code>, callbacks</td>
+      <td>flat async generator, terminal/transition event, abort invariant</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Farad와 2.1.88 sourcemap에서 관찰한 Claude Code의 flat async generator는 구조적으로 가깝다(C).
+현재 2.1.207이 같은 내부 구현을 유지한다는 뜻은 아니다. Farad의 <code class="language-plaintext highlighter-rouge">query_loop</code>는 app-layer class를
+import하지 않고 callback으로 system prompt, model, permission, compaction, tool execution을 받는다.
+이것은 테스트성과 SDK/app 경계를 지키는 좋은 선택이다.</p>
+
+<p>OpenCode의 현재 V1은 매 step에서 DB의 compacted view를 다시 materialize한다. DB authority와 client
+projection은 좋지만 loop hot path가 누적 history에 비례한다. 진행 중 V2는 context epoch 이후만
+읽는 방향으로 이를 고치려 한다.</p>
+
+<p>Codex의 특별한 강점은 loop 내부가 아니라 loop로 들어오는 control operation의 ordering이다.
+turn configuration은 <code class="language-plaintext highlighter-rouge">TurnContext</code>가 고정하고, 각 model sampling request에 보이는 environment,
+capability root, MCP runtime/tool list, <code class="language-plaintext highlighter-rouge">AGENTS.md</code>는 <code class="language-plaintext highlighter-rouge">StepContext</code>가 같은 request view로 묶는다.
+Claude/Farad도 active turn 하나를 지키지만, Codex는 live settings mutation까지 command stream에 넣어
+재현성을 높인다. 단 DeferredExecutor가 켜진 Codex는 sampling request 경계에서 filesystem-derived
+state를 refresh할 수 있으므로, 이 freshness 정책은 Farad의 explicit-refresh 계약과 같지 않다.</p>
+
+<h2 id="7-context-transcript-compaction-world-state">7. Context, transcript, compaction, world state</h2>
+
+<h3 id="71-공통된-좋은-방향">7.1 공통된 좋은 방향</h3>
+
+<p>네 제품 모두 다음 사실을 인정한다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>raw transcript != active conversation chain != model request context != UI projection
+</code></pre></div></div>
+
+<ul>
+  <li>raw transcript는 감사와 resume를 위한 장기 기록이다.</li>
+  <li>compaction은 raw history를 없애는 대신 model view를 대체한다.</li>
+  <li>skills/instructions/tool schema/world state는 request마다 별도 규칙으로 합쳐진다.</li>
+  <li>UI streaming placeholder는 durable conversation authority가 아니다.</li>
+</ul>
+
+<h3 id="72-제품별-차이">7.2 제품별 차이</h3>
+
+<p><strong>OpenCode</strong>의 현재 primary V1은 SQLite의 mutable message/part JSON projection에 상세 tool lifecycle을
+보존하고 compaction summary를 추가한다. lifecycle 변경은 이미 공용 EventV2 durable log에 append되고
+같은 transaction에서 projection되며, 고빈도 <code class="language-plaintext highlighter-rouge">message.part.delta</code>와 legacy SSE만 비영속이다. 진행 중인
+V2는 durable substrate를 새로 만드는 것이 아니라 typed session message/input/context projection,
+context epoch, 새 runner/API를 얹는다. V2는 compaction continuation과 replay-then-live API도 구현했지만
+durable execution ownership, bounded retry, plugin/MCP parity 등은 남아 있다. V1은 과거 row를 읽은 뒤
+버리는 read amplification이 약점이다.</p>
+
+<p><strong>Claude Code</strong>는 append-oriented JSONL chain, resume/fork, file checkpoint를 제공한다. prompt cache를
+위해 stable prefix를 적극 관리하고, snip/microcompact/context collapse/autocompact 및 large output
+spill을 조합한다. 하지만 session JSONL과 working tree는 원자적 transaction이 아니며, compaction
+summary가 nested instruction이나 오래된 skill 세부를 잃을 수 있다.</p>
+
+<p><strong>Codex</strong>는 rollout item에 response, inter-agent communication, turn context, world state,
+compaction을 타입으로 구분한다. JSONL을 durable replay 원본으로 두고 SQLite는 조회 projection이다.
+원본과 index authority가 가장 명료하다.</p>
+
+<p><strong>Farad</strong>는 append-only transcript, chunked storage, marker twin, per-turn reminder, runtime metadata의
+on-demand tool 분리를 명시한다. <code class="language-plaintext highlighter-rouge">working_folder_meta</code> 같은 byte-stable marker는 변경된 대화성 context만
+transcript에 남겨 재현성과 prompt cache를 동시에 지킨다. 중요한 질문은 disk append와 in-memory/UI
+projection 사이 failure ordering, 큰 transcript의 active-window read가 실제 반복 경로에서도 bounded인지다.</p>
+
+<h3 id="판정-1">판정</h3>
+
+<ul>
+  <li>가장 세밀한 개인 coding context 최적화: <strong>Claude Code</strong></li>
+  <li>가장 명시적인 replay/index authority: <strong>Codex</strong></li>
+  <li>provider/server DB projection: <strong>OpenCode</strong></li>
+  <li>NFS와 대화 재현성을 함께 명세한 방향: <strong>Farad</strong></li>
+</ul>
+
+<h2 id="8-tool-architecture와-capability-exposure">8. Tool architecture와 capability exposure</h2>
+
+<h3 id="공통-pipeline">공통 pipeline</h3>
+
+<p>model-visible tool path는 대체로 다음 단계로 수렴한다. hook, permission, spill, persistence는
+제품과 tool 종류에 따라 optional이며, local OS containment는 generic execute와 별도 경계다.</p>
+
+<pre class="mermaid">
+flowchart LR
+    DISC[Discover/load] --&gt; CAT[Catalog]
+    CAT --&gt; EXP[Per-turn exposure]
+    EXP --&gt; MODEL[Model schema]
+    MODEL --&gt; VAL[Validate input]
+    VAL --&gt; POLICY[Optional hook + permission]
+    POLICY --&gt; ROUTE[Tool-kind adapter]
+    ROUTE --&gt; INPROC[In-process built-in]
+    ROUTE --&gt; LOCAL[Local child process]
+    LOCAL --&gt; CONTAIN[OS containment when available]
+    ROUTE --&gt; REMOTE[Remote MCP trust/transport]
+    INPROC --&gt; BOUND[Bound/spill result]
+    CONTAIN --&gt; BOUND
+    REMOTE --&gt; BOUND
+    BOUND --&gt; EVENT[Persist + event]
+
+</pre>
+
+<p>차이는 각 칸을 얼마나 명시적으로 분리했는가다.</p>
+
+<ul>
+  <li>Codex는 dispatch registry와 <code class="language-plaintext highlighter-rouge">model_visible_specs</code>를 타입상 분리하고
+Direct/Deferred/DirectModelOnly/Hidden exposure를 per-step plan으로 만든다.</li>
+  <li>Farad는 Registry/Factory/Loader와 CapabilityCatalog, Off/Searchable/Active exposure, run readiness
+snapshot을 분리한다.</li>
+  <li>Claude Code는 ToolSearch, skill lazy body, streamed tool executor, conservative concurrency flag로
+prompt와 wall time을 줄인다.</li>
+  <li>OpenCode는 built-in/custom/MCP tool을 provider adapter 위에 조합하고 output truncation을 갖지만,
+current V1 resolver와 V2 tool execution이 전환 중이다.</li>
+</ul>
+
+<h3 id="병렬성">병렬성</h3>
+
+<ul>
+  <li>Claude Code와 Codex는 safe/read tool만 병렬, mutation은 직렬이라는 fail-closed 기본에 가깝다.
+Claude의 schema/call/permission/concurrency/result/TUI render 결합은 2.1.88 관찰(C)이고 현재 내부는
+공개되지 않았다.</li>
+  <li>OpenCode는 underlying AI SDK/tool declaration과 Effect concurrency를 사용하므로 tool별 안전성 및
+shared filesystem 충돌 검증이 중요하다.</li>
+  <li>Farad도 parallel dispatch와 per-tool cancellation을 갖지만, concurrency declaration과 terminal
+event invariant가 모든 built-in/MCP path에서 동일한지 회귀 테스트가 필요하다.</li>
+</ul>
+
+<h3 id="판정-2">판정</h3>
+
+<p>schema budget과 dispatch separation의 기준점은 Codex다. Farad는 이 분야에서 뒤처진다기보다 이미
+유사한 product-specific 구조를 갖는다. 추가 abstraction보다 catalog/exposure/readiness의 <strong>동일
+snapshot 사용</strong>과 국소 invalidation을 입증하는 것이 우선이다.</p>
+
+<h2 id="9-permission과-실제-command-containment">9. Permission과 실제 command containment</h2>
+
+<p>이 축에서는 용어를 엄격히 구분해야 한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>제품</th>
+      <th>policy decision</th>
+      <th>OS/process enforcement</th>
+      <th>기본 함의</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenCode</td>
+      <td>wildcard allow/ask/deny, tool-specific parser</td>
+      <td>내장 host sandbox 확인 안 됨</td>
+      <td>승인은 있으나 shell/plugin은 host user 권한</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td>mode/rules/hooks/classifier</td>
+      <td>macOS Seatbelt/Linux·WSL bubblewrap sandbox, opt-in; native Windows 미지원</td>
+      <td>지원 OS에서 켜면 강함; unavailable 시 fail-open 가능 unless configured</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td>approval/exec rules/tool annotation</td>
+      <td>platform-native sandbox가 local 기본</td>
+      <td>policy와 기술 경계를 가장 명확히 분리</td>
+    </tr>
+    <tr>
+      <td>Farad</td>
+      <td>scoped PermissionManager와 tool checks</td>
+      <td>agent command용 OS sandbox 없음</td>
+      <td>정책은 강하지만 arbitrary child process containment가 없음</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="왜-이것이-최우선-격차인가">왜 이것이 최우선 격차인가</h3>
+
+<p>permission parser는 model과 user 사이의 의사결정이고 sandbox는 kernel/OS가 child process를 막는
+기술 경계다. Bash tool이 <code class="language-plaintext highlighter-rouge">python -c</code>, compiler, git hook, package script를 실행할 수 있다면 개별
+Read/Edit tool의 semantic guard는 우회 가능하다. plugin hook과 MCP stdio server도 별도 process
+surface다.</p>
+
+<p>OpenCode 내부에서도 기억 범위가 다르다. V1 <code class="language-plaintext highlighter-rouge">always</code>는 directory instance 메모리라 restart에 사라지지만,
+V2 <code class="language-plaintext highlighter-rouge">always</code>는 save resource가 있을 때 project-scoped SQLite rule로 영속될 수 있다. 반면 pending approval은
+여전히 process-local이다. 따라서 “approval UI가 있다”와 “durable project policy가 있다”도 분리해 봐야 한다.</p>
+
+<p>OpenCode와 Farad는 이 구분에서 가장 취약하다. Claude는 지원 OS에서 sandbox가 있지만 기본 활성화가
+아니고 dependency가 없을 때 명시적으로 fail-closed를 설정하지 않으면 unsandboxed fallback이
+가능하다. native Windows에서는 같은 sandbox가 동작하지 않으므로 permission만으로 동일한 격리를
+얻었다고 보면 안 된다. Codex는 <strong>지원 플랫폼의 기본 local agent-command containment</strong>에서 protected
+path와 network policy까지 가장 강하다. <code class="language-plaintext highlighter-rouge">danger-full-access</code>, platform/backend 차이, remote MCP side
+effect 때문에 이 판정을 “제품의 모든 보안”으로 확대해서는 안 된다.</p>
+
+<p>Farad가 취할 방향은 “Codex와 동일한 bubblewrap 명령”이 아니다. RHEL 8.10 공유 HPC, user namespace
+제한, Windows를 전제로 다음을 먼저 계약해야 한다.</p>
+
+<ul>
+  <li>filesystem/network/process-tree/socket별 <code class="language-plaintext highlighter-rouge">enforced / unavailable / disabled</code>를 표시하고, 선택 profile의
+required guarantee를 모두 만족할 때만 overall <code class="language-plaintext highlighter-rouge">enforced</code>로 표시</li>
+  <li>permission posture와 containment capability를 직교 상태로 유지</li>
+  <li>Bash, background shell, user-configured hook, stdio MCP child 중 어느 local process가 경계 대상인지 inventory</li>
+  <li>backend가 없을 때 fail-closed가 필요한 managed policy와 사용자 선택형 fallback 구분</li>
+  <li>workspace write/read/network/socket/process-tree 규칙과 platform adapter</li>
+</ul>
+
+<p>HTTP/SSE MCP의 원격 side effect는 local OS sandbox로 격리할 수 없다. 이 경로는 permission, server trust,
+credential scope와 provenance로 통제해야 한다. 현재 Farad skill은 instruction package이고 plugin hook은
+metadata discovery와 executable wiring이 분리돼 있으므로 둘을 현행 local spawn surface로 과장하지 않는다.</p>
+
+<h2 id="10-mcp-skills-plugins-hooks">10. MCP, skills, plugins, hooks</h2>
+
+<p>네 제품 모두 이 확장 primitive를 갖지만 의미는 다르다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>primitive</th>
+      <th>올바른 책임</th>
+      <th>잘못된 평탄화의 위험</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instruction/rule file</td>
+      <td>model context</td>
+      <td>enforcement로 오해</td>
+    </tr>
+    <tr>
+      <td>skill</td>
+      <td>lazy procedural context + assets/scripts</td>
+      <td>항상 prompt에 전부 주입</td>
+    </tr>
+    <tr>
+      <td>MCP</td>
+      <td>external capability/resource connection</td>
+      <td>local built-in tool과 lifecycle을 동일시</td>
+    </tr>
+    <tr>
+      <td>hook</td>
+      <td>deterministic lifecycle policy/automation</td>
+      <td>core business logic을 hook에 숨김</td>
+    </tr>
+    <tr>
+      <td>plugin</td>
+      <td>위 primitive의 배포 단위</td>
+      <td>설치가 곧 신뢰라는 가정</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Claude Code는 이 구분을 가장 풍부한 제품 계약으로 제공하고, Codex는 per-step planner와 typed
+extension으로 이를 core에 통합한다. OpenCode는 provider/plugin 생태계와 server extension이 강하지만
+arbitrary JS plugin이 host process 권한을 공유한다. Farad는 4-layer Registry/Factory/Loader,
+marketplace, exposure, explicit refresh와 delta MCP reconcile을 갖고 <strong>명세상</strong> NFS 비용을 가장 엄격히
+제한한다. settings/endpoint/MCP current path가 그 명세를 실제로 위반한다는 감사 결과를 함께 봐야 한다.</p>
+
+<p>Farad의 차별점은 “항상 최신”이 아니라 <strong>명시적 refresh와 write-after-invalidate</strong>다. Claude/OpenCode의
+turn-time refresh나 file watch를 무조건 이식하면 NFS file-content round trip과 재현성이 나빠진다.
+현재 감사에서는 capability discovery는 이 계약을 대체로 지키지만, settings/endpoint는 5분 mtime timer,
+per-turn tier stat, 20분 poller의 endpoint config reconcile이라는 세 freshness 축을 동시에 가지고 있었고
+first/dirty MCP turn도 blocking reconcile을 기다렸다. 기본 composition에는 discovery provider가 없어
+20분 경로가 Ollama network probe를 실행하지는 않지만, Qt callback의 stat·selection·signal fanout은 남는다.
+따라서 이 축에서 Farad의 점수는 “좋은 명세”가 아니라 <strong>확인된 계약-구현 gap</strong>을 반영해야 한다.</p>
+
+<h2 id="11-multi-agent-background-work-scheduler">11. Multi-agent, background work, scheduler</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>제품</th>
+      <th>child 단위</th>
+      <th>context 관계</th>
+      <th>file isolation</th>
+      <th>interactive owner</th>
+      <th>durable schedule</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenCode</td>
+      <td>child session/task</td>
+      <td>parent-linked, foreground/background</td>
+      <td>기본 shared directory; 별도 격리 미확인</td>
+      <td>server process, experimental job</td>
+      <td>근거 없음</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td>subagent/session/team member</td>
+      <td>기본 fresh context, <code class="language-plaintext highlighter-rouge">fork</code>는 parent 상속 + result/mailbox</td>
+      <td>shared FS 또는 worktree</td>
+      <td>CLI process/per-user supervisor/cloud</td>
+      <td>local <code class="language-plaintext highlighter-rouge">/loop</code>는 process-bound; cloud 별도</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td>child agent thread</td>
+      <td>parent rollout flush + fork snapshot</td>
+      <td>shared workspace/environment policy</td>
+      <td>ThreadManager/agent graph</td>
+      <td>본 조사 증거로 판단 보류</td>
+    </tr>
+    <tr>
+      <td>Farad</td>
+      <td>subagent/runtime task/scheduled session</td>
+      <td>session/task artifact와 event</td>
+      <td>product policy에 따름</td>
+      <td>app runtime</td>
+      <td>persistent scheduler store</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Claude Code는 subagent, independent agent view, experimental team, worktree를 서로 다른 primitive로
+분리한 점이 좋다. 현재 일반 subagent는 최대 depth 5까지 nested delegation을 지원하고, <code class="language-plaintext highlighter-rouge">fork</code>만 다시
+fork할 수 없다. 다만 team은 experimental이고 resume/file-conflict 제약이 있으므로 durable team
+workflow로 과대평가하지 않는다. Codex는 child를 별도 thread로 만들어 lifecycle과 permission
+inheritance를 명시적으로 기록하지만, 이것만으로 장기 durable team workflow가 입증되지는 않는다.
+OpenCode는 server session tree가 자연스럽지만 background job은 process-local·non-durable이고 V2
+durable multi-node ownership은 아직 진행 중이다.</p>
+
+<p>Farad의 scheduler는 부가 CLI loop가 아니라 앱의 제품 기능이라는 점이 차별점이다. 그러나 scheduler가
+Qt timer에서 10,000 item을 주기적으로 stat/sort하거나 UI thread에 I/O를 올리면 이 차별점이 오히려
+가장 큰 운영 병목이 된다. scheduler의 authority, due index, executor thread, run idempotency를 별도로
+감사해야 한다.</p>
+
+<h2 id="12-provider-abstraction">12. Provider abstraction</h2>
+
+<h3 id="opencode">OpenCode</h3>
+
+<p>가장 폭넓고 제품 정체성 자체가 provider neutral이다. AI SDK/native adapter와 model catalog, provider
+config가 runtime의 중심이다. 장점은 선택권이고, 비용은 provider별 tool/reasoning/stream/error
+normalization의 거대한 compatibility matrix다.</p>
+
+<h3 id="claude-code">Claude Code</h3>
+
+<p>Bedrock/Vertex/Foundry와 gateway를 지원해도 메시지 의미론과 최적화는 Claude 모델 중심이다. 이는
+제품 품질에는 장점이지만 범용 kernel의 중립성은 낮다.</p>
+
+<h3 id="codex">Codex</h3>
+
+<p>model provider interface와 OSS endpoint가 있으나 auth, model catalog, 최신 기능과 hosted surface는
+OpenAI 중심이다. OpenCode 수준의 동등 provider experience라고 보기는 어렵다.</p>
+
+<h3 id="farad">Farad</h3>
+
+<p>hvppyai를 HTTP/types library로 제한하고 agent loop를 app 계층에 둔다. GLM/Kimi 같은 near-frontier
+provider를 first-class로 취급해야 하므로 이 경계는 유지할 가치가 크다. provider capability 차이를
+SDK에 agent policy로 hardcode하지 말고 turn/readiness adapter에서 해석해야 한다.</p>
+
+<h3 id="판정-3">판정</h3>
+
+<p>두 질문을 분리해야 한다.</p>
+
+<ul>
+  <li><strong>검증된 provider breadth</strong>: 75+ provider와 adapter matrix를 운영하는 OpenCode가 선두다.</li>
+  <li><strong>core semantic coupling과 architecture neutrality</strong>: Farad의 hvppyai/app 경계가 강하다. 다만
+GLM/Kimi first-class 목표가 OpenCode급 breadth나 모든 provider parity를 입증하지는 않는다.</li>
+</ul>
+
+<h2 id="13-ui와-human-in-the-loop">13. UI와 human-in-the-loop</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>제품</th>
+      <th>UI의 강점</th>
+      <th>구조상 주의점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OpenCode</td>
+      <td>TUI/Web/Electron/IDE가 API를 공유</td>
+      <td>SSE gap refetch, remote auth, client/server version</td>
+    </tr>
+    <tr>
+      <td>Claude Code</td>
+      <td>terminal workflow와 permission/diff/plan 밀도</td>
+      <td>local CLI 및 2.1.88 관찰(C)의 TUI/core render 결합·process-local state; Desktop/Web 내부 미확인</td>
+    </tr>
+    <tr>
+      <td>Codex</td>
+      <td>TUI/IDE/App에서 thread/subagent/approval 공유</td>
+      <td>app-server protocol evolution과 connection state</td>
+    </tr>
+    <tr>
+      <td>Farad</td>
+      <td>persistent sidebar, timeline, scheduler, settings, native terminal</td>
+      <td>Qt thread I/O, huge projection class, signal fanout</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Farad가 가장 잘할 수 있는 것은 Claude/Codex CLI를 픽셀 단위로 복제하는 일이 아니다. long-lived
+session, multiple provider, schedule, permission, context usage, subagent 상태를 <strong>저사양 desktop에서
+지속적으로 이해 가능하게 투영</strong>하는 것이다. 이 우위는 runtime authority를 UI가 침범하지 않을 때만
+유지된다.</p>
+
+<h2 id="14-persistence-nfs-n10000">14. Persistence, NFS, N=10,000</h2>
+
+<h3 id="141-local-ssd와-nfs는-다른-문제다">14.1 local SSD와 NFS는 다른 문제다</h3>
+
+<p>OpenCode의 SQLite WAL, Claude의 JSONL+stat, Codex의 JSONL+SQLite는 local disk에서 합리적이다.
+하지만 NFS에서는 SQLite locking, WAL, file-per-item content read, 대량 concurrent stat가 전혀 다른
+비용과 실패를 낳는다.</p>
+
+<p>Farad의 공식 비용 모델은 다음을 요구한다.</p>
+
+<ul>
+  <li>반복 경로는 누적 entity 수에 대해 O(1) 또는 visible-only</li>
+  <li>list data는 단일 derived index와 mtime/size delta 검증</li>
+  <li>content read는 changed file에만</li>
+  <li>전체 reconcile은 startup/명시 refresh처럼 bounded one-shot</li>
+  <li>external change 감지는 polling/watch가 아니라 explicit reconcile</li>
+</ul>
+
+<h3 id="142-제품별-판정">14.2 제품별 판정</h3>
+
+<ul>
+  <li>OpenCode V1은 한 긴 transcript에서 agent step마다 O(N) history materialization이라 가장 직접적인
+hot-path 문제가 있다. session list는 반환 수가 제한돼도 <code class="language-plaintext highlighter-rouge">time_updated</code> compound index가 없어 후보
+scan/sort 비용은 10k에서 미검증이다. SQLite WAL도 shared NFS canonical DB로는 별도 검증이 필요하다.
+<code class="language-plaintext highlighter-rouge">OPENCODE_DB</code>로 node-local path를 지정할 구현상 완화책은 있으나 공식 배포 계약은 약하다.</li>
+  <li>Claude Code는 2.1.88 sourcemap 관찰(C)에서 resume list가 O(N) stat/sort 후 recent item만 content
+read했다. local SSD에는 합리적일 수 있지만 현재 2.1.207 구현으로 단정할 수 없고, 그 관찰 경로는
+Farad의 10k 반복 계약에는 맞지 않는다.</li>
+  <li>Codex는 JSONL canonical과 SQLite query index 분리가 좋은 구조적 참고다. 다만 10,000 thread latency,
+fallback/rebuild bound, stale projection repair 비용을 보장하는 증거는 이번 조사에서 확인하지 못했다.
+Farad는 SQLite/WAL을 NFS canonical store로 그대로 복제하지 말고 node-local derived projection 또는
+자체 index를 써야 한다.</li>
+  <li>Farad는 명세가 가장 엄격하지만 실제 source의 scheduler/session-open/turn-start 경로가 이를
+지키는지는 별도 성능 gate로 증명해야 한다. 실제로 scheduler의 60초 Qt-thread 전량 stat/sort,
+sync transcript append와 cold double scan, rewind 뒤 full projection fallback이 확인됐다. “문서에 O(1)”은
+증거가 아니다.</li>
+</ul>
+
+<h2 id="15-failure-cancellation-recovery-observability">15. Failure, cancellation, recovery, observability</h2>
+
+<p>성숙한 agent runtime은 실패를 예외 문자열 하나로 만들지 않는다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>실패 축</th>
+      <th>좋은 계약</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>model</td>
+      <td>retryable/terminal, rate limit, output limit, context limit 분리</td>
+    </tr>
+    <tr>
+      <td>tool</td>
+      <td>pending/running/completed/error/cancelled와 terminal result 보장</td>
+    </tr>
+    <tr>
+      <td>approval</td>
+      <td>request identity, timeout/cancel, noninteractive fail behavior</td>
+    </tr>
+    <tr>
+      <td>process</td>
+      <td>process tree kill, late output suppression, cleanup finalizer</td>
+    </tr>
+    <tr>
+      <td>transcript</td>
+      <td>append ordering, partial record repair, resume boundary</td>
+    </tr>
+    <tr>
+      <td>client</td>
+      <td>disconnect 뒤 authoritative refetch/replay</td>
+    </tr>
+    <tr>
+      <td>MCP</td>
+      <td>per-server status, required/optional, reconnect/backoff, delta refresh</td>
+    </tr>
+    <tr>
+      <td>subagent</td>
+      <td>child terminal state, orphan cleanup, parent partial result</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Codex는 typed event/item과 cancellation token, thread lifecycle가 가장 체계적이다. 다만 core submission
+channel은 512로 bounded인 반면 event channel은 unbounded라서 느린 consumer와 event burst의 memory
+backpressure는 별도 운영 리스크다. Claude Code는 continue/terminal reason, tool state, hook failure,
+retry taxonomy가 매우 풍부하다. OpenCode는 DB
+projection과 Effect finalizer, 공용 durable event substrate가 강하지만 legacy SSE queue/backpressure와 V2 미완
+경계가 있다. Farad는 AgentEvent/TerminalReason, synthetic abort result, UI event dispatcher와 run
+measurement를 갖지만 모든 cancellation path에서 terminal event와 disk state가 닫히는지 감사가
+중요하다.</p>
+
+<h2 id="16-테스트-가능성과-변경-용이성">16. 테스트 가능성과 변경 용이성</h2>
+
+<h3 id="좋은-경계">좋은 경계</h3>
+
+<ul>
+  <li>OpenCode: typed schema/OpenAPI, Effect service/layer, public source/tests</li>
+  <li>Claude Code: 공식 SDK conformance surface; async generator·narrow <code class="language-plaintext highlighter-rouge">QueryDeps</code>는 2.1.88 관찰(C)</li>
+  <li>Codex: Rust types, storage trait, protocol schema, router/registry separation</li>
+  <li>Farad: Protocol/dataclass, query callback inversion, UI proxy, 4-layer contract, fail-on-expensive-fallback tests</li>
+</ul>
+
+<h3 id="변경-비용이-집중된-곳">변경 비용이 집중된 곳</h3>
+
+<ul>
+  <li>OpenCode: V1 <code class="language-plaintext highlighter-rouge">SessionPrompt</code>와 V2 migration overlap</li>
+  <li>Claude Code: 2.1.88에서 관찰한 QueryEngine/query/TUI/global state/message/session hotspot(C);
+current 2.1.207 내부는 미확인</li>
+  <li>Codex: Session spawn/services/tool spec feature composition</li>
+  <li>Farad: <code class="language-plaintext highlighter-rouge">AsyncSession</code>, <code class="language-plaintext highlighter-rouge">UiSession</code>, <code class="language-plaintext highlighter-rouge">CapabilityCatalog</code>, session/scheduler path</li>
+</ul>
+
+<p>LOC 자체가 결함은 아니다. 위험은 서로 다른 변경 이유가 한 module에 모여 independent test seam 없이
+같이 바뀌는 것이다. Farad의 분해 기준은 “파일이 길다”가 아니라 <strong>authority와 failure boundary가
+다른 책임을 추출</strong>하는 것이어야 한다.</p>
+
+<h2 id="17-use-case별-선택">17. Use-case별 선택</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>use case</th>
+      <th>1순위</th>
+      <th>이유</th>
+      <th>차선</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>다양한 provider를 붙인 headless agent service</td>
+      <td>OpenCode</td>
+      <td>trusted single-user/service 기준 server/API/SDK/provider breadth; multi-tenant는 ACL·sandbox·bound·durable owner 별도 필요</td>
+      <td>Farad engine을 별도 표면으로 만들 경우</td>
+    </tr>
+    <tr>
+      <td>개인 개발자의 깊은 terminal coding</td>
+      <td>Claude Code</td>
+      <td>workflow·hooks·context·tool 완성도</td>
+      <td>Codex</td>
+    </tr>
+    <tr>
+      <td>안전한 local command 실행이 핵심인 coding</td>
+      <td>Codex</td>
+      <td>지원 플랫폼의 sandbox-enabled default profile + approval 분리; <code class="language-plaintext highlighter-rouge">danger-full-access</code> 제외</td>
+      <td>Claude sandbox를 fail-closed로 설정</td>
+    </tr>
+    <tr>
+      <td>IDE/app/CLI를 한 runtime에 붙이는 플랫폼</td>
+      <td>Codex/OpenCode</td>
+      <td>Codex app-server는 experimental, OpenCode는 V1/V2 API drift 조건부</td>
+      <td>Claude SDK subprocess</td>
+    </tr>
+    <tr>
+      <td>GLM/Kimi 중심 native desktop</td>
+      <td>Farad</td>
+      <td>provider-neutral SDK + rich Qt product</td>
+      <td>OpenCode desktop</td>
+    </tr>
+    <tr>
+      <td>RHEL shared HPC/NFS</td>
+      <td>Farad(목표)</td>
+      <td>explicit NFS/10k/refresh 계약</td>
+      <td>별도 container/SSD를 붙인 다른 제품</td>
+    </tr>
+    <tr>
+      <td>inspectable parallel delegated coding</td>
+      <td>Codex/Claude Code</td>
+      <td>child lifecycle 또는 subagent workflow</td>
+      <td>Farad orchestration</td>
+    </tr>
+    <tr>
+      <td>durable long-lived local agent teams</td>
+      <td>판단 보류</td>
+      <td>네 제품 모두 제약 또는 증거 부족</td>
+      <td>실제 durability 요구부터 정의</td>
+    </tr>
+    <tr>
+      <td>persistent scheduled assistant</td>
+      <td>Farad</td>
+      <td>scheduler가 product domain; 현재 10k/NFS 배포는 due-index 수정 전 release-blocked</td>
+      <td>타 제품은 본 조사에서 동등 내구성 미확인</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>“Farad(목표)”라는 표현은 의도적이다. 해당 계약을 문서화했다는 것과 current implementation의 모든
+경로가 지킨다는 것은 다르다. 개별 Farad 감사에서 위반이 나오면 release gate로 고쳐야 한다.</p>
+
+<h2 id="18-무엇을-누구에게서-배울-것인가">18. 무엇을 누구에게서 배울 것인가</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>가져올 pattern</th>
+      <th>기준 제품</th>
+      <th>Farad식 번역</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>typed client/runtime anti-corruption layer</td>
+      <td>Codex, OpenCode</td>
+      <td>우선 in-process command/event Protocol; 두 번째 surface 전에는 server 보류</td>
+    </tr>
+    <tr>
+      <td>ordered control plane</td>
+      <td>Codex</td>
+      <td>turn input/settings/approval/cancel ordering 명문화</td>
+    </tr>
+    <tr>
+      <td>tool pipeline과 lazy disclosure</td>
+      <td>Claude, Codex</td>
+      <td>기존 catalog/readiness/exposure invariant 강화</td>
+    </tr>
+    <tr>
+      <td>durable event + projection</td>
+      <td>Codex, OpenCode EventV2/V2 typed projection</td>
+      <td>transcript canonical, bounded derived index와 repair 계약</td>
+    </tr>
+    <tr>
+      <td>context epoch/byte-stable baseline</td>
+      <td>OpenCode V2, Farad marker twin</td>
+      <td>external context 변경을 transcript에 재현 가능하게 기록</td>
+    </tr>
+    <tr>
+      <td>output spill + preview</td>
+      <td>Claude Code</td>
+      <td>NFS 비용과 민감정보 정책을 포함한 bounded artifact store</td>
+    </tr>
+    <tr>
+      <td>resource finalizer/scope</td>
+      <td>OpenCode Effect, Codex cancellation</td>
+      <td>Python async context/lifecycle owner를 명시</td>
+    </tr>
+    <tr>
+      <td>subagent as first-class lifecycle</td>
+      <td>Codex, Claude</td>
+      <td>parent snapshot, child terminal state, artifact merge</td>
+    </tr>
+    <tr>
+      <td>OS sandbox + separate approval</td>
+      <td>Codex, Claude</td>
+      <td>RHEL/Windows adapter와 honest capability state</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Codex의 request-scoped refresh는 이식 대상이 아니다. Farad에서는 <code class="language-plaintext highlighter-rouge">StepContext</code>처럼 한 요청의 tool과
+context view를 일치시키는 <strong>snapshot 불변식</strong>만 가져오고, 그 snapshot을 만들기 위해 매 sampling
+request마다 filesystem을 refresh하는 정책은 가져오지 않는다.</p>
+
+<h2 id="19-의도적으로-모방하지-않을-것">19. 의도적으로 모방하지 않을 것</h2>
+
+<ul>
+  <li>OpenCode의 모든 client/server 복잡도를 단일 Qt 앱에 선제 도입</li>
+  <li>Agent SDK의 live-session subprocess topology와 2.1.88에서 관찰한 process-global state</li>
+  <li>Codex의 crate 수와 모든 OpenAI product surface</li>
+  <li>local SSD 기준 SQLite/JSONL operation을 NFS에 그대로 적용</li>
+  <li>per-turn file watch/rescan을 “freshness”라는 이유로 도입</li>
+  <li>agent 수·plugin 수·hook event 수를 성숙도 지표로 삼기</li>
+  <li>문서상의 read-only/permission을 OS enforcement로 표현</li>
+  <li>compaction summary를 raw transcript 대체 원본으로 사용</li>
+</ul>
+
+<h2 id="20-farad의-현재-위치">20. Farad의 현재 위치</h2>
+
+<p>Farad는 다른 세 제품과 배포 형태·언어·공개 범위가 달라 단순 규모 순위를 매길 수 없다. 다만 다음
+contract는 비교 대상보다 더 엄격하다.</p>
+
+<ul>
+  <li>SDK에는 agent loop를 두지 않음</li>
+  <li>UI와 async execution authority 분리</li>
+  <li>모든 app LLM call streaming</li>
+  <li>explicit refresh와 국소 invalidation</li>
+  <li>NFS content-read 비용 명시</li>
+  <li>누적 10,000 entity 반복 경로 제한</li>
+  <li>transcript context와 runtime metadata 분리</li>
+  <li>Session 통일, scheduler와 subagent도 session projection에 통합</li>
+</ul>
+
+<p>따라서 전략은 feature parity가 아니라 <strong>계약-구현 gap closing</strong>이어야 한다. 특히 다음 네 질문이
+release 수준의 판정 기준이다.</p>
+
+<ol>
+  <li>agent-generated process가 permission decision 밖의 실제 OS 경계를 갖는가?</li>
+  <li>turn/session/scheduler 반복 경로가 10,000 entity에서 정말 bounded인가?</li>
+  <li>Qt와 asyncio가 서로의 mutable authority를 직접 읽지 않는가?</li>
+  <li>explicit refresh라고 문서화한 capability가 실제 turn start를 불필요하게 block하지 않는가?</li>
+</ol>
+
+<p>구체적인 우선순위와 exit criterion은 <a href="https://hvppycoding.github.io/research/farad-architecture-roadmap/">Farad 판정 및 로드맵</a>에 둔다.</p>
+
+<h2 id="21-최종-판정">21. 최종 판정</h2>
+
+<p>네 제품의 architecture를 한 문장씩 줄이면 이렇다.</p>
+
+<ul>
+  <li>OpenCode: <strong>server를 중심으로 가장 넓게 열려 있으나 runtime migration과 current hot path의 빚이 크다.</strong></li>
+  <li>Claude Code: <strong>가장 깊게 제품화된 workflow이며, 확인 가능한 local CLI/SDK에서는 Claude·process·local-file 결합을 대가로 낸다.</strong></li>
+  <li>Codex: <strong>가장 강한 protocol·sandbox·replay kernel이지만 그만큼 composition과 platform 복잡도가 크다.</strong></li>
+  <li>Farad: <strong>올바른 desktop/HPC 계약을 상당수 이미 세웠으나, 이제 문서가 아닌 enforcement와 hot-path
+evidence로 그 계약을 증명해야 한다.</strong></li>
+</ul>
+
+<p>Farad가 승리할 수 있는 경로는 OpenCode의 provider openness, Claude의 workflow semantics, Codex의
+runtime/security invariants를 모두 복제하는 것이 아니다. 현재 product differentiator인 native desktop,
+provider neutrality, scheduler와 선언된 explicit-refresh/NFS/10k 설계 계약을 바로잡아 유지하면서 <strong>Codex 수준의 실행 경계,
+Claude 수준의 tool/failure semantics, OpenCode 수준의 surface-independent application contract</strong>를
+필요한 만큼만 흡수하는 것이다.</p>
+
+<style>pre.mermaid{overflow-x:auto;background:transparent;border:0;padding:0}.mermaid svg{max-width:100%;height:auto}</style>
+
+<script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.esm.min.mjs";
+mermaid.initialize({startOnLoad:true,securityLevel:"strict"});
+</script>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[OpenCode · Claude Code · Codex · Farad 아키텍처 교차 비교]]></summary></entry><entry><title type="html">Farad 현재 구현 아키텍처 심층 감사</title><link href="https://hvppycoding.github.io/research/farad-architecture-audit/" rel="alternate" type="text/html" title="Farad 현재 구현 아키텍처 심층 감사" /><published>2026-07-13T23:54:00+09:00</published><updated>2026-07-13T23:54:00+09:00</updated><id>https://hvppycoding.github.io/research/farad-architecture-audit</id><content type="html" xml:base="https://hvppycoding.github.io/research/farad-architecture-audit/"><![CDATA[<h1 id="farad-현재-구현-아키텍처-심층-감사">Farad 현재 구현 아키텍처 심층 감사</h1>
 
 <blockquote>
   <p><a href="https://hvppycoding.github.io/research/coding-agent-architecture-comparison/">전체 보고서 인덱스</a></p>
@@ -8736,489 +9981,4 @@ pre-approve"로 그 패턴을 승인해 주면 다음 실행부터 안 막힌다
       <td><code class="language-plaintext highlighter-rouge">restored-src/src/utils/messages.ts:216-298</code>, <code class="language-plaintext highlighter-rouge">utils/permissions/permissions.ts:503-517, 944-951</code></td>
     </tr>
   </tbody>
-</table>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획]]></summary></entry><entry><title type="html">Farad Goal 하네스 설계와 Query Loop 상호작용</title><link href="https://hvppycoding.github.io/farad/goal-harness-architecture/" rel="alternate" type="text/html" title="Farad Goal 하네스 설계와 Query Loop 상호작용" /><published>2026-06-26T00:05:22+09:00</published><updated>2026-06-26T00:05:22+09:00</updated><id>https://hvppycoding.github.io/farad/goal-harness-architecture</id><content type="html" xml:base="https://hvppycoding.github.io/farad/goal-harness-architecture/"><![CDATA[<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Farad Goal Harness — Architecture &amp; Query-Loop Interaction</title>
-<style>
-  :root{
-    --bg:#fbfbfa; --panel:#ffffff; --ink:#1f2328; --muted:#6a737d; --faint:#8b949e;
-    --line:#e6e8eb; --accent:#3858e9; --accent-weak:#eef1fe; --on:#1a7f55; --on-weak:#e6f4ee;
-    --off:#9a3b3b; --off-weak:#fbecec; --warn:#8a6d00; --warn-weak:#fbf3d6; --code:#0b1021;
-    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    --sans:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-    line-height:1.62;font-size:15.5px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1040px;margin:0 auto;padding:0 28px 120px}
-  header.hero{padding:56px 28px 30px;max-width:1040px;margin:0 auto}
-  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--accent);font-weight:600}
-  h1{font-size:34px;line-height:1.18;margin:.35em 0 .25em;letter-spacing:-.01em}
-  .sub{color:var(--muted);font-size:16.5px;max-width:74ch}
-  .meta{margin-top:18px;font-family:var(--mono);font-size:12.5px;color:var(--faint);
-    display:flex;gap:18px;flex-wrap:wrap}
-  .meta b{color:var(--muted);font-weight:600}
-  nav.toc{position:sticky;top:0;z-index:5;background:rgba(251,251,250,.92);
-    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);margin-bottom:30px}
-  nav.toc ul{max-width:1040px;margin:0 auto;padding:11px 28px;list-style:none;display:flex;
-    gap:6px 16px;flex-wrap:wrap;font-size:13px}
-  nav.toc a{color:var(--muted);text-decoration:none;font-family:var(--mono)}
-  nav.toc a:hover{color:var(--accent)}
-  section{margin:42px 0;scroll-margin-top:60px}
-  h2{font-size:23px;margin:0 0 6px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px}
-  h2 .n{font-family:var(--mono);font-size:14px;color:var(--accent);font-weight:600}
-  h3{font-size:17px;margin:26px 0 6px}
-  p{margin:.5em 0}
-  .lead{color:var(--muted)}
-  code{font-family:var(--mono);font-size:.88em;background:#f0f1f3;color:#24292f;
-    padding:.08em .36em;border-radius:5px}
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media(max-width:760px){.grid2{grid-template-columns:1fr}.meta{gap:10px}}
-  .mermaid{background:var(--panel);border:1px solid var(--line);border-radius:12px;
-    padding:18px;margin:14px 0;overflow-x:auto;text-align:center}
-  figcaption{font-size:13px;color:var(--faint);text-align:center;margin-top:-6px;
-    font-family:var(--mono)}
-  table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0}
-  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
-  th{background:#f6f7f9;font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--muted)}
-  td code{white-space:nowrap}
-  .tag{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;
-    padding:1px 7px;border-radius:999px;border:1px solid transparent}
-  .t-on{background:var(--on-weak);color:var(--on);border-color:#bfe3d2}
-  .t-off{background:var(--off-weak);color:var(--off);border-color:#eccaca}
-  .t-warn{background:var(--warn-weak);color:var(--warn);border-color:#e7d79a}
-  .t-acc{background:var(--accent-weak);color:var(--accent);border-color:#c9d3fb}
-  .callout{border-left:3px solid var(--accent);background:var(--accent-weak);
-    border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
-  .callout.inv{border-left-color:var(--on);background:var(--on-weak)}
-  .callout.warn{border-left-color:var(--warn);background:var(--warn-weak)}
-  .callout b{font-weight:600}
-  ul.tight{margin:.4em 0;padding-left:1.25em}
-  ul.tight li{margin:.2em 0}
-  .ref{font-family:var(--mono);font-size:12px;color:var(--faint)}
-  .chk{list-style:none;padding-left:0}
-  .chk li{padding-left:26px;position:relative;margin:.42em 0}
-  .chk li::before{content:"";position:absolute;left:0;top:.42em;width:15px;height:15px;
-    border:1.6px solid var(--on);border-radius:4px}
-  .chk li::after{content:"";position:absolute;left:5px;top:.46em;width:4px;height:8px;
-    border:solid var(--on);border-width:0 2px 2px 0;transform:rotate(40deg)}
-  footer{border-top:1px solid var(--line);margin-top:60px;padding-top:18px;color:var(--faint);
-    font-size:12.5px;font-family:var(--mono)}
-  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:6px 0 2px}
-  .legend span{display:inline-flex;align-items:center;gap:6px}
-  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
-  hr.soft{border:0;border-top:1px solid var(--line);margin:30px 0}
-  a.codelink{color:var(--accent);text-decoration:none;border-bottom:1px dotted #b9c4f7}
-</style>
-</head>
-<body>
-<header class="hero">
-  <div class="kicker">Farad · Architecture Review</div>
-  <h1>The Goal Harness &amp; its interaction with the Query Loop</h1>
-  <p class="sub">A long-lived, per-session <b>objective</b> that drives the agent across turns until it is
-  proven complete, blocked, or the user stops it. Architecturally it is an <b>outer ralph loop wrapped
-  around the existing per-turn inner loop</b> (<code>query_loop</code>) — adding turn-boundary hooks, never
-  touching the inner cycle. This page is written for code review: every claim is anchored to a symbol.</p>
-  <div class="meta">
-    <span><b>scope</b> packages/farad/farad/goals + app/runtime + tools/builtin</span>
-    <span><b>truth source</b> transcript meta marker</span>
-    <span><b>tools</b> CreateGoal · UpdateGoal · SnoozeGoal</span>
-  </div>
-</header>
-
-<nav class="toc"><ul>
-  <li><a href="#tldr">0 · TL;DR</a></li>
-  <li><a href="#layers">1 · Layers</a></li>
-  <li><a href="#state">2 · State machine</a></li>
-  <li><a href="#twoloops">3 · Two loops</a></li>
-  <li><a href="#sequence">4 · Sequence</a></li>
-  <li><a href="#decision">5 · Continuation</a></li>
-  <li><a href="#snooze">6 · Snooze cadence</a></li>
-  <li><a href="#wire">7 · Wire &amp; truth</a></li>
-  <li><a href="#seams">8 · Integration seams</a></li>
-  <li><a href="#invariants">9 · Invariants</a></li>
-  <li><a href="#changelog">10 · Recent design</a></li>
-</ul></nav>
-
-<div class="wrap">
-
-<section id="tldr">
-  <h2><span class="n">0</span> TL;DR for the reviewer</h2>
-  <div class="grid2">
-    <div class="panel">
-      <h3 style="margin-top:0">What it is</h3>
-      <ul class="tight">
-        <li>One power axis: <span class="tag t-on">on</span> / <span class="tag t-off">off</span>.
-          The lifecycle meaning lives in <code>off_reason</code>.</li>
-        <li><code>revision</code> is the monotonic arbiter; the transcript
-          <code>{"type":"meta","kind":"goal"}</code> marker is truth, <code>session.meta.json</code> is a cache.</li>
-        <li>Three no-permission model tools; everything else is runtime/UI.</li>
-        <li>Cadence is <b>agent-driven</b>: grind by default, <code>SnoozeGoal</code> to wait. The runtime
-          never infers cadence from tool-call counts or background jobs.</li>
-      </ul>
-    </div>
-    <div class="panel">
-      <h3 style="margin-top:0">The one invariant to hold in mind</h3>
-      <div class="callout inv" style="margin:0">
-        <b>Containment.</b> Every Goal integration point is a strict no-op when
-        <code>config.goal_service is None</code>. The turn loop is byte-for-byte unchanged when the harness is
-        unwired (tests / headless). Review each seam by asking: <i>does it early-return on <code>None</code>?</i>
-      </div>
-    </div>
-  </div>
-  <div class="callout warn">
-    <b>Heads up — these landed this session (read §10 first if reviewing the diff):</b> the model/user-facing
-    turn/token <i>budget</i> was removed (replaced by a silent <code>HARD_TURN_CAP</code> backstop);
-    <code>SnoozeGoal</code> was added; and a runtime "defer while background work runs" heuristic was
-    <i>deliberately rejected</i> — cadence is the agent's call, not the runtime's.
-  </div>
-</section>
-
-<section id="layers">
-  <h2><span class="n">1</span> Layered architecture</h2>
-  <p class="lead">Four Qt-free layers under one Qt-facing surface. Mutations flow down; the only thing that
-  flows back up is a serialized snapshot via injected callbacks (no Qt import below the UI line).</p>
-  <table>
-    <thead><tr><th>Layer</th><th>Module</th><th>Responsibility</th><th>Knows about</th></tr></thead>
-    <tbody>
-      <tr><td><b>UI</b></td><td><code>ui/widgets/goal_status_strip.py</code></td>
-        <td>Live view + lifecycle controls (Pause/Run/Edit/Delete), docked inside the composer.
-          Binds to <code>goal_updated</code> snapshots only.</td><td>JSON snapshots</td></tr>
-      <tr><td><b>Tools</b></td><td><code>tools/builtin/goal_tools.py</code></td>
-        <td>Model-callable verbs: <code>CreateGoal</code>, <code>UpdateGoal</code>, <code>SnoozeGoal</code>.
-          Never build a <code>GoalState</code> — they call the service.</td><td>GoalService</td></tr>
-      <tr><td><b>Runtime</b></td><td><code>app/runtime/async_session.py</code></td>
-        <td>The <b>outer loop</b>: turn-boundary hooks, the continuation scheduler, snooze timer,
-          cold-open recovery, abort handling.</td><td>GoalService + query_loop</td></tr>
-      <tr><td><b>Service</b></td><td><code>goals/service.py</code></td>
-        <td>Sole authority for transitions. Builds the next immutable <code>GoalState</code> (rev++),
-          appends the marker (truth first), refreshes cache, emits snapshot.</td><td>Store, Models, Prompt</td></tr>
-      <tr><td><b>Store</b></td><td><code>goals/store.py</code></td>
-        <td>JSON I/O + <code>reconcile()</code> (cache vs transcript). The marker is canonical;
-          <code>load_cached()</code> is the fast path.</td><td>Transcript + meta files</td></tr>
-      <tr><td><b>Models</b></td><td><code>goals/models.py</code></td>
-        <td>Frozen <code>GoalState</code>, <code>GoalPowerState</code>, <code>off_reason</code> sets.
-          No storage, no Qt.</td><td>nothing</td></tr>
-    </tbody>
-  </table>
-  <p class="ref">Wire-prompt synthesis: <code>goals/prompt.py</code> (English-fixed, never i18n).
-  Composition root wiring: <code>app/services_factory.py</code> (<code>on_goal_updated → AppSignals.goal_updated.emit</code>).</p>
-</section>
-
-<section id="state">
-  <h2><span class="n">2</span> Goal state machine</h2>
-  <p class="lead">Two power states. <code>off_reason</code> partitions <span class="tag t-on">resumable</span>
-  (the strip shows <b>Run</b>) from <span class="tag t-off">terminal</span> (the strip hides). <code>revision</code>
-  increments on every appended marker so distinct lifecycle records never collapse.</p>
-  <div class="mermaid">
-stateDiagram-v2
-    direction LR
-    [*] --&gt; On: CreateGoal
-    On --&gt; On: progress · SnoozeGoal · edit_objective
-    On --&gt; Complete: UpdateGoal(complete) + evidence
-    On --&gt; Blocked: UpdateGoal(blocked) ×3 same blocker
-    On --&gt; Paused: user Pause · Esc/abort · cold-open · HARD_TURN_CAP
-    On --&gt; Cancelled: user Cancel
-    On --&gt; Deleted: user Delete
-    On --&gt; Replaced: replace_goal
-    Paused --&gt; On: Resume (auto-kicks loop, resets auto_turn_count)
-    Blocked --&gt; On: Resume
-    Complete --&gt; [*]
-    Cancelled --&gt; [*]
-    Deleted --&gt; [*]
-    Replaced --&gt; [*]
-    note right of Paused
-      resumable = {paused, blocked}
-      terminal  = {complete, deleted,
-                   cancelled, replaced}
-    end note
-  </div>
-  <figcaption>goals/models.py · OFF_REASONS_RESUMABLE / OFF_REASONS_TERMINAL</figcaption>
-  <div class="callout">
-    <b>Only the user resumes.</b> <code>UpdateGoal</code> can move <code>on→off</code> (complete/blocked) but
-    <i>cannot</i> pause/resume/cancel/redefine — those are user-only. <code>SnoozeGoal</code> keeps the Goal
-    <code>on</code>; it is a cadence hint, not a transition (no marker, no rev bump).
-  </div>
-</section>
-
-<section id="twoloops">
-  <h2><span class="n">3</span> The two nested loops — the load-bearing idea</h2>
-  <p class="lead">Farad already had a per-turn agent loop: <code>query_loop</code> cycles
-  <i>LLM → tools → LLM</i> within one turn until the model stops, returning <code>LoopTerminated</code>.
-  The Goal harness adds an <b>outer loop</b> that, at each turn boundary, decides whether to fire
-  <i>another</i> turn — the "ralph loop". The inner loop is untouched.</p>
-  <div class="mermaid">
-flowchart TB
-  subgraph OUTER["OUTER loop · Goal continuation (async_session.py)"]
-    direction TB
-    RT["_run_turn(trigger)"]
-    END["turn end · outcome"]
-    HOOK{"_schedule_goal_continuation_if_due"}
-    WAIT["arm _goal_snooze_task<br />(wait N min, preemptable)"]
-    STOP(["loop ends"])
-    END --&gt; HOOK
-    HOOK --&gt;|"snooze pending"| WAIT
-    HOOK --&gt;|"off / not due / abort"| STOP
-  end
-  subgraph INNER["INNER loop · query_loop (one turn)"]
-    direction TB
-    C["while True: cycle"] --&gt; L["stream_llm"]
-    L --&gt; T{"tool_calls?"}
-    T --&gt;|yes| X["execute_tool_calls<br />(CreateGoal / UpdateGoal /<br />SnoozeGoal / Bash / …)"]
-    X --&gt; C
-    T --&gt;|no| LT(["return LoopTerminated"])
-  end
-  RT --&gt; C
-  LT --&gt; END
-  HOOK --&gt;|"on &amp; due &amp; no snooze"| RT
-  WAIT --&gt; RT
-  </div>
-  <figcaption>inner: query_loop.py · while True (line ~368) → LoopTerminated · outer: async_session.py · _run_turn ↔ _schedule_goal_continuation_if_due</figcaption>
-  <div class="callout inv">
-    <b>Why this matters for review.</b> The Goal harness adds <i>no</i> branches inside <code>query_loop</code>.
-    All coupling is at the turn boundary in <code>async_session.py</code>. To audit the agent loop itself,
-    you can ignore Goal entirely; to audit Goal, you only read the outer hooks below.
-  </div>
-</section>
-
-<section id="sequence">
-  <h2><span class="n">4</span> End-to-end sequence — create → grind → snooze → complete</h2>
-  <div class="mermaid">
-sequenceDiagram
-    autonumber
-    actor U as User
-    participant UI as ChatPanel / Strip
-    participant AS as AsyncSession (outer)
-    participant QL as query_loop (inner)
-    participant SV as GoalService
-    participant M as Provider
-
-    U-&gt;&gt;UI: /goal [objective]
-    UI-&gt;&gt;AS: submit_user_text(creation prompt)
-    AS-&gt;&gt;QL: _run_turn(trigger=user_submit)
-    QL-&gt;&gt;M: stream completion
-    M--&gt;&gt;QL: tool_call CreateGoal
-    QL-&gt;&gt;SV: create_goal() → ON, rev++
-    QL--&gt;&gt;AS: LoopTerminated(completed)
-    Note over AS: turn-end hooks
-    AS-&gt;&gt;SV: note_turn_finished(trigger)
-    AS-&gt;&gt;SV: should_continue() → continue
-    AS-&gt;&gt;AS: _run_turn(trigger=goal)
-    rect rgb(238,241,254)
-    Note over AS,QL: OUTER ralph loop — repeats each turn
-    QL-&gt;&gt;M: …make concrete progress…
-    M--&gt;&gt;QL: tool_call SnoozeGoal(minutes=5)
-    QL-&gt;&gt;SV: request_snooze(300s) — stays ON, no marker
-    QL--&gt;&gt;AS: LoopTerminated(completed)
-    AS-&gt;&gt;AS: take_pending_snooze → arm _goal_snooze_task (5m)
-    Note over AS: no turn fires while waiting · HARD_TURN_CAP not spent
-    U--&gt;&gt;AS: (bg completion / reply preempts the wait early)
-    AS-&gt;&gt;AS: _delayed_goal_continuation → _run_turn(trigger=goal)
-    end
-    QL-&gt;&gt;M: …verify against worktree…
-    M--&gt;&gt;QL: tool_call UpdateGoal(complete, evidence)
-    QL-&gt;&gt;SV: mark_complete() → OFF(complete), rev++
-    AS-&gt;&gt;SV: should_continue() → stop (not on)
-    SV--&gt;&gt;UI: goal_updated snapshot → strip hides
-    Note over AS: outer loop ends
-  </div>
-  <figcaption>Each <code>_run_turn</code> is one full inner <code>query_loop</code>; the outer loop re-enters until UpdateGoal turns the Goal off.</figcaption>
-</section>
-
-<section id="decision">
-  <h2><span class="n">5</span> The continuation decision (turn boundary)</h2>
-  <p class="lead">Runs in <code>async_session._schedule_goal_continuation_if_due(outcome)</code>, invoked only for
-  <code>outcome ∈ {completed, loop_terminated}</code>. Aborts route to <code>_goal_pause_on_abort</code> instead.</p>
-  <div class="mermaid">
-flowchart TD
-  A["turn ended · outcome"] --&gt; G0{"goal_service wired?"}
-  G0 --&gt;|no| Z(["no-op (containment)"])
-  G0 --&gt;|yes| G1{"closed / in-flight /<br />compacting / live task /<br />postbox pending?"}
-  G1 --&gt;|yes| Z2(["defer — a wake will drive it"])
-  G1 --&gt;|no| SN["snooze = take_pending_snooze()<br />consumed here, exactly once"]
-  SN --&gt; D{"should_continue?<br />on · not abort · outcome==completed ·<br />auto_turn_count under HARD_TURN_CAP"}
-  D --&gt;|no| Z3(["drop snooze · loop ends"])
-  D --&gt;|yes| RV["snapshot _goal_scheduled_revision (D1)"]
-  RV --&gt; S{"snooze &gt; 0?"}
-  S --&gt;|yes| W["arm _goal_snooze_task<br />await sleep(N) · preemptable"]
-  S --&gt;|no| F["_run_turn(trigger=goal) now"]
-  W -.-&gt;|"timer fires &amp; still due"| F
-  classDef stop fill:#fbecec,stroke:#eccaca;
-  classDef go fill:#e6f4ee,stroke:#bfe3d2;
-  class Z,Z2,Z3 stop; class F,W go;
-  </div>
-  <figcaption>async_session.py · _schedule_goal_continuation_if_due + _delayed_goal_continuation</figcaption>
-  <div class="callout">
-    <b>D1 guard.</b> The next <code>trigger="goal"</code> turn re-checks <code>_goal_continuation_still_due()</code>
-    at the <i>top of</i> <code>_run_turn</code>: if the Goal turned off or its <code>revision</code> advanced
-    (pause, edit, new user turn) since the snapshot, the scheduled/snoozed turn is dropped before spending any
-    model call. This is what makes a stale snooze fire into a paused Goal safe.
-  </div>
-</section>
-
-<section id="snooze">
-  <h2><span class="n">6</span> SnoozeGoal — agent-controlled cadence</h2>
-  <p class="lead">The agent, not the runtime, decides when to wait. Default after a productive turn is to
-  continue immediately (grind). When the agent is only waiting on something — a background command it
-  launched, a rate limit, an external event — it calls <code>SnoozeGoal(minutes)</code> instead of ending an
-  idle turn that would just re-fire.</p>
-  <div class="grid2">
-    <div class="panel">
-      <h3 style="margin-top:0">Mechanics</h3>
-      <ul class="tight">
-        <li><code>request_snooze</code> records a <b>transient</b> per-session seconds value
-          (<code>GoalService._pending_snooze</code>). No marker, no rev bump — the Goal stays <code>on</code>.</li>
-        <li>The runtime consumes it once (<code>take_pending_snooze</code>) at the scheduling point and arms a
-          <b>separate</b> <code>_goal_snooze_task</code> (an <code>asyncio.sleep</code>), held apart from
-          <code>_current_turn_task</code> so user input can still run a turn.</li>
-        <li>Any real turn cancels the snooze at the top of <code>_run_turn</code> → a background completion /
-          user reply <b>preempts</b> the wait. A snoozing Goal fires no turn, so it <b>does not spend
-          <code>HARD_TURN_CAP</code></b>.</li>
-        <li>Any off-transition clears a stale snooze in <code>_commit</code>;
-          <code>request_abort</code> while snoozed cancels the wake and pauses the Goal (Case F).</li>
-      </ul>
-    </div>
-    <div class="panel">
-      <h3 style="margin-top:0">Why not auto-detect background jobs?</h3>
-      <p style="margin-top:0">An earlier prototype deferred continuation whenever the session had a running
-      background shell or subagent. It was <b>removed on purpose</b>: the runtime cannot know a background
-      job's nature. You might launch a <i>server</i> in the background and keep interacting with it —
-      "wait until it finishes" is wrong there.</p>
-      <p>So cadence is the agent's call (<code>SnoozeGoal</code>), and the runtime never inspects background
-      state in the continuation path. A backstop (<code>HARD_TURN_CAP = 50</code>, resets on resume) catches a
-      runaway loop without being a tunable feature.</p>
-    </div>
-  </div>
-</section>
-
-<section id="wire">
-  <h2><span class="n">7</span> Wire context &amp; the truth source</h2>
-  <div class="grid2">
-    <div class="panel">
-      <h3 style="margin-top:0">What the model sees</h3>
-      <p style="margin-top:0">On every <code>on</code> turn, <code>_with_goal_context</code> attaches a wire-only
-      compact reminder (<code>goals/prompt.py · build_compact_reminder</code>): the objective (XML-escaped,
-      treated as data), the anti-shrink rule, evidence discipline, and the SnoozeGoal hint. It is built once
-      per <code>TurnContext</code> so reruns are identical.</p>
-      <p>A read-only <b>"Goal prompt" audit card</b> is appended once per on-turn
-      (<code>_append_goal_notice_if_due</code>), rendered exactly like the compaction / background-task cards
-      via <code>SYSTEM_NOTE_ROLE + presentation_kind="goal_prompt"</code>.</p>
-    </div>
-    <div class="panel">
-      <h3 style="margin-top:0">What never reaches the provider</h3>
-      <p style="margin-top:0"><code>normalize_for_api</code> drops every transcript envelope whose
-      <code>type ∉ {user, assistant, tool}</code>. So the Goal <code>meta</code> markers and the
-      <code>goal_notice</code> audit entries are <b>structurally wire-excluded</b> — the reminder is injected
-      separately and intentionally; the markers/notices never double-send.</p>
-      <div class="callout inv" style="margin:.6em 0 0">
-        <b>Truth vs cache.</b> The <code>{"type":"meta","kind":"goal"}</code> transcript marker is the source of
-        truth (survives crash); <code>session.meta.json</code> is a fast cache. <code>reconcile()</code> resolves
-        them at session-open and the continuation guard.
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="seams">
-  <h2><span class="n">8</span> Integration seams — the review surface</h2>
-  <p class="lead">Every row below is a strict no-op when <code>goal_service is None</code>. These are the only
-  places the turn loop touches Goal — read them top to bottom to review the full coupling.</p>
-  <table>
-    <thead><tr><th>When</th><th>Seam (<code>async_session.py</code>)</th><th>Effect</th></tr></thead>
-    <tbody>
-      <tr><td>session open (once/process)</td><td><code>load_initial_state → _recover_goal_on_cold_open</code></td>
-        <td>An orphaned <code>on</code> Goal from a crashed session is auto-paused (Case D).</td></tr>
-      <tr><td>build turn context</td><td><code>_build_turn_context → _with_goal_context</code></td>
-        <td>Attach the wire-only reminder for an <code>on</code> Goal.</td></tr>
-      <tr><td>top of <code>_run_turn</code></td><td>D1 guard <code>_goal_continuation_still_due</code> + snooze cancel</td>
-        <td>Drop a stale <code>trigger="goal"</code> turn; preempt a pending snooze.</td></tr>
-      <tr><td>turn start</td><td><code>_goal_note_turn_started</code></td>
-        <td>Reconcile cache/transcript once at goal/resume boundaries.</td></tr>
-      <tr><td>after first drain</td><td><code>_append_goal_notice_if_due</code></td>
-        <td>Append the read-only "Goal prompt" audit card.</td></tr>
-      <tr><td>turn end (clean)</td><td><code>_goal_note_turn_finished → _schedule_goal_continuation_if_due</code></td>
-        <td>Bookkeeping (auto_turn_count, HARD_TURN_CAP) then schedule next turn / arm snooze / stop.</td></tr>
-      <tr><td>turn end (abort)</td><td><code>_goal_pause_on_abort</code></td>
-        <td>Esc/Stop durably pauses an <code>on</code> Goal (Case F).</td></tr>
-      <tr><td>snooze elapses</td><td><code>_delayed_goal_continuation</code></td>
-        <td>Fire the deferred turn (re-guarded by D1); preemptable; bounded by <code>MAX_SNOOZE_SECONDS</code>.</td></tr>
-      <tr><td>user Resume (strip)</td><td><code>kick_goal_continuation</code> (via handle proxy)</td>
-        <td>Auto-restart the loop after resume — no typed prompt needed.</td></tr>
-      <tr><td>Stop / shutdown</td><td><code>request_abort</code> / <code>shutdown</code></td>
-        <td>Cancel the snooze timer (and pause on abort) so no wake lingers.</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<section id="invariants">
-  <h2><span class="n">9</span> Architect review checklist</h2>
-  <div class="panel">
-    <ul class="chk">
-      <li><b>Containment</b> — every seam early-returns when <code>goal_service is None</code>; the unwired turn loop is unchanged.</li>
-      <li><b>Truth first</b> — service appends the transcript marker before refreshing the cache or emitting a snapshot (<code>_commit</code>).</li>
-      <li><b>Wire exclusion</b> — Goal markers and <code>goal_notice</code> never pass <code>normalize_for_api</code>; the reminder is the only thing that reaches the model.</li>
-      <li><b>Revision arbiter</b> — every state change bumps <code>revision</code>; the D1 guard compares against the scheduling snapshot, not "is it still on".</li>
-      <li><b>Exactly-once continuation</b> — turn spawns assign <code>_current_turn_task</code> synchronously on the single session loop (no await between done-check and create_task) → no double-fire / lost wake.</li>
-      <li><b>Snooze is free to wait</b> — snoozing fires no turn, so it never advances <code>auto_turn_count</code> / <code>HARD_TURN_CAP</code>; the wake is preemptable and cancelled by abort/shutdown/real-turn.</li>
-      <li><b>Cadence is the agent's</b> — the runtime never infers continuation timing from tool-call counts or background-job state.</li>
-      <li><b>Only-user lifecycle</b> — model tools can complete/block but cannot pause/resume/cancel/redefine.</li>
-      <li><b>English-fixed wire</b> — <code>goals/prompt.py</code> is never i18n; the strip's <code>Goal</code> label is a fixed product term.</li>
-    </ul>
-  </div>
-</section>
-
-<section id="changelog">
-  <h2><span class="n">10</span> Recent design decisions (for the diff reviewer)</h2>
-  <table>
-    <thead><tr><th>Decision</th><th>Rationale</th><th>Where</th></tr></thead>
-    <tbody>
-      <tr><td><span class="tag t-off">removed</span> turn/token <b>budget</b> as a feature</td>
-        <td>The model set it poorly and "exhausted" was a confusing pause reason. Replaced by a silent
-          <code>HARD_TURN_CAP = 50</code> runaway backstop (resets on resume), not a tunable knob.</td>
-        <td><code>service.py</code>, <code>models.py</code>, <code>goal_tools.py</code></td></tr>
-      <tr><td><span class="tag t-acc">added</span> <code>SnoozeGoal</code> tool</td>
-        <td>Agent-controlled "I'm waiting" signal so an idle wait does not busy-spin turns and does not burn
-          the cap; preempted early by real events.</td>
-        <td><code>goal_tools.py</code>, <code>async_session.py</code>, <code>service.py</code></td></tr>
-      <tr><td><span class="tag t-off">rejected</span> auto-defer while background work runs</td>
-        <td>The runtime cannot know a background job's nature (a server you keep talking to vs a build you
-          wait on). Cadence belongs to the agent.</td>
-        <td>— (deliberately absent from the continuation path)</td></tr>
-      <tr><td><span class="tag t-on">kept</span> immediate ralph continuation + strip + resume + cold-open</td>
-        <td>Tight turn-to-turn grind for active work; persistent UI/state for control and crash recovery —
-          the value a bare scheduled loop cannot give.</td>
-        <td><code>async_session.py</code>, <code>goal_status_strip.py</code></td></tr>
-    </tbody>
-  </table>
-  <div class="legend" style="margin-top:14px">
-    <span><span class="dot" style="background:var(--on)"></span>resumable / kept</span>
-    <span><span class="dot" style="background:var(--off)"></span>off / removed</span>
-    <span><span class="dot" style="background:var(--accent)"></span>added</span>
-    <span><span class="dot" style="background:var(--warn)"></span>watch</span>
-  </div>
-</section>
-
-<footer>
-  Farad Goal Harness · architecture review build · diagrams: Mermaid · source of truth: the code, not this page.
-  Verify every symbol against packages/farad/farad before relying on a claim here.
-</footer>
-</div>
-
-<script type="module">
-  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-  mermaid.initialize({
-    startOnLoad:true, theme:'base', securityLevel:'loose',
-    themeVariables:{
-      fontFamily:"'JetBrains Mono', ui-monospace, monospace", fontSize:'13px',
-      primaryColor:'#eef1fe', primaryBorderColor:'#c9d3fb', primaryTextColor:'#1f2328',
-      lineColor:'#8b949e', secondaryColor:'#e6f4ee', tertiaryColor:'#ffffff'
-    }
-  });
-</script>
-</body>
-</html>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad Goal Harness — Architecture &amp; Query-Loop Interaction Farad · Architecture Review The Goal Harness &amp; its interaction with the Query Loop A long-lived, per-session objective that drives the agent across turns until it is proven complete, blocked, or the user stops it. Architecturally it is an outer ralph loop wrapped around the existing per-turn inner loop (query_loop) — adding turn-boundary hooks, never touching the inner cycle. This page is written for code review: every claim is anchored to a symbol. scope packages/farad/farad/goals + app/runtime + tools/builtin truth source transcript meta marker tools CreateGoal · UpdateGoal · SnoozeGoal]]></summary></entry></feed>
+</table>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 스케줄 실행에 허용 도구 알려주기 — Claude Code 벤치마크와 구현 계획]]></summary></entry></feed>
