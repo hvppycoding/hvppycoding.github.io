@@ -500,7 +500,9 @@
 
       <section id="long-poll">
         <div class="section-head"><span class="section-no">04</span><h2>Long Poll은 어떻게 기다리는가?</h2></div>
-        <p>Farad가 매초 “명령 왔나요?”라고 물으면 요청이 너무 많습니다. Long Poll에서는 Farad가 한 번 질문하고 중앙 VM이 약 50초 동안 답을 보류합니다. 명령이 생기면 즉시 답하고, 아무 일도 없으면 빈 답을 돌려줍니다.</p>
+        <p>Farad가 매초 “명령 왔나요?”라고 물으면 요청이 너무 많습니다. Long Poll에서는 Farad가 한 번 질문하고 중앙 VM이 일정 시간 답을 보류합니다. 명령이 3초 만에 생기면 3초 만에 즉시 답하고, 제한 시간까지 아무 일도 없을 때만 빈 답을 돌려줍니다.</p>
+
+        <div class="decision"><b>왜 예시에 50초를 쓰는가?</b> 고정 규격이 아니라 재접속 횟수를 줄이기 위한 예시입니다. 실제 값은 사내 proxy/load balancer의 idle timeout보다 5~10초 짧게 둡니다. idle timeout이 60초면 <code>wait=50</code>, 30초면 <code>wait=20~25</code>가 적당합니다. 인프라 값을 모르는 v1은 25초처럼 보수적으로 시작합니다.</div>
 
         <div class="code">Farad → Relay: GET /v1/commands?cursor=42&amp;wait=50
 
@@ -726,6 +728,7 @@ accountHints:
           <div class="question">UpdateMessageRequest의 실제 wire field가 <code>chatroomId</code>인지, 문서의 <code>chatrommId</code>인지 확인이 필요한가?</div>
           <div class="question">Adaptive Card JSON 최대 크기, action 수, 지원 element 제한, version 1.3 구현 차이는 무엇인가?</div>
           <div class="question">Relay와 메신저 API 사이의 인증, TLS/mTLS, source IP allowlist, rate limit, timeout, 점검 시간 운영 계약은 무엇인가?</div>
+          <div class="question">Farad와 Relay 사이의 proxy/load balancer idle timeout은 몇 초인가? Long Poll wait와 client timeout을 각각 얼마로 둘 것인가?</div>
         </div>
 
         <h3>권장 구현 순서</h3>
