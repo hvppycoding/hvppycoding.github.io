@@ -3,368 +3,227 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Farad 예약 작업을 사내 메신저에서 안전하게 실행하기 위한 중앙 VM relay, long polling, mTLS 인증서, durable queue 설계 입문">
+  <meta name="description" content="Farad 예약 작업을 사내 메신저에서 안전하게 실행하기 위한 최초 1회 메신저 연결, 중앙 VM relay, long polling, durable queue 설계 입문">
   <title>Farad 예약 작업 사내 메신저 연동 아키텍처</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous"></script>
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #020617;
-      --panel: rgba(15, 23, 42, 0.76);
-      --panel-strong: #0f172a;
-      --line: #1e293b;
-      --line-strong: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --dim: #64748b;
-      --cyan: #22d3ee;
-      --emerald: #34d399;
-      --violet: #a78bfa;
-      --amber: #fbbf24;
-      --rose: #fb7185;
-      --orange: #fb923c;
+      color-scheme: light;
+      --bg: #ffffff;
+      --soft: #f6f8fa;
+      --soft-blue: #ddf4ff;
+      --line: #d0d7de;
+      --line-soft: #eaeef2;
+      --text: #24292f;
+      --muted: #57606a;
+      --dim: #6e7781;
+      --blue: #0969da;
+      --green: #1a7f37;
+      --purple: #8250df;
+      --orange: #bc4c00;
+      --red: #cf222e;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
-
     body {
       min-height: 100vh;
-      padding: 32px 20px 64px;
+      padding: 38px 22px 64px;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.08), transparent 30%),
-        radial-gradient(circle at 90% 8%, rgba(167, 139, 250, 0.08), transparent 28%),
-        var(--bg);
-      font-family: "Noto Sans KR", system-ui, sans-serif;
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+      font-size: 16px;
       line-height: 1.72;
     }
-
-    code, pre, .mono, svg text, .eyebrow, .toolbar button, .toc a {
-      font-family: "JetBrains Mono", "Noto Sans KR", monospace;
+    code, pre, .mono, svg text, .toolbar button {
+      font-family: "JetBrains Mono", "Noto Sans KR", ui-monospace, monospace;
     }
-
-    .container { width: min(1240px, 100%); margin: 0 auto; }
-
+    code {
+      padding: 0.12em 0.32em;
+      border-radius: 4px;
+      background: rgba(175, 184, 193, 0.2);
+      font-size: 0.88em;
+    }
+    .container { width: min(1120px, 100%); margin: 0 auto; }
     .header {
       position: relative;
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(15, 23, 42, 0.62);
-      overflow: hidden;
+      padding: 0 0 25px;
+      border-bottom: 1px solid var(--line);
     }
-
-    .header::after {
-      content: "";
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      right: -130px;
-      top: -160px;
-      border-radius: 50%;
-      border: 1px solid rgba(34, 211, 238, 0.18);
-      box-shadow: 0 0 0 38px rgba(34, 211, 238, 0.025), 0 0 0 76px rgba(167, 139, 250, 0.02);
-      pointer-events: none;
-    }
-
-    .header-row { display: flex; align-items: center; gap: 12px; }
-
-    .pulse-dot {
-      width: 11px;
-      height: 11px;
-      flex: 0 0 auto;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 18px rgba(34, 211, 238, 0.7);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse { 50% { opacity: 0.42; transform: scale(0.88); } }
-
+    .header-row { display: flex; align-items: flex-start; gap: 12px; }
+    .pulse-dot { display: none; }
     h1 {
-      max-width: 940px;
-      font-size: clamp(1.65rem, 3.4vw, 2.55rem);
-      line-height: 1.22;
+      max-width: 900px;
+      color: var(--text);
+      font-size: clamp(2rem, 4.2vw, 2.85rem);
+      line-height: 1.2;
       letter-spacing: -0.045em;
     }
-
     .subtitle {
-      max-width: 880px;
-      margin: 14px 0 0 23px;
+      max-width: 850px;
+      margin-top: 13px;
       color: var(--muted);
-      font-size: 0.98rem;
+      font-size: 1rem;
     }
-
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 18px 0 0 23px;
-    }
-
+    .meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 17px; }
     .chip {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      min-height: 29px;
-      padding: 4px 10px;
-      border: 1px solid var(--line-strong);
+      min-height: 26px;
+      padding: 2px 9px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(2, 6, 23, 0.65);
+      background: var(--soft);
       color: var(--muted);
       font-size: 0.75rem;
     }
-
-    .chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-left: auto;
-      z-index: 2;
-    }
-
-    .toolbar-actions { display: none; gap: 7px; }
+    .chip-dot { display: none; }
+    .toolbar { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .toolbar-actions { display: none; gap: 6px; }
     .toolbar.expanded .toolbar-actions { display: flex; }
-
     .toolbar button {
-      min-height: 32px;
-      padding: 5px 10px;
-      border: 1px solid var(--line-strong);
-      border-radius: 8px;
+      min-height: 31px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
       color: var(--muted);
-      background: rgba(30, 41, 59, 0.78);
+      background: var(--soft);
       cursor: pointer;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
     }
-
-    .toolbar button:hover { color: white; border-color: #475569; background: rgba(51, 65, 85, 0.88); }
-    .toolbar .toolbar-toggle { border-color: transparent; background: transparent; font-size: 1.15rem; }
-
+    .toolbar button:hover { color: var(--text); border-color: #afb8c1; background: #eef1f4; }
+    .toolbar .toolbar-toggle { border-color: transparent; background: transparent; font-size: 1.1rem; }
     .notice {
       margin-top: 18px;
-      padding: 12px 14px;
-      border-left: 3px solid var(--amber);
-      border-radius: 0 10px 10px 0;
-      background: rgba(120, 53, 15, 0.15);
-      color: #fde68a;
+      padding: 10px 13px;
+      border-left: 4px solid #d4a72c;
+      background: #fff8c5;
+      color: #4d2d00;
       font-size: 0.82rem;
     }
-
     .toc {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
       margin: 18px 0 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
     }
-
     .toc a {
-      padding: 11px 12px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.46);
+      padding: 10px 12px;
+      border-right: 1px solid var(--line-soft);
+      border-bottom: 1px solid var(--line-soft);
+      color: var(--blue);
+      background: #fff;
       text-decoration: none;
-      font-size: 0.76rem;
+      font-size: 0.79rem;
     }
-
-    .toc a:hover { color: var(--cyan); border-color: rgba(34, 211, 238, 0.45); }
-
-    section { margin-top: 38px; scroll-margin-top: 20px; }
-
-    .section-head { display: flex; align-items: baseline; gap: 11px; margin-bottom: 15px; }
-    .section-no { color: var(--cyan); font: 600 0.78rem "JetBrains Mono", monospace; }
-    h2 { font-size: clamp(1.3rem, 2.6vw, 1.75rem); letter-spacing: -0.035em; }
-    h3 { margin-top: 22px; font-size: 1.05rem; letter-spacing: -0.02em; }
+    .toc a:nth-child(4n) { border-right: 0; }
+    .toc a:nth-child(n+5) { border-bottom: 0; }
+    .toc a:hover { background: var(--soft); text-decoration: underline; }
+    section { margin-top: 48px; scroll-margin-top: 20px; }
+    .section-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+    .section-no { color: var(--dim); font: 600 0.76rem "JetBrains Mono", monospace; }
+    h2 { color: var(--text); font-size: clamp(1.4rem, 2.7vw, 1.8rem); letter-spacing: -0.03em; }
+    h3 { margin-top: 28px; color: var(--text); font-size: 1.08rem; letter-spacing: -0.02em; }
     p + p { margin-top: 12px; }
-    p { color: #cbd5e1; }
-    strong { color: #fff; }
-
+    p { color: var(--muted); }
+    strong { color: var(--text); }
     .lead {
-      padding: 22px;
-      border: 1px solid rgba(34, 211, 238, 0.27);
-      border-radius: 14px;
-      background: rgba(8, 51, 68, 0.22);
-      font-size: 1.02rem;
+      padding: 17px 19px;
+      border-left: 4px solid var(--blue);
+      background: var(--soft-blue);
+      color: var(--text);
+      font-size: 1rem;
     }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 13px;
-      margin-top: 16px;
-    }
-
-    .card {
-      min-width: 0;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      background: var(--panel);
-    }
-
-    .card-header { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
-    .card-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
-    .cyan { background: var(--cyan); }
-    .emerald { background: var(--emerald); }
-    .violet { background: var(--violet); }
-    .amber { background: var(--amber); }
-    .rose { background: var(--rose); }
-    .orange { background: var(--orange); }
-    .card h3 { margin: 0; font-size: 0.92rem; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .card { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .card-dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; }
+    .cyan { background: var(--blue); }
+    .emerald { background: var(--green); }
+    .violet { background: var(--purple); }
+    .amber, .orange { background: var(--orange); }
+    .rose { background: var(--red); }
+    .card h3 { margin: 0; font-size: 0.93rem; }
     .card p, .card li { color: var(--muted); font-size: 0.84rem; }
     .card ul { margin: 8px 0 0 18px; }
-    .card li + li { margin-top: 6px; }
-
-    .diagram-container {
-      margin-top: 16px;
-      padding: 15px;
-      border: 1px solid var(--line);
-      border-radius: 15px;
-      background: rgba(15, 23, 42, 0.55);
-      overflow-x: auto;
-    }
-
-    .diagram-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      margin: 3px 4px 12px;
-      color: var(--muted);
-      font-size: 0.79rem;
-    }
-
-    .diagram-title strong { color: white; }
-    svg { width: 100%; min-width: 920px; display: block; }
-
-    .analogy {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr auto 1fr;
-      align-items: stretch;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .analogy-box {
-      padding: 17px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--panel);
-    }
-
-    .analogy-box b { display: block; margin-bottom: 6px; color: white; }
+    .card li + li { margin-top: 5px; }
+    .diagram-container { margin-top: 16px; padding: 14px; border: 1px solid var(--line); border-radius: 6px; background: #fff; overflow-x: auto; }
+    .diagram-title { display: flex; justify-content: space-between; gap: 16px; margin: 2px 2px 12px; color: var(--muted); font-size: 0.79rem; }
+    .diagram-title strong { color: var(--text); }
+    svg { width: 100%; min-width: 920px; display: block; background: #fff; }
+    /* Existing inline diagrams use semantic dark-theme literals. These overrides keep
+       their geometry while translating them to the restrained document palette. */
+    svg rect[fill="#0f172a"], svg rect[fill="#020617"] { fill: #fff !important; }
+    svg rect[fill^="url(#grid"] { fill: #fff !important; }
+    svg rect[fill*="rgba(8,51,68"], svg rect[fill*="rgba(34,211,238"] { fill: #ddf4ff !important; }
+    svg rect[fill*="rgba(6,78,59"], svg rect[fill*="rgba(52,211,153"] { fill: #dafbe1 !important; }
+    svg rect[fill*="rgba(76,29,149"], svg rect[fill*="rgba(167,139,250"] { fill: #fbefff !important; }
+    svg rect[fill*="rgba(120,53,15"], svg rect[fill*="rgba(251,146,60"] { fill: #fff1e5 !important; }
+    svg rect[fill*="rgba(136,19,55"], svg rect[fill*="rgba(251,113,133"] { fill: #ffebe9 !important; }
+    svg rect[fill*="rgba(30,41,59"] { fill: #f6f8fa !important; }
+    svg text[fill="#fff"], svg text[fill="white"] { fill: #24292f !important; }
+    svg text[fill="#94a3b8"], svg text[fill="#cbd5e1"], svg text[fill="#64748b"] { fill: #57606a !important; }
+    svg text[fill="#22d3ee"], svg text[fill="#bae6fd"] { fill: #0969da !important; }
+    svg text[fill="#34d399"], svg text[fill="#a7f3d0"] { fill: #1a7f37 !important; }
+    svg text[fill="#a78bfa"], svg text[fill="#c4b5fd"] { fill: #8250df !important; }
+    svg text[fill="#fb923c"], svg text[fill="#fdba74"], svg text[fill="#fbbf24"], svg text[fill="#fde68a"] { fill: #9a6700 !important; }
+    svg text[fill="#fb7185"], svg text[fill="#fda4af"] { fill: #cf222e !important; }
+    svg [stroke="#22d3ee"] { stroke: #54aeff !important; }
+    svg [stroke="#34d399"] { stroke: #4ac26b !important; }
+    svg [stroke="#a78bfa"] { stroke: #a475f9 !important; }
+    svg [stroke="#fb923c"], svg [stroke="#fbbf24"] { stroke: #d4a72c !important; }
+    svg [stroke="#fb7185"] { stroke: #ff8182 !important; }
+    svg [stroke="#94a3b8"], svg [stroke="#64748b"], svg [stroke="#475569"] { stroke: #afb8c1 !important; }
+    svg [stroke="#1e293b"] { stroke: #eaeef2 !important; }
+    svg polygon[fill="#22d3ee"] { fill: #54aeff !important; }
+    svg polygon[fill="#34d399"] { fill: #4ac26b !important; }
+    svg polygon[fill="#a78bfa"] { fill: #a475f9 !important; }
+    svg polygon[fill="#fb923c"], svg polygon[fill="#fbbf24"] { fill: #d4a72c !important; }
+    svg polygon[fill="#fb7185"] { fill: #ff8182 !important; }
+    svg polygon[fill="#64748b"], svg polygon[fill="#94a3b8"] { fill: #afb8c1 !important; }
+    .analogy { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; gap: 10px; margin-top: 16px; }
+    .analogy-box { padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--soft); }
+    .analogy-box b { display: block; margin-bottom: 5px; color: var(--text); }
     .analogy-box span { color: var(--muted); font-size: 0.84rem; }
-    .analogy-arrow { align-self: center; color: var(--dim); font: 600 1.3rem "JetBrains Mono", monospace; }
-
-    .table-wrap { margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 760px; background: rgba(15, 23, 42, 0.55); }
-    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-    th { color: white; background: rgba(30, 41, 59, 0.7); font-size: 0.78rem; }
-    td { color: var(--muted); font-size: 0.82rem; }
+    .analogy-arrow { align-self: center; color: var(--dim); font: 600 1.2rem "JetBrains Mono", monospace; }
+    .table-wrap { margin-top: 16px; border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; background: #fff; }
+    th, td { padding: 11px 13px; border-bottom: 1px solid var(--line-soft); text-align: left; vertical-align: top; }
+    th { color: var(--text); background: var(--soft); font-size: 0.79rem; }
+    td { color: var(--muted); font-size: 0.83rem; }
     tr:last-child td { border-bottom: 0; }
-    td code { color: #bae6fd; }
-
-    .code {
-      margin-top: 13px;
-      padding: 15px;
-      border: 1px solid var(--line);
-      border-radius: 11px;
-      background: #020617;
-      color: #bae6fd;
-      font-size: 0.79rem;
-      line-height: 1.65;
-      overflow-x: auto;
-      white-space: pre;
-    }
-
+    td code { color: #0550ae; }
+    .code { margin-top: 13px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--soft); color: #24292f; font-size: 0.79rem; line-height: 1.65; overflow-x: auto; white-space: pre; }
     .steps { display: grid; gap: 10px; margin-top: 15px; }
-    .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
-    .step-n {
-      display: grid;
-      place-items: center;
-      width: 30px;
-      height: 30px;
-      border: 1px solid rgba(34, 211, 238, 0.5);
-      border-radius: 9px;
-      color: var(--cyan);
-      background: rgba(8, 51, 68, 0.35);
-      font: 600 0.76rem "JetBrains Mono", monospace;
-    }
+    .step { display: grid; grid-template-columns: 30px 1fr; gap: 11px; align-items: start; }
+    .step-n { display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid var(--line); border-radius: 50%; color: var(--blue); background: #fff; font: 600 0.72rem "JetBrains Mono", monospace; }
     .step p { font-size: 0.89rem; }
-
     .state-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 15px; }
-    .state {
-      padding: 7px 10px;
-      border: 1px solid var(--line-strong);
-      border-radius: 8px;
-      background: rgba(15, 23, 42, 0.84);
-      color: var(--muted);
-      font: 500 0.72rem "JetBrains Mono", monospace;
-    }
+    .state { padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--soft); color: var(--muted); font: 500 0.72rem "JetBrains Mono", monospace; }
     .state-arrow { color: var(--dim); }
-
-    .decision {
-      margin-top: 16px;
-      padding: 18px;
-      border: 1px solid rgba(52, 211, 153, 0.3);
-      border-radius: 13px;
-      background: rgba(6, 78, 59, 0.16);
-    }
-    .decision b { color: #a7f3d0; }
-
-    .questions { counter-reset: question; display: grid; gap: 9px; margin-top: 15px; }
-    .question {
-      position: relative;
-      padding: 13px 14px 13px 47px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.54);
-      font-size: 0.85rem;
-    }
-    .question::before {
-      counter-increment: question;
-      content: counter(question);
-      position: absolute;
-      left: 13px;
-      top: 12px;
-      display: grid;
-      place-items: center;
-      width: 23px;
-      height: 23px;
-      border-radius: 7px;
-      color: var(--amber);
-      background: rgba(120, 53, 15, 0.35);
-      font: 600 0.7rem "JetBrains Mono", monospace;
-    }
-
-    .footer {
-      margin-top: 40px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      color: var(--dim);
-      text-align: center;
-      font: 0.72rem "JetBrains Mono", monospace;
-    }
-
+    .decision { margin-top: 16px; padding: 16px 18px; border: 1px solid #aceebb; border-left: 4px solid var(--green); background: #dafbe1; }
+    .decision b { color: #116329; }
+    .questions { counter-reset: question; display: grid; gap: 8px; margin-top: 15px; }
+    .question { position: relative; padding: 12px 14px 12px 44px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: #fff; font-size: 0.85rem; }
+    .question::before { counter-increment: question; content: counter(question); position: absolute; left: 12px; top: 11px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #9a6700; background: #fff8c5; font: 600 0.68rem "JetBrains Mono", monospace; }
+    .footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--dim); text-align: center; font: 0.72rem "JetBrains Mono", monospace; }
     @media (max-width: 900px) {
-      body { padding: 18px 12px 48px; }
-      .header { padding: 20px; }
-      .subtitle, .meta { margin-left: 0; }
+      body { padding: 22px 13px 48px; }
       .toc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toc a, .toc a:nth-child(4n), .toc a:nth-child(n+5) { border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+      .toc a:nth-child(2n) { border-right: 0; }
+      .toc a:nth-last-child(-n+2) { border-bottom: 0; }
       .cards { grid-template-columns: 1fr; }
       .analogy { grid-template-columns: 1fr; }
       .analogy-arrow { transform: rotate(90deg); justify-self: center; }
-      .toolbar-actions { position: absolute; right: 16px; top: 66px; flex-direction: column; }
+      .toolbar-actions { position: absolute; right: 0; top: 42px; flex-direction: column; z-index: 2; }
     }
-
     @media print {
-      body { background: #020617; padding: 12px; }
+      body { background: #fff; padding: 12px; }
       .toolbar { display: none !important; }
       .toc { display: none; }
       section { break-inside: avoid; }
@@ -386,10 +245,11 @@
           <button class="toolbar-toggle" onclick="this.parentElement.classList.toggle('expanded')" title="내보내기" aria-label="내보내기 메뉴">⋯</button>
         </div>
       </div>
-      <p class="subtitle">중앙 VM, Long Poll, 인증서, NFS, SQLite가 각각 왜 필요한지 대학 신입생도 따라올 수 있게 설명한 설계 초안입니다.</p>
+      <p class="subtitle">별도 인증 인프라 없이 Farad와 사내 메신저를 최초 한 번 연결하고, 중앙 VM을 통해 예약 작업을 안전하게 실행하는 구조를 설명합니다.</p>
       <div class="meta">
-        <span class="chip"><span class="chip-dot"></span>설계 초안 v0.1</span>
+        <span class="chip"><span class="chip-dot"></span>정책 반영 v0.2</span>
         <span class="chip">범위: Schedule 원격 1회 실행</span>
+        <span class="chip">인증: Farad 생성 토큰 + 메신저 승인</span>
         <span class="chip">작성일: 2026-07-14</span>
       </div>
       <div class="notice">공개 문서이므로 실제 회사명·호스트명·사용자 ID·credential·Schedule 내용은 포함하지 않았습니다. 예시는 모두 가상 값입니다.</div>
@@ -397,7 +257,7 @@
 
     <nav class="toc" aria-label="문서 목차">
       <a href="#summary">01 · 한눈에 보기</a>
-      <a href="#certificate">02 · 인증서란?</a>
+      <a href="#pairing">02 · 최초 연결</a>
       <a href="#architecture">03 · 전체 구조</a>
       <a href="#long-poll">04 · Long Poll</a>
       <a href="#sequence">05 · 실행 시퀀스</a>
@@ -444,68 +304,69 @@
         </div>
       </section>
 
-      <section id="certificate">
-        <div class="section-head"><span class="section-no">02</span><h2>인증서는 무엇인가?</h2></div>
-        <p><strong>인증서(certificate)는 인터넷에서 쓰는 사원증</strong>이라고 생각하면 됩니다. Farad가 중앙 VM에 연결할 때 “나는 kim 계정의 정식 Farad다”라고 주장하는 것만으로는 부족합니다. 누구나 요청 본문에 <code>user=kim</code>이라고 적을 수 있기 때문입니다.</p>
+      <section id="pairing">
+        <div class="section-head"><span class="section-no">02</span><h2>최초 연결: 비밀값을 누가 전달하는가?</h2></div>
+        <div class="lead"><strong>아무도 전달하지 않습니다.</strong> Farad가 256비트 랜덤 토큰을 자기 호스트에서 직접 만들고 보호 파일에 저장합니다. 사용자는 Farad에서 <strong>메신저 연결</strong>을 누르고, 본인 사내 메신저에서 <strong>이 Farad 연결</strong>을 한 번 누르면 됩니다.</div>
 
         <div class="analogy">
-          <div class="analogy-box"><b>사원증</b><span>사진, 이름, 사번이 있고 회사가 발급했다는 표시가 있습니다.</span></div>
-          <div class="analogy-arrow">≈</div>
-          <div class="analogy-box"><b>클라이언트 인증서</b><span>계정 이름, 유효기간, 공개키가 있고 사내 CA의 전자서명이 있습니다.</span></div>
-          <div class="analogy-arrow">+</div>
-          <div class="analogy-box"><b>개인키</b><span>사원증 소유자만 가진 비밀 도장입니다. 호스트 밖으로 보내지 않습니다.</span></div>
+          <div class="analogy-box"><b>Farad가 열쇠를 만듦</b><span>긴 비밀 토큰은 화면에 보여주거나 복사하지 않습니다.</span></div>
+          <div class="analogy-arrow">→</div>
+          <div class="analogy-box"><b>메신저로 본인 확인</b><span>같은 짧은 코드와 호스트 이름을 보고 연결을 승인합니다.</span></div>
+          <div class="analogy-arrow">→</div>
+          <div class="analogy-box"><b>이후 자동 인증</b><span>Farad가 저장된 토큰으로 Long Poll 요청을 인증합니다.</span></div>
         </div>
 
-        <h3>CA는 누구인가?</h3>
-        <p><strong>CA(Certificate Authority)</strong>는 인증서를 발급하고 서명하는 사내 신분증 발급 부서입니다. 중앙 VM은 “이 인증서가 우리가 신뢰하는 사내 CA가 서명한 것인가, 만료되지 않았는가, 취소되지 않았는가”를 검사합니다.</p>
-
-        <h3>mTLS는 무엇인가?</h3>
-        <p>보통 HTTPS에서는 브라우저가 서버 인증서만 검사합니다. <strong>mTLS(mutual TLS)</strong>는 서로 검사합니다. Farad는 중앙 VM이 진짜인지 확인하고, 중앙 VM도 Farad의 사용자 인증서를 확인합니다.</p>
+        <h3>사용자에게 보이는 절차</h3>
+        <div class="steps">
+          <div class="step"><span class="step-n">1</span><p>Farad에서 <strong>메신저 연결</strong>을 누릅니다. 메신저 계정 매핑이 없으면 Knox ID 같은 공개 식별자만 한 번 입력합니다.</p></div>
+          <div class="step"><span class="step-n">2</span><p>Farad 화면에 <code>BLUE-47</code> 같은 짧은 확인 코드가 나타납니다.</p></div>
+          <div class="step"><span class="step-n">3</span><p>사내 메신저로 온 카드에서 계정·호스트·요청 시각과 같은 코드를 확인하고 <strong>이 Farad 연결</strong>을 누릅니다.</p></div>
+          <div class="step"><span class="step-n">4</span><p>Farad가 자동으로 연결 완료를 감지합니다. 토큰 복사, 인증서 발급, 파일 배포는 없습니다.</p></div>
+        </div>
 
         <div class="diagram-container">
-          <div class="diagram-title"><strong>인증서 확인 흐름</strong><span>비밀키는 네트워크로 전송되지 않습니다.</span></div>
-          <svg viewBox="0 0 1100 430" role="img" aria-label="Farad와 중앙 VM이 사내 CA 인증서를 상호 검증하는 흐름">
+          <div class="diagram-title"><strong>최초 1회 연결 시퀀스</strong><span>짧은 코드는 비교용이며 실제 비밀 토큰이 아닙니다.</span></div>
+          <svg viewBox="0 0 1160 760" role="img" aria-label="Farad가 비밀 토큰을 직접 만들고 사내 메신저 승인으로 계정을 연결하는 시퀀스">
             <defs>
-              <marker id="arrow-cert" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#fb7185"/></marker>
-              <pattern id="grid-cert" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0 L0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/></pattern>
+              <marker id="arrow-pair" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#64748b"/></marker>
             </defs>
-            <rect width="1100" height="430" fill="url(#grid-cert)"/>
+            <rect width="1160" height="760" fill="#ffffff"/>
 
-            <line x1="275" y1="185" x2="815" y2="185" stroke="#fb7185" stroke-width="2" stroke-dasharray="7,5" marker-end="url(#arrow-cert)"/>
-            <line x1="825" y1="245" x2="285" y2="245" stroke="#22d3ee" stroke-width="2" stroke-dasharray="7,5" marker-end="url(#arrow-cert)"/>
-            <path d="M550 104 L550 145 Q550 165 530 165 L260 165" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-cert)"/>
-            <path d="M550 104 L550 145 Q550 165 570 165 L840 165" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow-cert)"/>
+            <rect x="35" y="28" width="180" height="55" rx="6" fill="#f6f8fa" stroke="#afb8c1"/><text x="125" y="52" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">사용자</text><text x="125" y="69" fill="#94a3b8" font-size="8" text-anchor="middle">Farad 화면 + 휴대폰</text>
+            <rect x="315" y="28" width="180" height="55" rx="6" fill="rgba(8,51,68,.4)" stroke="#22d3ee"/><text x="405" y="52" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">Farad</text><text x="405" y="69" fill="#94a3b8" font-size="8" text-anchor="middle">사용자 호스트</text>
+            <rect x="665" y="28" width="180" height="55" rx="6" fill="rgba(6,78,59,.4)" stroke="#34d399"/><text x="755" y="52" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">중앙 VM Relay</text><text x="755" y="69" fill="#94a3b8" font-size="8" text-anchor="middle">Pairing API + SQLite</text>
+            <rect x="945" y="28" width="180" height="55" rx="6" fill="rgba(76,29,149,.4)" stroke="#a78bfa"/><text x="1035" y="52" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">사내 메신저</text><text x="1035" y="69" fill="#94a3b8" font-size="8" text-anchor="middle">본인 확인 채널</text>
 
-            <rect x="70" y="130" width="210" height="170" rx="10" fill="#0f172a"/>
-            <rect x="70" y="130" width="210" height="170" rx="10" fill="rgba(8,51,68,.4)" stroke="#22d3ee" stroke-width="1.5"/>
-            <text x="175" y="158" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">사용자 호스트</text>
-            <text x="175" y="180" fill="#94a3b8" font-size="10" text-anchor="middle">Farad client</text>
-            <rect x="95" y="205" width="160" height="62" rx="7" fill="rgba(136,19,55,.4)" stroke="#fb7185" stroke-width="1.2"/>
-            <text x="175" y="229" fill="#fff" font-size="11" text-anchor="middle">kim의 인증서</text>
-            <text x="175" y="249" fill="#94a3b8" font-size="9" text-anchor="middle">+ 호스트에만 있는 개인키</text>
+            <line x1="125" y1="84" x2="125" y2="720" stroke="#afb8c1" stroke-dasharray="5,5"/>
+            <line x1="405" y1="84" x2="405" y2="720" stroke="#22d3ee" stroke-dasharray="5,5"/>
+            <line x1="755" y1="84" x2="755" y2="720" stroke="#34d399" stroke-dasharray="5,5"/>
+            <line x1="1035" y1="84" x2="1035" y2="720" stroke="#a78bfa" stroke-dasharray="5,5"/>
 
-            <rect x="440" y="35" width="220" height="70" rx="9" fill="#0f172a"/>
-            <rect x="440" y="35" width="220" height="70" rx="9" fill="rgba(76,29,149,.4)" stroke="#a78bfa" stroke-width="1.5"/>
-            <text x="550" y="64" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">사내 CA</text>
-            <text x="550" y="84" fill="#94a3b8" font-size="9" text-anchor="middle">두 인증서에 전자서명</text>
-
-            <rect x="820" y="130" width="210" height="170" rx="10" fill="#0f172a"/>
-            <rect x="820" y="130" width="210" height="170" rx="10" fill="rgba(6,78,59,.4)" stroke="#34d399" stroke-width="1.5"/>
-            <text x="925" y="158" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">중앙 VM Relay</text>
-            <text x="925" y="180" fill="#94a3b8" font-size="10" text-anchor="middle">relay.company.internal</text>
-            <rect x="845" y="205" width="160" height="62" rx="7" fill="rgba(136,19,55,.4)" stroke="#fb7185" stroke-width="1.2"/>
-            <text x="925" y="229" fill="#fff" font-size="11" text-anchor="middle">서버 인증서</text>
-            <text x="925" y="249" fill="#94a3b8" font-size="9" text-anchor="middle">+ VM에만 있는 개인키</text>
-
-            <text x="550" y="176" fill="#fb7185" font-size="9" text-anchor="middle">1 · Farad 인증서 제시 → VM이 CA 서명과 kim principal 검증</text>
-            <text x="550" y="265" fill="#22d3ee" font-size="9" text-anchor="middle">2 · VM 인증서 제시 → Farad가 올바른 relay인지 검증</text>
-
-            <rect x="190" y="350" width="720" height="45" rx="8" fill="rgba(136,19,55,.16)" stroke="#fb7185" stroke-width="1" stroke-dasharray="4,4"/>
-            <text x="550" y="378" fill="#fda4af" font-size="10" text-anchor="middle">검증 성공 후에만 암호화된 HTTPS 채널과 사용자 kim의 권한을 연결합니다.</text>
+            <line x1="135" y1="125" x2="395" y2="125" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow-pair)"/><text x="265" y="114" fill="#94a3b8" font-size="8" text-anchor="middle">1 · [메신저 연결]</text>
+            <rect x="315" y="150" width="180" height="72" rx="6" fill="#ddf4ff" stroke="#54aeff"/><text x="405" y="174" fill="#fff" font-size="8" text-anchor="middle">256-bit token 로컬 생성</text><text x="405" y="192" fill="#94a3b8" font-size="8" text-anchor="middle">0600 민감 파일에 저장</text><text x="405" y="210" fill="#94a3b8" font-size="8" text-anchor="middle">pairing ID + BLUE-47 생성</text>
+            <line x1="415" y1="255" x2="745" y2="255" stroke="#22d3ee" stroke-width="1.7" marker-end="url(#arrow-pair)"/><text x="580" y="244" fill="#22d3ee" font-size="8" text-anchor="middle">2 · HTTPS: token hash + pairing ID + 계정 식별자</text>
+            <rect x="665" y="280" width="180" height="62" rx="6" fill="#dafbe1" stroke="#4ac26b"/><text x="755" y="304" fill="#fff" font-size="8" text-anchor="middle">5분 TTL · single-use 저장</text><text x="755" y="323" fill="#94a3b8" font-size="8" text-anchor="middle">요청 횟수 제한</text>
+            <line x1="765" y1="375" x2="1025" y2="375" stroke="#34d399" stroke-width="1.7" marker-end="url(#arrow-pair)"/><text x="895" y="364" fill="#34d399" font-size="8" text-anchor="middle">3 · 연결 확인 Adaptive Card 발송</text>
+            <line x1="1025" y1="425" x2="135" y2="425" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#arrow-pair)"/><text x="580" y="414" fill="#a78bfa" font-size="8" text-anchor="middle">4 · “host-a · BLUE-47 · [이 Farad 연결]”</text>
+            <line x1="135" y1="480" x2="1025" y2="480" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow-pair)"/><text x="580" y="469" fill="#94a3b8" font-size="8" text-anchor="middle">5 · 코드가 같음을 확인하고 승인</text>
+            <line x1="1025" y1="530" x2="765" y2="530" stroke="#a78bfa" stroke-width="1.7" marker-end="url(#arrow-pair)"/><text x="895" y="519" fill="#a78bfa" font-size="8" text-anchor="middle">6 · 실제 sender userId가 포함된 callback</text>
+            <rect x="665" y="555" width="180" height="72" rx="6" fill="#dafbe1" stroke="#4ac26b"/><text x="755" y="579" fill="#fff" font-size="8" text-anchor="middle">수신자와 sender 일치 확인</text><text x="755" y="597" fill="#94a3b8" font-size="8" text-anchor="middle">token hash를 계정에 활성화</text><text x="755" y="615" fill="#94a3b8" font-size="8" text-anchor="middle">평문 token은 저장하지 않음</text>
+            <line x1="745" y1="665" x2="415" y2="665" stroke="#34d399" stroke-width="1.7" marker-end="url(#arrow-pair)"/><text x="580" y="654" fill="#34d399" font-size="8" text-anchor="middle">7 · Pairing status = CONNECTED</text>
+            <line x1="395" y1="705" x2="135" y2="705" stroke="#22d3ee" stroke-width="1.6" marker-end="url(#arrow-pair)"/><text x="265" y="694" fill="#22d3ee" font-size="8" text-anchor="middle">8 · 연결 완료</text>
           </svg>
         </div>
 
-        <div class="decision"><b>사내 인증서 인프라가 아직 없다면?</b> v1에서는 사용자별 긴 랜덤 API token을 <code>0600</code> 권한 파일에 저장하는 방법도 가능합니다. 다만 계정 폐기·만료·호스트 식별·키 회전을 운영하기에는 mTLS 인증서가 더 명확합니다.</div>
+        <h3>어디에 무엇을 저장하는가?</h3>
+        <div class="cards">
+          <article class="card"><div class="card-header"><span class="card-dot cyan"></span><h3>Farad</h3></div><p>원본 토큰을 민감 파일에 <code>0600</code>으로 저장합니다. 토큰을 로그·화면·NFS 운영 매핑에 쓰지 않습니다.</p></article>
+          <article class="card"><div class="card-header"><span class="card-dot emerald"></span><h3>중앙 VM</h3></div><p>토큰의 단방향 hash, 연결된 messenger userId, 장치 식별자, 폐기 상태만 SQLite에 저장합니다.</p></article>
+          <article class="card"><div class="card-header"><span class="card-dot violet"></span><h3>사내 메신저</h3></div><p>최초 연결 승인과 실제 sender 확인에만 사용합니다. 짧은 확인 코드는 비밀번호가 아닙니다.</p></article>
+        </div>
+
+        <h3>서버가 진짜 중앙 VM인지는 어떻게 아는가?</h3>
+        <p>토큰은 반드시 <strong>HTTPS</strong> 위에서만 사용합니다. 사용자별 인증서는 필요 없지만, Farad는 중앙 VM의 서버 인증서를 검증해야 합니다. 사내 CA를 모든 호스트가 신뢰하기 어렵다면 Farad 배포물에 Relay 서버의 공개키 지문을 넣어 고정할 수 있습니다. 공개키 지문은 공개 정보라 사용자마다 비밀 파일로 배포할 필요가 없습니다.</p>
+
+        <div class="decision"><b>확정 정책</b> 최초 연결은 Farad 1회 클릭 + 본인 메신저 1회 승인입니다. 토큰을 잃거나 호스트를 재설치하면 기존 연결을 폐기하고 같은 절차로 다시 연결합니다. 아무 신뢰 채널도 없이 최초 인증을 자동화할 수는 없으므로, 현재 환경에서는 이미 로그인된 사내 메신저를 본인 확인 수단으로 사용합니다.</div>
       </section>
 
       <section id="architecture">
@@ -564,7 +425,7 @@
             <rect x="175" y="485" width="230" height="105" rx="9" fill="#0f172a"/>
             <rect x="175" y="485" width="230" height="105" rx="9" fill="rgba(76,29,149,.4)" stroke="#a78bfa" stroke-width="1.5"/>
             <text x="290" y="513" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">사용자 Farad 상태</text>
-            <text x="290" y="535" fill="#94a3b8" font-size="8" text-anchor="middle">task_id · digest · capability · token</text>
+            <text x="290" y="535" fill="#94a3b8" font-size="8" text-anchor="middle">task_id · digest · capability · 연결 token</text>
             <text x="290" y="554" fill="#94a3b8" font-size="8" text-anchor="middle">Schedule 정의와 실행 history</text>
             <text x="290" y="575" fill="#c4b5fd" font-size="8" text-anchor="middle">실제 prompt / 경로는 이곳 밖으로 나가지 않음</text>
 
@@ -572,14 +433,14 @@
             <rect x="180" y="35" width="220" height="92" rx="9" fill="#0f172a"/>
             <rect x="180" y="35" width="220" height="92" rx="9" fill="rgba(76,29,149,.4)" stroke="#a78bfa" stroke-width="1.5"/>
             <text x="290" y="63" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">NFS 운영 설정</text>
-            <text x="290" y="84" fill="#94a3b8" font-size="8" text-anchor="middle">계정 principal → messenger userId</text>
-            <text x="290" y="103" fill="#c4b5fd" font-size="8" text-anchor="middle">운영자 관리 · 시작/명시 refresh에 읽음</text>
+            <text x="290" y="84" fill="#94a3b8" font-size="8" text-anchor="middle">OS 계정 → Knox ID 입력 힌트 (선택)</text>
+            <text x="290" y="103" fill="#c4b5fd" font-size="8" text-anchor="middle">인증 수단 아님 · 공개 Relay pin 설정 가능</text>
 
             <!-- VM components -->
             <rect x="565" y="305" width="280" height="120" rx="10" fill="#0f172a"/>
             <rect x="565" y="305" width="280" height="120" rx="10" fill="rgba(6,78,59,.4)" stroke="#34d399" stroke-width="1.5"/>
             <text x="705" y="333" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">Relay API</text>
-            <text x="705" y="355" fill="#94a3b8" font-size="9" text-anchor="middle">mTLS 인증 · Long Poll · 카드 전달/갱신</text>
+            <text x="705" y="355" fill="#94a3b8" font-size="9" text-anchor="middle">token 인증 · Long Poll · 카드 전달/갱신</text>
             <rect x="588" y="374" width="112" height="32" rx="6" fill="rgba(251,146,60,.28)" stroke="#fb923c" stroke-width="1"/>
             <text x="644" y="395" fill="#fdba74" font-size="8" text-anchor="middle">Command Router</text>
             <rect x="712" y="374" width="110" height="32" rx="6" fill="rgba(136,19,55,.35)" stroke="#fb7185" stroke-width="1"/>
@@ -606,7 +467,7 @@
 
             <!-- labels -->
             <text x="498" y="350" fill="#22d3ee" font-size="8" text-anchor="middle">HTTPS Long Poll</text>
-            <text x="498" y="365" fill="#fb7185" font-size="8" text-anchor="middle">mTLS</text>
+            <text x="498" y="365" fill="#fb7185" font-size="8" text-anchor="middle">Bearer token + HTTPS</text>
             <text x="897" y="350" fill="#34d399" font-size="8" text-anchor="middle">Message API</text>
             <text x="900" y="555" fill="#fb923c" font-size="8" text-anchor="middle">encrypted callback</text>
 
@@ -627,7 +488,8 @@
             <tbody>
               <tr><td>Schedule prompt, 작업 폴더, 모델, 권한</td><td>사용자 Farad</td><td>아니오</td></tr>
               <tr><td>Schedule을 지금 실행해도 되는가</td><td>Farad의 RemoteScheduleService + Scheduler</td><td>아니오. 전달만 함</td></tr>
-              <tr><td>계정 kim의 메신저 userId</td><td>운영자 관리 account mapping</td><td>예</td></tr>
+              <tr><td>이 Farad와 메신저 userId의 연결</td><td>메신저 승인 후 Relay DB에 생긴 account binding</td><td>예</td></tr>
+              <tr><td>연결용 원본 비밀 토큰</td><td>사용자 Farad의 민감 파일</td><td>아니오. token hash만 저장</td></tr>
               <tr><td>chatroomId, msgId, msgKey</td><td>중앙 VM Relay DB</td><td>예</td></tr>
               <tr><td>action token의 실제 task_id 매핑</td><td>사용자 Farad</td><td>아니오. opaque token만 봄</td></tr>
               <tr><td>실제 실행 결과와 transcript</td><td>사용자 Farad</td><td>아니오. 최소 상태만 받음</td></tr>
@@ -668,7 +530,7 @@ Farad → Relay: 다음 Long Poll 시작</div>
         <h3>Farad는 언제 연결하는가?</h3>
         <div class="steps">
           <div class="step"><span class="step-n">1</span><p>앱이 시작되고 해당 계정이 singleton lease를 획득합니다.</p></div>
-          <div class="step"><span class="step-n">2</span><p>메신저 연동 설정과 credential이 유효하면 Long Poll task 하나를 시작합니다.</p></div>
+          <div class="step"><span class="step-n">2</span><p>최초 연결이 완료되어 로컬 token과 Relay의 account binding이 유효하면 Long Poll task 하나를 시작합니다.</p></div>
           <div class="step"><span class="step-n">3</span><p>정상 응답 후 즉시 다음 poll을 시작하고, 오류면 2초 → 4초 → 8초처럼 bounded backoff로 재연결합니다.</p></div>
           <div class="step"><span class="step-n">4</span><p>앱 종료, lease 상실, 계정 비활성화 시 poll과 pending network task를 정리합니다.</p></div>
         </div>
@@ -676,7 +538,7 @@ Farad → Relay: 다음 Long Poll 시작</div>
 
       <section id="sequence">
         <div class="section-head"><span class="section-no">05</span><h2>예시로 보는 전체 실행 시퀀스</h2></div>
-        <p>가상의 사용자 <strong>kim</strong>이 회사 PC에서 “조용한 수달”이라는 별칭으로 Schedule을 준비하고, 집에서 실행한다고 가정합니다.</p>
+        <p>최초 연결은 이미 끝났다고 가정합니다. 가상의 사용자 <strong>kim</strong>이 회사 PC에서 “조용한 수달”이라는 별칭으로 Schedule을 준비하고, 집에서 실행하는 예시입니다.</p>
 
         <div class="diagram-container">
           <div class="diagram-title"><strong>정상 경로 시퀀스</strong><span>카드에는 실제 Schedule 이름·task_id·prompt가 없습니다.</span></div>
@@ -714,7 +576,7 @@ Farad → Relay: 다음 Long Poll 시작</div>
             <line x1="1140" y1="450" x2="910" y2="450" stroke="#fb923c" stroke-width="1.8" marker-end="url(#arrow-seq-orange)"/><text x="1025" y="440" fill="#fb923c" font-size="8" text-anchor="middle">6 · encrypted callback POST</text>
             <rect x="810" y="472" width="180" height="48" rx="6" fill="rgba(251,146,60,.22)" stroke="#fb923c"/><text x="900" y="491" fill="#fff" font-size="8" text-anchor="middle">DB에 command 저장</text><text x="900" y="507" fill="#94a3b8" font-size="7" text-anchor="middle">durable commit 후 HTTP 200</text>
             <line x1="890" y1="545" x2="380" y2="545" stroke="#22d3ee" stroke-width="1.8" marker-end="url(#arrow-seq-cyan)"/><text x="635" y="535" fill="#22d3ee" font-size="8" text-anchor="middle">7 · 대기 중 Long Poll에 command 즉시 반환</text>
-            <rect x="290" y="565" width="160" height="65" rx="7" fill="rgba(6,78,59,.28)" stroke="#34d399"/><text x="370" y="587" fill="#fff" font-size="8" text-anchor="middle">token / principal / TTL 검증</text><text x="370" y="603" fill="#94a3b8" font-size="7" text-anchor="middle">새 confirm token 발급</text><text x="370" y="618" fill="#94a3b8" font-size="7" text-anchor="middle">command ACK</text>
+            <rect x="290" y="565" width="160" height="65" rx="7" fill="rgba(6,78,59,.28)" stroke="#34d399"/><text x="370" y="587" fill="#fff" font-size="8" text-anchor="middle">account binding / TTL 검증</text><text x="370" y="603" fill="#94a3b8" font-size="7" text-anchor="middle">새 confirm token 발급</text><text x="370" y="618" fill="#94a3b8" font-size="7" text-anchor="middle">command ACK</text>
             <line x1="380" y1="655" x2="890" y2="655" stroke="#22d3ee" stroke-width="1.7" marker-end="url(#arrow-seq-cyan)"/><text x="635" y="645" fill="#22d3ee" font-size="8" text-anchor="middle">8 · 카드 갱신: “실행할까요? [확인] [취소]”</text>
             <line x1="910" y1="695" x2="1140" y2="695" stroke="#34d399" stroke-width="1.6" marker-end="url(#arrow-seq)"/>
 
@@ -772,9 +634,9 @@ Farad → Relay: 다음 Long Poll 시작</div>
           <table>
             <thead><tr><th>저장 위치</th><th>저장할 것</th><th>읽는 시점</th><th>저장하지 않을 것</th></tr></thead>
             <tbody>
-              <tr><td>NFS 운영 설정</td><td><code>farad principal → messenger userId</code> 매핑, CA trust 설정</td><td>Relay 시작 또는 명시적 refresh</td><td>사용자마다 매초 변하는 command queue</td></tr>
-              <tr><td>사용자 Farad data</td><td>Schedule 정의, capability→task_id, task digest, 실행 history</td><td>Farad의 기존 store/cache 계약</td><td>메신저 API credential</td></tr>
-              <tr><td>VM 로컬 SQLite WAL</td><td>chatroomId, msgId/msgKey, command, ACK, dedupe, delivery generation</td><td>callback·Long Poll·카드 갱신 때 O(1) 조회</td><td>Schedule prompt, transcript, 작업 경로, tool 결과</td></tr>
+              <tr><td>NFS 운영 설정 (선택)</td><td><code>OS 계정 → Knox ID</code> 입력 힌트, Relay endpoint와 공개키 pin</td><td>앱 시작 또는 명시적 refresh</td><td>비밀 token, 인증의 최종 근거, 자주 변하는 command queue</td></tr>
+              <tr><td>사용자 Farad data</td><td>Schedule 정의, capability→task_id, task digest, 실행 history, 원본 연결 token</td><td>Farad의 기존 store/cache 계약. token만 별도 <code>0600</code> 보호</td><td>메신저 벤더 API credential</td></tr>
+              <tr><td>VM 로컬 SQLite WAL</td><td>token hash, account binding, pairing, chatroomId, msgKey, command, ACK, dedupe</td><td>pairing·callback·Long Poll·카드 갱신 때 indexed 조회</td><td>원본 token, Schedule prompt, transcript, 작업 경로, tool 결과</td></tr>
             </tbody>
           </table>
         </div>
@@ -782,20 +644,19 @@ Farad → Relay: 다음 Long Poll 시작</div>
         <h3>왜 SQLite를 NFS 위에 두지 않는가?</h3>
         <p>SQLite WAL은 로컬 파일 잠금과 빠른 fsync를 전제로 합니다. NFS에서는 잠금·캐시·장애 복구 의미가 서버와 mount 설정에 따라 달라질 수 있습니다. 중앙 Relay가 한 VM에서 돌기 때문에 <strong>VM 로컬 디스크의 SQLite</strong>가 단순하고 안전합니다. 나중에 Relay를 여러 VM으로 늘릴 때 PostgreSQL로 교체합니다.</p>
 
-        <h3>가상의 account mapping 예시</h3>
-        <div class="code"># 운영자가 관리하는 예시. 실제 파일 형식은 구현 단계에서 확정.
-accounts:
+        <h3>가상의 NFS 입력 힌트 예시</h3>
+        <div class="code"># 선택 기능. 사용자의 입력을 줄일 뿐 인증 정보가 아닙니다.
+accountHints:
   kim:
-    messengerUserId: 10001234
-    enabled: true
+    knoxId: kim.example
   lee:
-    messengerUserId: 10005678
-    enabled: true</div>
-        <p>Farad 요청 본문이 <code>messengerUserId=10001234</code>를 직접 주장하는 구조는 피합니다. 중앙 VM이 인증서에서 확인한 <code>kim</code> principal을 운영 매핑에 대입해 receiver를 결정합니다.</p>
+    knoxId: lee.example</div>
+        <p>힌트가 없으면 사용자가 Knox ID를 최초 연결 때 한 번 입력하면 됩니다. 힌트나 요청 본문의 계정 문자열을 믿고 인증을 끝내면 안 됩니다. <strong>그 계정으로 실제 전송된 카드에서, 같은 계정의 사용자가 승인한 callback</strong>이 도착해야 최종 account binding을 만듭니다.</p>
 
         <h3>중앙 SQLite의 최소 테이블</h3>
         <div class="cards">
-          <article class="card"><div class="card-header"><span class="card-dot violet"></span><h3>accounts / chatrooms</h3></div><p>인증된 principal과 메신저 사용자, 재사용할 1:1 chatroomId를 연결합니다.</p></article>
+          <article class="card"><div class="card-header"><span class="card-dot violet"></span><h3>accounts / client_credentials</h3></div><p>승인된 messenger userId와 Farad 설치 식별자, token hash, 폐기 상태를 연결합니다.</p></article>
+          <article class="card"><div class="card-header"><span class="card-dot violet"></span><h3>pairings / chatrooms</h3></div><p>5분짜리 single-use 연결 요청과 재사용할 1:1 chatroomId를 저장합니다.</p></article>
           <article class="card"><div class="card-header"><span class="card-dot violet"></span><h3>deliveries</h3></div><p>eventId, msgId, msgKey, 현재 card generation을 저장해 같은 카드를 갱신합니다.</p></article>
           <article class="card"><div class="card-header"><span class="card-dot orange"></span><h3>commands / action_routes</h3></div><p>어느 Farad에 보낼 명령인지, ACK 여부와 만료 시각을 저장합니다.</p></article>
           <article class="card"><div class="card-header"><span class="card-dot rose"></span><h3>inbound_dedup</h3></div><p>메신저 서버가 같은 callback을 재전송해도 효과가 한 번만 나도록 막습니다.</p></article>
@@ -819,7 +680,7 @@ accounts:
 
         <h3>확인 버튼을 누른 순간 검사할 것</h3>
         <div class="cards">
-          <article class="card"><div class="card-header"><span class="card-dot rose"></span><h3>누가 눌렀는가</h3></div><ul><li>인증된 corporate principal</li><li>발급 당시 chatroom과 같은가</li><li>다른 사용자의 token이 아닌가</li></ul></article>
+          <article class="card"><div class="card-header"><span class="card-dot rose"></span><h3>누가 눌렀는가</h3></div><ul><li>callback sender가 연결된 userId인가</li><li>발급 당시 chatroom과 같은가</li><li>다른 Farad 설치의 action token이 아닌가</li></ul></article>
           <article class="card"><div class="card-header"><span class="card-dot amber"></span><h3>아직 유효한가</h3></div><ul><li>single-use token인가</li><li>TTL과 remaining uses가 남았는가</li><li>현재 app lease_epoch와 같은가</li></ul></article>
           <article class="card"><div class="card-header"><span class="card-dot emerald"></span><h3>작업이 그대로인가</h3></div><ul><li>task digest가 같은가</li><li>삭제·비활성·실행 중이 아닌가</li><li>run limit이 남았는가</li></ul></article>
           <article class="card"><div class="card-header"><span class="card-dot cyan"></span><h3>권한이 제한됐는가</h3></div><ul><li>full access Schedule 거부</li><li>저장된 allow pattern만 사용</li><li>새 approval과 질문은 기다리지 않음</li></ul></article>
@@ -864,19 +725,19 @@ accounts:
           <div class="question">interactive callback을 받기 위해 chatType 0을 쓰는 것이 맞는가? chatType 5 Noti에서는 callback이 지원되지 않는가?</div>
           <div class="question">UpdateMessageRequest의 실제 wire field가 <code>chatroomId</code>인지, 문서의 <code>chatrommId</code>인지 확인이 필요한가?</div>
           <div class="question">Adaptive Card JSON 최대 크기, action 수, 지원 element 제한, version 1.3 구현 차이는 무엇인가?</div>
-          <div class="question">API 인증, TLS/mTLS, source IP allowlist, rate limit, timeout, 점검 시간의 운영 계약은 무엇인가?</div>
+          <div class="question">Relay와 메신저 API 사이의 인증, TLS/mTLS, source IP allowlist, rate limit, timeout, 점검 시간 운영 계약은 무엇인가?</div>
         </div>
 
         <h3>권장 구현 순서</h3>
         <div class="steps">
           <div class="step"><span class="step-n">1</span><p>메신저 담당자와 위 wire/security 계약을 확정하고 fake server로 암복호화·card callback 샘플을 고정합니다.</p></div>
-          <div class="step"><span class="step-n">2</span><p>중앙 Relay의 account mapping, SQLite schema, idempotent outbox/inbox, Long Poll API를 먼저 구현합니다.</p></div>
-          <div class="step"><span class="step-n">3</span><p>Farad에 CorporateRelayTransport와 RemoteScheduleService를 추가하고 기존 OutboundGate의 닫힌 template 계약을 재사용합니다.</p></div>
+          <div class="step"><span class="step-n">2</span><p>중앙 Relay의 pairing/account binding, token hash, SQLite schema, idempotent outbox/inbox, Long Poll API를 먼저 구현합니다.</p></div>
+          <div class="step"><span class="step-n">3</span><p>Farad에 로컬 token 생성·보호 저장과 Pairing UI, CorporateRelayTransport, RemoteScheduleService를 추가하고 기존 OutboundGate의 닫힌 template 계약을 재사용합니다.</p></div>
           <div class="step"><span class="step-n">4</span><p>Schedule 발급 UI와 <code>run_remote</code> 안전 진입점을 연결합니다.</p></div>
-          <div class="step"><span class="step-n">5</span><p>연결 끊김, VM 재시작, 중복 callback, token 만료, Schedule 변경, full-access 거부를 end-to-end로 검증합니다.</p></div>
+          <div class="step"><span class="step-n">5</span><p>pairing 만료·타인 승인·요청 남발·token 폐기, 연결 끊김, VM 재시작, 중복 callback, Schedule 변경, full-access 거부를 end-to-end로 검증합니다.</p></div>
         </div>
 
-        <div class="decision"><b>최종 설계 요약</b> 중앙 VM은 “메신저 어댑터 + durable 우체국”, 사용자 Farad는 “Schedule 정책과 실행의 단일 권위”입니다. NFS는 운영자 account mapping에만 제한적으로 쓰고, 동적인 명령 queue는 VM 로컬 SQLite에 둡니다. Farad는 실행 중일 때 프로세스당 Long Poll 하나를 유지하며, 인증서 또는 사용자별 credential로 자신의 principal을 증명합니다.</div>
+        <div class="decision"><b>최종 설계 요약</b> 중앙 VM은 “메신저 어댑터 + durable 우체국”, 사용자 Farad는 “Schedule 정책과 실행의 단일 권위”입니다. Farad가 원본 token을 직접 만들고, 사내 메신저 최초 1회 승인으로 token hash와 사용자 계정을 연결합니다. NFS account hint는 선택 기능이며 인증 수단이 아닙니다. 동적인 pairing·계정 연결·명령 queue는 VM 로컬 SQLite에 두고, 연결된 Farad는 프로세스당 Long Poll 하나를 유지합니다.</div>
       </section>
     </main>
 
@@ -889,7 +750,7 @@ accounts:
       const r = el.getBoundingClientRect();
       const pad = 32;
       return html2canvas(document.body, {
-        backgroundColor: '#020617',
+        backgroundColor: '#ffffff',
         scale: 2,
         useCORS: true,
         ignoreElements: (e) => e.classList && e.classList.contains('toolbar'),
