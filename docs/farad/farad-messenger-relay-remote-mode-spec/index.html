@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2026-07-16T07:04:47+09:00">
+  <meta property="article:published_time" content="2026-07-16T00:00:00+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙">
     <meta itemprop="description" content="Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙">
-    <meta itemprop="datePublished" content="2026-07-16T07:04:47+09:00">
+    <meta itemprop="datePublished" content="2026-07-16T00:00:00+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2026-07-16T07:04:47+09:00">2026-07-16</time>
+        <time datetime="2026-07-16T00:00:00+09:00">2026-07-16</time>
       </span>
     
 
@@ -476,7 +476,10 @@ transcript의 권위는 항상 사용자 호스트의 Farad에 있다.</p>
     <ul>
       <li><code class="language-plaintext highlighter-rouge">/remote</code>가 여는 session-scoped dialog다.</li>
       <li>emoji picker + 별칭 입력, 안전 경계 한 줄, <code class="language-plaintext highlighter-rouge">취소</code>/<code class="language-plaintext highlighter-rouge">Remote 켜기</code>를 제공한다.</li>
-      <li>활성화 뒤 prompt 영역에는 작은 <code class="language-plaintext highlighter-rouge">Remote</code> 상태 affordance를 표시하되 permission mode와 섞지 않는다.</li>
+      <li>활성화 뒤 prompt container의 최상단에는 Goal strip과 같은 위치에 Remote strip을 표시한다.</li>
+      <li>strip에는 초록색 <code class="language-plaintext highlighter-rouge">Remote</code> 제품 라벨과 사용자가 정한 <code class="language-plaintext highlighter-rouge">[이모지 별칭]</code> 제목을 함께 보여준다.</li>
+      <li>Goal과 Remote는 상호 배타이므로 두 strip을 동시에 표시하지 않는다.</li>
+      <li>Remote strip은 permission mode와 별개의 session-scoped 실행 모드다.</li>
     </ul>
   </li>
 </ol>
@@ -484,6 +487,27 @@ transcript의 권위는 항상 사용자 호스트의 Farad에 있다.</p>
 <p>입력 조합은 첨부된 picker 참고처럼 왼쪽의 정사각형 emoji button과 오른쪽의 일반 rounded-rectangle
 text field를 한 줄에 둔다. picker는 검색, 최근 사용, category와 emoji grid를 제공한다. upload와
 custom icon tab은 V1에 넣지 않는다.</p>
+
+<h3 id="55-remote-질문-ui">5.5 Remote 질문 UI</h3>
+
+<p><code class="language-plaintext highlighter-rouge">RemoteReport(status="needs_feedback")</code>가 안전한 선택지를 열면 같은 interaction을 두 surface에
+투영한다.</p>
+
+<ul>
+  <li>Farad 데스크톱은 기존 <code class="language-plaintext highlighter-rouge">AskUserQuestion</code>과 같은 prompt-container 내부 위치에 질문 카드를 즉시
+표시한다.</li>
+  <li>메신저에도 같은 keyword 기반 선택 카드를 즉시 보낸다.</li>
+  <li>데스크톱 질문은 임의 자유 입력을 받지 않고 RemoteReport의 allowlist 선택지만 보여준다.</li>
+  <li>데스크톱 또는 메신저 어느 쪽에서도 답할 수 있지만 최종 응답은 정확히 하나만 commit된다.</li>
+  <li>메신저에서 먼저 선택하면 데스크톱 카드도 같은 선택을 즉시 적용하고 모든 버튼을 잠근다.</li>
+  <li>데스크톱에서 먼저 선택하면 로컬 카드와 agent Future는 즉시 처리하되, 비용 절감을 위해 이미 보낸
+메신저 카드를 즉시 갱신하지 않는다.</li>
+  <li>선택된 카드는 tool result가 commit될 때까지 선택값과 <code class="language-plaintext highlighter-rouge">데스크톱에서 선택됨</code> 또는
+<code class="language-plaintext highlighter-rouge">메신저에서 선택됨</code> source를 보여주고, 이후에는 일반 tool row가 결과 이력을 보존한다.</li>
+</ul>
+
+<p>일반 <code class="language-plaintext highlighter-rouge">AskUserQuestion</code> payload를 자동으로 메신저에 미러링하지 않는다. Remote 메신저 질문은 반드시
+<code class="language-plaintext highlighter-rouge">RemoteReport</code>의 keyword template를 통해서만 생성한다.</p>
 
 <h2 id="6-사용자-연결">6. 사용자 연결</h2>
 
@@ -1045,17 +1069,75 @@ Relay가 같은 <code class="language-plaintext highlighter-rouge">eventId</code
 
 <h3 id="134-사용자-피드백">13.4 사용자 피드백</h3>
 
-<p>메신저 선택은 Relay에서 <code class="language-plaintext highlighter-rouge">REMOTE_FEEDBACK</code> command로 commit한 뒤 Farad에 전달한다.</p>
+<p>같은 질문에 데스크톱과 메신저라는 두 ingress가 있으므로 최종 선택의 단일 권위는 Farad asyncio
+thread의 <code class="language-plaintext highlighter-rouge">RemoteInteractionCoordinator</code>다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DESKTOP_CHOICE ─┐
+                ├─ resolve(interactionRef, choice, source, expectedRevision)
+MESSENGER_CHOICE┘                         │
+                                         ▼
+                              WAITING → RESOLVED 한 번만
+</code></pre></div></div>
 
 <ul>
-  <li>Farad는 interaction, target, generation, allowed choice를 다시 검증한다.</li>
-  <li>유효한 선택을 기존 session PostBox에 machine-origin user entry로 넣는다.</li>
-  <li>이 입력은 새 outer AgentRun을 깨우며, Remote Stop 계약은 그대로 유지된다.</li>
-  <li>중복 선택은 기존 result를 반환하고 PostBox에 다시 넣지 않는다.</li>
-  <li>만료, 이미 소비됨, 다른 run의 선택은 안전한 <code class="language-plaintext highlighter-rouge">EXPIRED_INTERACTION</code> 카드로 응답한다.</li>
+  <li>Farad는 interaction, target, generation, revision, allowed choice를 다시 검증한다.</li>
+  <li>먼저 Farad에서 commit된 선택만 agent Future를 resolve하고 같은 session PostBox 또는 tool result에
+한 번 전달한다. 두 ingress의 wall-clock 시각이나 Relay 도착 순서를 권위로 쓰지 않는다.</li>
+  <li>메신저 선택은 Relay에서 provisional <code class="language-plaintext highlighter-rouge">REMOTE_FEEDBACK</code> command로 commit한 뒤 Farad에 전달한다.</li>
+  <li>메신저 선택이 이기면 Farad의 post-commit event가 Qt의 같은 Remote 질문 카드에 선택값과 source를
+적용하고 버튼을 잠근다. Relay는 기존 Messenger 카드를 선택 결과로 한 번 갱신한다.</li>
+  <li>데스크톱 선택이 이기면 Farad는 즉시 agent를 계속하고 Relay에 안전한 resolution event를 보낸다.
+Relay는 interaction을 <code class="language-plaintext highlighter-rouge">RESOLVED_DESKTOP</code>으로 표시하되 Messenger update delivery는 만들지 않는다.</li>
+  <li>이후 사용자가 아직 활성처럼 보이는 Messenger 카드를 실제로 누르면 새 agent 입력을 만들지 않는다.
+Relay가 이미 local resolution을 알면 즉시, 모르고 있으면 Farad의 <code class="language-plaintext highlighter-rouge">ALREADY_RESOLVED_DESKTOP</code> result를
+받은 뒤 기존 카드를 딱 한 번 warning 상태로 갱신한다.</li>
+  <li>warning 본문은 <code class="language-plaintext highlighter-rouge">이미 데스크톱에서 처리된 응답입니다</code>이며 원래 질문 이력을 유지하고 모든 선택
+버튼을 제거한다. 같은 stale click이 반복돼도 warning update는 중복 생성하지 않는다.</li>
+  <li>app/Relay restart 뒤에도 interaction의 final choice/source/revision을 재확인할 수 있도록 Farad의
+bounded Remote index와 Relay interaction row에 안전한 projection을 보존한다.</li>
 </ul>
 
-<h3 id="135-자율-진행-안전장치">13.5 자율 진행 안전장치</h3>
+<h3 id="135-messenger-카드의-lazy-invalidation">13.5 Messenger 카드의 lazy invalidation</h3>
+
+<p>데스크톱 선택은 Messenger 카드 invalidate를 즉시 발생시키지 않는다. <code class="language-plaintext highlighter-rouge">UpdateMessageRequest</code>도 한 건의
+비용으로 간주하기 때문이다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>선택 경로</th>
+      <th>즉시 동작</th>
+      <th>Messenger outbound 추가 비용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>메신저에서 선택</td>
+      <td>Farad와 데스크톱 UI에 반영</td>
+      <td>선택 결과/버튼 제거 update 1건</td>
+    </tr>
+    <tr>
+      <td>데스크톱에서 선택</td>
+      <td>Farad와 데스크톱 UI에 반영</td>
+      <td>0건</td>
+    </tr>
+    <tr>
+      <td>데스크톱 처리 뒤 stale 카드 클릭</td>
+      <td>agent에는 전달하지 않음</td>
+      <td>warning/버튼 제거 update 최대 1건</td>
+    </tr>
+    <tr>
+      <td>같은 stale 카드 재클릭</td>
+      <td>기존 resolved 결과 반환</td>
+      <td>0건</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>따라서 Remote 질문 하나는 처음 카드 전송 1건이 기본 비용이다. 데스크톱에서만 처리하고 stale 카드가
+눌리지 않으면 추가 Messenger 호출이 없다.</p>
+
+<h3 id="136-자율-진행-안전장치">13.6 자율 진행 안전장치</h3>
 
 <ul>
   <li>Remote와 Goal은 모두 Stop 경계 owner이므로 V1에서는 동시에 켤 수 없다.</li>
@@ -1067,14 +1149,15 @@ Relay가 같은 <code class="language-plaintext highlighter-rouge">eventId</code
   <li>사용자 Stop, 앱 종료, runtime takeover는 continuation보다 우선한다.</li>
 </ul>
 
-<h3 id="136-승인과-질문">13.6 승인과 질문</h3>
+<h3 id="137-승인과-질문">13.7 승인과 질문</h3>
 
 <ul>
   <li>Remote 모드는 permission mode를 우회하지 않는다.</li>
   <li>위험 도구 승인 요청은 메신저에서 승인할 수 없다.</li>
   <li>승인 필요 시 <code class="language-plaintext highlighter-rouge">LOCAL_CONFIRMATION_REQUIRED</code> 고정 카드만 보내고 로컬 Farad에서 처리한다.</li>
-  <li><code class="language-plaintext highlighter-rouge">AskUserQuestion</code>은 V1에서 Remote keyword catalog로 변환 가능한 single-select 질문만 메신저로
-보낼 수 있다. 변환할 수 없으면 로컬 확인으로 남긴다.</li>
+  <li>일반 <code class="language-plaintext highlighter-rouge">AskUserQuestion</code>은 항상 로컬 Farad에서만 처리한다.</li>
+  <li>메신저와 데스크톱에 동시에 나타나는 질문은 <code class="language-plaintext highlighter-rouge">RemoteReport(status="needs_feedback")</code>의 allowlist된
+keyword template뿐이다. 임의 질문 텍스트를 자동 변환하거나 메신저로 보내지 않는다.</li>
 </ul>
 
 <h2 id="14-고정-keyword와-카드-문구">14. 고정 keyword와 카드 문구</h2>
@@ -1108,13 +1191,45 @@ Relay가 같은 <code class="language-plaintext highlighter-rouge">eventId</code
 <p>표현할 수 없는 상황은 임의 문자열을 보내지 않고 일반 <code class="language-plaintext highlighter-rouge">확인이 필요해요</code> 상태와 안전한 선택으로
 축소한다. 자유 조립 방식은 스키마 확장점으로 남기지만 V1 UI는 한 선택만 허용한다.</p>
 
-<h2 id="15-카드세션응답-correlation">15. 카드·세션·응답 correlation</h2>
+<h2 id="15-메신저-발신-비용-정책">15. 메신저 발신 비용 정책</h2>
+
+<p>Messenger의 <code class="language-plaintext highlighter-rouge">ChatRequest</code> message entry와 <code class="language-plaintext highlighter-rouge">UpdateMessageRequest</code> entry는 각각 1건의 비용이 발생한다고
+간주한다. HTTP request 수가 아니라 실제 전송·갱신한 message entry 수를 비용 단위로 센다.
+<code class="language-plaintext highlighter-rouge">chatMessageParams</code>가 최대 10개라는 API 상한은 10건을 무료로 묶는 의미가 아니다.</p>
+
+<p>Relay에는 pure <code class="language-plaintext highlighter-rouge">OutboundCostPolicy</code>를 두어 semantic event를 다음 네 결과로 분류한다.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">SEND_NEW</code>: pairing, 사용자가 요청한 HOME/목록/실행 확인, 새 <code class="language-plaintext highlighter-rouge">NEEDS_FEEDBACK</code> 질문</li>
+  <li><code class="language-plaintext highlighter-rouge">UPDATE_EXISTING</code>: 메신저 선택 결과, terminal 상태를 반드시 닫아야 하는 경우, stale click warning</li>
+  <li><code class="language-plaintext highlighter-rouge">STORE_ONLY</code>: Relay 최신 projection만 갱신하고 Messenger에는 보내지 않음</li>
+  <li><code class="language-plaintext highlighter-rouge">DROP_DUPLICATE</code>: 같은 logical key/revision의 재전송</li>
+</ul>
+
+<p>고정 규칙:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">NEEDS_FEEDBACK</code> 질문 카드는 로컬 UI와 동시에 Messenger로 즉시 <code class="language-plaintext highlighter-rouge">SEND_NEW</code>한다.</li>
+  <li>모델 cycle마다 진행 메시지를 보내지 않는다. heartbeat, continuation, token usage, 같은 상태의
+progress 반복은 <code class="language-plaintext highlighter-rouge">STORE_ONLY</code>다.</li>
+  <li>데스크톱 선택으로 이미 보낸 카드가 stale이 되어도 즉시 update하지 않는다. 사용자가 그 카드를
+실제로 눌렀을 때만 warning <code class="language-plaintext highlighter-rouge">UPDATE_EXISTING</code>을 최대 한 번 만든다.</li>
+  <li>메신저에서 선택한 카드는 재클릭 방지를 위해 선택 결과와 버튼 제거를 한 번 update한다.</li>
+  <li>별도의 <code class="language-plaintext highlighter-rouge">처리되었습니다</code>, ACK, toast, warning 새 메시지를 만들지 않는다. 항상 기존 카드를
+update하며 새 카드로 대체하지 않는다.</li>
+  <li><code class="language-plaintext highlighter-rouge">cardRef + targetRevision + semanticKind</code> unique key로 중복 delivery를 막는다. retry는 같은 delivery를
+재사용하고 비용 카운터를 논리 건수와 provider 시도 건수로 나눠 기록한다.</li>
+  <li>Farad→Relay resolution/progress event는 Messenger outbound가 아니므로 안전한 projection 갱신에는
+사용할 수 있다. event를 받았다는 이유만으로 delivery를 만들지는 않는다.</li>
+</ol>
+
+<h2 id="16-카드세션응답-correlation">16. 카드·세션·응답 correlation</h2>
 
 <p>Messenger 카드 하나가 어느 Farad client, 어느 Remote 대상, 어느 run, 어느 질문의 응답인지 정확히
 연결해야 한다. 이 매핑은 한 프로세스의 범용 dict 하나로 합치지 않고 네트워크 경계에 따라 두 권위로
 나눈다.</p>
 
-<h3 id="151-relay의-cardinteractionstore">15.1 Relay의 CardInteractionStore</h3>
+<h3 id="161-relay의-cardinteractionstore">16.1 Relay의 CardInteractionStore</h3>
 
 <p>Relay SQLite가 Messenger identity와 opaque Remote identity의 연결을 소유한다.</p>
 
@@ -1135,25 +1250,38 @@ clientId + runtimeGeneration + runRef
 <ul>
   <li><code class="language-plaintext highlighter-rouge">message_cards.card_ref</code> → <code class="language-plaintext highlighter-rouge">room_id</code>, <code class="language-plaintext highlighter-rouge">msg_id</code>, <code class="language-plaintext highlighter-rouge">msg_key</code>, <code class="language-plaintext highlighter-rouge">card_kind</code>, <code class="language-plaintext highlighter-rouge">card_revision</code>, <code class="language-plaintext highlighter-rouge">state</code></li>
   <li><code class="language-plaintext highlighter-rouge">action_routes.token_hash</code> → <code class="language-plaintext highlighter-rouge">card_ref</code>, <code class="language-plaintext highlighter-rouge">card_revision</code>, <code class="language-plaintext highlighter-rouge">interaction_id</code>, <code class="language-plaintext highlighter-rouge">choice_keyword</code>, <code class="language-plaintext highlighter-rouge">expires_at</code></li>
-  <li><code class="language-plaintext highlighter-rouge">interactions.interaction_id</code> → <code class="language-plaintext highlighter-rouge">client_id</code>, <code class="language-plaintext highlighter-rouge">run_ref</code>, <code class="language-plaintext highlighter-rouge">state</code>, <code class="language-plaintext highlighter-rouge">selected_keyword</code></li>
+  <li><code class="language-plaintext highlighter-rouge">interactions.interaction_id</code> → <code class="language-plaintext highlighter-rouge">client_id</code>, <code class="language-plaintext highlighter-rouge">run_ref</code>, <code class="language-plaintext highlighter-rouge">state</code>, <code class="language-plaintext highlighter-rouge">selected_keyword</code>,
+<code class="language-plaintext highlighter-rouge">selected_source</code>, <code class="language-plaintext highlighter-rouge">interaction_revision</code></li>
   <li><code class="language-plaintext highlighter-rouge">commands.command_id</code> → <code class="language-plaintext highlighter-rouge">interaction_id</code>, <code class="language-plaintext highlighter-rouge">run_ref</code>, <code class="language-plaintext highlighter-rouge">generation</code>, <code class="language-plaintext highlighter-rouge">state</code></li>
 </ul>
 
-<p>클릭 transaction은 다음을 원자적으로 처리한다.</p>
+<p>Messenger 클릭의 첫 transaction은 <strong>최종 선택을 확정하지 않고</strong> 다음을 원자적으로 처리한다.</p>
 
 <ol>
   <li>token hash lookup</li>
   <li>outer sender/room, client, TTL, current card revision 검증</li>
-  <li>action route <code class="language-plaintext highlighter-rouge">ACTIVE → CONSUMED</code></li>
-  <li>interaction <code class="language-plaintext highlighter-rouge">WAITING → SELECTED</code></li>
+  <li>action route <code class="language-plaintext highlighter-rouge">ACTIVE → RESERVED</code> 또는 idempotent 기존 command 확인</li>
   <li><code class="language-plaintext highlighter-rouge">REMOTE_FEEDBACK</code> command insert</li>
-  <li>기존 카드의 update delivery insert</li>
 </ol>
+
+<p>Farad가 command를 받은 뒤 <code class="language-plaintext highlighter-rouge">RemoteInteractionCoordinator.resolve(...)</code> 결과를 돌려줘야 interaction과
+카드 상태를 최종 commit한다.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ACCEPTED_MESSENGER</code>: <code class="language-plaintext highlighter-rouge">WAITING → RESOLVED_MESSENGER</code>, 선택 결과/버튼 제거 update delivery 1건</li>
+  <li><code class="language-plaintext highlighter-rouge">ALREADY_RESOLVED_DESKTOP</code>: <code class="language-plaintext highlighter-rouge">RESOLVED_DESKTOP</code> 유지, stale warning/버튼 제거 update delivery 최대 1건</li>
+  <li><code class="language-plaintext highlighter-rouge">ALREADY_RESOLVED_MESSENGER</code>: 기존 result 반환, 새 command·delivery 없음</li>
+  <li><code class="language-plaintext highlighter-rouge">STALE_OR_EXPIRED</code>: mutation 없이 안전한 만료 결과</li>
+</ul>
+
+<p>데스크톱 선택 직후 Farad가 보내는 safe resolution event는 interaction을 <code class="language-plaintext highlighter-rouge">RESOLVED_DESKTOP</code>으로
+projection할 수 있지만 Messenger update delivery를 만들지 않는다. action route는 stale click 판별을
+위해 클릭 또는 TTL 만료까지 남긴다.</p>
 
 <p><code class="language-plaintext highlighter-rouge">UpdateMessageRequest</code>는 <code class="language-plaintext highlighter-rouge">card_ref</code>의 현재 <code class="language-plaintext highlighter-rouge">msgKey</code>와 revision을 사용한다. 오래된 update worker가 최신
 선택 결과를 덮지 못하도록 expected revision이 일치할 때만 다음 revision을 commit한다.</p>
 
-<h3 id="152-farad의-remotecorrelationindex">15.2 Farad의 RemoteCorrelationIndex</h3>
+<h3 id="162-farad의-remotecorrelationindex와-remoteinteractioncoordinator">16.2 Farad의 RemoteCorrelationIndex와 RemoteInteractionCoordinator</h3>
 
 <p>Farad는 Relay가 모르는 실제 local target과 session locator를 소유한다.</p>
 
@@ -1174,29 +1302,38 @@ RemoteCorrelationIndex
 index 파일로 저장한다. Remote 대상마다 작은 파일을 startup에 읽지 않는다.</li>
   <li>transcript가 대화 정본이고 index는 locator projection이다. 손상 시 전체 session scan을 시작 시점에
 수행하지 않고 명시적으로 열린 Remote session이나 Relay reconcile 대상만 복구한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteInteractionCoordinator</code>는 Farad asyncio runtime에 있고 해당 interaction의 유일한 응답
+권위다. Qt widget이나 Relay SQLite가 agent Future를 직접 완료하지 않는다.</li>
+  <li>데스크톱과 Messenger ingress 모두
+<code class="language-plaintext highlighter-rouge">resolve(interactionRef, keyword, source, expectedRevision)</code> 하나를 호출한다.</li>
+  <li>첫 commit만 <code class="language-plaintext highlighter-rouge">WAITING → RESOLVED_DESKTOP|RESOLVED_MESSENGER</code>로 전이하며, 정확히 한 번만 session
+PostBox/Future를 완료하고 transcript tool result를 만든다.</li>
+  <li>Messenger가 이기면 post-commit UI event로 데스크톱 질문의 같은 선택지를 표시하고 전 버튼을
+잠근다. 데스크톱이 이기면 local UI는 즉시 잠그되 Relay에는 safe resolution event만 보낸다.</li>
   <li><code class="language-plaintext highlighter-rouge">REMOTE_FEEDBACK</code>을 받으면 <code class="language-plaintext highlighter-rouge">runRef</code>와 <code class="language-plaintext highlighter-rouge">interactionRef</code>가 같은 session의 현재 waiting interaction인지
-확인한 뒤 그 session PostBox에 넣는다.</li>
+검증한 뒤 coordinator로 전달한다. 이미 처리됐으면 PostBox에 두 번째 값을 넣지 않는다.</li>
 </ul>
 
-<h3 id="153-mapping-lifecycle">15.3 mapping lifecycle</h3>
+<h3 id="163-mapping-lifecycle">16.3 mapping lifecycle</h3>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Farad RemoteReport
 → eventId + runRef + interactionRef
-→ Relay interaction/card/action rows commit
-→ ChatRequest 또는 UpdateMessageRequest
+→ Farad local question 표시 + Relay interaction/card/action rows commit
+→ ChatRequest
 → msgId/msgKey 저장
-→ 사용자 actionToken 클릭
-→ Relay command commit
-→ Farad RemoteCorrelationIndex lookup
-→ 정확한 AsyncSession PostBox
+→ [Messenger 선택] Relay provisional command → Farad coordinator first-commit
+   → Relay RESOLVED_MESSENGER + 기존 카드 선택/비활성 update
+→ [Desktop 선택] Farad coordinator first-commit → Relay RESOLVED_DESKTOP projection
+   → 즉시 Messenger update 없음
+   → 나중에 stale 카드 클릭 시 기존 카드 warning/비활성 update 최대 1회
 </code></pre></div></div>
 
 <p>card, action, interaction, command, local session 중 하나라도 현재 generation과 일치하지 않으면 추측해서
 전달하지 않고 stale/expired 결과로 끝낸다.</p>
 
-<h2 id="16-relay-sqlite">16. Relay SQLite</h2>
+<h2 id="17-relay-sqlite">17. Relay SQLite</h2>
 
-<h3 id="161-현재-구현된-schema">16.1 현재 구현된 schema</h3>
+<h3 id="171-현재-구현된-schema">17.1 현재 구현된 schema</h3>
 
 <table>
   <thead>
@@ -1219,7 +1356,7 @@ index 파일로 저장한다. Remote 대상마다 작은 파일을 startup에 �
 
 <p>현재 schema version은 1이고 <code class="language-plaintext highlighter-rouge">deliveries.kind</code>는 <code class="language-plaintext highlighter-rouge">home</code>만 지원한다.</p>
 
-<h3 id="162-목표-schema">16.2 목표 schema</h3>
+<h3 id="172-목표-schema">17.2 목표 schema</h3>
 
 <table>
   <thead>
@@ -1287,8 +1424,8 @@ index 파일로 저장한다. Remote 대상마다 작은 파일을 startup에 �
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">interactions</code></td>
-      <td>interaction ID, run ref, state</td>
-      <td>피드백 single-consume</td>
+      <td>interaction ID, run ref, state, keyword, source, revision</td>
+      <td>피드백 first-commit projection</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">message_cards</code></td>
@@ -1297,8 +1434,8 @@ index 파일로 저장한다. Remote 대상마다 작은 파일을 startup에 �
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">deliveries</code></td>
-      <td>semantic kind, state, retry lease</td>
-      <td>outbound outbox</td>
+      <td>semantic kind, logical cost key, state, retry lease</td>
+      <td>outbound outbox·비용 dedupe</td>
     </tr>
   </tbody>
 </table>
@@ -1306,7 +1443,7 @@ index 파일로 저장한다. Remote 대상마다 작은 파일을 startup에 �
 <p>모든 사용자별 hot query는 <code class="language-plaintext highlighter-rouge">client_id</code>가 선두인 index와 bounded limit을 사용한다. 사용자별 DB 파일을
 만들지 않는다.</p>
 
-<h3 id="163-저장하지-않는-값">16.3 저장하지 않는 값</h3>
+<h3 id="173-저장하지-않는-값">17.3 저장하지 않는 값</h3>
 
 <ul>
   <li>Messenger API token</li>
@@ -1319,7 +1456,7 @@ index 파일로 저장한다. Remote 대상마다 작은 파일을 startup에 �
   <li>exception message와 Messenger response body</li>
 </ul>
 
-<h3 id="164-retention">16.4 retention</h3>
+<h3 id="174-retention">17.4 retention</h3>
 
 <p>SQLite는 무한히 쌓지 않는다.</p>
 
@@ -1332,7 +1469,7 @@ bounded batch로 정리한다.</li>
   <li>active/pending/in-flight 행은 retention 대상이 아니다.</li>
 </ul>
 
-<h2 id="17-중복실패비정상-신호">17. 중복·실패·비정상 신호</h2>
+<h2 id="18-중복실패비정상-신호">18. 중복·실패·비정상 신호</h2>
 
 <table>
   <thead>
@@ -1398,10 +1535,22 @@ bounded batch로 정리한다.</li>
       <td>Remote continuation 상한 도달</td>
       <td>runtime 고정 failure event 후 abort</td>
     </tr>
+    <tr>
+      <td>데스크톱에서 먼저 응답</td>
+      <td>local 즉시 처리, Relay projection만 갱신, Messenger delivery 없음</td>
+    </tr>
+    <tr>
+      <td>이후 같은 Messenger 카드 클릭</td>
+      <td>기존 카드에 <code class="language-plaintext highlighter-rouge">이미 데스크톱에서 처리된 응답입니다</code> warning과 버튼 제거 update 최대 1건</td>
+    </tr>
+    <tr>
+      <td>데스크톱·Messenger 동시 응답</td>
+      <td>Farad coordinator의 첫 commit만 유효, 패자는 already-resolved 결과</td>
+    </tr>
   </tbody>
 </table>
 
-<h2 id="18-다중-사용자-예시">18. 다중 사용자 예시</h2>
+<h2 id="19-다중-사용자-예시">19. 다중 사용자 예시</h2>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>사용자 A / client_A / room_A / runtime generation 4
   ├─ 세션 01       WAITING
@@ -1421,9 +1570,9 @@ bounded batch로 정리한다.</li>
   <li>C가 정상 runtime lease를 얻으면 자기 pending command 하나부터 받는다.</li>
 </ul>
 
-<h2 id="19-전체-시나리오">19. 전체 시나리오</h2>
+<h2 id="20-전체-시나리오">20. 전체 시나리오</h2>
 
-<h3 id="191-일반-세션-remote">19.1 일반 세션 <code class="language-plaintext highlighter-rouge">/remote</code></h3>
+<h3 id="201-일반-세션-remote">20.1 일반 세션 <code class="language-plaintext highlighter-rouge">/remote</code></h3>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>사용자: 일반 CHAT에서 /remote
 Farad:  emoji + 별칭 입력 창("[💬 세션 01]")
@@ -1433,14 +1582,23 @@ Farad:  연결이 없으면 pairing, 있으면 Remote mode commit
 모델:   한 cycle 작업 후 그냥 Stop
 Farad:  remote_continue를 append하고 같은 AgentRun 계속
 모델:   사용자 판단 필요 → RemoteReport(NEEDS_FEEDBACK)
-Relay:  event + card update를 commit하고 receipt
+Farad:  prompt 위에 Remote 질문 UI 표시
+Relay:  event + 새 질문 card를 commit하고 receipt
 Farad:  Stop 허용, session은 feedback 대기
 사용자: 메신저에서 "다르게 시도하기"
-Relay:  REMOTE_FEEDBACK command commit
-Farad:  PostBox에 feedback append, 새 AgentRun 시작
+Relay:  provisional REMOTE_FEEDBACK command commit
+Farad:  coordinator가 first-commit, PostBox에 feedback append
+Farad UI: 같은 선택을 표시하고 모든 선택지 잠금
+Relay:  기존 Messenger card에 선택 결과를 남기고 버튼 제거 update 1건
+Farad:  새 AgentRun 시작
 </code></pre></div></div>
 
-<h3 id="192-schedule-목록부터-피드백까지">19.2 Schedule 목록부터 피드백까지</h3>
+<p>같은 질문을 사용자가 데스크톱에서 먼저 선택하면 local 처리는 즉시 끝나고 Messenger card는 그대로
+남는다. 사용자가 나중에 그 stale card를 누른 순간에만 Relay가 기존 card를
+<code class="language-plaintext highlighter-rouge">이미 데스크톱에서 처리된 응답입니다</code> warning 상태로 update하고 버튼을 제거한다. 이 warning update는
+중복 클릭에도 한 번만 과금된다.</p>
+
+<h3 id="202-schedule-목록부터-피드백까지">20.2 Schedule 목록부터 피드백까지</h3>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HOME → Farad 예약 작업 조회
 → LIST_REMOTE_ITEMS command
@@ -1459,7 +1617,7 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
 → 재실행 진행 후 RemoteReport(COMPLETED)
 </code></pre></div></div>
 
-<h3 id="193-a와-b를-연달아-실행">19.3 A와 B를 연달아 실행</h3>
+<h3 id="203-a와-b를-연달아-실행">20.3 A와 B를 연달아 실행</h3>
 
 <ul>
   <li>Relay는 A, B command를 각각 commit한다.</li>
@@ -1469,7 +1627,7 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
   <li>A가 피드백을 기다려도 B 실행은 계속할 수 있다.</li>
 </ul>
 
-<h2 id="20-성능과-운영">20. 성능과 운영</h2>
+<h2 id="21-성능과-운영">21. 성능과 운영</h2>
 
 <ul>
   <li>Long Poll은 <code class="language-plaintext highlighter-rouge">(client_id, state, available_at_ms)</code> index로 자기 command 최대 1개만 찾는다.</li>
@@ -1480,9 +1638,11 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
 순차 read하고 local ID를 O(1)로 조회한다.</li>
   <li>ordinary turn마다 NFS 파일 scan, singleid 실행, Relay 목록 재동기화를 하지 않는다.</li>
   <li>Remote mode 상태 변경은 commit 후 해당 session runtime snapshot만 invalidate한다.</li>
+  <li>outbound hot path는 <code class="language-plaintext highlighter-rouge">card_ref + target_revision + semantic_kind</code> unique lookup으로 O(1) dedupe하며,
+논리 메시지 비용과 provider retry 시도 횟수를 별도 counter로 기록한다.</li>
 </ul>
 
-<h2 id="21-현재-구현-상태">21. 현재 구현 상태</h2>
+<h2 id="22-현재-구현-상태">22. 현재 구현 상태</h2>
 
 <h3 id="구현됨">구현됨</h3>
 
@@ -1510,11 +1670,13 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
   <li><code class="language-plaintext highlighter-rouge">/remote</code> command, 별칭 dialog와 Remote state</li>
   <li>Schedule safe projection과 Run now command adapter</li>
   <li><code class="language-plaintext highlighter-rouge">RemoteTurnHook</code>, <code class="language-plaintext highlighter-rouge">RemoteReport</code>, <code class="language-plaintext highlighter-rouge">remote_continue</code></li>
-  <li>progress/feedback card, 선택 후 카드 갱신</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteInteractionCoordinator</code>, Remote status strip, 동기화된 local feedback UI</li>
+  <li>progress/feedback card, 선택 후 카드 갱신, desktop-first lazy warning update</li>
+  <li><code class="language-plaintext highlighter-rouge">OutboundCostPolicy</code>와 logical delivery cost dedupe/counter</li>
   <li>retention, multi-instance takeover, production 운영 gate</li>
 </ul>
 
-<h2 id="22-완료-조건">22. 완료 조건</h2>
+<h2 id="23-완료-조건">23. 완료 조건</h2>
 
 <p>다음 조건을 모두 만족해야 기능 완료로 본다.</p>
 
@@ -1526,10 +1688,14 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
   <li>일반 <code class="language-plaintext highlighter-rouge">CHAT</code>에서 <code class="language-plaintext highlighter-rouge">/remote</code>로 별칭을 입력하고 Remote 모드를 켤 수 있다.</li>
   <li>Remote report 없이 Stop한 모델은 같은 AgentRun에서 계속 진행한다.</li>
   <li>Remote report가 durable 접수된 경우에만 session이 피드백을 기다린다.</li>
-  <li>메신저 선택이 정확한 session PostBox에 한 번만 전달된다.</li>
+  <li>데스크톱과 메신저 선택이 같은 interaction을 공유하고 정확한 session PostBox에 한 번만 전달된다.</li>
   <li>같은 Schedule은 중복 실행되지 않고 다른 Schedule은 동시 실행된다.</li>
   <li>실제 Session/Schedule 이름, prompt, path, transcript, 도구 결과가 Relay DB·로그·카드에 없다.</li>
-  <li>클릭한 카드는 이력을 보존하면서 선택 결과를 표시하고 재클릭할 수 없다.</li>
+  <li>Messenger 선택은 데스크톱 질문을 즉시 같은 결과로 잠그고, 출처를 표시한다.</li>
+  <li>데스크톱 선택은 Messenger update를 즉시 만들지 않는다.</li>
+  <li>그 뒤 stale Messenger card를 클릭하면 기존 card가 warning/비활성 상태로 정확히 한 번 update된다.</li>
+  <li>클릭한 카드는 이력을 보존하면서 선택 결과 또는 stale warning을 표시하고 재클릭할 수 없다.</li>
+  <li>message/update entry별 logical cost가 기록되고 중복·retry가 이중 과금 delivery를 만들지 않는다.</li>
   <li>webhook, Long Poll, result, event의 중복과 crash 경계를 통합 테스트가 검증한다.</li>
   <li>Stage에서 암호화 key fetch, proactive pairing, 카드 send/update, inbound action 왕복을 검증한다.</li>
   <li>Relay/Farad focused tests, Ruff, strict mypy와 관련 architecture gate가 통과한다.</li>
@@ -1560,7 +1726,7 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-07-16T07:04:47+09:00">2026-07-16</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-07-16T00:00:00+09:00">2026-07-16</time></p>
 
       </footer>
 
@@ -1569,10 +1735,10 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
       
   <nav class="pagination">
     
-      <a href="/farad/farad-messenger-relay-remote-mode-plan/" class="pagination--pager" title="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획">Previous</a>
+      <a href="/research/html-design-agent-prompt-benchmark/" class="pagination--pager" title="HTML 디자인 에이전트 운영 프롬프트 벤치마크">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/farad/farad-messenger-relay-remote-mode-plan/" class="pagination--pager" title="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획">Next</a>
     
   </nav>
 
@@ -1614,7 +1780,7 @@ Farad:  PostBox에 feedback append, 새 AgentRun 시작
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2026-07-16T00:00:00+09:00">2026-07-16</time>
+        <time datetime="2026-07-16T07:05:01+09:00">2026-07-16</time>
       </span>
     
 
