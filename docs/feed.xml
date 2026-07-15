@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-16T08:09:07+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</title><link href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/" rel="alternate" type="text/html" title="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획" /><published>2026-07-16T07:05:01+09:00</published><updated>2026-07-16T07:05:01+09:00</updated><id>https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/"><![CDATA[<h1 id="farad-사내-메신저-relay-및-remote-모드-구현-계획">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-16T08:09:21+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</title><link href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/" rel="alternate" type="text/html" title="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획" /><published>2026-07-16T08:09:20+09:00</published><updated>2026-07-16T08:09:20+09:00</updated><id>https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/"><![CDATA[<h1 id="farad-사내-메신저-relay-및-remote-모드-구현-계획">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</h1>
 
 <blockquote>
   <p>기준 스펙: <a href="/farad/farad-messenger-relay-remote-mode-spec/">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙</a></p>
@@ -54,6 +54,8 @@ Relay client로 보낸다.</li>
   <li><strong>반복 경로는 O(1) 또는 bounded batch다.</strong> Long Poll, click, turn Stop에서 전체 table/session scan 금지.</li>
   <li><strong>먼저 문서 계약을 갱신한다.</strong> Remote는 Goal에 이어 두 번째 turn lifecycle contributor이므로 실제
 구현 전에 <code class="language-plaintext highlighter-rouge">docs/layers.md</code>와 <code class="language-plaintext highlighter-rouge">docs/agent.md</code>의 hook arbitration 계약을 정식화한다.</li>
+  <li><strong>Messenger 발신과 update는 각각 비용이 드는 delivery다.</strong> 즉시 필요한 질문만 보내고,
+desktop-first 선택은 stale Messenger card를 실제로 클릭할 때까지 update하지 않는다.</li>
 </ol>
 
 <h2 id="3-phase-의존-관계">3. Phase 의존 관계</h2>
@@ -99,6 +101,7 @@ Relay client로 보낸다.</li>
       <li>원격 연결 설정</li>
       <li>Schedule Remote 설정</li>
       <li>Session <code class="language-plaintext highlighter-rouge">/remote</code> 설정</li>
+      <li>Remote 활성 표시 + desktop/Messenger 공용 질문</li>
     </ul>
   </li>
   <li>GitHub Pages의 별도 Spec/Plan Markdown 글</li>
@@ -117,7 +120,8 @@ Relay client로 보낸다.</li>
 
 <ul>
   <li>URL 하나로 세 UI Option을 각각 재현할 수 있다.</li>
-  <li>UI와 Spec이 emoji 1개 + 12칸 별칭, Remote/Goal 상호 배타, <code class="language-plaintext highlighter-rouge">/remote</code> local command에 일치한다.</li>
+  <li>UI와 Spec이 emoji 1개 + 12칸 별칭, Remote/Goal 상호 배타, <code class="language-plaintext highlighter-rouge">/remote</code> local command와
+desktop/Messenger first-response-wins 질문에 일치한다.</li>
 </ul>
 
 <h2 id="5-phase-1--relay-안전-foundation">5. Phase 1 — Relay 안전 foundation</h2>
@@ -162,6 +166,7 @@ Relay client로 보낸다.</li>
   <li>outbound worker
     <ul>
       <li>bounded claim</li>
+      <li><code class="language-plaintext highlighter-rouge">OutboundCostPolicy</code>: <code class="language-plaintext highlighter-rouge">SEND_NEW</code>, <code class="language-plaintext highlighter-rouge">UPDATE_EXISTING</code>, <code class="language-plaintext highlighter-rouge">STORE_ONLY</code>, <code class="language-plaintext highlighter-rouge">DROP_DUPLICATE</code></li>
       <li>semantic card render</li>
       <li>action route를 send 전에 commit</li>
       <li>ChatRequest response의 <code class="language-plaintext highlighter-rouge">msgId</code>/<code class="language-plaintext highlighter-rouge">msgKey</code> commit</li>
@@ -170,6 +175,7 @@ Relay client로 보낸다.</li>
   </li>
   <li>worker lifecycle을 ASGI process composition root에서 시작/종료</li>
   <li>request/message ID generator의 signed-int64, process restart, collision 테스트</li>
+  <li><code class="language-plaintext highlighter-rouge">cardRef + targetRevision + semanticKind</code> logical cost key와 logical/provider-attempt counter</li>
 </ul>
 
 <p>예상 변경 위치:</p>
@@ -198,6 +204,7 @@ Relay client로 보낸다.</li>
   <li>Create/Chat/Update stage/prod URL과 암호화 request contract</li>
   <li>send 전 crash, response 전/후 crash, card identity commit 실패</li>
   <li>stale revision update가 최신 카드를 덮지 못함</li>
+  <li>동일 logical cost key의 retry/중복 enqueue가 새 과금 delivery를 만들지 않음</li>
   <li>claim query가 requested batch 이상 row를 materialize하지 않음</li>
 </ul>
 
@@ -365,7 +372,20 @@ Relay client로 보낸다.</li>
       <li><code class="language-plaintext highlighter-rouge">[emoji alias]</code> Messenger preview</li>
     </ul>
   </li>
-  <li>활성 session prompt의 작은 Remote affordance</li>
+  <li>활성 session prompt의 Goal-like Remote status strip
+    <ul>
+      <li>prompt container 최상단에 초록색 <code class="language-plaintext highlighter-rouge">Remote</code> + <code class="language-plaintext highlighter-rouge">[emoji alias]</code></li>
+      <li>Goal strip과 동시에 표시하지 않음</li>
+    </ul>
+  </li>
+  <li>Remote 전용 local question
+    <ul>
+      <li>기존 AskUserQuestion과 같은 prompt-area 배치와 선택 경험</li>
+      <li><code class="language-plaintext highlighter-rouge">RemoteReport(NEEDS_FEEDBACK)</code>의 고정 keyword 선택지만 사용</li>
+      <li>일반 AskUserQuestion은 Messenger로 mirror하지 않음</li>
+      <li>선택 출처가 desktop인지 Messenger인지 표시</li>
+    </ul>
+  </li>
 </ol>
 
 <p>Qt 구현 시:</p>
@@ -397,6 +417,7 @@ Relay client로 보낸다.</li>
   <li>session/schedule type routing</li>
   <li>NFS hot path에서 target별 content read가 실행되면 fail</li>
   <li>Qt i18n, theme, font 12/14/18, keyboard focus</li>
+  <li>Remote/Goal strip mutual exclusion과 Messenger post-commit UI synchronization</li>
 </ul>
 
 <h3 id="완료-조건-4">완료 조건</h3>
@@ -476,6 +497,14 @@ Relay client로 보낸다.</li>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">RemoteTurnHook</code></li>
   <li><code class="language-plaintext highlighter-rouge">RemoteReport</code> built-in/internal tool</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteInteractionCoordinator</code>
+    <ul>
+      <li>Farad asyncio runtime의 유일한 interaction 응답 권위</li>
+      <li>desktop/Messenger ingress가 같은
+<code class="language-plaintext highlighter-rouge">resolve(interactionRef, keyword, source, expectedRevision)</code> 호출</li>
+      <li>first commit만 PostBox/Future와 transcript tool result를 정확히 한 번 완료</li>
+    </ul>
+  </li>
   <li>per-run report receipt state</li>
   <li><code class="language-plaintext highlighter-rouge">remote_continue</code> transcript note</li>
   <li>Stop policy
@@ -488,6 +517,12 @@ Relay client로 보낸다.</li>
   <li>continuation count/wall-clock guard</li>
   <li>limit reached runtime-generated event</li>
   <li>feedback PostBox ingress</li>
+  <li>post-commit UI event
+    <ul>
+      <li>Messenger가 이기면 desktop question에 같은 선택 표시 + 전 버튼 잠금</li>
+      <li>desktop이 이기면 local UI 즉시 잠금 + Relay safe resolution event; Messenger update 없음</li>
+    </ul>
+  </li>
 </ul>
 
 <p>예상 변경 위치:</p>
@@ -521,6 +556,9 @@ Relay client로 보낸다.</li>
   <li>report receipt 후 Stop 허용</li>
   <li>report HTTP failure 후 continuation</li>
   <li>duplicate event idempotency</li>
+  <li>desktop/Messenger 동시 선택에서 first commit 하나만 agent 입력이 됨</li>
+  <li>Messenger 선택 뒤 desktop UI가 같은 결과로 즉시 잠김</li>
+  <li>desktop 선택 뒤 Relay event는 저장되지만 outbound delivery가 생성되지 않음</li>
   <li>pending user input/abort/shutdown 우선</li>
   <li>Goal + Remote 동시 활성화 거부</li>
   <li>Remote mode off ordinary CHAT behavior 불변</li>
@@ -538,7 +576,8 @@ Relay client로 보낸다.</li>
 
 <h3 id="목표-7">목표</h3>
 
-<p>각 카드와 버튼을 정확한 run/session interaction에 연결하고, 선택 뒤 같은 카드를 안전하게 갱신한다.</p>
+<p>각 카드와 버튼을 정확한 run/session interaction에 연결하고, 응답 출처와 비용 정책에 따라 같은 카드를
+필요할 때만 안전하게 갱신한다.</p>
 
 <h3 id="relay-구현-3">Relay 구현</h3>
 
@@ -553,8 +592,12 @@ Relay client로 보낸다.</li>
   </li>
   <li><code class="language-plaintext highlighter-rouge">POST /v1/remote-events</code></li>
   <li><code class="language-plaintext highlighter-rouge">RemoteReport</code> keyword → card renderer</li>
-  <li>card/action/interaction/command 원자 transaction</li>
-  <li>선택 후 UpdateMessage delivery</li>
+  <li>질문은 <code class="language-plaintext highlighter-rouge">ChatRequest</code>로 즉시 전송</li>
+  <li>Messenger click transaction은 action을 reserve하고 provisional command만 생성</li>
+  <li>Farad resolution result 뒤 interaction final state/source commit</li>
+  <li>Messenger-first 선택 후 UpdateMessage delivery 1건</li>
+  <li>desktop-first safe resolution event는 state projection만 갱신하고 delivery를 만들지 않음</li>
+  <li>desktop-first stale card가 실제 클릭될 때 warning UpdateMessage delivery 최대 1건</li>
   <li>current revision compare-and-set</li>
   <li>consumed/expired/stale card response</li>
 </ul>
@@ -571,16 +614,19 @@ Relay client로 보낸다.</li>
   <li><code class="language-plaintext highlighter-rouge">REMOTE_FEEDBACK</code> → exact session PostBox</li>
   <li>processed interaction dedupe</li>
   <li>live session이 없어도 locator로 정상 runtime open</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteInteractionCoordinator</code> result code를 Relay command result로 반환</li>
 </ul>
 
 <h3 id="카드-동작">카드 동작</h3>
 
 <ul>
   <li>본문과 과거 상태 유지</li>
-  <li><code class="language-plaintext highlighter-rouge">선택: ...</code> body 추가</li>
+  <li>Messenger-first는 <code class="language-plaintext highlighter-rouge">선택: ...</code> body 추가</li>
+  <li>desktop-first stale click은 <code class="language-plaintext highlighter-rouge">이미 데스크톱에서 처리된 응답입니다</code> warning body 추가</li>
   <li>선택 submit action 전부 제거</li>
   <li>Back/Home만 fresh token으로 재발급</li>
   <li>stale worker가 newer card revision을 덮지 않음</li>
+  <li>별도 ACK/warning 새 메시지는 만들지 않음</li>
 </ul>
 
 <h3 id="검증-7">검증</h3>
@@ -589,6 +635,10 @@ Relay client로 보낸다.</li>
   <li>두 session이 같은 keyword/card kind를 동시에 사용</li>
   <li>같은 session의 연속 interaction 두 개</li>
   <li>old card click, duplicated click, wrong room, wrong generation</li>
+  <li>desktop-first 뒤 card 미클릭: update delivery 0건</li>
+  <li>desktop-first 뒤 첫 stale click: warning update 1건; 이후 중복 click: 추가 0건</li>
+  <li>Messenger-first: selected update 1건과 desktop UI synchronization</li>
+  <li>desktop/Messenger race: Farad first commit만 유효하고 패자는 already-resolved</li>
   <li>app/Relay restart 뒤 feedback routing</li>
   <li>session 10,000개 fixture에서 glob fallback이 실행되면 fail</li>
 </ul>
@@ -597,7 +647,9 @@ Relay client로 보낸다.</li>
 
 <ul>
   <li>어떤 action도 다른 session/run으로 전달되지 않는다.</li>
-  <li>클릭한 카드가 이력을 보존하면서 재클릭 불가능 상태가 된다.</li>
+  <li>Messenger-first 카드는 선택 결과로, desktop-first stale card는 warning으로 이력을 보존하며
+재클릭 불가능 상태가 된다.</li>
+  <li>desktop-first 응답만으로 Messenger update 비용이 발생하지 않는다.</li>
 </ul>
 
 <h2 id="13-phase-9--보안retention관측성-hardening">13. Phase 9 — 보안·retention·관측성 hardening</h2>
@@ -633,6 +685,8 @@ Relay client로 보낸다.</li>
   <li>command age/retry/result</li>
   <li>event/card update latency</li>
   <li>stale/expired action count</li>
+  <li>Messenger logical send/update cost와 provider attempt count</li>
+  <li>desktop-first deferred update 절약 건수와 stale warning update 건수</li>
   <li>Remote continuation count와 limit reached</li>
 </ul>
 
@@ -661,8 +715,9 @@ Relay client로 보낸다.</li>
   <li>same Schedule duplicate rejection</li>
   <li>general CHAT <code class="language-plaintext highlighter-rouge">/remote</code> and alias dialog</li>
   <li>plain Stop → automatic continuation</li>
-  <li>RemoteReport → feedback card → user choice → exact PostBox</li>
-  <li>selected card update and duplicate click</li>
+  <li>RemoteReport → desktop + Messenger feedback card → Messenger choice → exact PostBox + desktop sync</li>
+  <li>desktop choice → no Messenger update → later stale click → one warning update</li>
+  <li>desktop/Messenger simultaneous choice → one first commit</li>
   <li>network disconnect at every commit boundary</li>
 </ol>
 
@@ -711,7 +766,7 @@ Relay client로 보낸다.</li>
   <tbody>
     <tr>
       <td>Pure policy</td>
-      <td>alias width, emoji catalog, keyword, state transition, revision</td>
+      <td>alias width, emoji catalog, keyword, interaction first-commit, outbound cost, revision</td>
     </tr>
     <tr>
       <td>Crypto/adapter</td>
@@ -735,15 +790,15 @@ Relay client로 보낸다.</li>
     </tr>
     <tr>
       <td>Runtime</td>
-      <td>same-run continuation, report receipt, feedback PostBox, abort</td>
+      <td>same-run continuation, report receipt, dual-ingress coordinator, feedback PostBox, abort</td>
     </tr>
     <tr>
       <td>Qt</td>
-      <td>feature exposure, <code class="language-plaintext highlighter-rouge">/remote</code>, dialogs, i18n, focus, font/theme</td>
+      <td>feature exposure, <code class="language-plaintext highlighter-rouge">/remote</code>, Remote strip/question, Messenger sync, i18n, focus, font/theme</td>
     </tr>
     <tr>
       <td>E2E fake</td>
-      <td>Messenger webhook ↔ Relay ↔ fake Farad ↔ card update</td>
+      <td>Messenger webhook ↔ Relay ↔ fake Farad ↔ desktop choice/card lazy update</td>
     </tr>
     <tr>
       <td>Stage</td>
@@ -765,7 +820,7 @@ Relay client로 보낸다.</li>
   <li>Stage에서 실제 Messenger 왕복을 검증했다.</li>
 </ul>
 
-<p>현재 완료 범위는 Phase 1까지다. Phase 2~8이 product vertical slice, Phase 9~10이 production gate다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 사내 메신저 Relay 및 Remote 모드 구현 계획]]></summary></entry><entry><title type="html">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙</title><link href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-spec/" rel="alternate" type="text/html" title="Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙" /><published>2026-07-16T00:00:00+09:00</published><updated>2026-07-16T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-spec</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-spec/"><![CDATA[<h1 id="farad-사내-메신저-relay-및-remote-모드-통합-스펙">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙</h1>
+<p>현재 완료 범위는 Phase 1까지다. Phase 2~8이 product vertical slice, Phase 9~10이 production gate다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 사내 메신저 Relay 및 Remote 모드 구현 계획]]></summary></entry><entry><title type="html">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙</title><link href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-spec/" rel="alternate" type="text/html" title="Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙" /><published>2026-07-16T08:09:07+09:00</published><updated>2026-07-16T08:09:07+09:00</updated><id>https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-spec</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-spec/"><![CDATA[<h1 id="farad-사내-메신저-relay-및-remote-모드-통합-스펙">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙</h1>
 
 <blockquote>
   <p>문서 상태: 구현 기준 스펙</p>
