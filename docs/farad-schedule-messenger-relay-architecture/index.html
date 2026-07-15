@@ -721,7 +721,7 @@
       <a href="#offline">Farad 오프라인</a>
       <a href="#ownership">데이터 소유권</a>
       <a href="#scope">구현 범위</a>
-      <div class="meta">Farad internal messenger relay<br>Scenario contract · 2026-07-15</div>
+      <div class="meta">Farad internal messenger relay<br>Scenario contract · 2026-07-16</div>
     </nav>
 
     <main>
@@ -763,7 +763,7 @@
             </div>
           </div>
           <div class="responsibility">
-            <div><b>Relay가 모르는 것</b><span>prompt, 작업 경로, transcript, 실제 Schedule ID</span></div>
+            <div><b>Relay가 모르는 것</b><span>실제 Schedule 이름·ID, prompt, 작업 경로, transcript</span></div>
             <div><b>Farad가 모르는 것</b><span>메신저 OpenAPI token, AES key, msgKey 전송 세부</span></div>
           </div>
         </figure>
@@ -1078,14 +1078,19 @@ COMMIT</pre></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">17</span><span class="exchange-from">Farad</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
-              <div class="exchange-message"><b>로컬 Schedule 정본 조회</b><p>기존 Schedule store/index에서 remote-enabled 항목만 읽습니다. Relay에는 실제 Schedule ID, prompt, 작업 경로, 로그를 내보내지 않습니다.</p><pre>safe view:
+              <div class="exchange-message"><b>로컬 Schedule 정본 조회와 안전한 별칭 projection</b><p>기존 Schedule store/index에서 remote-enabled 항목만 읽습니다. 실제 이름을 자르거나 추론하지 않고, 사용자가 원격 등록 때 승인한 <code>remoteDisplayName</code>만 projection에 넣습니다.</p><pre>Farad local only:
+  actual schedule name → "고객사A 차세대 모델 장애 재현"
+  remoteDisplayName    → "야간검증"
+
+safe view sent to Relay:
 {
   "viewId": "view_42",
   "items": [
-    {"itemToken":"item_a9","displayName":"야간 검증","state":"READY"},
-    {"itemToken":"item_b4","displayName":"리포트 생성","state":"RUNNING"}
+    {"itemToken":"item_a9","remoteDisplayName":"야간검증","stateKeyword":"READY"},
+    {"itemToken":"item_b4","remoteDisplayName":"리포트생성","stateKeyword":"RUNNING"}
   ]
 }</pre></div>
+              <div class="exchange-state warning">별칭 제한은 화면 폭 10칸입니다. 한글·한자는 2칸, 영문·숫자는 1칸으로 계산해 한글 최대 5자·영문 최대 10자입니다. 미지정 시 Farad가 안정적인 <code>작업 01</code>을 부여하고, 실제 Schedule 이름은 0자도 전송하지 않습니다.</div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">18</span><span class="exchange-from">Farad</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
@@ -1097,8 +1102,8 @@ Authorization: Bearer &lt;Farad client token&gt;
   "payload": {
     "viewId": "view_42",
     "items": [
-      {"itemToken":"item_a9","displayName":"야간 검증","state":"READY"},
-      {"itemToken":"item_b4","displayName":"리포트 생성","state":"RUNNING"}
+      {"itemToken":"item_a9","remoteDisplayName":"야간검증","stateKeyword":"READY"},
+      {"itemToken":"item_b4","remoteDisplayName":"리포트생성","stateKeyword":"RUNNING"}
     ]
   }
 }</pre></div>
@@ -1107,14 +1112,28 @@ Authorization: Bearer &lt;Farad client token&gt;
               <span class="exchange-no">19</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
               <div class="exchange-message"><b>result 커밋 = command ACK</b><pre>command 101: LEASED → COMPLETED
 command_results(command_id=101, payload_hash=...)
-action_routes(actionToken → client/viewId/itemToken/cardRef/TTL)
+action_routes(act_run_a9 → client/viewId/itemToken/cardRef/TTL)
+action_routes(act_cancel_a9 → client/cardRef/TTL)
 deliveries(kind="SCHEDULE_LIST_UPDATE", status="PENDING")
 COMMIT</pre></div>
               <div class="exchange-state atomic">같은 commandId의 동일 result를 재전송해도 한 번만 반영합니다. Farad가 HTTP 응답을 못 받으면 안전하게 같은 result를 재시도할 수 있습니다.</div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">20</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
-              <div class="exchange-message"><b>같은 카드를 Schedule 목록으로 갱신</b><p><code>UpdateMessageRequest</code>의 <code>msgType=20</code>으로 항목별 실행 버튼과 항상 존재하는 “뒤로”, “홈으로”를 표시합니다.</p></div>
+              <div class="exchange-message"><b>같은 카드를 Schedule 목록으로 갱신</b><p><code>UpdateMessageRequest</code>의 <code>msgType=20</code>으로 별칭별 <code>Action.ShowCard</code>와 항상 존재하는 “뒤로”, “홈으로”를 표시합니다.</p><pre>{
+  "type": "Action.ShowCard",
+  "title": "야간검증",
+  "card": {
+    "type": "AdaptiveCard",
+    "body": [
+      {"type":"TextBlock","text":"야간검증을 정말 실행할까요?","wrap":true}
+    ],
+    "actions": [
+      {"type":"Action.Submit","title":"실행하기","data":{"actionToken":"act_run_a9"}},
+      {"type":"Action.Submit","title":"취소","data":{"actionToken":"act_cancel_a9"}}
+    ]
+  }
+}</pre><p>이모지는 사용하지 않습니다. 중첩 확인 JSON과 뒤로·홈을 포함해 3,300자 제한에 여유를 두도록 기본 페이지는 Schedule 5개로 나눕니다.</p></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">21</span><span class="exchange-from">OpenAPI</span><span class="exchange-arrow">→</span><span class="exchange-to">사용자</span>
@@ -1129,55 +1148,27 @@ COMMIT</pre></div>
           <div class="exchange-list">
             <div class="exchange-row">
               <span class="exchange-no">22</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Messenger</span>
-              <div class="exchange-message"><b>“야간 검증 실행” 클릭</b><p>Messenger RP는 해당 버튼의 <code>actionToken</code>을 수신 webhook으로 되돌립니다.</p></div>
+              <div class="exchange-message"><b>“야간검증” Action.ShowCard 클릭</b><p>Messenger client가 이미 카드 안에 들어 있는 중첩 확인 카드를 펼칩니다.</p></div>
+              <div class="exchange-state">이 클릭은 Relay로 전송되지 않습니다. SQLite 변경, RUN_SCHEDULE command, UpdateMessageRequest가 모두 없습니다.</div>
             </div>
             <div class="exchange-row">
-              <span class="exchange-no">23</span><span class="exchange-from">Messenger RP</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
-              <div class="exchange-message"><b>ADAPTIVE_CARD click 전달</b><p>구조는 13번과 같습니다. Relay는 바깥 sender/room과 저장된 action route를 대조합니다.</p></div>
-            </div>
-            <div class="exchange-row">
-              <span class="exchange-no">24</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
-              <div class="exchange-message"><b>실행 확인 상태만 만들고 아직 command는 만들지 않음</b><pre>schedule item actionToken: ACTIVE → CONSUMED
-confirmation:
-  confirmRef = "confirm_52"
-  viewId = "view_42"
-  itemToken = "item_a9"
-  state = "WAITING"
-action routes:
-  act_run_confirm → confirm_52 / CONFIRM
-  act_run_cancel  → confirm_52 / CANCEL
-delivery = "RUN_CONFIRM_CARD_UPDATE"
-COMMIT</pre></div>
-              <div class="exchange-state atomic">Schedule 항목을 고른 것과 실제 실행 승인을 분리합니다. 이 단계에서는 Farad로 갈 command가 없습니다.</div>
-            </div>
-            <div class="exchange-row">
-              <span class="exchange-no">25</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
-              <div class="exchange-message"><b>새 메시지 없이 같은 카드를 실행 확인 화면으로 갱신</b><pre>UpdateMessageRequest
-  chatroomId = 193802984023
-  msgKey = 12393024
-  msgType = 20
+              <span class="exchange-no">23</span><span class="exchange-from">Messenger</span><span class="exchange-arrow">→</span><span class="exchange-to">사용자</span>
+              <div class="exchange-message"><b>같은 카드 안에 실행 확인 표시</b><pre>야간검증을 정말 실행할까요?
 
-카드 본문:
-  야간 검증
-  정말 실행할까요?
-
-카드 actions:
-  [실행하기] → act_run_confirm
-  [취소]     → act_run_cancel
-  [뒤로] [홈으로]</pre><p>대화 내역에는 카드 하나만 남고 그 카드의 현재 내용만 확인 화면으로 바뀝니다.</p></div>
+[실행하기] [취소]</pre><p>별도 메시지가 생기지 않고 기존 Schedule 목록 카드 내부에서만 펼쳐집니다.</p></div>
             </div>
             <div class="exchange-row">
-              <span class="exchange-no">25a</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Messenger</span>
-              <div class="exchange-message"><b>같은 카드에서 “실행하기” 클릭</b><p>“취소”를 누르면 confirm state를 CANCELED로 바꾸고 같은 카드를 Schedule 목록으로 되돌립니다. RUN_SCHEDULE command는 만들지 않습니다.</p></div>
+              <span class="exchange-no">24</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Messenger</span>
+              <div class="exchange-message"><b>중첩 카드의 “실행하기” 클릭</b><p>이 내부 버튼만 <code>Action.Submit</code>이며 <code>{"actionToken":"act_run_a9"}</code>를 담습니다.</p></div>
             </div>
             <div class="exchange-row">
-              <span class="exchange-no">25b</span><span class="exchange-from">Messenger RP</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
-              <div class="exchange-message"><b>실행 확인 actionToken webhook</b><p>Relay는 sender·chatroom·confirmRef·TTL·WAITING 상태를 검증합니다.</p></div>
+              <span class="exchange-no">25</span><span class="exchange-from">Messenger RP</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+              <div class="exchange-message"><b>실행 Action.Submit webhook</b><p>구조는 13번과 같습니다. Relay는 바깥 sender·chatroom과 저장된 <code>act_run_a9</code> route, TTL, card generation을 대조합니다.</p></div>
             </div>
             <div class="exchange-row">
-              <span class="exchange-no">25c</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
-              <div class="exchange-message"><b>승인과 RUN_SCHEDULE command를 원자적으로 커밋</b><pre>confirmation confirm_52: WAITING → CONFIRMED
-act_run_confirm, act_run_cancel → CONSUMED
+              <span class="exchange-no">25a</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
+              <div class="exchange-message"><b>action 소모와 RUN_SCHEDULE command를 원자적으로 커밋</b><pre>act_run_a9: ACTIVE → CONSUMED
+act_cancel_a9: ACTIVE → CONSUMED
 command 102:
   kind = "RUN_SCHEDULE"
   payload = {"viewId":"view_42","itemToken":"item_a9"}
@@ -1187,8 +1178,8 @@ COMMIT</pre></div>
               <div class="exchange-state atomic">중복 클릭·RP 재전송이 와도 command 102는 한 번만 생성됩니다.</div>
             </div>
             <div class="exchange-row">
-              <span class="exchange-no">25d</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
-              <div class="exchange-message"><b>같은 카드를 “시작 요청 중”으로 갱신</b><p>실행·취소 버튼은 제거하고 뒤로·홈만 유지합니다. 카드 update가 실패해도 승인 token은 이미 소모되어 재실행되지 않습니다.</p></div>
+              <span class="exchange-no">25b</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
+              <div class="exchange-message"><b>실제 승인 이후에만 같은 카드를 “시작 요청 중”으로 갱신</b><p>중첩 실행·취소 버튼은 제거하고 뒤로·홈만 유지합니다. 카드 update가 실패해도 실행 token은 이미 소모되어 재실행되지 않습니다. “취소” webhook은 command를 만들지 않고 목록 카드로 되돌립니다.</p></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">26</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
@@ -1223,7 +1214,7 @@ COMMIT</pre></div>
               <div class="exchange-message"><b>“실행 시작” 카드 갱신</b><p>Relay는 result·runRef·cardRef를 SQLite에 먼저 커밋하고, 그 뒤 저장된 msgKey로 카드를 갱신합니다.</p></div>
             </div>
           </div>
-          <div class="state-flow"><b>Schedule 선택</b><span>→</span><b>같은 카드에서 실행 확인</b><span>→</span><b>RUN_SCHEDULE PENDING</b><span>→</span><b>Farad single-flight 검사</b><span>→</span><b>ACCEPTED / ALREADY_RUNNING</b></div>
+          <div class="state-flow"><b>Action.ShowCard 펼침 · 서버 왕복 없음</b><span>→</span><b>내부 “실행하기”</b><span>→</span><b>RUN_SCHEDULE PENDING</b><span>→</span><b>Farad single-flight 검사</b><span>→</span><b>ACCEPTED / ALREADY_RUNNING</b></div>
         </article>
 
         <article class="protocol-phase">
@@ -1313,7 +1304,7 @@ COMMIT</pre></div>
     {"type":"Action.Submit","title":"홈으로","data":{"actionToken":"act_home_new"}}
   ]
 }</pre></div>
-              <div class="exchange-state">버튼 title에는 제한된 이모지를 선택적으로 붙일 수 있지만, 의미와 프로토콜 값은 항상 고정 keyword로 결정합니다.</div>
+              <div class="exchange-state">버튼 title은 이모지 없이 고정 문구만 사용합니다. 의미와 프로토콜 값은 항상 고정 keyword로 결정합니다.</div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">40</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Messenger</span>
@@ -1458,7 +1449,7 @@ COMMIT</pre></div>
           <h3>예약 작업 2개가 실행 중이에요</h3>
           <p>각 작업의 진행 상황은 별도 카드로 알려드릴게요.</p>
           <div class="card-actions"><span>Schedule A 상태 보기</span><span>Schedule B 상태 보기</span></div>
-          <div class="card-actions utility"><span>↩️ 뒤로</span><span>🏠 홈으로</span></div>
+          <div class="card-actions utility"><span>뒤로</span><span>홈으로</span></div>
         </div>
       </section>
 
@@ -1503,6 +1494,7 @@ COMMIT</pre></div>
             <tr><th>Farad client token</th><td>각 Farad 설치가 생성하는 비밀. Relay Long Poll 인증에 사용하며 Relay는 hash만 저장합니다.</td></tr>
             <tr><th>actionToken</th><td>한 카드 버튼을 한 동작에 연결하는 짧은 수명의 opaque 값. Schedule ID나 prompt를 포함하지 않습니다.</td></tr>
             <tr><th>itemToken / runRef</th><td>Farad가 실제 Schedule과 실행을 안전하게 식별하는 opaque 참조. 메신저에 내부 ID를 노출하지 않습니다.</td></tr>
+            <tr><th>remoteDisplayName</th><td>사용자가 원격 등록 때 별도로 승인한 공개용 별칭. 화면 폭 10칸만 허용하고 원격 등록 항목 안에서 중복을 금지하며, 실제 Schedule 이름에서 자동 생성하지 않습니다. 미지정 시 <code>작업 01</code>을 사용합니다.</td></tr>
           </tbody>
         </table>
 
@@ -1512,7 +1504,8 @@ COMMIT</pre></div>
             <h3>Farad 사용자 호스트</h3>
             <ul>
               <li>보호된 client token 원문</li>
-              <li>Schedule 정의와 실제 ID</li>
+              <li>Schedule 정의·실제 ID·실제 이름</li>
+              <li>실제 Schedule과 remoteDisplayName 매핑</li>
               <li>실행 상태와 single-flight</li>
               <li>세션 transcript와 상세 결과</li>
             </ul>
@@ -1522,6 +1515,7 @@ COMMIT</pre></div>
             <ul>
               <li>client token hash와 Knox binding</li>
               <li>messenger userId와 chatroomId</li>
+              <li>itemToken과 승인된 remoteDisplayName</li>
               <li>inbound dedupe와 action route</li>
               <li>command, idempotent result, delivery outbox</li>
             </ul>
@@ -1550,7 +1544,7 @@ COMMIT</pre></div>
               <li>Schedule 정의·prompt·경로</li>
               <li>LLM 판단과 transcript</li>
               <li>실행 가능 여부와 single-flight</li>
-              <li>자유 텍스트 보관</li>
+              <li>실제 Schedule 이름과 승인되지 않은 자유 텍스트</li>
             </ul>
           </div>
         </div>
