@@ -1,0 +1,1252 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Farad 사내 메신저 Relay 및 Remote 모드 구현 계획 - ARCHIVE</title>
+<meta name="description" content="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획">
+<meta property="og:url" content="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/">
+
+
+  <meta property="og:description" content="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-07-16T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획">
+    <meta itemprop="description" content="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획">
+    <meta itemprop="datePublished" content="2026-07-16T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/" itemprop="url">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-16T00:00:00+09:00">2026-07-16</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="farad-사내-메신저-relay-및-remote-모드-구현-계획">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</h1>
+
+<blockquote>
+  <p>기준 스펙: <a href="/farad/farad-messenger-relay-remote-mode-spec/">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙</a></p>
+
+  <p>기준일: 2026-07-16</p>
+
+  <p>구현 단위: 각 phase는 독립 검증·commit 가능한 vertical slice</p>
+</blockquote>
+
+<h2 id="1-현재-기준선">1. 현재 기준선</h2>
+
+<h3 id="11-구현된-것">1.1 구현된 것</h3>
+
+<ul>
+  <li>독립 <code class="language-plaintext highlighter-rouge">packages/farad-relay</code> package, CLI와 Uvicorn 실행</li>
+  <li>bounded <code class="language-plaintext highlighter-rouge">POST /message</code>, <code class="language-plaintext highlighter-rouge">GET /healthz</code></li>
+  <li>strict Base64, AES-256-CBC/PKCS#7 codec, startup key fetch</li>
+  <li>Messenger official inbound field 검증과 TEXT 원문 폐기</li>
+  <li>exact optional Knox ID allowlist</li>
+  <li>VM-local SQLite WAL <code class="language-plaintext highlighter-rouge">inbound_events</code>, HOME <code class="language-plaintext highlighter-rouge">deliveries</code>, dedupe/lease/retry</li>
+  <li>HOME Adaptive Card renderer와 Back/Home action</li>
+  <li>encrypted Stage/Production v2 <code class="language-plaintext highlighter-rouge">ChatRequest</code> client</li>
+  <li>Farad SYSTEM/USER startup-only <code class="language-plaintext highlighter-rouge">features.remoteControl</code> provider</li>
+  <li>fixed <code class="language-plaintext highlighter-rouge">/appl/LINUX/Hyper/utils/singleid</code> adapter</li>
+</ul>
+
+<p>현재 자동 검증 기준:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad-relay/tests</code>: 95 passed</li>
+  <li>Farad feature exposure + singleid focused tests: 21 passed</li>
+</ul>
+
+<h3 id="12-아직-연결되지-않은-것">1.2 아직 연결되지 않은 것</h3>
+
+<p>현재 <code class="language-plaintext highlighter-rouge">ChatRequest</code> client와 HOME renderer는 있지만 outbound delivery worker가 없어 실제 카드를 보내지
+않는다. Relay ASGI route도 <code class="language-plaintext highlighter-rouge">/message</code>, <code class="language-plaintext highlighter-rouge">/healthz</code>뿐이다. Farad에는 Relay client, credential state,
+Long Poll, Remote UI, Remote runtime hook이 없다.</p>
+
+<p>따라서 현재 구현은 안전한 foundation이며 end-to-end 원격 제어는 아직 동작하지 않는다.</p>
+
+<h2 id="2-구현-원칙">2. 구현 원칙</h2>
+
+<ol>
+  <li><strong>Relay와 Farad를 독립 package/process로 유지한다.</strong></li>
+  <li><strong>실제 작업 권위는 Farad에 둔다.</strong> Relay는 routing, durability, Messenger adapter다.</li>
+  <li><strong>각 phase는 inbound commit → outbox/command → result의 crash boundary를 테스트한다.</strong></li>
+  <li><strong>일반 <code class="language-plaintext highlighter-rouge">CHAT</code>과 <code class="language-plaintext highlighter-rouge">SCHEDULED</code>가 같은 Remote runtime 정책을 사용한다.</strong></li>
+  <li><strong>Remote는 <code class="language-plaintext highlighter-rouge">SessionType</code>이나 permission mode가 아니다.</strong> session-scoped execution mode다.</li>
+  <li><strong>메신저에 구체 텍스트를 보내지 않는다.</strong> emoji key, 안전 별칭, keyword, opaque ref만 허용한다.</li>
+  <li><strong>Qt UI signal을 backend authority로 사용하지 않는다.</strong> asyncio service/hook에서 post-commit event를
+Relay client로 보낸다.</li>
+  <li><strong>반복 경로는 O(1) 또는 bounded batch다.</strong> Long Poll, click, turn Stop에서 전체 table/session scan 금지.</li>
+  <li><strong>먼저 문서 계약을 갱신한다.</strong> Remote는 Goal에 이어 두 번째 turn lifecycle contributor이므로 실제
+구현 전에 <code class="language-plaintext highlighter-rouge">docs/layers.md</code>와 <code class="language-plaintext highlighter-rouge">docs/agent.md</code>의 hook arbitration 계약을 정식화한다.</li>
+</ol>
+
+<h2 id="3-phase-의존-관계">3. Phase 의존 관계</h2>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>P0 스펙·UI 시안
+ │
+ ├─ P1 기존 foundation ─ P2 Outbound/Card store ─ P3 Pairing
+ │                                              │
+ │                                              └─ P4 Runtime lease/Long Poll
+ │                                                       │
+ └─ P5 Farad state/UI ───────────────────────────────────┤
+                                                         ├─ P6 Schedule projection/Run
+                                                         ├─ P7 Remote runtime mode
+                                                         └─ P8 Feedback/card update
+                                                                  │
+                                                                  └─ P9 Hardening
+                                                                          │
+                                                                          └─ P10 Stage rollout
+</code></pre></div></div>
+
+<p>P2~P4는 Relay 중심, P5와 P7은 Farad 중심이다. P6과 P8이 첫 product vertical slice를 완성한다.</p>
+
+<h2 id="4-phase-0--스펙과-ui-기준-고정">4. Phase 0 — 스펙과 UI 기준 고정</h2>
+
+<p>상태: <strong>완료</strong></p>
+
+<h3 id="목표">목표</h3>
+
+<ul>
+  <li>통합 스펙과 단계별 구현 계획을 Markdown 정본으로 만든다.</li>
+  <li>Farad UI Lab에서 세 Remote 설정 surface를 재현한다.</li>
+  <li>첨부 참고처럼 emoji button + alias input + searchable picker를 candidate로 고정한다.</li>
+  <li>카드/interaction/session correlation의 두 권위를 명시한다.</li>
+</ul>
+
+<h3 id="산출물">산출물</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">02_JOB/260715_messenger-relay/spec.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">02_JOB/260715_messenger-relay/plan.md</code></li>
+  <li>Farad UI Lab <code class="language-plaintext highlighter-rouge">messenger-choice-ui</code> Study의 다음 Option
+    <ul>
+      <li>원격 연결 설정</li>
+      <li>Schedule Remote 설정</li>
+      <li>Session <code class="language-plaintext highlighter-rouge">/remote</code> 설정</li>
+    </ul>
+  </li>
+  <li>GitHub Pages의 별도 Spec/Plan Markdown 글</li>
+</ul>
+
+<h3 id="검증">검증</h3>
+
+<ul>
+  <li>Markdown heading/link/code-fence 검사</li>
+  <li>UI Lab <code class="language-plaintext highlighter-rouge">npm run check</code>, <code class="language-plaintext highlighter-rouge">npm run build:githubio</code>, <code class="language-plaintext highlighter-rouge">npm run tokens:check</code></li>
+  <li>Light/Dark, Korean/English, Text size 12/14/18, Desktop/Narrow 수동 확인</li>
+  <li>fixture에 실제 사용자 path, Knox ID, token, Session/Schedule 이름이 없는지 검사</li>
+</ul>
+
+<h3 id="완료-조건">완료 조건</h3>
+
+<ul>
+  <li>URL 하나로 세 UI Option을 각각 재현할 수 있다.</li>
+  <li>UI와 Spec이 emoji 1개 + 12칸 별칭, Remote/Goal 상호 배타, <code class="language-plaintext highlighter-rouge">/remote</code> local command에 일치한다.</li>
+</ul>
+
+<h2 id="5-phase-1--relay-안전-foundation">5. Phase 1 — Relay 안전 foundation</h2>
+
+<p>상태: <strong>완료</strong></p>
+
+<h3 id="구현-내용">구현 내용</h3>
+
+<ul>
+  <li>independent package/process</li>
+  <li>inbound decrypt/normalize/DLP</li>
+  <li>SQLite WAL transaction, dedupe, HOME outbox</li>
+  <li>bounded body/claim/retry</li>
+  <li>HOME renderer</li>
+  <li>ChatRequest client</li>
+  <li>Farad feature exposure와 singleid adapter</li>
+</ul>
+
+<h3 id="유지할-회귀-gate">유지할 회귀 gate</h3>
+
+<ul>
+  <li>raw inbound text가 domain type, SQLite/WAL, log에 존재하지 않는다.</li>
+  <li>duplicate inbound는 HOME delivery를 하나만 만든다.</li>
+  <li>crash after commit과 expired delivery lease를 복구한다.</li>
+  <li>production client가 plaintext dev mode로 시작하지 않는다.</li>
+</ul>
+
+<h2 id="6-phase-2--versioned-sqlite와-outbound-delivery">6. Phase 2 — versioned SQLite와 outbound delivery</h2>
+
+<h3 id="목표-1">목표</h3>
+
+<p>HOME semantic delivery를 실제 Messenger <code class="language-plaintext highlighter-rouge">ChatRequest</code>로 보내고 정확한 card identity를 저장한다.</p>
+
+<h3 id="구현">구현</h3>
+
+<p>Relay:</p>
+
+<ul>
+  <li>SQLite schema version 2 migration</li>
+  <li><code class="language-plaintext highlighter-rouge">message_cards</code>, 확장된 <code class="language-plaintext highlighter-rouge">deliveries</code>, 최소 <code class="language-plaintext highlighter-rouge">action_routes</code> 추가</li>
+  <li><code class="language-plaintext highlighter-rouge">CreateChatroomRequest</code>, <code class="language-plaintext highlighter-rouge">UpdateMessageRequest</code> typed client 추가</li>
+  <li>outbound worker
+    <ul>
+      <li>bounded claim</li>
+      <li>semantic card render</li>
+      <li>action route를 send 전에 commit</li>
+      <li>ChatRequest response의 <code class="language-plaintext highlighter-rouge">msgId</code>/<code class="language-plaintext highlighter-rouge">msgKey</code> commit</li>
+      <li>retry와 <code class="language-plaintext highlighter-rouge">DELIVERY_UNKNOWN</code> 분리</li>
+    </ul>
+  </li>
+  <li>worker lifecycle을 ASGI process composition root에서 시작/종료</li>
+  <li>request/message ID generator의 signed-int64, process restart, collision 테스트</li>
+</ul>
+
+<p>예상 변경 위치:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad-relay/farad_relay/store.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad-relay/farad_relay/messenger_client.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad-relay/farad_relay/cards.py</code></li>
+  <li>신규 <code class="language-plaintext highlighter-rouge">delivery_worker.py</code>, <code class="language-plaintext highlighter-rouge">schema.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad-relay/tests/</code></li>
+</ul>
+
+<h3 id="transaction-순서">transaction 순서</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>semantic delivery + action routes commit
+→ Messenger API call
+→ response card identity commit
+→ delivery delivered
+</code></pre></div></div>
+
+<p>Messenger 응답이 불명확하면 자동 중복 전송하지 않고 <code class="language-plaintext highlighter-rouge">DELIVERY_UNKNOWN</code>으로 남긴다.</p>
+
+<h3 id="검증-1">검증</h3>
+
+<ul>
+  <li>Create/Chat/Update stage/prod URL과 암호화 request contract</li>
+  <li>send 전 crash, response 전/후 crash, card identity commit 실패</li>
+  <li>stale revision update가 최신 카드를 덮지 못함</li>
+  <li>claim query가 requested batch 이상 row를 materialize하지 않음</li>
+</ul>
+
+<h3 id="완료-조건-1">완료 조건</h3>
+
+<ul>
+  <li>TEXT/INTRO inbound 뒤 실제 HOME card가 전송된다.</li>
+  <li>DB의 <code class="language-plaintext highlighter-rouge">message_cards</code>에서 정확한 <code class="language-plaintext highlighter-rouge">room/msgId/msgKey/revision</code>을 조회할 수 있다.</li>
+</ul>
+
+<h2 id="7-phase-3--proactive-pairing과-fallback">7. Phase 3 — proactive pairing과 fallback</h2>
+
+<h3 id="목표-2">목표</h3>
+
+<p>Farad가 pairing을 시작하면 봇이 먼저 연결 확인 카드를 보내고 사용자 클릭으로만 binding을 활성화한다.</p>
+
+<h3 id="relay-구현">Relay 구현</h3>
+
+<ul>
+  <li>schema version 3
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">client_installations</code></li>
+      <li><code class="language-plaintext highlighter-rouge">messenger_bindings</code></li>
+      <li><code class="language-plaintext highlighter-rouge">pairing_attempts</code></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">POST /v1/clients/register</code></li>
+  <li>client token slow hash와 constant-time verify</li>
+  <li>Knox ID → numeric Messenger user ID provider Protocol</li>
+  <li><code class="language-plaintext highlighter-rouge">CreateChatroomRequest(chatType=0)</code>와 room reuse</li>
+  <li>연결/취소 action route</li>
+  <li>INTRO fallback matching</li>
+  <li>pending client용 activation Long Poll 또는 register wait contract</li>
+</ul>
+
+<h3 id="farad-구현">Farad 구현</h3>
+
+<ul>
+  <li>client token 생성</li>
+  <li><code class="language-plaintext highlighter-rouge">singleid</code>는 최초 pairing/명시적 repair에서만 실행</li>
+  <li>pending/accepted/rejected/repair-required 상태 projection</li>
+  <li>token을 일반 state와 분리한 sensitive store에 atomic write</li>
+</ul>
+
+<h3 id="검증-2">검증</h3>
+
+<ul>
+  <li>선제 연결 성공</li>
+  <li>directory lookup/CreateChatroom/card send 부분 실패</li>
+  <li>INTRO fallback</li>
+  <li>wrong sender/room/Knox ID</li>
+  <li>duplicate connect/cancel click</li>
+  <li>Farad가 token을 저장했지만 Relay binding이 없는 repair</li>
+</ul>
+
+<h3 id="완료-조건-2">완료 조건</h3>
+
+<ul>
+  <li>사용자가 봇을 미리 열지 않아도 확인 카드를 받고 연결할 수 있다.</li>
+  <li>승인 전에는 Schedule/Session command가 생성되지 않는다.</li>
+</ul>
+
+<h2 id="8-phase-4--runtime-lease와-long-poll-command-queue">8. Phase 4 — runtime lease와 Long Poll command queue</h2>
+
+<h3 id="목표-3">목표</h3>
+
+<p>동일 client의 Farad 여러 instance 중 하나만 command를 받으며, command를 잃지 않고 재전달한다.</p>
+
+<h3 id="relay-구현-1">Relay 구현</h3>
+
+<ul>
+  <li>schema version 4
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">runtime_leases</code></li>
+      <li><code class="language-plaintext highlighter-rouge">commands</code></li>
+      <li><code class="language-plaintext highlighter-rouge">command_results</code></li>
+    </ul>
+  </li>
+  <li>API
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">POST /v1/runtime/claim</code></li>
+      <li><code class="language-plaintext highlighter-rouge">GET /v1/commands?waitSeconds=25</code></li>
+      <li><code class="language-plaintext highlighter-rouge">POST /v1/commands/{id}/result</code></li>
+      <li><code class="language-plaintext highlighter-rouge">POST /v1/runtime/release</code></li>
+    </ul>
+  </li>
+  <li>client-scoped waiter registry
+    <ul>
+      <li>SQLite가 command authority</li>
+      <li>in-memory waiter는 wake-up 최적화만 담당</li>
+      <li>process restart 후 polling만으로 correctness 유지</li>
+    </ul>
+  </li>
+  <li>response당 command 최대 1개</li>
+  <li>command lease, result-as-ACK, generation fencing</li>
+  <li>takeover request와 Messenger confirmation</li>
+</ul>
+
+<h3 id="farad-구현-1">Farad 구현</h3>
+
+<ul>
+  <li>async Relay client와 bounded retry/backoff</li>
+  <li>runtime claim → Long Poll → dispatch → result loop</li>
+  <li>shutdown release는 best effort</li>
+  <li>reconnect 후 미완료 command idempotent 재처리</li>
+</ul>
+
+<h3 id="검증-3">검증</h3>
+
+<ul>
+  <li>empty 25초 poll, command wake-up, client 격리</li>
+  <li>Farad A/B 동시 claim</li>
+  <li>expired lease와 generation rollover</li>
+  <li>response 유실, result 유실, duplicate result</li>
+  <li>10,000 command fixture에서 client-scoped indexed query</li>
+</ul>
+
+<h3 id="완료-조건-3">완료 조건</h3>
+
+<ul>
+  <li>두 Farad가 떠도 한 instance만 command를 받는다.</li>
+  <li>command는 result commit 전까지 삭제되지 않는다.</li>
+</ul>
+
+<h2 id="9-phase-5--farad-remote-state와-세-ui-surface">9. Phase 5 — Farad Remote state와 세 UI surface</h2>
+
+<h3 id="목표-4">목표</h3>
+
+<p>사용자가 연결과 Remote 대상 노출을 명시적으로 제어한다.</p>
+
+<h3 id="domainstate">domain/state</h3>
+
+<p>신규 Farad 경계:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">RemoteControlService</code>: enable/disable/rename intent owner</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteConnectionClient</code>: Relay HTTP boundary</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteTargetIndex</code>: Session/Schedule local ID ↔ emoji key/alias/enabled</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteCorrelationIndex</code>: run/interaction ref ↔ exact session locator</li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteModeState</code>: session-scoped runtime snapshot</li>
+</ul>
+
+<p>저장 원칙:</p>
+
+<ul>
+  <li>client token은 sensitive store</li>
+  <li>Remote target/correlation은 <code class="language-plaintext highlighter-rouge">&lt;farad-data&gt;/state/</code>의 bounded 단일 index</li>
+  <li>실제 transcript는 기존 Session transcript</li>
+  <li>startup은 remote target별 파일을 읽지 않는다.</li>
+  <li>in-app mutation은 atomic persist 후 exact in-memory entry와 해당 session snapshot만 갱신한다.</li>
+</ul>
+
+<h3 id="ui">UI</h3>
+
+<ol>
+  <li>Settings Remote 연결 row</li>
+  <li>Schedule create/edit의 <code class="language-plaintext highlighter-rouge">메신저에서 사용</code> toggle</li>
+  <li><code class="language-plaintext highlighter-rouge">/remote</code> command와 session-scoped dialog</li>
+  <li>공용 <code class="language-plaintext highlighter-rouge">RemoteAliasEditor</code>
+    <ul>
+      <li>catalog emoji 1개 선택 필수</li>
+      <li>emoji search/recent/category picker</li>
+      <li>text field 12 display cells</li>
+      <li>duplicate/name validation</li>
+      <li><code class="language-plaintext highlighter-rouge">[emoji alias]</code> Messenger preview</li>
+    </ul>
+  </li>
+  <li>활성 session prompt의 작은 Remote affordance</li>
+</ol>
+
+<p>Qt 구현 시:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">InputDialog</code>/<code class="language-plaintext highlighter-rouge">StandardDialog</code> 계열 사용; <code class="language-plaintext highlighter-rouge">QInputDialog</code> 금지</li>
+  <li>user-visible 문자열 en/ko catalog 동시 추가</li>
+  <li>clickable control에 pointing hand cursor</li>
+  <li>font-aware geometry와 Light source-of-truth</li>
+  <li>emoji picker는 standard QWidget/QListView 기반; QPainter custom grid는 피한다.</li>
+</ul>
+
+<h3 id="remote-command"><code class="language-plaintext highlighter-rouge">/remote</code> command</h3>
+
+<ul>
+  <li>command registry에 feature-flag 조건부 등록/노출</li>
+  <li>pending New Session에서는 materialize 안내</li>
+  <li>real CHAT에서 dialog open</li>
+  <li>Goal active면 명확한 local error, mutation 없음</li>
+  <li>성공은 transcript bubble 없이 조용히 UI state만 반영</li>
+</ul>
+
+<h3 id="검증-4">검증</h3>
+
+<ul>
+  <li>alias width: Korean 6, ASCII 12, mixed, whitespace/control/duplicate</li>
+  <li>emoji catalog 외 값 거부</li>
+  <li>feature off일 때 command/UI 미노출</li>
+  <li>session/schedule type routing</li>
+  <li>NFS hot path에서 target별 content read가 실행되면 fail</li>
+  <li>Qt i18n, theme, font 12/14/18, keyboard focus</li>
+</ul>
+
+<h3 id="완료-조건-4">완료 조건</h3>
+
+<ul>
+  <li>연결, Schedule, 일반 Session 세 surface에서 동일 emoji/alias 계약을 사용한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">/remote</code> 성공이 모델 입력이나 transcript bubble을 만들지 않는다.</li>
+</ul>
+
+<h2 id="10-phase-6--안전-remote-목록과-schedule-run-now">10. Phase 6 — 안전 Remote 목록과 Schedule Run now</h2>
+
+<h3 id="목표-5">목표</h3>
+
+<p>메신저 HOME에서 Remote-enabled Schedule을 조회하고 실행한다.</p>
+
+<h3 id="relay-구현-2">Relay 구현</h3>
+
+<ul>
+  <li>schema version 5
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">remote_views</code></li>
+      <li><code class="language-plaintext highlighter-rouge">remote_items</code></li>
+    </ul>
+  </li>
+  <li>HOME <code class="language-plaintext highlighter-rouge">Farad 예약 작업 조회</code> action → <code class="language-plaintext highlighter-rouge">LIST_REMOTE_ITEMS</code> command</li>
+  <li>result의 emoji key/alias/state keyword만 검증·저장</li>
+  <li>bounded pagination card</li>
+  <li><code class="language-plaintext highlighter-rouge">Action.ShowCard</code> inline confirmation과 별도 confirmation fallback</li>
+  <li>실행 click transaction → <code class="language-plaintext highlighter-rouge">RUN_SCHEDULE</code> command</li>
+</ul>
+
+<h3 id="farad-구현-2">Farad 구현</h3>
+
+<ul>
+  <li>existing Scheduler store/index에서 remote-enabled 항목만 O(visible) projection</li>
+  <li>item token/view token을 실제 Schedule로 해석하는 bounded runtime map</li>
+  <li>command 수신 시 remote-enabled와 single-flight 재검사</li>
+  <li>existing <code class="language-plaintext highlighter-rouge">SessionWorkflowService.submit_scheduled_run</code> 경로 사용</li>
+  <li>same Schedule max 1, different Schedule concurrent</li>
+</ul>
+
+<h3 id="검증-5">검증</h3>
+
+<ul>
+  <li>실제 Schedule 이름/ID/prompt/path가 wire·Relay DB에 없음</li>
+  <li>stale view, token swapping, wrong client/generation</li>
+  <li>A와 B 연속 click 후 둘 다 실행</li>
+  <li>A 두 번 click → 하나 accepted, 하나 already running</li>
+  <li>cron/local/remote 실행 간 same-Schedule single-flight</li>
+</ul>
+
+<h3 id="완료-조건-5">완료 조건</h3>
+
+<ul>
+  <li>HOME에서 Schedule 목록·확인·실행·상태 갱신이 Stage에서 왕복한다.</li>
+</ul>
+
+<h2 id="11-phase-7--통합-remote-runtime-mode">11. Phase 7 — 통합 Remote runtime mode</h2>
+
+<h3 id="목표-6">목표</h3>
+
+<p>일반 <code class="language-plaintext highlighter-rouge">CHAT</code>과 <code class="language-plaintext highlighter-rouge">SCHEDULED</code>가 보고 없이 Stop하면 자동 계속하고, durable report 뒤에만 기다린다.</p>
+
+<h3 id="architecture-선행-변경">architecture 선행 변경</h3>
+
+<p>현재 <code class="language-plaintext highlighter-rouge">TurnLifecycleHook</code>의 contributor는 Goal 하나다. Remote가 두 번째 실제 contributor가 되므로:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">docs/layers.md</code>에 runtime contributor/arbitration 계약을 정식화한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">docs/agent.md</code>에 Stop precedence를 기록한다.</li>
+  <li>Goal과 Remote의 상호 배타를 application service에서 enforce한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">AsyncSession</code>은 concrete Goal/Remote 타입을 import하지 않는다.</li>
+</ol>
+
+<h3 id="구현-1">구현</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">RemoteTurnHook</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteReport</code> built-in/internal tool</li>
+  <li>per-run report receipt state</li>
+  <li><code class="language-plaintext highlighter-rouge">remote_continue</code> transcript note</li>
+  <li>Stop policy
+    <ul>
+      <li>report receipt 없음 → <code class="language-plaintext highlighter-rouge">RuntimeStopDecision(allow=False)</code></li>
+      <li>receipt 있음 → allow</li>
+    </ul>
+  </li>
+  <li>Remote keyword catalog와 card payload codec</li>
+  <li>continuation count/wall-clock guard</li>
+  <li>limit reached runtime-generated event</li>
+  <li>feedback PostBox ingress</li>
+</ul>
+
+<p>예상 변경 위치:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/turn_hooks.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/async_session.py</code></li>
+  <li><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/config_factory.py</code></li>
+  <li>신규 <code class="language-plaintext highlighter-rouge">packages/farad/farad/remote_control/turn_hook.py</code></li>
+  <li>신규 <code class="language-plaintext highlighter-rouge">packages/farad/farad/remote_control/report_tool.py</code></li>
+  <li>transcript UI factory/i18n의 <code class="language-plaintext highlighter-rouge">remote_continue</code> presentation</li>
+</ul>
+
+<h3 id="failure-boundary">failure boundary</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RemoteReport tool call
+→ safe payload validate
+→ Relay event idempotent commit
+→ receipt 반환
+→ tool result transcript commit
+→ Stop 허용
+</code></pre></div></div>
+
+<p>Relay commit 전 오류는 receipt가 아니며 Stop을 허용하지 않는다. 무한 retry는 runtime limit guard가
+고정 failure event와 abort로 끝낸다.</p>
+
+<h3 id="검증-6">검증</h3>
+
+<ul>
+  <li>plain assistant Stop이 같은 run ID로 continuation</li>
+  <li>report receipt 후 Stop 허용</li>
+  <li>report HTTP failure 후 continuation</li>
+  <li>duplicate event idempotency</li>
+  <li>pending user input/abort/shutdown 우선</li>
+  <li>Goal + Remote 동시 활성화 거부</li>
+  <li>Remote mode off ordinary CHAT behavior 불변</li>
+  <li>SCHEDULED와 CHAT 같은 policy contract test</li>
+</ul>
+
+<h3 id="완료-조건-6">완료 조건</h3>
+
+<ul>
+  <li>모델이 보고하지 않고 조용히 끝날 수 없다.</li>
+  <li>보고한 session은 불필요한 추가 LLM call 없이 메신저 응답을 기다린다.</li>
+</ul>
+
+<h2 id="12-phase-8--카드-correlation-progress와-feedback">12. Phase 8 — 카드 correlation, progress와 feedback</h2>
+
+<h3 id="목표-7">목표</h3>
+
+<p>각 카드와 버튼을 정확한 run/session interaction에 연결하고, 선택 뒤 같은 카드를 안전하게 갱신한다.</p>
+
+<h3 id="relay-구현-3">Relay 구현</h3>
+
+<ul>
+  <li>schema version 6
+    <ul>
+      <li>확장 <code class="language-plaintext highlighter-rouge">action_routes</code></li>
+      <li><code class="language-plaintext highlighter-rouge">remote_events</code></li>
+      <li><code class="language-plaintext highlighter-rouge">interactions</code></li>
+      <li>revisioned <code class="language-plaintext highlighter-rouge">message_cards</code></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">POST /v1/remote-events</code></li>
+  <li><code class="language-plaintext highlighter-rouge">RemoteReport</code> keyword → card renderer</li>
+  <li>card/action/interaction/command 원자 transaction</li>
+  <li>선택 후 UpdateMessage delivery</li>
+  <li>current revision compare-and-set</li>
+  <li>consumed/expired/stale card response</li>
+</ul>
+
+<h3 id="farad-구현-3">Farad 구현</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">RemoteCorrelationIndex</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">runRef</code>/<code class="language-plaintext highlighter-rouge">interactionRef</code> → <code class="language-plaintext highlighter-rouge">SessionLocator</code></li>
+      <li>SCHEDULED lookup에는 <code class="language-plaintext highlighter-rouge">schedule_id</code> hint 필수</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">REMOTE_FEEDBACK</code> → exact session PostBox</li>
+  <li>processed interaction dedupe</li>
+  <li>live session이 없어도 locator로 정상 runtime open</li>
+</ul>
+
+<h3 id="카드-동작">카드 동작</h3>
+
+<ul>
+  <li>본문과 과거 상태 유지</li>
+  <li><code class="language-plaintext highlighter-rouge">선택: ...</code> body 추가</li>
+  <li>선택 submit action 전부 제거</li>
+  <li>Back/Home만 fresh token으로 재발급</li>
+  <li>stale worker가 newer card revision을 덮지 않음</li>
+</ul>
+
+<h3 id="검증-7">검증</h3>
+
+<ul>
+  <li>두 session이 같은 keyword/card kind를 동시에 사용</li>
+  <li>같은 session의 연속 interaction 두 개</li>
+  <li>old card click, duplicated click, wrong room, wrong generation</li>
+  <li>app/Relay restart 뒤 feedback routing</li>
+  <li>session 10,000개 fixture에서 glob fallback이 실행되면 fail</li>
+</ul>
+
+<h3 id="완료-조건-7">완료 조건</h3>
+
+<ul>
+  <li>어떤 action도 다른 session/run으로 전달되지 않는다.</li>
+  <li>클릭한 카드가 이력을 보존하면서 재클릭 불가능 상태가 된다.</li>
+</ul>
+
+<h2 id="13-phase-9--보안retention관측성-hardening">13. Phase 9 — 보안·retention·관측성 hardening</h2>
+
+<h3 id="보안">보안</h3>
+
+<ul>
+  <li>credential/token/key redaction</li>
+  <li>action token hash at rest</li>
+  <li>sender/room/client/generation binding</li>
+  <li>RemoteReport schema에 자유 텍스트 필드가 추가되지 않는 gate</li>
+  <li>Messenger payload, DB, WAL, structured log DLP scan test</li>
+  <li>remote approval/Full Access 차단 contract test</li>
+</ul>
+
+<h3 id="retention">retention</h3>
+
+<ul>
+  <li>expired action/view/item bounded cleanup</li>
+  <li>completed command/result/event/interaction/delivery retention</li>
+  <li>active/pending/in-flight 제외</li>
+  <li>cleanup index와 <code class="language-plaintext highlighter-rouge">EXPLAIN QUERY PLAN</code> regression</li>
+</ul>
+
+<h3 id="관측성">관측성</h3>
+
+<p>본문 없는 counter/latency/error-code만 기록한다.</p>
+
+<ul>
+  <li>inbound accepted/duplicate/rejected</li>
+  <li>delivery pending/in-flight/unknown</li>
+  <li>active/pending client와 runtime lease</li>
+  <li>command age/retry/result</li>
+  <li>event/card update latency</li>
+  <li>stale/expired action count</li>
+  <li>Remote continuation count와 limit reached</li>
+</ul>
+
+<h3 id="운영">운영</h3>
+
+<ul>
+  <li>graceful shutdown과 lease release</li>
+  <li>SQLite backup/restore runbook</li>
+  <li>schema migration failure rollback/backup</li>
+  <li>VM disk pressure와 WAL checkpoint policy</li>
+  <li>health/readiness를 분리할 필요가 있는지 Stage 자료로 결정</li>
+</ul>
+
+<h2 id="14-phase-10--stage-e2e와-production-rollout">14. Phase 10 — Stage E2E와 production rollout</h2>
+
+<h3 id="stage-검증-시나리오">Stage 검증 시나리오</h3>
+
+<ol>
+  <li>proactive pairing</li>
+  <li>INTRO fallback pairing</li>
+  <li>Farad restart without re-pairing</li>
+  <li>two Farad instance conflict and approved takeover</li>
+  <li>HOME and unauthenticated LLM usage card</li>
+  <li>Schedule list, nested/fallback confirmation, Run now</li>
+  <li>two different Schedule concurrent execution</li>
+  <li>same Schedule duplicate rejection</li>
+  <li>general CHAT <code class="language-plaintext highlighter-rouge">/remote</code> and alias dialog</li>
+  <li>plain Stop → automatic continuation</li>
+  <li>RemoteReport → feedback card → user choice → exact PostBox</li>
+  <li>selected card update and duplicate click</li>
+  <li>network disconnect at every commit boundary</li>
+</ol>
+
+<h3 id="공급자-확인-항목">공급자 확인 항목</h3>
+
+<ul>
+  <li>Production key endpoint</li>
+  <li>ambiguous ChatRequest response의 requestId/msgId idempotency</li>
+  <li><code class="language-plaintext highlighter-rouge">ActionSubmit</code>과 <code class="language-plaintext highlighter-rouge">Action.ShowCard</code> host 지원 범위</li>
+  <li>UpdateMessageRequest의 revision/old-card 동작</li>
+  <li>Adaptive Card action/body/page 실사용 상한</li>
+  <li>webhook non-200 retry 정책</li>
+</ul>
+
+<h3 id="배포-문서">배포 문서</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docs/deployment.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docs/deployment-config.md</code></li>
+  <li>대상 버전 <code class="language-plaintext highlighter-rouge">docs/deployment-guides/v&lt;version&gt;.md</code></li>
+  <li>Relay systemd/container 예시와 VM-local DB 위치</li>
+  <li>token/device/system ID/key URL 설정</li>
+  <li>stage/prod endpoint 전환과 rollback</li>
+</ul>
+
+<h3 id="production-gate">production gate</h3>
+
+<ul>
+  <li>Stage E2E 전체 통과</li>
+  <li>Relay focused pytest, Ruff, strict mypy</li>
+  <li>변경 Farad strict type gate와 관련 pytest</li>
+  <li>live DB migration rehearsal</li>
+  <li>DLP fixture scan</li>
+  <li>load test: 사용자/command/run/card 각각 10,000 기준 hot query bounded 확인</li>
+</ul>
+
+<h2 id="15-전체-테스트-매트릭스">15. 전체 테스트 매트릭스</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>계층</th>
+      <th>테스트</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Pure policy</td>
+      <td>alias width, emoji catalog, keyword, state transition, revision</td>
+    </tr>
+    <tr>
+      <td>Crypto/adapter</td>
+      <td>key/IV, padding, Base64, official field, action prefix</td>
+    </tr>
+    <tr>
+      <td>SQLite</td>
+      <td>migration, transaction rollback, dedupe, lease, CAS, retention</td>
+    </tr>
+    <tr>
+      <td>ASGI</td>
+      <td>body bound, auth, Long Poll, wrong generation, shutdown</td>
+    </tr>
+    <tr>
+      <td>Messenger client</td>
+      <td>stage/prod URL/header/encryption/response parse</td>
+    </tr>
+    <tr>
+      <td>Farad service</td>
+      <td>pairing, state commit, target/correlation index, repair</td>
+    </tr>
+    <tr>
+      <td>Runtime</td>
+      <td>same-run continuation, report receipt, feedback PostBox, abort</td>
+    </tr>
+    <tr>
+      <td>Qt</td>
+      <td>feature exposure, <code class="language-plaintext highlighter-rouge">/remote</code>, dialogs, i18n, focus, font/theme</td>
+    </tr>
+    <tr>
+      <td>E2E fake</td>
+      <td>Messenger webhook ↔ Relay ↔ fake Farad ↔ card update</td>
+    </tr>
+    <tr>
+      <td>Stage</td>
+      <td>real key/chatroom/send/update/action round trip</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="16-구현-완료-판정">16. 구현 완료 판정</h2>
+
+<p>기능이 “구현됨”으로 표시되려면 다음이 모두 충족돼야 한다.</p>
+
+<ul>
+  <li>code path와 schema가 존재한다.</li>
+  <li>happy path만이 아니라 duplicate/crash/stale generation 테스트가 있다.</li>
+  <li>실제 이름·자유 텍스트가 boundary를 넘지 않는 DLP 테스트가 있다.</li>
+  <li>N=10,000 hot-path guard가 있다.</li>
+  <li>relevant docs와 deployment guide가 source와 일치한다.</li>
+  <li>Stage에서 실제 Messenger 왕복을 검증했다.</li>
+</ul>
+
+<p>현재 완료 범위는 Phase 1까지다. Phase 2~8이 product vertical slice, Phase 9~10이 production gate다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#farad" class="page__taxonomy-item p-category" rel="tag">farad</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-07-16T00:00:00+09:00">2026-07-16</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/research/html-design-agent-prompt-benchmark/" class="pagination--pager" title="HTML 디자인 에이전트 운영 프롬프트 벤치마크">Previous</a>
+    
+    
+      <a href="/farad/farad-messenger-relay-remote-mode-spec/" class="pagination--pager" title="Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/farad-messenger-relay-remote-mode-spec/" rel="permalink">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-16T07:04:47+09:00">2026-07-16</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/research/html-design-agent-prompt-benchmark/" rel="permalink">HTML 디자인 에이전트 운영 프롬프트 벤치마크
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-15T00:39:14+09:00">2026-07-15</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">HTML 디자인 에이전트 운영 프롬프트 벤치마크
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/research/farad-artifact-anthropic-doc-coauthoring-skill-benchmark/" rel="permalink">Anthropic <code class="language-plaintext highlighter-rouge">doc-coauthoring</code> 스킬 벤치마크
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-14T23:51:08+09:00">2026-07-14</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Anthropic doc-coauthoring 스킬 벤치마크
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/research/farad-artifact-impeccable-skill-benchmark/" rel="permalink">Impeccable Skill 벤치마크
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-07-14T23:51:00+09:00">2026-07-14</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">Impeccable Skill 벤치마크
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
