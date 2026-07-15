@@ -714,6 +714,7 @@
       <a href="#shape">전체 구조</a>
       <a href="#connect">최초 연결</a>
       <a href="#restart">재시작</a>
+      <a href="#runtime">Farad 두 개 실행</a>
       <a href="#wire">상세 메시지 흐름</a>
       <a href="#two-jobs">A 다음 B 실행</a>
       <a href="#same-job">A를 두 번 실행</a>
@@ -776,20 +777,81 @@
           <li><span class="actor">Farad</span><div class="step-copy"><b>256비트 이상의 client token 생성</b><span>원문은 로컬 보호 파일에 저장합니다.</span></div></li>
           <li><span class="actor">Relay</span><div class="step-copy"><b><code>{knoxId, token}</code> 등록을 pending으로 저장</b><span>token 원문 대신 hash를 저장합니다.</span></div></li>
           <li><span class="actor">사용자</span><div class="step-copy"><b>메신저 봇을 열거나 말을 건다</b><span>Relay가 수신 envelope의 공식 <code>senderKnoxId</code>를 확인합니다.</span></div></li>
-          <li><span class="actor">Relay</span><div class="step-copy"><b>pending Knox ID가 일치하면 active 전환</b><span>메신저 <code>userId</code>와 <code>chatroomId</code>도 같은 client에 연결합니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b>“이 Farad를 연결할까요?” 확인 카드 발송</b><span>메신저 <code>userId</code>와 <code>chatroomId</code>를 후보 binding으로 저장하지만 아직 PENDING입니다.</span></div></li>
+          <li><span class="actor">사용자</span><div class="step-copy"><b>메신저에서 “연결하기” 선택</b><span>이 클릭이 커밋된 뒤에만 client가 ACTIVE가 됩니다. “취소”를 누르면 등록을 폐기합니다.</span></div></li>
         </ol>
-        <div class="note"><code>singleid</code> 결과는 Farad state나 transcript에 저장하지 않습니다. 마지막 메신저 확인 단계가 “이 Knox 계정을 실제로 사용하는 사람”임을 확인하고, 이후 binding은 Relay가 기억합니다.</div>
+        <div class="note"><code>singleid</code> 결과는 Farad state나 transcript에 저장하지 않습니다. 현재 확보한 값이 Knox ID뿐이라면 사용자가 봇을 한 번 열어야 Relay가 숫자형 messenger userId와 chatroomId를 얻을 수 있습니다. 별도 Knox ID→messenger userId 조회 수단이 생기면 <code>CreateChatroomRequest</code>로 확인 카드를 먼저 보낼 수 있습니다.</div>
       </section>
 
       <section id="restart">
         <div class="scenario-head"><span class="scenario-no">SCENARIO 02</span><h2>Farad를 껐다 켜도 다시 매핑하지 않는다</h2></div>
         <ol class="sequence">
           <li><span class="actor">Farad</span><div class="step-copy"><b>로컬 보호 파일에서 client token 읽기</b><span><code>singleid</code> 명령은 다시 실행하지 않습니다.</span></div></li>
-          <li><span class="actor">Farad</span><div class="step-copy"><b>Bearer token으로 Relay Long Poll 시작</b><span><code>GET /commands?waitSeconds=25</code></span></div></li>
-          <li><span class="actor">Relay</span><div class="step-copy"><b>token hash로 active client 조회</b><span>저장된 Knox ID, messenger userId, chatroomId를 사용합니다.</span></div></li>
-          <li><span class="actor">Relay</span><div class="step-copy"><b>대기 명령 또는 빈 응답 반환</b><span>Farad는 응답 직후 다음 Long Poll을 엽니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>이번 프로세스의 임시 runtimeId 생성</b><span>매 실행마다 새 UUID를 만들며 디스크에 저장하지 않습니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>runtime lease 획득</b><span><code>POST /v1/runtime/claim</code>으로 현재 generation을 받습니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>Bearer token과 generation으로 Long Poll 시작</b><span><code>GET /v1/commands?waitSeconds=25</code></span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b>명령 1개 또는 빈 응답 반환</b><span>Farad는 명령 result를 제출한 뒤 다음 Long Poll을 엽니다.</span></div></li>
         </ol>
-        <div class="decision"><b>Farad가 기억하는 것은 client token 하나</b>별도 Linux ID, Knox ID, bindingId를 로컬 state에 중복 저장하지 않습니다. token이 없거나 Relay binding이 폐기된 경우에만 최초 연결을 다시 합니다.</div>
+        <div class="decision"><b>Farad가 영구히 기억하는 것은 client token과 relayOrigin</b>별도 Linux ID, Knox ID, bindingId, runtimeId를 로컬 state에 중복 저장하지 않습니다. token이 없거나 Relay binding이 폐기된 경우에만 최초 연결을 다시 합니다.</div>
+      </section>
+
+      <section id="runtime">
+        <div class="scenario-head"><span class="scenario-no">RUNTIME OWNERSHIP</span><h2>Farad가 두 개 떠도 하나만 명령을 받는다</h2></div>
+        <p class="section-intro">NFS에서는 서로 다른 호스트의 Farad가 같은 client token 파일을 읽을 수 있습니다. 그래서 token은 사용자 연결만 증명하고, 실제 명령 수신 권위는 Relay가 발급한 runtime lease와 generation으로 한 프로세스에만 줍니다.</p>
+
+        <table class="token-table">
+          <tbody>
+            <tr><th>clientToken</th><td>장기 비밀. 어떤 Messenger 사용자 연결인지 증명합니다. NFS를 통해 여러 Farad 프로세스가 같은 값을 볼 수 있습니다.</td></tr>
+            <tr><th>runtimeId</th><td>Farad를 켤 때마다 만드는 임시 UUID. 프로세스가 종료되면 버리며 비밀값은 아닙니다.</td></tr>
+            <tr><th>generation</th><td>Relay가 현재 활성 runtime에 주는 fencing 번호. 모든 command·result·event는 이 번호와 묶입니다.</td></tr>
+            <tr><th>runtime lease</th><td>Long Poll이 정상적으로 이어지는 동안 갱신되는 짧은 수명의 소유권입니다.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="exchange-list" style="margin-top: 24px;">
+          <div class="exchange-row">
+            <span class="exchange-no">A</span><span class="exchange-from">Farad A</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+            <div class="exchange-message"><b><span class="contract-tag proposed">제안 계약</span> runtime claim 성공</b><pre>POST /v1/runtime/claim
+Authorization: Bearer &lt;Farad client token&gt;
+
+{"runtimeId":"runtime-A"}
+
+200 OK
+{"generation":7,"leaseUntilMillis":1784100030000}</pre></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">B</span><span class="exchange-from">Farad B</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+            <div class="exchange-message"><b>같은 client의 두 번째 claim 거절</b><pre>POST /v1/runtime/claim
+Authorization: Bearer &lt;같은 Farad client token&gt;
+
+{"runtimeId":"runtime-B"}
+
+409 Conflict
+{"code":"ACTIVE_RUNTIME_EXISTS"}</pre></div>
+          </div>
+        </div>
+
+        <h3>Farad A가 이미 연결된 상태에서 Farad B가 켜진 경우</h3>
+        <ol class="sequence">
+          <li><span class="actor">Farad A</span><div class="step-copy"><b><code>runtime-A / generation=7</code>로 lease 소유</b><span>Long Poll과 event 전송이 lease를 계속 갱신합니다.</span></div></li>
+          <li><span class="actor">Farad B</span><div class="step-copy"><b>같은 clientToken, 새 <code>runtime-B</code>로 claim 요청</b><span>NFS의 같은 token을 읽었더라도 다른 runtime으로 구분됩니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b><code>409 ACTIVE_RUNTIME_EXISTS</code> 반환</b><span>B에는 command를 주지 않고 로컬 UI에 “다른 Farad가 연결 중”을 표시합니다.</span></div></li>
+          <li><span class="actor">사용자</span><div class="step-copy"><b>필요한 경우에만 “이 Farad로 전환 요청”</b><span>Relay는 이미 연결된 Messenger 대화방에 전환 확인 카드를 보냅니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b>사용자 확인 후 <code>generation 7 → 8</code></b><span>A를 fence하고 B만 활성화합니다. A의 늦은 result·event는 <code>STALE_RUNTIME</code>으로 거절합니다.</span></div></li>
+        </ol>
+
+        <div class="message-card">
+          <h3>원격 연결을 새 Farad로 전환할까요?</h3>
+          <p>기존 Farad에서는 더 이상 메신저 명령을 받을 수 없습니다.</p>
+          <div class="card-actions"><span>전환하기</span><span>유지하기</span></div>
+          <div class="card-actions utility"><span>뒤로</span><span>홈으로</span></div>
+        </div>
+
+        <div class="note">전환은 기존 Farad에서 이미 실행 중인 로컬 Schedule을 강제로 종료하지 않습니다. 대신 기존 Schedule 목록 actionToken과 아직 전달하지 않은 command를 폐기하고, 새 Farad에서 목록을 다시 조회합니다. 모든 Long Poll·result·event에는 <code>X-Farad-Runtime-Id</code>와 <code>X-Farad-Generation</code>을 보내며, 이전 generation은 <code>409 STALE_RUNTIME</code>으로 거절합니다.</div>
+
+        <h3>명령은 한 번에 하나씩 전달한다</h3>
+        <div class="decision"><b>Messenger의 “최대 10개”와 Relay queue는 별개</b><code>chatMessageParams</code> 최대 10개는 한 번의 Messenger API 요청에 넣을 수 있는 메시지 수입니다. Relay Long Poll은 command를 1개만 돌려주며, SQLite에는 10개를 넘어도 retention 정책 범위에서 계속 쌓입니다.</div>
+        <div class="state-flow"><b>command 1 전달</b><span>→</span><b>Farad 처리</b><span>→</span><b>result commit = ACK</b><span>→</span><b>다음 command 1 전달</b></div>
       </section>
 
       <section id="wire">
@@ -812,7 +874,7 @@
         <div class="note">두 Bearer token은 완전히 다릅니다. <b>Messenger API token</b>은 Relay가 OpenAPI를 호출할 때만 쓰고, <b>Farad client token</b>은 한 Farad 설치가 Relay의 Long Poll·result·event API를 호출할 때만 씁니다.</div>
 
         <article class="protocol-phase">
-          <div class="phase-title"><span>PHASE A · 01–11</span><h3>최초 연결과 홈 카드</h3></div>
+          <div class="phase-title"><span>PHASE A · 01–11d</span><h3>최초 연결 확인과 홈 카드</h3></div>
           <div class="exchange-list">
             <div class="exchange-row">
               <span class="exchange-no">01</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
@@ -847,8 +909,8 @@ Content-Type: application/json
             </div>
             <div class="exchange-row">
               <span class="exchange-no">05</span><span class="exchange-from">Farad</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
-              <div class="exchange-message"><b><span class="contract-tag proposed">제안 계약</span> 첫 Long Poll</b><pre>GET /v1/commands?waitSeconds=25&amp;limit=10
-Authorization: Bearer &lt;Farad client token&gt;</pre><p>PENDING client에는 일반 실행 명령을 주지 않고 활성화 신호만 기다립니다.</p></div>
+              <div class="exchange-message"><b><span class="contract-tag proposed">제안 계약</span> 연결 확인 대기 Long Poll</b><pre>GET /v1/commands?waitSeconds=25
+Authorization: Bearer &lt;Farad client token&gt;</pre><p>PENDING client에는 일반 실행 명령을 주지 않고 활성화 신호만 기다립니다. runtime lease는 사용자가 연결을 승인한 뒤 획득합니다.</p></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">06</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Messenger</span>
@@ -878,17 +940,16 @@ AES-256-CBC → Base64 body
             </div>
             <div class="exchange-row">
               <span class="exchange-no">08</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
-              <div class="exchange-message"><b>신원 연결과 홈 발송을 한 transaction으로 예약</b><pre>inbound_messages(msg_id=23234)      -- dedupe
-clients: PENDING → ACTIVE
+              <div class="exchange-message"><b>신원 후보 연결과 확인 카드 발송을 예약</b><pre>inbound_messages(msg_id=23234)      -- dedupe
+clients: status = PENDING 유지
   messenger_user_id = 189473292
   chatroom_id = 193802984023
-commands(kind="CLIENT_ACTIVATED", status="PENDING")
-deliveries(kind="HOME_CARD", status="PENDING")</pre></div>
-              <div class="exchange-state atomic">이 네 변경이 모두 커밋된 뒤 Relay가 Messenger에 <code>HTTP 200 OK</code>를 반환합니다. 200 전에 프로세스가 죽으면 RP 재전송을 안전하게 다시 받습니다.</div>
+deliveries(kind="CONNECTION_CONFIRM_CARD", status="PENDING")</pre></div>
+              <div class="exchange-state atomic">INTRO만으로 ACTIVE가 되지 않습니다. 이 변경이 커밋된 뒤 Relay가 Messenger에 <code>HTTP 200 OK</code>를 반환합니다.</div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">09</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
-              <div class="exchange-message"><b><span class="contract-tag confirmed">확정 계약</span> 홈 Adaptive Card 발송</b><pre>POST https://openapi.stage.samsung.net/messenger/message/api/v2.0/message/chatRequest
+              <div class="exchange-message"><b><span class="contract-tag confirmed">확정 계약</span> 연결 확인 Adaptive Card 발송</b><pre>POST https://openapi.stage.samsung.net/messenger/message/api/v2.0/message/chatRequest
 Authorization: Bearer &lt;Messenger API token&gt;
 x-device-id: &lt;registered device id&gt;
 x-device-type: relation
@@ -902,9 +963,9 @@ Accept: text/plain
   "chatMessageParams": [{
     "msgId": 1784100000002,
     "msgType": 19,
-    "chatMsg": "{\"type\":\"AdaptiveCard\",\"$schema\":\"http://adaptivecards.io/schemas/adaptive-card.json\",\"version\":\"1.3\",\"body\":[{\"type\":\"TextBlock\",\"text\":\"무엇을 확인할까요?\",\"weight\":\"Bolder\"}],\"actions\":[{\"type\":\"Action.Submit\",\"title\":\"LLM 사용량 조회\",\"data\":{\"actionToken\":\"act_home_llm_r2\"}},{\"type\":\"Action.Submit\",\"title\":\"Farad 예약 작업 조회\",\"data\":{\"actionToken\":\"act_home_schedule_x7\"}}]}"
+    "chatMsg": "{\"type\":\"AdaptiveCard\",\"$schema\":\"http://adaptivecards.io/schemas/adaptive-card.json\",\"version\":\"1.3\",\"body\":[{\"type\":\"TextBlock\",\"text\":\"이 Farad를 원격 제어에 연결할까요?\",\"weight\":\"Bolder\"},{\"type\":\"TextBlock\",\"text\":\"연결하면 메신저에서 예약 작업을 조회하고 실행할 수 있습니다.\",\"wrap\":true}],\"actions\":[{\"type\":\"Action.Submit\",\"title\":\"연결하기\",\"data\":{\"actionToken\":\"act_connect_x7\"}},{\"type\":\"Action.Submit\",\"title\":\"취소\",\"data\":{\"actionToken\":\"act_cancel_p2\"}}]}"
   }]
-}</pre><p>홈 카드의 각 <code>Action.Submit.data</code>에는 의미 있는 ID 대신 <code>{"actionToken":"act_home_schedule_x7"}</code>만 넣습니다.</p></div>
+}</pre><p>확인 카드의 각 <code>Action.Submit.data</code>에는 의미 있는 ID 대신 짧은 수명의 actionToken만 넣습니다.</p></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">10</span><span class="exchange-from">OpenAPI</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
@@ -919,19 +980,39 @@ Accept: text/plain
               <div class="exchange-state atomic">Relay는 <code>msgKey</code>를 delivery/card record에 저장합니다. 이후 카드 변경은 수신 payload에 메아리친 msgKey가 아니라 이 저장값만 씁니다.</div>
             </div>
             <div class="exchange-row">
-              <span class="exchange-no">11</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
+              <span class="exchange-no">11</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Messenger</span>
+              <div class="exchange-message"><b>“연결하기” 클릭</b><p>“취소”를 누르면 PENDING client와 token hash를 폐기하고 Farad에는 <code>CONNECTION_REJECTED</code>를 전달합니다.</p></div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">11a</span><span class="exchange-from">Messenger RP</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+              <div class="exchange-message"><b>연결 actionToken webhook</b><p>Relay는 바깥 sender·chatroom과 PENDING client에 저장된 후보 binding을 다시 대조합니다.</p></div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">11b</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
+              <div class="exchange-message"><b>사용자 승인과 활성화를 한 transaction으로 커밋</b><pre>act_connect_x7: ACTIVE → CONSUMED
+clients: PENDING → ACTIVE
+commands(kind="CLIENT_ACTIVATED", status="PENDING")
+deliveries(kind="HOME_CARD_UPDATE", status="PENDING")
+COMMIT</pre></div>
+              <div class="exchange-state atomic">승인 actionToken과 ACTIVE 전환이 함께 커밋되므로 중복 클릭으로 두 연결이 생기지 않습니다.</div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">11c</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
+              <div class="exchange-message"><b>확인 카드를 홈 카드로 갱신</b><p>저장된 msgKey를 사용해 같은 메시지를 “LLM 사용량 조회 / Farad 예약 작업 조회 / 홈” 카드로 바꿉니다.</p></div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">11d</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
               <div class="exchange-message"><b>대기 중 Long Poll 깨우기</b><pre>200 OK
 {
-  "commands": [{
+  "command": {
     "commandId": 100,
     "kind": "CLIENT_ACTIVATED"
-  }],
-  "hasMore": false,
+  },
   "leaseUntilMillis": 1784100030000
-}</pre><p>Farad는 처리 후 <code>POST /v1/commands/100/result</code>를 보냅니다. Relay가 이 result를 커밋하는 것이 별도 ACK를 대신합니다.</p></div>
+}</pre><p>Farad는 처리 결과를 제출한 뒤 <code>POST /v1/runtime/claim</code>으로 runtimeId와 generation을 받고 일반 command Long Poll을 시작합니다.</p></div>
             </div>
           </div>
-          <div class="state-flow"><b>PENDING client</b><span>→</span><b>Messenger 신원 확인</b><span>→</span><b>ACTIVE client</b><span>→</span><b>홈 카드 표시</b></div>
+          <div class="state-flow"><b>PENDING client</b><span>→</span><b>확인 카드</b><span>→</span><b>사용자 “연결하기”</b><span>→</span><b>ACTIVE client</b><span>→</span><b>runtime lease</b></div>
         </article>
 
         <article class="protocol-phase">
@@ -987,14 +1068,13 @@ COMMIT</pre></div>
               <span class="exchange-no">16</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
               <div class="exchange-message"><b><span class="contract-tag proposed">제안 계약</span> Long Poll로 목록 명령 전달</b><pre>200 OK
 {
-  "commands": [{
+  "command": {
     "commandId": 101,
     "kind": "LIST_SCHEDULES"
-  }],
-  "hasMore": false,
+  },
   "leaseUntilMillis": 1784100035000
 }</pre></div>
-              <div class="exchange-state warning">한 응답에 최대 10개를 줍니다. <code>hasMore=true</code>면 Farad가 기다리지 않고 다음 poll을 열어 나머지를 받습니다.</div>
+              <div class="exchange-state warning">한 응답에는 command 1개만 줍니다. Farad가 result를 제출한 뒤 다음 poll을 열면 SQLite queue의 다음 command를 받습니다.</div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">17</span><span class="exchange-from">Farad</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
@@ -1057,18 +1137,58 @@ COMMIT</pre></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">24</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
-              <div class="exchange-message"><b>실행 요청과 버튼 소모를 원자적으로 커밋</b><pre>actionToken ACTIVE → CONSUMED
+              <div class="exchange-message"><b>실행 확인 상태만 만들고 아직 command는 만들지 않음</b><pre>schedule item actionToken: ACTIVE → CONSUMED
+confirmation:
+  confirmRef = "confirm_52"
+  viewId = "view_42"
+  itemToken = "item_a9"
+  state = "WAITING"
+action routes:
+  act_run_confirm → confirm_52 / CONFIRM
+  act_run_cancel  → confirm_52 / CANCEL
+delivery = "RUN_CONFIRM_CARD_UPDATE"
+COMMIT</pre></div>
+              <div class="exchange-state atomic">Schedule 항목을 고른 것과 실제 실행 승인을 분리합니다. 이 단계에서는 Farad로 갈 command가 없습니다.</div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">25</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
+              <div class="exchange-message"><b>새 메시지 없이 같은 카드를 실행 확인 화면으로 갱신</b><pre>UpdateMessageRequest
+  chatroomId = 193802984023
+  msgKey = 12393024
+  msgType = 20
+
+카드 본문:
+  야간 검증
+  정말 실행할까요?
+
+카드 actions:
+  [실행하기] → act_run_confirm
+  [취소]     → act_run_cancel
+  [뒤로] [홈으로]</pre><p>대화 내역에는 카드 하나만 남고 그 카드의 현재 내용만 확인 화면으로 바뀝니다.</p></div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">25a</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Messenger</span>
+              <div class="exchange-message"><b>같은 카드에서 “실행하기” 클릭</b><p>“취소”를 누르면 confirm state를 CANCELED로 바꾸고 같은 카드를 Schedule 목록으로 되돌립니다. RUN_SCHEDULE command는 만들지 않습니다.</p></div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">25b</span><span class="exchange-from">Messenger RP</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+              <div class="exchange-message"><b>실행 확인 actionToken webhook</b><p>Relay는 sender·chatroom·confirmRef·TTL·WAITING 상태를 검증합니다.</p></div>
+            </div>
+            <div class="exchange-row">
+              <span class="exchange-no">25c</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
+              <div class="exchange-message"><b>승인과 RUN_SCHEDULE command를 원자적으로 커밋</b><pre>confirmation confirm_52: WAITING → CONFIRMED
+act_run_confirm, act_run_cancel → CONSUMED
 command 102:
   kind = "RUN_SCHEDULE"
   payload = {"viewId":"view_42","itemToken":"item_a9"}
   status = "PENDING"
 delivery = "STARTING_CARD_UPDATE"
 COMMIT</pre></div>
-              <div class="exchange-state atomic">중복 클릭·RP 재전송이 와도 새 command를 만들지 않습니다.</div>
+              <div class="exchange-state atomic">중복 클릭·RP 재전송이 와도 command 102는 한 번만 생성됩니다.</div>
             </div>
             <div class="exchange-row">
-              <span class="exchange-no">25</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
-              <div class="exchange-message"><b>실행 버튼을 즉시 제거</b><p>같은 카드를 “야간 검증 · 시작 요청 중”으로 갱신합니다. 뒤로·홈 유틸리티 버튼은 새 actionToken으로 유지합니다.</p></div>
+              <span class="exchange-no">25d</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
+              <div class="exchange-message"><b>같은 카드를 “시작 요청 중”으로 갱신</b><p>실행·취소 버튼은 제거하고 뒤로·홈만 유지합니다. 카드 update가 실패해도 승인 token은 이미 소모되어 재실행되지 않습니다.</p></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">26</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
@@ -1103,7 +1223,7 @@ COMMIT</pre></div>
               <div class="exchange-message"><b>“실행 시작” 카드 갱신</b><p>Relay는 result·runRef·cardRef를 SQLite에 먼저 커밋하고, 그 뒤 저장된 msgKey로 카드를 갱신합니다.</p></div>
             </div>
           </div>
-          <div class="state-flow"><b>RUN_SCHEDULE PENDING</b><span>→</span><b>Farad single-flight 검사</b><span>→</span><b>ACCEPTED / ALREADY_RUNNING</b></div>
+          <div class="state-flow"><b>Schedule 선택</b><span>→</span><b>같은 카드에서 실행 확인</b><span>→</span><b>RUN_SCHEDULE PENDING</b><span>→</span><b>Farad single-flight 검사</b><span>→</span><b>ACCEPTED / ALREADY_RUNNING</b></div>
         </article>
 
         <article class="protocol-phase">
@@ -1222,12 +1342,23 @@ COMMIT</pre></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">44</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
-              <div class="exchange-message"><b>선택 버튼 즉시 제거</b><p>저장된 msgKey로 “다시 하기를 선택했어요 · 처리 중” 카드로 갱신하고, RETRY/STOP/TRY_DIFFERENTLY 버튼을 모두 없앱니다. 뒤로·홈만 새 token으로 남깁니다.</p></div>
+              <div class="exchange-message"><b>기존 카드는 유지하고 선택지만 비활성 표시로 교체</b><p>저장된 msgKey로 같은 카드 본문을 그대로 갱신합니다. Adaptive Card 1.3에는 실제 disabled action이 없으므로 선택용 <code>Action.Submit</code>은 모두 제거합니다.</p><pre>"body": [
+  ...기존 본문 그대로...,
+  {"type":"Container","style":"emphasis","items":[
+    {"type":"TextBlock","text":"✓ 다시 하기 · 선택됨","weight":"Bolder"}
+  ]},
+  {"type":"TextBlock","text":"그만하기","isSubtle":true},
+  {"type":"TextBlock","text":"다르게 시도하기","isSubtle":true}
+],
+"actions": [
+  {"type":"Action.Submit","title":"뒤로","data":{"actionToken":"act_back_new"}},
+  {"type":"Action.Submit","title":"홈으로","data":{"actionToken":"act_home_new"}}
+]</pre><p>선택지는 내역에 남지만 클릭할 수 없습니다. 뒤로·홈만 새 token을 가진 실제 버튼으로 유지합니다.</p></div>
             </div>
             <div class="exchange-row">
               <span class="exchange-no">45</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
               <div class="exchange-message"><b>Long Poll로 선택 전달</b><pre>{
-  "commands": [{
+  "command": {
     "commandId": 103,
     "kind": "REMOTE_CHOICE",
     "payload": {
@@ -1235,8 +1366,7 @@ COMMIT</pre></div>
       "interactionId": "choice_19",
       "choice": "RETRY"
     }
-  }],
-  "hasMore": false
+  }
 }</pre></div>
             </div>
             <div class="exchange-row">
