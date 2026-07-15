@@ -467,6 +467,61 @@
 
     .token-table th { width: 29%; color: var(--ink); }
 
+    .multi-user-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .user-case {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--blue);
+      border-radius: 8px;
+      background: #fcfcfb;
+    }
+
+    .user-case.offline { border-top-color: var(--amber); }
+    .user-case h3 { margin: 0 0 4px; font-size: 16px; }
+    .user-case > p { margin-bottom: 13px; color: var(--muted); font-size: 12px; }
+    .user-case dl { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 5px 8px; margin: 0; font-size: 12px; }
+    .user-case dt { color: var(--muted); }
+    .user-case dd { min-width: 0; margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+
+    .table-scroll {
+      max-width: 100%;
+      margin: 20px 0 28px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .table-scroll .queue { min-width: 720px; margin: 0; }
+    .table-scroll .queue th, .table-scroll .queue td { padding: 11px 12px; }
+
+    .schema-table td:first-child {
+      color: var(--ink);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .schema-map {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 24px 0;
+    }
+
+    .schema-map div {
+      padding: 15px;
+      border-top: 1px solid var(--line-strong);
+      background: #fcfcfb;
+    }
+
+    .schema-map b { display: block; margin-bottom: 3px; color: var(--ink); font-size: 13px; }
+    .schema-map span { color: var(--muted); font-size: 12px; }
+
     .decision {
       padding: 25px;
       border: 1px solid var(--line-strong);
@@ -685,6 +740,7 @@
       h2 { font-size: 23px; }
       .lead { font-size: 17px; }
       .answer, .ownership, .result-rule, .implementation { grid-template-columns: 1fr; }
+      .multi-user-grid, .schema-map { grid-template-columns: 1fr; }
       .answer > div + div { border-left: 0; border-top: 1px solid var(--line); }
       .topology { grid-template-columns: 1fr; gap: 8px; }
       .arrow { transform: rotate(90deg); }
@@ -693,6 +749,7 @@
       .clicks { flex-wrap: wrap; }
       .queue { font-size: 12px; }
       .queue th:nth-child(2), .queue td:nth-child(2) { display: none; }
+      .table-scroll .queue th:nth-child(2), .table-scroll .queue td:nth-child(2) { display: table-cell; }
       .run-chart { padding: 18px 14px; }
       .run-chart .axis { grid-template-columns: 82px repeat(6, 1fr); }
       .track { grid-template-columns: 82px minmax(0, 1fr); }
@@ -715,6 +772,8 @@
       <a href="#connect">최초 연결</a>
       <a href="#restart">재시작</a>
       <a href="#runtime">Farad 두 개 실행</a>
+      <a href="#multi-user">여러 사용자</a>
+      <a href="#database">SQLite 테이블</a>
       <a href="#wire">상세 메시지 흐름</a>
       <a href="#two-jobs">A 다음 B 실행</a>
       <a href="#same-job">A를 두 번 실행</a>
@@ -854,6 +913,119 @@ Authorization: Bearer &lt;같은 Farad client token&gt;
         <div class="state-flow"><b>command 1 전달</b><span>→</span><b>Farad 처리</b><span>→</span><b>result commit = ACK</b><span>→</span><b>다음 command 1 전달</b></div>
       </section>
 
+      <section id="multi-user">
+        <div class="scenario-head"><span class="scenario-no">MULTI-USER</span><h2>세 사람이 동시에 눌러도 각자의 Farad로만 간다</h2></div>
+        <p class="section-intro">Relay는 사용자별 SQLite 파일을 만들지 않습니다. VM 로컬 SQLite 하나에서 모든 행을 <code>client_id</code>로 나누고, 메신저의 바깥 envelope에 있는 <code>sender + chatroomId</code>가 그 client binding과 일치할 때만 버튼을 처리합니다.</p>
+
+        <div class="multi-user-grid" aria-label="세 사용자 연결 상태 예시">
+          <article class="user-case">
+            <h3>사용자 가 · online</h3>
+            <p>Schedule 목록을 조회하는 중</p>
+            <dl>
+              <dt>client</dt><dd><code>client_A</code></dd>
+              <dt>sender/room</dt><dd><code>11001 / 51001</code></dd>
+              <dt>runtime</dt><dd><code>runtime_A · gen 3</code></dd>
+              <dt>공개 별칭</dt><dd><code>예약 작업 01</code></dd>
+            </dl>
+          </article>
+          <article class="user-case">
+            <h3>사용자 나 · online</h3>
+            <p>자신의 Schedule을 실행하는 중</p>
+            <dl>
+              <dt>client</dt><dd><code>client_B</code></dd>
+              <dt>sender/room</dt><dd><code>11002 / 51002</code></dd>
+              <dt>runtime</dt><dd><code>runtime_B · gen 8</code></dd>
+              <dt>공개 별칭</dt><dd><code>예약 작업 01</code></dd>
+            </dl>
+          </article>
+          <article class="user-case offline">
+            <h3>사용자 다 · offline</h3>
+            <p>Farad가 꺼진 뒤, 전에 받은 유효한 카드에서 버튼을 누름</p>
+            <dl>
+              <dt>client</dt><dd><code>client_C</code></dd>
+              <dt>sender/room</dt><dd><code>11003 / 51003</code></dd>
+              <dt>runtime</dt><dd>활성 lease 없음</dd>
+              <dt>공개 별칭</dt><dd><code>예약 작업 01</code></dd>
+            </dl>
+          </article>
+        </div>
+
+        <div class="note">세 사람이 모두 <code>예약 작업 01</code>을 써도 괜찮습니다. 별칭 중복 금지는 전체 Relay가 아니라 한 <code>client_id</code> 안에서만 적용합니다. 별칭은 표시용이고, 실제 routing은 opaque <code>itemToken</code>과 <code>client_id</code>로 결정합니다.</div>
+
+        <h3>거의 동시에 세 번 클릭한 경우</h3>
+        <div class="table-scroll">
+          <table class="queue" aria-label="다중 사용자 동시 클릭 처리 예시">
+            <thead><tr><th>시각</th><th>사용자 동작</th><th>SQLite에 생기는 일</th><th>결과</th></tr></thead>
+            <tbody>
+              <tr><td>10:00:00</td><td>가: 예약 작업 조회</td><td><code>command 701 / client_A / LIST_SCHEDULES</code></td><td>A의 Long Poll만 가져감</td></tr>
+              <tr><td>10:00:01</td><td>나: 예약 작업 01 실행</td><td><code>command 702 / client_B / RUN_SCHEDULE</code></td><td>B의 Long Poll만 가져감</td></tr>
+              <tr><td>10:00:02</td><td>다: 예약 작업 01 실행</td><td><code>command 703 / client_C / RUN_SCHEDULE</code></td><td><span class="status wait">pending</span> offline queue에 유지</td></tr>
+              <tr><td>10:00:03</td><td>가: 목록 result 제출</td><td><code>701 LEASED → COMPLETED</code></td><td>A의 방 51001에만 목록 카드</td></tr>
+              <tr><td>10:00:04</td><td>나: 실행 시작 event</td><td><code>runRef_B7 / card_B</code></td><td>B의 방 51002에만 진행 카드</td></tr>
+              <tr><td>10:05:00</td><td>다: Farad 재연결</td><td><code>runtime_C / generation 2</code> lease</td><td>C가 command 703을 받아 실행</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="result-rule">
+          <div><b>Long Poll 격리</b><span>Bearer client token으로 찾은 <code>client_id</code>와 현재 generation을 조건에 넣습니다. A는 B·C의 command를 조회할 수 없습니다.</span></div>
+          <div><b>카드 클릭 격리</b><span><code>actionToken</code>만 맞아도 처리하지 않습니다. 외부 envelope의 sender·room이 route에 저장된 binding과 모두 같아야 합니다.</span></div>
+        </div>
+      </section>
+
+      <section id="database">
+        <div class="scenario-head"><span class="scenario-no">SQLITE AUTHORITY</span><h2>한 DB에서 client_id가 사용자 경계가 된다</h2></div>
+        <p class="section-intro">현재 코드에 구현된 테이블과 앞으로 필요한 테이블을 구분합니다. 지금의 Relay schema version 1은 수신 중복 제거와 HOME outbox까지만 담당하며, pairing·Long Poll 단계에서 아래 제안 테이블을 schema version 2로 추가하는 구조가 자연스럽습니다.</p>
+
+        <div class="contract-key">
+          <span><span class="contract-tag confirmed">현재 구현</span> <code>packages/farad-relay/farad_relay/store.py</code>에 존재</span>
+          <span><span class="contract-tag proposed">제안 스키마</span> pairing·Long Poll·Run now 구현 시 추가</span>
+        </div>
+
+        <div class="table-scroll">
+          <table class="queue schema-table" aria-label="Relay SQLite 테이블 설계">
+            <thead><tr><th>테이블</th><th>상태</th><th>주요 열</th><th>한 가지 핵심 규칙</th></tr></thead>
+            <tbody>
+              <tr><td>inbound_events</td><td><span class="status run">현재 구현</span></td><td>event_id, room_id, sender_id, kind, action_token, state</td><td><code>event_id</code> 중복은 200 no-op, 다른 routing 재사용은 충돌</td></tr>
+              <tr><td>deliveries</td><td><span class="status run">현재 구현</span></td><td>delivery_id, source_event_id, room_id, kind, state, lease</td><td>HOME outbox를 bounded batch로 claim하고 실패 시 다시 pending</td></tr>
+              <tr><td>client_installations</td><td><span class="status wait">제안</span></td><td>client_id, token_hash, state, created_at_ms, activated_at_ms</td><td>client token 원문은 저장하지 않고 hash만 UNIQUE</td></tr>
+              <tr><td>messenger_bindings</td><td><span class="status wait">제안</span></td><td>client_id, sender_id, room_id, knox_id, state</td><td><code>client_id</code>와 <code>(sender_id, room_id)</code> 모두 한 active binding만 허용</td></tr>
+              <tr><td>runtime_leases</td><td><span class="status wait">제안</span></td><td>client_id, runtime_id, generation, lease_until_ms</td><td><code>client_id</code>가 PK라 한 사용자에 활성 runtime 하나</td></tr>
+              <tr><td>schedule_items</td><td><span class="status wait">제안</span></td><td>client_id, view_id, item_token, remote_display_name, state_keyword, expires_at_ms</td><td>실제 Schedule ID·이름 없이 한 목록 view의 안전한 projection만 보관</td></tr>
+              <tr><td>action_routes</td><td><span class="status wait">제안</span></td><td>token_hash, client_id, sender_id, room_id, kind, item_token, state, expires_at_ms</td><td>token + sender + room + client가 모두 맞아야 ACTIVE → CONSUMED</td></tr>
+              <tr><td>commands</td><td><span class="status wait">제안</span></td><td>command_id, client_id, kind, item_token, interaction_id, choice_keyword, state, generation, lease</td><td><code>(client_id, state, available_at_ms)</code> index로 자기 queue에서 1개만 claim</td></tr>
+              <tr><td>command_results</td><td><span class="status wait">제안</span></td><td>command_id, outcome_keyword, run_ref, result_hash, completed_at_ms</td><td>같은 command result 재전송은 동일 hash일 때 idempotent</td></tr>
+              <tr><td>interactions</td><td><span class="status wait">제안</span></td><td>interaction_id, client_id, run_ref, prompt_keyword, selected_choice, state, expires_at_ms</td><td>WAITING에서 선택 하나만 원자적으로 SELECTED</td></tr>
+              <tr><td>message_cards</td><td><span class="status wait">제안</span></td><td>card_ref, client_id, room_id, msg_id, msg_key, kind, state</td><td>UpdateMessageRequest가 정확히 자기 방의 기존 카드만 갱신</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="schema-map" aria-label="테이블 관계 요약">
+          <div><b>client_installations 1 → 1 messenger_bindings</b><span>설치 credential과 메신저 사용자·방 연결을 분리합니다.</span></div>
+          <div><b>client_installations 1 → 0..1 runtime_leases</b><span>offline 사용자는 binding은 있지만 활성 runtime 행이 없거나 만료됩니다.</span></div>
+          <div><b>client_installations 1 → N commands</b><span>각 command는 생성 순간부터 한 client에 귀속됩니다.</span></div>
+          <div><b>schedule_items 1 → N action_routes</b><span>목록 카드의 각 버튼은 짧은 수명의 route를 따로 가집니다.</span></div>
+          <div><b>commands 1 → 0..1 command_results</b><span>result commit이 ACK이고 중복 제출을 흡수합니다.</span></div>
+          <div><b>interactions 1 → N action_routes</b><span>선택지는 여러 개여도 한 interaction에서는 하나만 소비됩니다.</span></div>
+        </div>
+
+        <h3>위 세 사용자 예시가 DB에 보이는 모습</h3>
+        <div class="table-scroll">
+          <table class="queue" aria-label="다중 사용자 SQLite 샘플 행">
+            <thead><tr><th>client_id</th><th>binding</th><th>runtime lease</th><th>command queue</th></tr></thead>
+            <tbody>
+              <tr><td><code>client_A</code></td><td><code>11001 / 51001</code></td><td><code>runtime_A / gen 3 / ACTIVE</code></td><td><code>701 LIST_SCHEDULES / COMPLETED</code></td></tr>
+              <tr><td><code>client_B</code></td><td><code>11002 / 51002</code></td><td><code>runtime_B / gen 8 / ACTIVE</code></td><td><code>702 RUN_SCHEDULE / COMPLETED</code></td></tr>
+              <tr><td><code>client_C</code></td><td><code>11003 / 51003</code></td><td>없음 → 재연결 후 <code>gen 2</code></td><td><code>703 RUN_SCHEDULE / PENDING</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="decision"><b>사용자별 DB 파일은 만들지 않는다</b>중앙 VM 로컬 SQLite 하나에 두고, 모든 future hot query는 <code>client_id</code>가 선두인 index로 제한합니다. DB가 10,000명·명령 10,000건 이상으로 커져도 Long Poll은 전체 table을 훑지 않고 자기 client의 due command 1개만 찾습니다.</div>
+        <div class="note"><b>DB에 두지 않는 것:</b> Messenger API token, AES key·IV, raw Farad client token, 실제 Schedule 이름·ID, prompt, 경로, transcript, 자유 텍스트 <code>chatMsg</code>. Knox ID와 숫자형 sender·room은 binding에 필요하고 승인된 공개 별칭은 표시에 필요하므로 저장하되, 일반 로그에는 노출하지 않고 Relay VM 접근 권한으로 보호합니다.</div>
+      </section>
+
       <section id="wire">
         <div class="scenario-head"><span class="scenario-no">FULL WIRE TRACE</span><h2>처음 연결부터 답장 선택까지, 실제 왕복</h2></div>
         <p class="section-intro">아래는 한 사용자가 Farad를 연결하고, Schedule 목록을 열고, 하나를 실행한 뒤 “시뮬레이션 실패” 카드에서 “다시 하기”를 선택하는 전체 흐름입니다. 메신저가 제공한 API는 확정 계약으로, 아직 구현할 Farad–Relay API는 제안 계약으로 표시했습니다.</p>
@@ -899,12 +1071,16 @@ Content-Type: application/json
             </div>
             <div class="exchange-row">
               <span class="exchange-no">04</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
-              <div class="exchange-message"><b>연결 대기 상태 커밋</b><pre>clients:
+              <div class="exchange-message"><b>연결 대기 상태 커밋</b><pre>client_installations:
+  client_id = "client_A"
   token_hash = HASH(clientToken)
+  state = "PENDING"
+messenger_bindings:
+  client_id = "client_A"
   knox_id = "user.knox.id"
-  status = "PENDING"
-  messenger_user_id = NULL
-  chatroom_id = NULL</pre></div>
+  sender_id = NULL
+  room_id = NULL
+  state = "PENDING"</pre></div>
               <div class="exchange-state atomic">DB commit이 성공한 뒤에만 등록 API에 성공을 반환합니다.</div>
             </div>
             <div class="exchange-row">
@@ -940,11 +1116,12 @@ AES-256-CBC → Base64 body
             </div>
             <div class="exchange-row">
               <span class="exchange-no">08</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
-              <div class="exchange-message"><b>신원 후보 연결과 확인 카드 발송을 예약</b><pre>inbound_messages(msg_id=23234)      -- dedupe
-clients: status = PENDING 유지
-  messenger_user_id = 189473292
-  chatroom_id = 193802984023
-deliveries(kind="CONNECTION_CONFIRM_CARD", status="PENDING")</pre></div>
+              <div class="exchange-message"><b>신원 후보 연결과 확인 카드 발송을 예약</b><pre>inbound_events(event_id="23234")      -- dedupe
+messenger_bindings(client_id="client_A"):
+  sender_id = 189473292
+  room_id = 193802984023
+  state = "PENDING"
+deliveries(kind="CONNECTION_CONFIRM_CARD", state="PENDING")</pre></div>
               <div class="exchange-state atomic">INTRO만으로 ACTIVE가 되지 않습니다. 이 변경이 커밋된 뒤 Relay가 Messenger에 <code>HTTP 200 OK</code>를 반환합니다.</div>
             </div>
             <div class="exchange-row">
@@ -989,10 +1166,11 @@ Accept: text/plain
             </div>
             <div class="exchange-row">
               <span class="exchange-no">11b</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
-              <div class="exchange-message"><b>사용자 승인과 활성화를 한 transaction으로 커밋</b><pre>act_connect_x7: ACTIVE → CONSUMED
-clients: PENDING → ACTIVE
-commands(kind="CLIENT_ACTIVATED", status="PENDING")
-deliveries(kind="HOME_CARD_UPDATE", status="PENDING")
+              <div class="exchange-message"><b>사용자 승인과 활성화를 한 transaction으로 커밋</b><pre>action_routes(HASH(act_connect_x7)): ACTIVE → CONSUMED
+client_installations(client_A): PENDING → ACTIVE
+messenger_bindings(client_A): PENDING → ACTIVE
+commands(client_A, kind="CLIENT_ACTIVATED", state="PENDING")
+deliveries(client_A, kind="HOME_CARD_UPDATE", state="PENDING")
 COMMIT</pre></div>
               <div class="exchange-state atomic">승인 actionToken과 ACTIVE 전환이 함께 커밋되므로 중복 클릭으로 두 연결이 생기지 않습니다.</div>
             </div>
