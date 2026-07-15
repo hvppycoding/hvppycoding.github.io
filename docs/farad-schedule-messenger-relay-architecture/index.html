@@ -586,21 +586,21 @@
 
       <section id="connect">
         <div class="scenario-head"><span class="scenario-no">SCENARIO 01</span><h2>처음 한 번만 연결한다</h2></div>
-        <p class="section-intro">공용 매핑 파일은 인증 수단이 아니라 “내 Knox ID를 찾는 주소록”입니다. Linux ID는 Farad 안에서 조회에만 쓰고 Relay에는 보내지 않습니다.</p>
+        <p class="section-intro">공용 매핑 파일이나 Linux ID 전달은 필요 없습니다. Farad가 관리 명령을 한 번 실행해 현재 사용자의 Knox ID를 직접 얻습니다.</p>
         <ol class="sequence">
-          <li><span class="actor">Farad</span><div class="step-copy"><b>현재 Linux 계정으로 공용 매핑 파일 조회</b><span>자기 행의 <code>senderKnoxId</code> 한 건만 읽고 전체 파일은 보관하지 않습니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b><code>/appl/LINUX/Hyper/utils/singleid</code> 실행</b><span>인자와 shell 없이 실행하고 stdout 한 줄을 <code>senderKnoxId</code>로 검증합니다.</span></div></li>
           <li><span class="actor">Farad</span><div class="step-copy"><b>256비트 이상의 client token 생성</b><span>원문은 로컬 보호 파일에 저장합니다.</span></div></li>
           <li><span class="actor">Relay</span><div class="step-copy"><b><code>{knoxId, token}</code> 등록을 pending으로 저장</b><span>token 원문 대신 hash를 저장합니다.</span></div></li>
           <li><span class="actor">사용자</span><div class="step-copy"><b>메신저 봇을 열거나 말을 건다</b><span>Relay가 수신 envelope의 공식 <code>senderKnoxId</code>를 확인합니다.</span></div></li>
           <li><span class="actor">Relay</span><div class="step-copy"><b>pending Knox ID가 일치하면 active 전환</b><span>메신저 <code>userId</code>와 <code>chatroomId</code>도 같은 client에 연결합니다.</span></div></li>
         </ol>
-        <div class="note">공용 파일을 읽을 수 있다는 사실만으로는 본인 증명이 되지 않습니다. 마지막 메신저 확인 단계가 “이 Knox 계정을 실제로 사용하는 사람”임을 확인합니다.</div>
+        <div class="note"><code>singleid</code> 결과는 Farad state나 transcript에 저장하지 않습니다. 마지막 메신저 확인 단계가 “이 Knox 계정을 실제로 사용하는 사람”임을 확인하고, 이후 binding은 Relay가 기억합니다.</div>
       </section>
 
       <section id="restart">
         <div class="scenario-head"><span class="scenario-no">SCENARIO 02</span><h2>Farad를 껐다 켜도 다시 매핑하지 않는다</h2></div>
         <ol class="sequence">
-          <li><span class="actor">Farad</span><div class="step-copy"><b>로컬 보호 파일에서 client token 읽기</b><span>공용 매핑 파일과 Linux ID는 다시 보지 않습니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>로컬 보호 파일에서 client token 읽기</b><span><code>singleid</code> 명령은 다시 실행하지 않습니다.</span></div></li>
           <li><span class="actor">Farad</span><div class="step-copy"><b>Bearer token으로 Relay Long Poll 시작</b><span><code>GET /commands?waitSeconds=25</code></span></div></li>
           <li><span class="actor">Relay</span><div class="step-copy"><b>token hash로 active client 조회</b><span>저장된 Knox ID, messenger userId, chatroomId를 사용합니다.</span></div></li>
           <li><span class="actor">Relay</span><div class="step-copy"><b>대기 명령 또는 빈 응답 반환</b><span>Farad는 응답 직후 다음 Long Poll을 엽니다.</span></div></li>
@@ -727,7 +727,7 @@
           <div>
             <h3>Relay에 넣지 않을 것</h3>
             <ul class="plain">
-              <li>Linux ID와 공용 매핑 파일</li>
+              <li>Linux ID와 <code>singleid</code> 실행 결과</li>
               <li>Schedule 정의·prompt·경로</li>
               <li>LLM 판단과 transcript</li>
               <li>실행 가능 여부와 single-flight</li>
