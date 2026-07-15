@@ -309,6 +309,7 @@
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
+    .flow-grid.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     .flow-item { position: relative; padding: 18px 18px 18px 0; }
     .flow-item:not(:last-child)::after {
       content: "→";
@@ -422,6 +423,7 @@
       .toc { grid-template-columns: 1fr 1fr; }
       .summary-list li { grid-template-columns: 1fr; gap: 5px; }
       .flow-grid { grid-template-columns: 1fr; }
+      .flow-grid.five { grid-template-columns: 1fr; }
       .flow-item { padding-right: 0; border-bottom: 1px solid var(--divider); }
       .flow-item:last-child { border-bottom: 0; }
       .flow-item:not(:last-child)::after { content: "↓"; top: auto; right: auto; left: 0; bottom: -13px; background: var(--page); padding: 0 6px; }
@@ -481,7 +483,7 @@
         <span>독자: Farad 개발자 · 중앙 VM/메신저 API 담당자</span>
         <span>설계 기준일: 2026-07-15</span>
         <span>현재 단계: 구현 전 아키텍처 합의</span>
-        <span>문서 revision: v0.3</span>
+        <span>문서 revision: v0.4</span>
       </div>
       <div class="status-key" aria-label="문서 상태 표기">
         <span class="tag confirmed">확정 · 현재 합의</span>
@@ -505,10 +507,10 @@
       <div class="section-title"><span class="section-number mono">01</span><h2>한 문장으로 이해하는 시스템</h2></div>
       <div class="thesis"><strong>메신저는 화면과 버튼만 제공하고, 중앙 VM은 안전한 배달과 API 변환을 담당하며, 실제 Schedule 목록·실행·LLM 판단의 권위는 각 사용자 호스트의 Farad에 남습니다.</strong></div>
       <ul class="summary-list">
-        <li><b>첫 화면</b><span><code>📊 LLM 사용량 조회</code>와 <code>🗓️ Farad 예약 작업 조회</code>를 보여 줍니다. 사용량 카드는 Farad 연결 없이 Relay가 제공합니다.</span></li>
+        <li><b>첫 화면</b><span>사용자가 1:1 대화방에 말을 걸면 Relay가 <code>POST /message</code>를 받아 <code>📊 LLM 사용량 조회</code>와 <code>🗓️ Farad 예약 작업 조회</code>를 보여 줍니다.</span></li>
         <li><b>사용자가 하는 일</b><span>메신저에서 검수된 별칭으로 표시된 원격 허용 Schedule을 고른 뒤 확인하여 실행합니다.</span></li>
         <li><b>Farad가 하는 일</b><span>최신 Schedule 목록을 안전한 표식으로 투영하고, 선택을 재검증한 뒤 기존 <code>Run now</code> 경로로 실행합니다.</span></li>
-        <li><b>중앙 VM이 하는 일</b><span>메신저 API와 통신할 수 있는 유일한 Relay로서 callback, command, ACK, 카드 ID와 일회용 토큰을 SQLite에 보관합니다.</span></li>
+        <li><b>중앙 VM이 하는 일</b><span>메신저의 inbound <code>POST /message</code>를 수신하고, outbound API를 호출하는 유일한 Relay로서 command, ACK, 카드 ID와 일회용 토큰을 SQLite에 보관합니다.</span></li>
         <li><b>LLM이 보내는 내용</b><span>자유 텍스트가 아니라 상태·행동·전략 키워드만 보냅니다. 추천 전략은 v1에서 최대 1개이며 Relay가 검수된 문구와 고정 이모지로 렌더링합니다.</span></li>
         <li><b>동시 실행 규칙</b><span>같은 Schedule은 한 번에 하나만 실행합니다. 서로 다른 Schedule은 동시에 실행할 수 있습니다.</span></li>
       </ul>
@@ -518,7 +520,7 @@
         <table>
           <thead><tr><th>기능</th><th>v1 동작</th><th>경계</th></tr></thead>
           <tbody>
-            <tr><td>홈</td><td>LLM 사용량 조회 / Farad 예약 작업 조회</td><td>사용량은 Relay-only, Schedule 영역부터 Farad 연결 필요</td></tr>
+            <tr><td>홈</td><td>사용자의 inbound 메시지 → LLM 사용량 조회 / Farad 예약 작업 조회</td><td>메시지 본문은 해석·저장·전달하지 않고 홈 열기 신호로만 사용</td></tr>
             <tr><td>목록</td><td>원격 허용 Schedule을 페이지 단위로 조회</td><td>실제 이름·prompt·경로 대신 검수된 안전한 별칭과 상태만 표시</td></tr>
             <tr><td>실행</td><td>선택 → 확인 → 기존 Run now 실행</td><td>동일 Schedule 중복 실행 거절, 다른 Schedule은 허용</td></tr>
             <tr><td>진행 보고</td><td>Schedule의 LLM이 상태 키워드 전송</td><td>자유 문자열, 파일명, 경로, 원문 결과 전송 금지</td></tr>
@@ -562,7 +564,7 @@
           <rect x="438" y="132" width="232" height="122" rx="9" fill="var(--raised)" stroke="var(--border)"/>
           <text x="460" y="164" fill="var(--text)" font-size="16" font-weight="600">Relay API</text>
           <text x="460" y="188" fill="var(--text-2)" font-size="13">홈 · LLM 사용량 · navigation</text>
-          <text x="460" y="211" fill="var(--text-2)" font-size="13">pairing · Long Poll · callback</text>
+          <text x="460" y="211" fill="var(--text-2)" font-size="13">inbound /message · pairing · Long Poll</text>
           <text x="460" y="234" fill="var(--muted)" font-size="12">card renderer · keyword validation</text>
           <rect x="438" y="282" width="232" height="110" rx="9" fill="var(--inset)" stroke="var(--border)"/>
           <text x="460" y="314" fill="var(--text)" font-size="16" font-weight="600">VM 로컬 SQLite WAL</text>
@@ -584,7 +586,7 @@
           <line x1="670" y1="205" x2="798" y2="205" stroke="var(--muted)" stroke-width="2" marker-end="url(#arrow)"/>
           <line x1="798" y1="239" x2="670" y2="239" stroke="var(--muted)" stroke-width="2" marker-end="url(#arrow)"/>
           <text x="711" y="193" fill="var(--text-2)" font-size="12">사내 API</text>
-          <text x="716" y="258" fill="var(--text-2)" font-size="12">POST /message</text>
+          <text x="734" y="258" fill="var(--text-2)" font-size="11" text-anchor="middle">POST /message · 사용자 입력</text>
         </svg>
         <figcaption>Relay는 업무 데이터베이스가 아니라 배달·변환 계층입니다. 전체 Schedule과 실행 결과의 정본은 Farad에 남습니다.</figcaption>
       </figure>
@@ -599,7 +601,7 @@
             <tr><td>홈 navigation과 LLM 사용량 카드</td><td>Relay application service</td><td>보관</td></tr>
             <tr><td>활성 keyword vocabulary</td><td>Relay 운영 정책</td><td>정본과 버전 보관</td></tr>
             <tr><td>LLM이 사용 가능한 keyword snapshot</td><td>Farad가 동기화한 vocabulary snapshot</td><td>vocabulary version으로 대조</td></tr>
-            <tr><td>메신저 chatroomId, msgKey, callback dedupe</td><td>Relay SQLite</td><td>보관</td></tr>
+            <tr><td>inbound event ID, chatroomId, msgKey, action dedupe</td><td>Relay SQLite</td><td>본문 없이 식별자·처리 상태만 보관</td></tr>
             <tr><td>실행 transcript와 도구 결과</td><td>Farad session</td><td>보관하지 않음</td></tr>
           </tbody>
         </table>
@@ -611,8 +613,16 @@
     <section id="flows">
       <div class="section-title"><span class="section-number mono">03</span><h2>사용자 경험을 만드는 다섯 가지 시퀀스</h2></div>
 
-      <h3>1. 홈 메뉴와 인증 범위</h3>
-      <p>대화방의 첫 카드는 기능을 두 갈래로 나눕니다. 사용량 조회는 Relay가 직접 처리하고, Schedule 영역에서만 Farad 연결 상태를 확인합니다.</p>
+      <h3>1. 사용자가 말을 걸면 홈 메뉴로 응답</h3>
+      <p>중앙 VM의 Relay가 <code>http://{연계서버IP:port}/message</code>에서 메신저 RP 서버의 POST를 기다립니다. 사용자가 1:1 대화방에 메시지를 보내면 Relay는 방·발신자·event 식별 정보를 확인하고 홈 카드 전송 의도를 SQLite에 기록한 뒤 HTTP 200을 반환합니다. 실제 카드는 HTTP 응답 body가 아니라 메신저 <code>ChatRequest</code>로 보냅니다.</p>
+      <pre>사용자  → 메신저 RP   "안녕" 또는 임의 메시지
+메신저 RP → Relay     POST http://{연계서버IP:port}/message
+                         { roomInfo, senderInfo, eventId, messageType, ... }
+Relay   → SQLite      inbound dedupe + HOME delivery intent 원자 기록
+Relay   → 메신저 RP   HTTP 200 OK
+Relay   → 메신저 API  ChatRequest(home Adaptive Card)
+메신저  → 사용자      [📊 LLM 사용량 조회] [🗓️ Farad 예약 작업 조회]</pre>
+      <div class="decision"><strong>자유 텍스트 처리 원칙</strong> v1은 사용자가 쓴 문장을 명령이나 prompt로 해석하지 않습니다. 내용은 로그·SQLite·Farad·LLM으로 전달하지 않고 “홈을 열어 달라”는 신호로만 사용합니다. 카드 버튼 응답은 같은 endpoint에서 별도의 action event로 분기합니다.</div>
       <div class="card-preview" aria-label="메신저 홈 카드 예시">
         <strong>Farad</strong>
         <span>원하는 기능을 선택해 주세요.</span>
@@ -647,14 +657,14 @@ route = action_routes.consume(action_token, sender, chatroom_id)
 if route.scope is ActionScope.RELAY_ONLY:
     return relay_menu_service.handle(route)
 return farad_command_service.enqueue(route)</pre>
-      <div class="note"><strong>첫 화면을 언제 보내나?</strong> 메신저에 공식 대화방 열기 callback이 있으면 그 이벤트를 사용합니다. 제공된 명세에는 해당 이벤트가 없으므로, 없을 때는 1:1 방 생성 직후 홈 카드를 보내고 고정 <code>/start</code> 입력을 복구 경로로 둡니다. 정확한 이벤트 지원 여부는 API 담당자에게 확인합니다.</div>
+      <div class="note"><strong>현재 확정한 범위</strong> 수신 URL과 “방 정보 같은 routing 정보가 온다”는 사실만 확정합니다. 실제 필드명, 암호화·서명, event ID, 텍스트와 Adaptive Card 응답의 구분 값은 상세 수신 API 명세를 받은 뒤 adapter schema에 고정합니다.</div>
 
       <h3>2. 최초 1회 Farad 연결</h3>
       <p>이 연결은 Schedule 기능에만 필요합니다. 비밀 파일을 운영자가 배포하지 않고 Farad가 자기 호스트에서 긴 랜덤 credential을 만든 뒤, 사용자가 이미 로그인한 사내 메신저에서 본인 연결을 승인합니다.</p>
       <div class="flow-grid" aria-label="최초 연결 단계">
         <div class="flow-item"><b>Farad가 credential 생성</b><span>화면이나 로그에 원문을 노출하지 않고 민감 파일에 저장</span></div>
         <div class="flow-item"><b>Relay에 pairing 등록</b><span>짧은 만료시간과 single-use pairing ID 발급</span></div>
-        <div class="flow-item"><b>메신저에서 본인 승인</b><span>callback sender userId와 pairing을 결합</span></div>
+        <div class="flow-item"><b>메신저에서 본인 승인</b><span>inbound sender userId와 pairing을 결합</span></div>
         <div class="flow-item"><b>Long Poll 시작</b><span>Relay가 credential hash와 account binding을 확인</span></div>
       </div>
       <div class="note"><strong>NFS의 역할</strong> OS 계정 → 사내 메신저 ID 입력 힌트를 둘 수는 있지만 인증 수단이 아닙니다. 비밀 credential은 Farad가 직접 생성하며 NFS 공용 매핑에 넣지 않습니다.</div>
@@ -665,8 +675,9 @@ return farad_command_service.enqueue(route)</pre>
 Relay  → Farad   25초 안에 명령이 없으면 빈 응답
 Farad  → Relay   즉시 다음 Long Poll 연결
 
-사용자 → Relay   Adaptive Card 버튼 클릭
-Relay  → SQLite  commandId=43을 먼저 영속화
+사용자 → 메신저  Adaptive Card 버튼 클릭
+메신저 → Relay   POST /message (action event + room/sender info)
+Relay  → SQLite  action 소비와 commandId=43을 먼저 영속화
 Relay  → Farad   { commandId: 43, kind: "LIST_SCHEDULES" }
 Farad  → Relay   처리 결과 전송
 Farad  → Relay   ACK commandId=43</pre>
@@ -928,19 +939,27 @@ def validate(request: RemoteChoiceRequest) -> None:
       </div>
 
       <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">http://{relay-host}/message</span><span class="tag confirmed">제공된 명세</span></div>
-        <p>메신저 RP 서버가 Relay로 보내는 inbound endpoint입니다. Body는 AES-256 암호화 후 Base64 인코딩되어 들어오며, Relay가 복호화·검증·dedupe·영속화를 마친 뒤 HTTP 200을 반환합니다.</p>
+        <div class="api-head"><span class="method">POST</span><span class="path">http://{연계서버IP:port}/message</span><span class="tag confirmed">URL 확정</span><span class="tag open">Body 상세 대기</span></div>
+        <p>사용자가 메신저 대화방에 메시지를 보내거나 카드 버튼을 누를 때 메신저 RP 서버가 호출하는 inbound endpoint입니다. 중앙 VM의 Relay가 지정된 IP와 port에서 이 경로를 리스닝합니다. 현재는 방·발신자·event·메시지 종류를 식별할 정보가 온다고 가정하고, 실제 필드명은 추후 명세로 교체합니다.</p>
         <pre>{
-  "sender": 123456789,
-  "senderName": "사용자",
-  "senderKnoxId": "employee-id",
-  "chatType": "SINGLE",
-  "chatroomId": 99887766,
-  "msgId": 11223344,
-  "msgType": "ADAPTIVE_CARD",
-  "chatMsg": "{ ... Action.Submit data ... }",
-  "sentTime": 1721000000000
+  "roomInfo": "&lt;placeholder: 1:1 방 식별 정보&gt;",
+  "senderInfo": "&lt;placeholder: 발신자 식별 정보&gt;",
+  "eventId": "&lt;placeholder: 중복 제거용 식별자&gt;",
+  "messageType": "&lt;placeholder: TEXT 또는 ACTION 구분&gt;",
+  "payload": "&lt;placeholder: 상세 명세 수신 후 확정&gt;"
 }</pre>
+        <div class="table-shell">
+          <table>
+            <thead><tr><th>수신 종류</th><th>Relay 처리</th><th>Farad 전달</th></tr></thead>
+            <tbody>
+              <tr><td>일반 사용자 메시지</td><td>본문 폐기 → 홈 카드 delivery 생성</td><td>하지 않음</td></tr>
+              <tr><td>Adaptive Card action</td><td>actionToken 검증 → route 실행</td><td>Farad-required action만 durable command로 전달</td></tr>
+              <tr><td>중복 event</td><td>이미 처리한 결과로 간주하고 HTTP 200</td><td>재적용하지 않음</td></tr>
+              <tr><td>지원하지 않는 방/종류</td><td>내용을 처리하지 않고 제한된 audit 후 HTTP 200</td><td>하지 않음</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Relay는 최소 검증과 <code>inbound_dedup</code> 기록, 필요한 delivery/command intent의 commit을 마친 뒤 HTTP 200만 반환합니다. 카드 생성과 전송은 outbox worker가 이어서 수행하므로 메신저 RP의 요청 timeout에 묶이지 않습니다.</p>
       </div>
 
       <h3>Adaptive Card action 규칙</h3>
@@ -984,10 +1003,10 @@ def validate(request: RemoteChoiceRequest) -> None:
         <table>
           <thead><tr><th>저장 위치</th><th>보관하는 것</th><th>보관하지 않는 것</th></tr></thead>
           <tbody>
-            <tr><td>Farad 민감 파일</td><td>원본 client credential</td><td>메신저 callback, 중앙 command queue</td></tr>
+            <tr><td>Farad 민감 파일</td><td>원본 client credential</td><td>메신저 inbound event, 중앙 command queue</td></tr>
             <tr><td>Farad runtime/session</td><td>Schedule 정의, task ID, prompt, transcript, 결과, 실행 상태</td><td>메신저 msgKey 정본</td></tr>
             <tr><td>선택적 NFS 설정</td><td>Relay 고정 IP, OS 계정 → 메신저 ID 입력 힌트</td><td>비밀 token, SQLite, 자주 바뀌는 상태</td></tr>
-            <tr><td>VM 로컬 SQLite WAL</td><td>account binding, credential hash, chatroom, navigation, delivery, command, ACK, action route, dedupe, keyword vocabulary</td><td>전체 Schedule 목록, 실제 task ID, prompt, 경로, tool 결과</td></tr>
+            <tr><td>VM 로컬 SQLite WAL</td><td>account binding, credential hash, chatroom, inbound dedupe, outbox delivery, command, ACK, action route, keyword vocabulary</td><td>사용자 자유 텍스트, 전체 Schedule 목록, 실제 task ID, prompt, 경로, tool 결과</td></tr>
           </tbody>
         </table>
       </div>
@@ -997,19 +1016,19 @@ def validate(request: RemoteChoiceRequest) -> None:
         <article class="panel"><h4>accounts / credentials</h4><p>messenger userId, Farad 설치 식별자, credential hash, 활성/폐기 상태를 연결합니다.</p></article>
         <article class="panel"><h4>pairings / chatrooms</h4><p>만료되는 pairing과 재사용할 1:1 chatroomId를 보관합니다.</p></article>
         <article class="panel"><h4>commands</h4><p>commandId, 대상 client, payload, cursor, ACK, 만료를 보관합니다. 미ACK command는 다시 배달합니다.</p></article>
-        <article class="panel"><h4>deliveries / cards</h4><p>requestId, msgId, msgKey, card generation, 마지막 전송 상태를 기록합니다.</p></article>
+        <article class="panel"><h4>deliveries / cards</h4><p>outbox delivery intent, requestId, msgId, msgKey, card generation, 시도 횟수와 마지막 전송 상태를 기록합니다.</p></article>
         <article class="panel"><h4>action_routes</h4><p>actionToken, scope, kind, 대상 client/runRef, card generation, 만료와 소비 여부를 관리합니다.</p></article>
         <article class="panel"><h4>keyword_vocabulary</h4><p>vocabularyVersion, keyword ID, 고정 문구·이모지, 허용 조합, deprecated 상태를 관리합니다.</p></article>
-        <article class="panel"><h4>inbound_dedup</h4><p>msgId 또는 callback identity를 unique key로 잡아 같은 사용자 동작의 재적용을 막습니다.</p></article>
+        <article class="panel"><h4>inbound_dedup</h4><p>event ID, room/sender 식별자, event kind, 처리 상태를 저장해 재적용을 막습니다. 자유 텍스트 본문은 넣지 않습니다.</p></article>
         <article class="panel"><h4>navigation / safe views</h4><p>현재 화면, 검수된 별칭, opaque itemToken, TTL만 짧게 보관합니다. task ID는 넣지 않습니다.</p></article>
       </div>
 
       <h3>10,000개 누적을 가정한 반복 경로</h3>
       <ul class="plain-list">
         <li>Long Poll 조회는 대상 client와 미ACK cursor를 index로 찾고 전체 command를 스캔하지 않습니다.</li>
-        <li>action 소비는 actionToken unique index로 O(1)에 가깝게 처리합니다.</li>
+        <li>inbound event dedupe와 action 소비는 unique index로 O(1)에 가깝게 처리합니다.</li>
         <li>카드 갱신은 chatroomId와 msgKey를 직접 조회합니다.</li>
-        <li>만료 command, callback, view는 bounded batch로 정리합니다.</li>
+        <li>만료 command, inbound dedupe, action route, view는 bounded batch로 정리합니다.</li>
         <li>Farad Schedule 목록은 기존 index/read model을 사용하고 매 Long Poll마다 NFS 파일을 다시 읽지 않습니다.</li>
       </ul>
     </section>
@@ -1022,7 +1041,8 @@ def validate(request: RemoteChoiceRequest) -> None:
           <h4>v1이 막는 것</h4>
           <ul class="plain-list">
             <li>LLM의 파일명·경로·로그·원문 결과 자유 전송</li>
-            <li>다른 사용자의 카드 callback 재사용</li>
+            <li>사용자가 보낸 자유 텍스트의 저장·Farad/LLM 전달</li>
+            <li>다른 사용자의 카드 action 재사용</li>
             <li>같은 action의 중복 적용</li>
             <li>만료되거나 이전 화면 generation의 선택 실행</li>
             <li>같은 Schedule 동시 실행</li>
@@ -1034,6 +1054,7 @@ def validate(request: RemoteChoiceRequest) -> None:
           <ul class="plain-list">
             <li>승인 keyword 선택과 전송 시각을 이용한 의도적 은닉 통신</li>
             <li>고정 IP를 신뢰한 사내 구간의 도청·spoofing</li>
+            <li>상세 수신 명세 확정 전의 application-level webhook 서명 검증</li>
             <li>사용자가 수정한 로컬 Farad binary 자체의 진위 증명</li>
             <li>승인된 단어 조합이 전달하는 업무 사실</li>
             <li>사용자 계정이나 VM 관리자 권한 탈취</li>
@@ -1043,13 +1064,19 @@ def validate(request: RemoteChoiceRequest) -> None:
 
       <h3>보안 검증 순서</h3>
       <ol class="plain-list">
-        <li>Relay가 client credential과 account binding을 확인합니다.</li>
-        <li>메신저 callback sender가 연결된 messenger userId인지 확인합니다.</li>
-        <li>commandId, msgId, actionToken의 중복 여부를 확인합니다.</li>
+        <li><code>POST /message</code>의 body 크기·content type·요청 timeout을 제한하고, 운영 방화벽에서 메신저 RP 출발지만 허용합니다.</li>
+        <li>상세 명세가 제공하는 암호화·서명·sender/room 식별 규칙을 inbound adapter에서 검증합니다.</li>
+        <li>event ID를 SQLite unique key로 먼저 확인하고 중복 요청은 재적용하지 않습니다.</li>
+        <li>일반 메시지는 본문을 폐기하고 room/sender를 홈 delivery route에만 사용합니다.</li>
+        <li>카드 action이면 sender가 연결된 messenger userId인지 확인하고 actionToken을 검사합니다.</li>
+        <li>Relay가 Farad-required action에 대해 client credential과 account binding을 확인합니다.</li>
+        <li>commandId와 actionToken의 중복 여부를 확인합니다.</li>
         <li>actionToken의 TTL, card generation, scope, 허용 action, 대상 client를 검사합니다.</li>
         <li>Farad가 itemToken을 실제 Schedule에 로컬로 해석하고 최신 상태를 재검증합니다.</li>
         <li>진행/선택 메시지는 Farad와 Relay가 같은 keyword vocabulary로 두 번 검사합니다.</li>
       </ol>
+
+      <div class="note"><strong>HTTP 200의 의미</strong> “카드를 사용자에게 이미 보냈다”가 아니라 “inbound event와 필요한 delivery/command intent를 안전하게 기록했다”는 뜻입니다. 전송 실패는 outbox가 재시도하며, RP 서버의 webhook 재전송과 중복 카드를 분리합니다.</div>
 
       <div class="warning"><strong>고정 IP 신뢰는 명시적인 위험 수용입니다.</strong> v1에서는 Relay IP를 설정하고 별도 인증서·CA·공개키 pin 없이 신뢰합니다. 이 선택은 운영을 단순하게 하지만 사내망 구간의 기밀성과 서버 진위를 보장하지 않습니다. 위협 모델이 바뀌면 wire schema가 아니라 transport 계층에 HTTPS 또는 pinning을 추가해야 합니다.</div>
       <div class="note"><strong>로컬 앱 진위의 한계</strong> 사용자가 자신의 호스트에서 Farad를 실행하고 수정할 수 있으므로 Relay가 “공식 binary 그대로”임을 증명할 수는 없습니다. Relay가 신뢰하는 대상은 메신저로 승인된 사용자와 발급된 client credential입니다.</div>
@@ -1057,7 +1084,7 @@ def validate(request: RemoteChoiceRequest) -> None:
 
     <section id="implementation">
       <div class="section-title"><span class="section-number mono">09</span><h2>구현 영향과 역할 분담</h2></div>
-      <p class="intro">Farad scheduler를 다시 만들 필요는 없지만, Relay 연결부터 원격 선택까지 하나의 정식 vertical slice가 필요합니다. 핵심 위험은 실행 자체보다 headless scheduled agent가 안전한 원격 응답을 기다리고 재개하는 경계입니다.</p>
+      <p class="intro">Farad scheduler를 다시 만들 필요는 없지만, 사용자 메시지 수신부터 홈 응답·Relay 연결·원격 선택까지 하나의 정식 vertical slice가 필요합니다. 핵심 위험은 inbound HTTP 요청과 outbound 카드 전송을 한 요청처럼 취급해 event를 잃거나 중복 처리하는 것, 그리고 headless scheduled agent가 안전한 원격 응답을 기다리고 재개하는 경계입니다.</p>
 
       <h3>Farad에서 재사용하는 것</h3>
       <div class="table-shell">
@@ -1080,7 +1107,7 @@ def validate(request: RemoteChoiceRequest) -> None:
         <li><b>RemoteScheduleController</b><span>safe schedule projection, itemToken 검증, Run now 결과를 소유하는 application service</span></li>
         <li><b>RemoteKeywordVocabulary</b><span>versioned snapshot과 상태·행동·전략 keyword validation을 제공하는 bounded provider</span></li>
         <li><b>ReportRemoteProgress</b><span>상태 keyword를 비동기로 제출하고 전송 결과를 transcript tool result로 남기는 schedule-only tool</span></li>
-        <li><b>RequestRemoteChoice</b><span>선택 카드를 보내고 callback/timeout/abort 중 하나로 Future를 해소하는 schedule-only tool</span></li>
+        <li><b>RequestRemoteChoice</b><span>선택 카드를 보내고 action/timeout/abort 중 하나로 Future를 해소하는 schedule-only tool</span></li>
         <li><b>Qt ↔ asyncio proxy</b><span>Long Poll에서 받은 LIST/RUN command를 Qt 소유 SchedulerEngine으로 안전하게 전달</span></li>
         <li><b>Credential store</b><span>Farad가 생성한 원본 credential만 좁은 권한으로 보호</span></li>
       </ul>
@@ -1088,38 +1115,43 @@ def validate(request: RemoteChoiceRequest) -> None:
       <h3>중앙 VM 담당 구현 범위</h3>
       <ul class="checklist">
         <li>SQLite WAL schema와 migration, unique index, TTL cleanup을 정의한다.</li>
+        <li>지정된 내부 IP:port에서 <code>POST /message</code>를 받는 inbound HTTP listener를 운영한다.</li>
+        <li>수신 API 상세 schema·암호화·서명은 <code>MessengerInboundAdapter</code>에 격리하고, application service에는 정규화된 room/sender/event kind만 넘긴다.</li>
+        <li>일반 메시지의 본문을 adapter 경계에서 폐기하고, inbound dedupe와 HOME outbox intent를 한 SQLite transaction으로 commit한다.</li>
         <li>pairing/account binding과 credential hash 검증을 구현한다.</li>
         <li>Long Poll command queue를 persist-before-deliver, ACK-after-result로 구현한다.</li>
-        <li>메신저 inbound AES-256/Base64 복호화와 HTTP 200 응답 경계를 확인한다.</li>
         <li>CreateChatroom, ChatRequest, UpdateMessageRequest adapter를 구현한다.</li>
         <li>Adaptive Card 1.3 payload와 Action.Submit action route를 구현한다.</li>
         <li>keyword vocabulary 정본, 고정 renderer, 조합 validation, vocabulary version endpoint를 구현한다.</li>
-        <li>msgId/actionToken 중복, 재전송, process crash를 포함한 idempotency 테스트를 만든다.</li>
+        <li>event ID/actionToken 중복, webhook 재전송, outbound 실패, process crash를 포함한 idempotency 테스트를 만든다.</li>
         <li>requestId/msgId int64 unique ID 생성 규칙을 정하고 ms 충돌을 막는다.</li>
         <li>운영 로그에서 credential, actionToken, 내부 payload 원문을 마스킹한다.</li>
       </ul>
 
       <h3>권장 구현 단계</h3>
-      <div class="flow-grid">
-        <div class="flow-item"><b>1 · 연결과 실행</b><span>pairing, Long Poll, 목록, 선택, 같은 Run now</span></div>
-        <div class="flow-item"><b>2 · keyword 진행</b><span>고정 vocabulary와 progress card/update</span></div>
-        <div class="flow-item"><b>3 · 원격 선택</b><span>RequestRemoteChoice, callback, timeout, abort</span></div>
-        <div class="flow-item"><b>4 · 운영 강화</b><span>재시작, dedupe, stale action, 부하·장애 테스트</span></div>
+      <div class="flow-grid five">
+        <div class="flow-item"><b>1 · 수신과 홈</b><span>POST /message, dedupe, outbox, 홈 카드</span></div>
+        <div class="flow-item"><b>2 · 연결과 실행</b><span>pairing, Long Poll, 목록, 선택, 같은 Run now</span></div>
+        <div class="flow-item"><b>3 · keyword 진행</b><span>고정 vocabulary와 progress card/update</span></div>
+        <div class="flow-item"><b>4 · 원격 선택</b><span>RequestRemoteChoice, action, timeout, abort</span></div>
+        <div class="flow-item"><b>5 · 운영 강화</b><span>재시작, dedupe, stale action, 부하·장애 테스트</span></div>
       </div>
 
       <h3>구현 전에 함께 결정할 항목</h3>
       <ul class="checklist">
         <li>Relay 앞단 proxy/load balancer의 idle timeout과 Long Poll wait/client timeout 값</li>
+        <li><code>POST /message</code>의 실제 body schema, content type, event ID, 방/발신자 필드와 TEXT/ACTION 구분 값</li>
+        <li>수신 body의 암호화·서명·key 전달/회전 방식과 메신저 RP source 인증 방법</li>
+        <li>RP 서버의 retry 조건·timeout, 최대 body 크기, 허용 chat type과 rate limit</li>
         <li>원격 선택의 기본 TTL, 미응답 시 실패/계속/데스크톱 확인 중 어떤 정책을 적용할지</li>
         <li>Adaptive Card 최대 payload, action 수, version 1.3 실제 지원 범위</li>
-        <li>메신저 inbound AES key 전달·회전·운영 주체</li>
         <li>카드 update/recall 실패 시 새 카드 전송 여부와 사용자에게 보일 중복 처리</li>
         <li>keyword vocabulary 추가·deprecated·rollback의 배포 절차</li>
-        <li>Relay 장애나 재시작 중 callback을 얼마 동안 보관할지</li>
+        <li>Relay 장애나 재시작 중 inbound/action dedupe와 outbox를 얼마 동안 보관할지</li>
         <li>고정 IP 신뢰 가정을 언제 HTTPS/pinning으로 재검토할지</li>
       </ul>
 
-      <div class="decision"><strong>현재 합의의 최종 형태</strong> 메신저는 Farad Schedule의 만능 자유 명령창이 아니라, 홈·사용량·목록·실행·진행·제한된 선택을 제공하는 안전한 리모컨입니다. 실제 실행은 기존 Run now와 같고 같은 Schedule만 single-flight입니다. LLM은 폐쇄형 keyword만 고르고, Relay가 고정 문구와 고정 이모지를 렌더링합니다.</div>
+      <div class="decision"><strong>현재 합의의 최종 형태</strong> 사용자가 메신저에 말을 걸면 중앙 Relay의 <code>POST /message</code>가 이를 받아 홈 카드를 보냅니다. 자유 텍스트는 홈 열기 신호일 뿐 Farad나 LLM의 입력이 되지 않습니다. 이후 메신저는 홈·사용량·목록·실행·진행·제한된 선택을 제공하는 안전한 리모컨으로 동작하며, 실제 실행은 기존 Run now와 같고 같은 Schedule만 single-flight입니다.</div>
     </section>
 
     <section id="glossary">
@@ -1132,6 +1164,8 @@ def validate(request: RemoteChoiceRequest) -> None:
             <tr><td>Relay</td><td>중앙 VM에서 Farad와 사내 메신저 API 사이를 연결하는 서비스</td></tr>
             <tr><td>Long Poll</td><td>서버가 일정 시간 HTTP 응답을 보류해 새 command를 빠르게 전달하는 방식</td></tr>
             <tr><td>ACK</td><td>Farad가 command 처리 결과를 안전하게 제출했다는 확인</td></tr>
+            <tr><td>inbound event</td><td>메신저 RP가 <code>POST /message</code>로 전달하는 사용자 메시지 또는 카드 action 도착 사건</td></tr>
+            <tr><td>outbox</td><td>HTTP 200 전에 SQLite에 기록해 두고 별도 worker가 재시도하는 outbound 카드 전송 의도</td></tr>
             <tr><td>itemToken</td><td>실제 task ID 대신 목록 선택에 사용하는 짧은 수명의 opaque token</td></tr>
             <tr><td>actionToken</td><td>Adaptive Card 버튼 한 번을 특정 account/scope/action에 연결하는 single-use opaque token</td></tr>
             <tr><td>keyword vocabulary</td><td>LLM이 선택할 수 있는 상태·행동·전략 keyword와 고정 렌더링 규칙의 버전된 목록</td></tr>
