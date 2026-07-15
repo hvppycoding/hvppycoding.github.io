@@ -769,7 +769,8 @@
     <nav class="side" aria-label="문서 목차">
       <strong>시나리오 설계</strong>
       <a href="#shape">전체 구조</a>
-      <a href="#connect">최초 연결</a>
+      <a href="#proactive-connect">봇이 먼저 연결</a>
+      <a href="#connect">사용자가 먼저 연결</a>
       <a href="#restart">재시작</a>
       <a href="#runtime">Farad 두 개 실행</a>
       <a href="#multi-user">여러 사용자</a>
@@ -828,9 +829,130 @@
         </figure>
       </section>
 
+      <section id="proactive-connect">
+        <div class="scenario-head"><span class="scenario-no">SCENARIO 01A</span><h2>봇이 먼저 “연결하시겠습니까?” 카드를 보낸다</h2></div>
+        <p class="section-intro">기본 연결 경로입니다. <code>singleid</code>로 얻은 Knox ID를 숫자형 Messenger <code>userId</code>로 바꾸는 사내 조회 수단이 있다고 전제합니다. 사용자는 봇을 검색하거나 먼저 열 필요가 없습니다.</p>
+
+        <div class="result-rule">
+          <div><b>Farad가 보내는 값</b><span>처음 연결할 때만 <code>knoxId</code>와 새 client token을 Relay에 보냅니다. 숫자형 Messenger userId는 Farad가 기억하지 않습니다.</span></div>
+          <div><b>Relay가 맡는 일</b><span>Knox ID로 userId를 조회하고, 1:1 방을 생성·재사용한 뒤 연결 확인 카드를 먼저 발송합니다.</span></div>
+        </div>
+
+        <div class="exchange-list" style="margin-top: 24px;">
+          <div class="exchange-row">
+            <span class="exchange-no">01</span><span class="exchange-from">Farad</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+            <div class="exchange-message"><b><span class="contract-tag proposed">제안 계약</span> 선제 연결 등록</b><pre>POST /v1/clients/register
+{
+  "knoxId": "user.knox.id",
+  "clientToken": "&lt;256-bit random secret&gt;",
+  "deliveryMode": "PROACTIVE"
+}</pre><p>Farad는 이 요청 직후 PENDING 연결 Long Poll을 열어 승인 결과를 기다립니다.</p></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">02</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">ID 조회</span>
+            <div class="exchange-message"><b>Knox ID를 숫자형 Messenger userId로 해석</b><pre>resolve("user.knox.id")
+result = messengerUserId 189473292</pre><p>조회 수단은 사내 관리 mapping 또는 directory adapter로 캡슐화합니다. Farad state와 transcript에는 이 숫자를 저장하지 않습니다.</p></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">03</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
+            <div class="exchange-message"><b>외부 API 호출 전에 pairing intent 커밋</b><pre>client_installations(client_A): PENDING
+messenger_bindings(client_A):
+  knox_id = "user.knox.id"
+  sender_id = "189473292"
+  room_id = NULL
+pairing_attempts(pair_41):
+  state = "ROOM_PENDING"
+  create_request_id = 1784100000101
+  chat_request_id = 1784100000102
+  message_id = 1784100000103
+deliveries(pair_41, kind="CREATE_PAIRING_ROOM", state="PENDING")
+COMMIT</pre></div>
+            <div class="exchange-state atomic">client token 원문은 저장하지 않고 hash만 저장합니다. 이 transaction이 실패하면 Messenger API를 호출하지 않습니다.</div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">04</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
+            <div class="exchange-message"><b><span class="contract-tag confirmed">확정 계약</span> 1:1 대화방 생성 또는 재사용</b><pre>POST https://openapi.stage.samsung.net/messenger/message/api/v2.0/message/createChatroomRequest
+
+{
+  "requestId": 1784100000101,
+  "chatType": 0,
+  "receivers": [189473292]
+}</pre><p><code>chatType=0</code>은 동일 방장·수신자 조합이면 기존 1:1 방을 반환하므로, 사용자가 전에 봇을 열었던 적이 있어도 같은 방을 재사용합니다.</p></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">05</span><span class="exchange-from">OpenAPI</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+            <div class="exchange-message"><b>대화방 ID 반환</b><pre>{
+  "chatroomId": 193802984023,
+  "createTimeMillis": 1784100000120,
+  "result": {"code": 1000}
+}
+
+messenger_bindings(client_A).room_id = "193802984023"
+pairing_attempts(pair_41): ROOM_PENDING → ROOM_READY
+action_routes(connect_token, cancel_token): ACTIVE
+deliveries(CREATE_PAIRING_ROOM): IN_FLIGHT → DELIVERED
+deliveries(pair_41, kind="CONNECTION_CONFIRM_CARD", state="PENDING")
+COMMIT</pre><p>연결·취소 action route를 sender·room·client에 묶은 뒤에만 카드 발송 delivery를 만듭니다.</p></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">06</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">OpenAPI</span>
+            <div class="exchange-message"><b><span class="contract-tag confirmed">확정 계약</span> 연결 확인 Adaptive Card 발송</b><pre>Outbound worker claims CONNECTION_CONFIRM_CARD
+
+POST https://openapi.stage.samsung.net/messenger/message/api/v2.0/message/chatRequest
+
+{
+  "requestId": 1784100000102,
+  "chatroomId": 193802984023,
+  "chatMessageParams": [{
+    "msgId": 1784100000103,
+    "msgType": 19,
+    "chatMsg": "&lt;연결 확인 Adaptive Card JSON&gt;"
+  }]
+}</pre><p>카드 data에는 <code>actionToken</code>만 넣고 Knox ID, client ID, host, Schedule 정보는 넣지 않습니다.</p></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">07</span><span class="exchange-from">OpenAPI</span><span class="exchange-arrow">→</span><span class="exchange-to">사용자</span>
+            <div class="exchange-message"><b>사용자가 봇을 열기 전에 새 메시지 도착</b><p>Relay는 발송 응답의 <code>msgKey</code>를 <code>message_cards</code>에 저장하고 pairing 상태를 <code>CONFIRM_SENT</code>로 바꿉니다.</p></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">08</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Relay</span>
+            <div class="exchange-message"><b>“연결하기” 클릭</b><p>Messenger RP가 기존 <code>POST /message</code>로 actionToken과 바깥 sender·chatroom을 전달합니다. Relay는 세 값이 pending binding과 모두 일치할 때만 승인합니다.</p></div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">09</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">SQLite</span>
+            <div class="exchange-message"><b>연결 승인과 Farad 깨우기를 한 transaction으로 커밋</b><pre>action_routes(connect_token): ACTIVE → CONSUMED
+pairing_attempts(pair_41): CONFIRM_SENT → ACCEPTED
+client_installations(client_A): PENDING → ACTIVE
+messenger_bindings(client_A): PENDING → ACTIVE
+commands(client_A, kind="CLIENT_ACTIVATED", state="PENDING")
+deliveries(client_A, kind="HOME_CARD_UPDATE", state="PENDING")
+COMMIT</pre></div>
+            <div class="exchange-state atomic">중복 클릭이나 webhook 재전송은 같은 연결과 command를 다시 만들지 않습니다.</div>
+          </div>
+          <div class="exchange-row">
+            <span class="exchange-no">10</span><span class="exchange-from">Relay</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
+            <div class="exchange-message"><b>PENDING Long Poll에 연결 완료 전달</b><pre>{
+  "commandId": 100,
+  "kind": "CLIENT_ACTIVATED"
+}</pre><p>이후 Farad가 runtime lease를 claim하고 일반 command Long Poll을 시작합니다.</p></div>
+          </div>
+        </div>
+
+        <div class="message-card" style="margin-top: 24px;">
+          <h3>Farad 원격 제어를 연결할까요?</h3>
+          <p>연결하면 메신저에서 예약 작업을 조회하고 실행할 수 있습니다.</p>
+          <div class="card-actions"><span>연결하기</span><span>취소</span></div>
+          <div class="card-actions utility"><span>뒤로</span><span>홈으로</span></div>
+        </div>
+
+        <div class="note"><code>result.code=1001</code>, 무효·비활성 수신자, directory 조회 장애처럼 선제 발송을 완료하지 못하면 pairing을 ACTIVE로 만들지 않습니다. Farad에는 안전한 실패 코드만 돌려주고, 보조 경로로 “메신저에서 봇을 한 번 열어주세요”를 안내할 수 있습니다.</div>
+        <div class="exchange-state warning" style="margin-top: 14px;">1:1 <code>CreateChatroomRequest</code>는 기존 방을 재사용하지만, 응답이 유실된 <code>ChatRequest</code>를 같은 requestId·msgId로 재시도했을 때의 Messenger 중복 방지 계약은 아직 확인되지 않았습니다. 이 구간은 무조건 재전송하지 말고 <code>DELIVERY_UNKNOWN</code>으로 남겨 운영 확인하거나, 공급자의 idempotency 계약을 받은 뒤 자동 재시도를 켭니다.</div>
+        <div class="decision"><b>선제 발송은 편의 기능이고, 연결 승인은 여전히 사용자 클릭이다</b>방이 만들어지고 카드가 도착한 것만으로 Farad를 ACTIVE로 바꾸지 않습니다. 메신저에서 “연결하기”가 돌아와 SQLite transaction이 커밋된 순간만 연결 완료입니다.</div>
+      </section>
+
       <section id="connect">
-        <div class="scenario-head"><span class="scenario-no">SCENARIO 01</span><h2>처음 한 번만 연결한다</h2></div>
-        <p class="section-intro">공용 매핑 파일이나 Linux ID 전달은 필요 없습니다. Farad가 관리 명령을 한 번 실행해 현재 사용자의 Knox ID를 직접 얻습니다.</p>
+        <div class="scenario-head"><span class="scenario-no">SCENARIO 01B · FALLBACK</span><h2>선제 발송이 실패하면 사용자가 봇을 한 번 연다</h2></div>
+        <p class="section-intro">무효·비활성 수신자나 Messenger API 장애로 카드를 먼저 보내지 못한 경우의 보조 경로입니다. Farad가 관리 명령으로 Knox ID를 얻는 것과 client token을 만드는 과정은 같습니다.</p>
         <ol class="sequence">
           <li><span class="actor">Farad</span><div class="step-copy"><b><code>/appl/LINUX/Hyper/utils/singleid</code> 실행</b><span>인자와 shell 없이 실행하고 stdout 한 줄을 <code>senderKnoxId</code>로 검증합니다.</span></div></li>
           <li><span class="actor">Farad</span><div class="step-copy"><b>256비트 이상의 client token 생성</b><span>원문은 로컬 보호 파일에 저장합니다.</span></div></li>
@@ -839,7 +961,7 @@
           <li><span class="actor">Relay</span><div class="step-copy"><b>“이 Farad를 연결할까요?” 확인 카드 발송</b><span>메신저 <code>userId</code>와 <code>chatroomId</code>를 후보 binding으로 저장하지만 아직 PENDING입니다.</span></div></li>
           <li><span class="actor">사용자</span><div class="step-copy"><b>메신저에서 “연결하기” 선택</b><span>이 클릭이 커밋된 뒤에만 client가 ACTIVE가 됩니다. “취소”를 누르면 등록을 폐기합니다.</span></div></li>
         </ol>
-        <div class="note"><code>singleid</code> 결과는 Farad state나 transcript에 저장하지 않습니다. 현재 확보한 값이 Knox ID뿐이라면 사용자가 봇을 한 번 열어야 Relay가 숫자형 messenger userId와 chatroomId를 얻을 수 있습니다. 별도 Knox ID→messenger userId 조회 수단이 생기면 <code>CreateChatroomRequest</code>로 확인 카드를 먼저 보낼 수 있습니다.</div>
+        <div class="note"><code>singleid</code> 결과는 Farad state나 transcript에 저장하지 않습니다. 기본 경로는 앞의 userId 조회와 <code>CreateChatroomRequest</code>를 사용합니다. 이 fallback에서는 사용자가 보낸 <code>INTRO</code> envelope에서 sender·chatroom을 다시 확인한 뒤 같은 승인 transaction으로 합류합니다.</div>
       </section>
 
       <section id="restart">
@@ -990,6 +1112,7 @@ Authorization: Bearer &lt;같은 Farad client token&gt;
               <tr><td>deliveries</td><td><span class="status run">현재 구현</span></td><td>delivery_id, source_event_id, room_id, kind, state, lease</td><td>HOME outbox를 bounded batch로 claim하고 실패 시 다시 pending</td></tr>
               <tr><td>client_installations</td><td><span class="status wait">제안</span></td><td>client_id, token_hash, state, created_at_ms, activated_at_ms</td><td>client token 원문은 저장하지 않고 hash만 UNIQUE</td></tr>
               <tr><td>messenger_bindings</td><td><span class="status wait">제안</span></td><td>client_id, sender_id, room_id, knox_id, state</td><td><code>client_id</code>와 <code>(sender_id, room_id)</code> 모두 한 active binding만 허용</td></tr>
+              <tr><td>pairing_attempts</td><td><span class="status wait">제안</span></td><td>pairing_id, client_id, state, create_request_id, chat_request_id, message_id, room_id, expires_at_ms, error_code</td><td>방 생성·카드 발송·사용자 승인을 재시작 가능한 단계로 기록</td></tr>
               <tr><td>runtime_leases</td><td><span class="status wait">제안</span></td><td>client_id, runtime_id, generation, lease_until_ms</td><td><code>client_id</code>가 PK라 한 사용자에 활성 runtime 하나</td></tr>
               <tr><td>schedule_items</td><td><span class="status wait">제안</span></td><td>client_id, view_id, item_token, remote_display_name, state_keyword, expires_at_ms</td><td>실제 Schedule ID·이름 없이 한 목록 view의 안전한 projection만 보관</td></tr>
               <tr><td>action_routes</td><td><span class="status wait">제안</span></td><td>token_hash, client_id, sender_id, room_id, kind, item_token, state, expires_at_ms</td><td>token + sender + room + client가 모두 맞아야 ACTIVE → CONSUMED</td></tr>
@@ -1003,6 +1126,7 @@ Authorization: Bearer &lt;같은 Farad client token&gt;
 
         <div class="schema-map" aria-label="테이블 관계 요약">
           <div><b>client_installations 1 → 1 messenger_bindings</b><span>설치 credential과 메신저 사용자·방 연결을 분리합니다.</span></div>
+          <div><b>client_installations 1 → N pairing_attempts</b><span>재연결 이력을 구분하고 현재 PENDING 시도 하나만 활성화합니다.</span></div>
           <div><b>client_installations 1 → 0..1 runtime_leases</b><span>offline 사용자는 binding은 있지만 활성 runtime 행이 없거나 만료됩니다.</span></div>
           <div><b>client_installations 1 → N commands</b><span>각 command는 생성 순간부터 한 client에 귀속됩니다.</span></div>
           <div><b>schedule_items 1 → N action_routes</b><span>목록 카드의 각 버튼은 짧은 수명의 route를 따로 가집니다.</span></div>
@@ -1046,7 +1170,7 @@ Authorization: Bearer &lt;같은 Farad client token&gt;
         <div class="note">두 Bearer token은 완전히 다릅니다. <b>Messenger API token</b>은 Relay가 OpenAPI를 호출할 때만 쓰고, <b>Farad client token</b>은 한 Farad 설치가 Relay의 Long Poll·result·event API를 호출할 때만 씁니다.</div>
 
         <article class="protocol-phase">
-          <div class="phase-title"><span>PHASE A · 01–11d</span><h3>최초 연결 확인과 홈 카드</h3></div>
+          <div class="phase-title"><span>PHASE A · 01B FALLBACK</span><h3>사용자가 봇을 먼저 연 경우의 연결 확인</h3></div>
           <div class="exchange-list">
             <div class="exchange-row">
               <span class="exchange-no">01</span><span class="exchange-from">사용자</span><span class="exchange-arrow">→</span><span class="exchange-to">Farad</span>
