@@ -3,1244 +3,743 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Farad Schedule을 사내 메신저에서 조회·실행하고 진행 상황과 제한된 선택을 주고받는 Relay 아키텍처 설명서">
-  <title>Farad Schedule 메신저 리모컨 · 전체 아키텍처와 연동 계약</title>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous"></script>
+  <meta name="color-scheme" content="light">
+  <title>Farad 사내 메신저 원격 스케줄 — 시나리오 설계</title>
   <style>
     :root {
-      color-scheme: light dark;
-      --page: #ffffff;
-      --surface: #f7f7f5;
-      --raised: #ffffff;
-      --inset: #f4f4f2;
-      --text: #171717;
-      --text-2: #3f3f3f;
-      --muted: #707070;
-      --border: #e3e3df;
-      --border-strong: #cfcfc9;
-      --divider: #efefec;
-      --accent: #0e79cf;
-      --accent-soft: #e6f1fa;
-      --farad: #4f70d6;
-      --success: #2d9150;
-      --success-soft: #edf7f0;
-      --warning: #9a6b08;
-      --warning-soft: #fff8df;
-      --error: #c44d44;
-      --error-soft: #fff0ee;
-      --code: #202124;
-      --shadow: none;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --page: #181818;
-        --surface: #1e1e1e;
-        --raised: #262626;
-        --inset: #121212;
-        --text: #eeeeee;
-        --text-2: #c6c6c6;
-        --muted: #8c8c8c;
-        --border: #3c3c3c;
-        --border-strong: #4d4d4d;
-        --divider: #262626;
-        --accent: #2a82d0;
-        --accent-soft: rgba(42, 130, 208, 0.15);
-        --success: #5fae73;
-        --success-soft: rgba(95, 174, 115, 0.12);
-        --warning: #cda244;
-        --warning-soft: rgba(205, 162, 68, 0.12);
-        --error: #e27970;
-        --error-soft: rgba(226, 121, 112, 0.12);
-        --code: #eeeeee;
-      }
+      --canvas: #f6f6f4;
+      --paper: #ffffff;
+      --ink: #171717;
+      --text: #363636;
+      --muted: #727272;
+      --line: #e4e4df;
+      --line-strong: #cecec7;
+      --soft: #f3f3f0;
+      --blue: #4169c1;
+      --blue-soft: #edf2fd;
+      --green: #39765a;
+      --green-soft: #edf6f1;
+      --amber: #8a641c;
+      --amber-soft: #fbf5e8;
+      --red: #95534d;
+      --red-soft: #fbefed;
+      --radius: 10px;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .04);
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; background: var(--page); }
+
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      background: var(--page);
       color: var(--text);
-      font-family: Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI",
-        system-ui, -apple-system, sans-serif;
+      background: var(--canvas);
+      font-family: Pretendard, "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.7;
       word-break: keep-all;
-      overflow-wrap: anywhere;
     }
-    a { color: var(--accent); text-underline-offset: 3px; }
-    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    a { color: inherit; }
+
     code, pre, .mono {
-      font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
     }
+
     code {
-      padding: 0.08em 0.3em;
+      padding: .08em .34em;
       border-radius: 4px;
-      background: var(--inset);
-      color: var(--code);
-      font-size: 0.88em;
+      background: var(--soft);
+      color: #2d2d2d;
+      font-size: .9em;
     }
-    strong { color: var(--text); font-weight: 600; }
 
-    .farad-artifact {
-      --type-meta: 14px;
-      --type-body: 16px;
-      --type-minor-heading: 18px;
-      --type-section-heading: clamp(22px, calc(20px + 0.4vw), 24px);
-      --type-document-title: clamp(30px, calc(27px + 0.8vw), 34px);
-      width: min(1040px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 54px 0 72px;
-      font-size: var(--type-body);
-      line-height: 1.6;
-    }
-    .masthead {
-      position: relative;
-      padding-bottom: 28px;
-      border-bottom: 1px solid var(--border-strong);
-    }
-    .toolbar {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .toolbar-actions { display: none; gap: 6px; }
-    .toolbar.expanded .toolbar-actions { display: flex; }
-    .toolbar button {
-      min-height: 30px;
-      padding: 4px 9px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--surface);
-      color: var(--text-2);
-      cursor: pointer;
-      font: 12px "JetBrains Mono", "Cascadia Code", Consolas, monospace;
-    }
-    .toolbar button:hover { border-color: var(--border-strong); color: var(--text); }
-    .toolbar .toolbar-toggle { border-color: transparent; background: transparent; font-size: 17px; }
-    h1, h2, h3, h4 { margin: 0; color: var(--text); font-weight: 600; }
-    h1 {
-      max-width: 860px;
-      font-size: var(--type-document-title);
-      line-height: 1.2;
-      letter-spacing: -0.035em;
-    }
-    .lede {
-      max-width: 780px;
-      margin: 18px 0 0;
-      color: var(--text-2);
-      font-size: var(--type-body);
-    }
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 18px;
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: var(--type-meta);
-    }
-    .status-key {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 18px;
-      margin-top: 18px;
-    }
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0;
-      color: var(--text-2);
-      font-size: var(--type-meta);
-      white-space: nowrap;
-    }
-    .tag::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--muted);
-      flex: 0 0 auto;
-    }
-    .tag.confirmed::before { background: var(--success); }
-    .tag.proposed::before { background: var(--accent); }
-    .tag.open::before { background: var(--warning); }
-
-    .toc {
+    .shell {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin: 28px 0 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+      grid-template-columns: 220px minmax(0, 860px);
+      gap: 44px;
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 42px 0 80px;
     }
-    .toc a {
-      padding: 11px 8px;
-      color: var(--text-2);
-      font-size: var(--type-meta);
+
+    .side {
+      position: sticky;
+      top: 26px;
+      align-self: start;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .side strong {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .side a {
+      display: block;
+      padding: 5px 0;
       text-decoration: none;
     }
-    .toc a:hover { color: var(--accent); }
 
-    section { margin-top: 64px; scroll-margin-top: 24px; }
-    .section-title {
+    .side a:hover { color: var(--ink); }
+
+    .side .meta {
+      margin-top: 26px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    main {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .hero, section { padding: 48px 56px; }
+
+    section { border-top: 1px solid var(--line); }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 680px;
+      margin-bottom: 20px;
+      color: var(--ink);
+      font-size: clamp(34px, 6vw, 54px);
+      font-weight: 720;
+      letter-spacing: -.045em;
+      line-height: 1.12;
+    }
+
+    h2 {
+      margin-bottom: 13px;
+      color: var(--ink);
+      font-size: 27px;
+      letter-spacing: -.025em;
+      line-height: 1.3;
+    }
+
+    h3 {
+      margin: 34px 0 12px;
+      color: var(--ink);
+      font-size: 19px;
+      line-height: 1.45;
+    }
+
+    .lead {
+      max-width: 700px;
+      margin-bottom: 32px;
+      color: #444;
+      font-size: 19px;
+      line-height: 1.75;
+    }
+
+    .kicker {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .answer {
       display: grid;
-      grid-template-columns: max-content minmax(0, 1fr);
-      gap: 18px;
-      align-items: baseline;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      overflow: hidden;
     }
-    .section-number {
-      color: var(--text-2);
-      font-family: inherit;
-      font-size: 17px;
-      font-weight: 500;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-    }
-    h2 { font-size: var(--type-section-heading); letter-spacing: -0.025em; }
-    h3 { margin-top: 34px; font-size: var(--type-minor-heading); letter-spacing: -0.015em; }
-    h4 { font-size: var(--type-body); }
-    p { max-width: 780px; margin: 14px 0 0; color: var(--text-2); }
-    .small { color: var(--muted); font-size: var(--type-meta); }
-    .intro { max-width: 820px; font-size: var(--type-body); }
 
-    .thesis {
+    .answer > div { padding: 22px 24px; }
+    .answer > div + div { border-left: 1px solid var(--line); }
+    .answer b { display: block; margin-bottom: 4px; color: var(--ink); font-size: 18px; }
+    .answer span { color: var(--muted); font-size: 14px; }
+
+    .section-intro {
+      max-width: 690px;
+      margin-bottom: 26px;
+      color: var(--muted);
+    }
+
+    .figure {
+      margin: 28px 0 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fcfcfb;
+    }
+
+    .figure figcaption {
+      margin-bottom: 18px;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .topology {
+      display: grid;
+      grid-template-columns: 1fr 44px 1.15fr 44px 1fr;
+      align-items: center;
+    }
+
+    .node {
+      min-height: 132px;
+      padding: 20px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    .node.relay { border-top: 3px solid var(--blue); }
+    .node b { display: block; margin-bottom: 9px; color: var(--ink); }
+    .node span { display: block; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .arrow { color: var(--muted); text-align: center; font-size: 24px; }
+
+    .responsibility {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 34px;
       margin-top: 24px;
-      padding: 20px 22px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--accent-soft);
-      color: var(--text);
-      font-size: var(--type-body);
     }
-    .note, .warning, .decision {
-      margin-top: 20px;
-      padding: 16px 18px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--surface);
-      color: var(--text-2);
-    }
-    .warning { background: var(--warning-soft); }
-    .decision { background: var(--success-soft); }
-    .warning, .decision { border: 0; }
-    .note strong, .warning strong, .decision strong { display: block; margin-bottom: 4px; }
 
-    .summary-list {
-      margin: 24px 0 0;
+    .responsibility div {
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .responsibility b { display: block; color: var(--ink); font-size: 14px; }
+    .responsibility span { color: var(--muted); font-size: 13px; }
+
+    .sequence {
+      margin: 28px 0 0;
       padding: 0;
       list-style: none;
-      border-top: 1px solid var(--border);
+      counter-reset: step;
     }
-    .summary-list li {
-      display: grid;
-      grid-template-columns: minmax(160px, 0.34fr) minmax(0, 1fr);
-      gap: 24px;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--divider);
-    }
-    .summary-list b { font-weight: 600; }
-    .summary-list span { color: var(--text-2); }
 
-    .table-shell {
-      margin-top: 20px;
-      overflow-x: auto;
+    .sequence li {
+      position: relative;
+      display: grid;
+      grid-template-columns: 40px 120px minmax(0, 1fr);
+      min-height: 70px;
+      counter-increment: step;
     }
-    table {
+
+    .sequence li::before {
+      content: counter(step);
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      margin-top: 2px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .sequence li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 31px;
+      bottom: 0;
+      left: 13px;
+      border-left: 1px solid var(--line);
+    }
+
+    .actor {
+      padding-top: 3px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .step-copy { padding: 0 0 22px; }
+    .step-copy b { display: block; color: var(--ink); font-size: 15px; }
+    .step-copy span { color: var(--muted); font-size: 14px; }
+
+    .note {
+      margin-top: 24px;
+      padding: 17px 19px;
+      border-left: 3px solid var(--blue);
+      background: var(--blue-soft);
+      color: #344360;
+      font-size: 14px;
+    }
+
+    .scenario-head {
+      display: flex;
+      gap: 16px;
+      align-items: baseline;
+      margin-bottom: 24px;
+    }
+
+    .scenario-no {
+      flex: 0 0 auto;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .scenario-head h2 { margin: 0; }
+
+    .clicks {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 4px 0 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .button {
+      padding: 8px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .queue {
       width: 100%;
-      min-width: 720px;
-      border: 0;
       border-collapse: collapse;
-      background: transparent;
+      margin: 20px 0 28px;
+      font-size: 14px;
     }
-    th, td {
-      padding: 12px 16px;
-      border: 0;
+
+    .queue th, .queue td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
       text-align: left;
       vertical-align: top;
     }
-    th {
-      border-bottom: 1px solid var(--border);
-      background: transparent;
-      color: var(--text);
-      font-size: var(--type-body);
-      font-weight: 600;
-    }
-    td {
-      border-bottom: 1px solid var(--divider);
-      color: var(--text-2);
-      font-size: var(--type-body);
-      font-weight: 400;
-    }
-    tbody tr:last-child td { border-bottom: 0; }
-    .nowrap { white-space: nowrap; }
 
-    .figure {
-      margin: 22px 0 0;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--raised);
-      overflow-x: auto;
-    }
-    .figure-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 14px;
+    .queue th {
       color: var(--muted);
-      font-size: var(--type-meta);
-    }
-    .figure-head strong { font-size: var(--type-meta); }
-    .figure svg { display: block; width: 100%; min-width: 820px; height: auto; }
-    .figure figcaption { margin-top: 12px; color: var(--muted); font-size: var(--type-meta); }
-
-    .flow-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0;
-      margin-top: 22px;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .flow-grid.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-    .flow-item { position: relative; padding: 18px 18px 18px 0; }
-    .flow-item:not(:last-child)::after {
-      content: "→";
-      position: absolute;
-      top: 18px;
-      right: 10px;
-      color: var(--muted);
-    }
-    .flow-item b { display: block; padding-right: 24px; font-size: var(--type-body); }
-    .flow-item span { display: block; margin-top: 5px; padding-right: 24px; color: var(--muted); font-size: var(--type-meta); }
-
-    pre {
-      margin: 16px 0 0;
-      padding: 16px 18px;
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--inset);
-      color: var(--code);
-      font-size: 13px;
-      line-height: 1.58;
-      white-space: pre;
+      font-size: 12px;
+      font-weight: 650;
     }
 
-    .split {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 22px;
-      margin-top: 22px;
-    }
-    .panel {
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--raised);
-    }
-    .panel h3, .panel h4 { margin-top: 0; }
-    .panel p { font-size: var(--type-body); }
-    .plain-list { margin: 12px 0 0; padding-left: 20px; color: var(--text-2); }
-    .plain-list li + li { margin-top: 7px; }
-    .plain-list li::marker { color: var(--muted); }
-
-    .api-block { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
-    .card-preview {
-      max-width: 520px;
-      margin-top: 20px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: var(--raised);
-    }
-    .card-preview h4 { margin-bottom: 8px; }
-    .card-preview p { margin-top: 6px; }
-    .card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-    .card-action {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 6px 11px;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      background: var(--surface);
-      color: var(--text);
-      font-size: var(--type-meta);
-    }
-    .api-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; }
-    .method {
+    .status {
+      display: inline-block;
       padding: 2px 7px;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      background: var(--surface);
-      color: var(--text);
-      font: 600 13px "JetBrains Mono", monospace;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
     }
-    .path { color: var(--text); font: 500 var(--type-meta) "JetBrains Mono", monospace; }
 
-    .checklist { margin: 20px 0 0; padding: 0; list-style: none; }
-    .checklist li {
-      position: relative;
-      padding: 11px 0 11px 30px;
-      border-bottom: 1px solid var(--divider);
-      color: var(--text-2);
+    .status.run { color: var(--green); background: var(--green-soft); }
+    .status.wait { color: var(--amber); background: var(--amber-soft); }
+    .status.stop { color: var(--red); background: var(--red-soft); }
+
+    .run-chart {
+      padding: 22px 24px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fcfcfb;
     }
-    .checklist li::before {
-      content: "□";
-      position: absolute;
-      left: 2px;
-      top: 9px;
+
+    .run-chart .axis {
+      display: grid;
+      grid-template-columns: 115px repeat(6, 1fr);
+      margin-bottom: 9px;
       color: var(--muted);
-      font-size: 1.1rem;
+      font-size: 11px;
     }
+
+    .track {
+      display: grid;
+      grid-template-columns: 115px minmax(0, 1fr);
+      align-items: center;
+      margin: 12px 0;
+    }
+
+    .track-name { color: var(--ink); font-size: 13px; font-weight: 650; }
+
+    .track-line {
+      position: relative;
+      height: 24px;
+      border-left: 1px solid var(--line);
+      background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+      background-size: 20% 100%;
+    }
+
+    .bar {
+      position: absolute;
+      top: 3px;
+      height: 18px;
+      border-radius: 4px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 750;
+      line-height: 18px;
+      text-align: center;
+    }
+
+    .bar.a { left: 3%; width: 67%; }
+    .bar.b { left: 21%; width: 72%; background: var(--blue-soft); color: var(--blue); }
+    .bar.reject { left: 23%; width: 30%; background: var(--red-soft); color: var(--red); }
+
+    .result-rule {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .result-rule div {
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .result-rule b { display: block; color: var(--ink); }
+    .result-rule span { color: var(--muted); font-size: 13px; }
+
+    .message-card {
+      max-width: 480px;
+      padding: 20px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .message-card h3 { margin: 0 0 6px; font-size: 17px; }
+    .message-card p { margin-bottom: 17px; color: var(--muted); font-size: 14px; }
+    .card-actions { display: grid; gap: 7px; }
+    .card-actions span {
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      font-size: 13px;
+      text-align: center;
+    }
+    .card-actions.utility {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .ownership {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .ownership article {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .ownership h3 { margin: 0 0 14px; }
+    .ownership ul, .plain { margin: 0; padding-left: 19px; }
+    .ownership li, .plain li { margin: 7px 0; }
+
+    .token-table {
+      width: 100%;
+      margin-top: 26px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .token-table th, .token-table td {
+      padding: 13px 11px;
+      border-top: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .token-table th { width: 29%; color: var(--ink); }
+
+    .decision {
+      padding: 25px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: #fafaf8;
+    }
+
+    .decision b { display: block; margin-bottom: 8px; color: var(--ink); font-size: 18px; }
+
+    .implementation {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 28px;
+    }
+
+    .implementation h3 { margin-top: 0; }
 
     footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      align-items: flex-end;
-      margin-top: 72px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
+      padding: 24px 56px 34px;
+      border-top: 1px solid var(--line);
       color: var(--muted);
-      font-size: var(--type-meta);
-    }
-    .made-with { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
-    .made-with svg { width: 16px; height: 16px; flex: 0 0 auto; }
-
-    @media (max-width: 760px) {
-      .farad-artifact { width: min(100% - 28px, 1040px); padding-top: 32px; }
-      .masthead { padding-top: 42px; }
-      .toolbar { top: 8px; right: 0; }
-      .toc { grid-template-columns: 1fr 1fr; }
-      .summary-list li { grid-template-columns: 1fr; gap: 5px; }
-      .flow-grid { grid-template-columns: 1fr; }
-      .flow-grid.five { grid-template-columns: 1fr; }
-      .flow-item { padding-right: 0; border-bottom: 1px solid var(--divider); }
-      .flow-item:last-child { border-bottom: 0; }
-      .flow-item:not(:last-child)::after { content: "↓"; top: auto; right: auto; left: 0; bottom: -13px; background: var(--page); padding: 0 6px; }
-      .split { grid-template-columns: 1fr; }
-      footer { display: block; }
-      .made-with { margin-top: 16px; }
+      font-size: 12px;
     }
 
-    @media print {
-      :root {
-        color-scheme: light;
-        --page: #ffffff;
-        --surface: #f7f7f5;
-        --raised: #ffffff;
-        --inset: #f4f4f2;
-        --text: #171717;
-        --text-2: #3f3f3f;
-        --muted: #707070;
-        --border: #e3e3df;
-        --border-strong: #cfcfc9;
-        --divider: #efefec;
-        --accent: #0e79cf;
-        --accent-soft: #e6f1fa;
-        --success: #2d9150;
-        --success-soft: #edf7f0;
-        --warning: #9a6b08;
-        --warning-soft: #fff8df;
-        --error: #c44d44;
-        --error-soft: #fff0ee;
-        --code: #202124;
-      }
-      html, body { background: #fff; }
-      .farad-artifact { width: 100%; padding: 0; }
-      .toc { display: none; }
-      .toolbar { display: none !important; }
-      section { margin-top: 42px; }
-      .figure, .panel, .note, .warning, .decision, pre { break-inside: avoid; }
-      h2, h3 { break-after: avoid; }
-      a { color: inherit; text-decoration: none; }
+    @media (max-width: 900px) {
+      .shell { display: block; width: min(760px, calc(100% - 28px)); padding-top: 16px; }
+      .side { position: static; display: flex; overflow-x: auto; gap: 16px; margin: 0 4px 14px; }
+      .side strong, .side .meta { display: none; }
+      .side a { flex: 0 0 auto; }
+      .hero, section { padding: 38px 32px; }
+      footer { padding: 22px 32px 30px; }
+    }
+
+    @media (max-width: 620px) {
+      body { font-size: 15px; }
+      main { border-radius: 9px; }
+      .hero, section { padding: 32px 22px; }
+      h1 { font-size: 36px; }
+      h2 { font-size: 23px; }
+      .lead { font-size: 17px; }
+      .answer, .ownership, .result-rule, .implementation { grid-template-columns: 1fr; }
+      .answer > div + div { border-left: 0; border-top: 1px solid var(--line); }
+      .topology { grid-template-columns: 1fr; gap: 8px; }
+      .arrow { transform: rotate(90deg); }
+      .responsibility { grid-template-columns: 1fr; gap: 0; }
+      .sequence li { grid-template-columns: 38px 82px minmax(0, 1fr); }
+      .clicks { flex-wrap: wrap; }
+      .queue { font-size: 12px; }
+      .queue th:nth-child(2), .queue td:nth-child(2) { display: none; }
+      .run-chart { padding: 18px 14px; }
+      .run-chart .axis { grid-template-columns: 82px repeat(6, 1fr); }
+      .track { grid-template-columns: 82px minmax(0, 1fr); }
+      footer { padding: 20px 22px 28px; }
     }
   </style>
 </head>
 <body>
-  <main class="farad-artifact" id="report-container">
-    <header class="masthead">
-      <div class="toolbar" data-html2canvas-ignore="true">
-        <div class="toolbar-actions">
-          <button onclick="copyAsImage(this)">Copy</button>
-          <button onclick="downloadPNG(this)">PNG</button>
-          <button onclick="downloadPDF(this)">PDF</button>
+  <div class="shell">
+    <nav class="side" aria-label="문서 목차">
+      <strong>시나리오 설계</strong>
+      <a href="#shape">전체 구조</a>
+      <a href="#connect">최초 연결</a>
+      <a href="#restart">재시작</a>
+      <a href="#two-jobs">A 다음 B 실행</a>
+      <a href="#same-job">A를 두 번 실행</a>
+      <a href="#offline">Farad 오프라인</a>
+      <a href="#ownership">데이터 소유권</a>
+      <a href="#scope">구현 범위</a>
+      <div class="meta">Farad internal messenger relay<br>Scenario contract · 2026-07-15</div>
+    </nav>
+
+    <main>
+      <header class="hero">
+        <div class="kicker">Farad × 사내 메신저</div>
+        <h1>Relay는 실행기가 아니라, 명령을 잃지 않는 우체통이다</h1>
+        <p class="lead">사용자가 메신저에서 Schedule을 연달아 눌러도 Relay는 각 클릭을 독립된 명령으로 저장합니다. 실제 동시 실행 여부는 Farad가 “같은 Schedule인가?”만 보고 결정합니다.</p>
+        <div class="answer" aria-label="동시 실행 규칙 요약">
+          <div><b>A 다음 B</b><span>서로 다른 Schedule이므로 둘 다 실행</span></div>
+          <div><b>A 다음 A</b><span>첫 A만 실행, 두 번째 A는 already_running</span></div>
         </div>
-        <button class="toolbar-toggle" onclick="this.parentElement.classList.toggle('expanded')" title="내보내기" aria-label="내보내기 메뉴">⋯</button>
-      </div>
-      <h1>Farad Schedule 메신저 리모컨</h1>
-      <p class="lede">사용자 호스트의 Farad와 중앙 VM Relay, 사내 메신저 API가 어떻게 나뉘어 동작하는지 설명하고, 구현을 시작할 수 있을 만큼 구체적인 통신·상태·보안 계약을 정리한 공동 설계 문서입니다.</p>
-      <div class="meta">
-        <span>독자: Farad 개발자 · 중앙 VM/메신저 API 담당자</span>
-        <span>설계 기준일: 2026-07-15</span>
-        <span>현재 단계: 구현 전 아키텍처 합의</span>
-        <span>문서 revision: v0.4</span>
-      </div>
-      <div class="status-key" aria-label="문서 상태 표기">
-        <span class="tag confirmed">확정 · 현재 합의</span>
-        <span class="tag proposed">제안 · 인터페이스 초안</span>
-        <span class="tag open">미결정 · 구현 전 확인</span>
-      </div>
-      <nav class="toc" aria-label="문서 목차">
-        <a href="#overview">한눈에 보기</a>
-        <a href="#architecture">전체 구조</a>
-        <a href="#flows">핵심 시퀀스</a>
-        <a href="#keywords">키워드 카드</a>
-        <a href="#relay-api">Farad ↔ Relay</a>
-        <a href="#messenger-api">Relay ↔ 메신저</a>
-        <a href="#state">상태와 저장소</a>
-        <a href="#security">보안 경계</a>
-        <a href="#implementation">구현 범위</a>
-      </nav>
-    </header>
+      </header>
 
-    <section id="overview">
-      <div class="section-title"><span class="section-number mono">01</span><h2>한 문장으로 이해하는 시스템</h2></div>
-      <div class="thesis"><strong>메신저는 화면과 버튼만 제공하고, 중앙 VM은 안전한 배달과 API 변환을 담당하며, 실제 Schedule 목록·실행·LLM 판단의 권위는 각 사용자 호스트의 Farad에 남습니다.</strong></div>
-      <ul class="summary-list">
-        <li><b>첫 화면</b><span>사용자가 1:1 대화방에 말을 걸면 Relay가 <code>POST /message</code>를 받아 <code>📊 LLM 사용량 조회</code>와 <code>🗓️ Farad 예약 작업 조회</code>를 보여 줍니다.</span></li>
-        <li><b>사용자가 하는 일</b><span>메신저에서 검수된 별칭으로 표시된 원격 허용 Schedule을 고른 뒤 확인하여 실행합니다.</span></li>
-        <li><b>Farad가 하는 일</b><span>최신 Schedule 목록을 안전한 표식으로 투영하고, 선택을 재검증한 뒤 기존 <code>Run now</code> 경로로 실행합니다.</span></li>
-        <li><b>중앙 VM이 하는 일</b><span>메신저의 inbound <code>POST /message</code>를 수신하고, outbound API를 호출하는 유일한 Relay로서 command, ACK, 카드 ID와 일회용 토큰을 SQLite에 보관합니다.</span></li>
-        <li><b>LLM이 보내는 내용</b><span>자유 텍스트가 아니라 상태·행동·전략 키워드만 보냅니다. 추천 전략은 v1에서 최대 1개이며 Relay가 검수된 문구와 고정 이모지로 렌더링합니다.</span></li>
-        <li><b>동시 실행 규칙</b><span>같은 Schedule은 한 번에 하나만 실행합니다. 서로 다른 Schedule은 동시에 실행할 수 있습니다.</span></li>
-      </ul>
+      <section id="shape">
+        <h2>세 구성요소의 책임을 섞지 않는다</h2>
+        <p class="section-intro">Relay는 메신저와 통신 가능한 중앙 VM에 있고, 실제 Schedule 정의와 실행 상태는 각 사용자 호스트의 Farad에만 있습니다.</p>
+        <figure class="figure">
+          <figcaption>전체 통신 경로</figcaption>
+          <div class="topology">
+            <div class="node">
+              <b>사내 메신저</b>
+              <span>홈 카드 표시</span>
+              <span>사용자 버튼 클릭 전달</span>
+              <span><code>POST /message</code></span>
+            </div>
+            <div class="arrow" aria-hidden="true">↔</div>
+            <div class="node relay">
+              <b>중앙 VM Relay</b>
+              <span>메신저 암복호화·송수신</span>
+              <span>client token 검증</span>
+              <span>명령 queue·ACK·outbox</span>
+            </div>
+            <div class="arrow" aria-hidden="true">↔</div>
+            <div class="node">
+              <b>사용자 호스트 Farad</b>
+              <span>Schedule 목록과 Run now</span>
+              <span>동일 Schedule single-flight</span>
+              <span>진행 keyword 생성</span>
+            </div>
+          </div>
+          <div class="responsibility">
+            <div><b>Relay가 모르는 것</b><span>prompt, 작업 경로, transcript, 실제 Schedule ID</span></div>
+            <div><b>Farad가 모르는 것</b><span>메신저 OpenAPI token, AES key, msgKey 전송 세부</span></div>
+          </div>
+        </figure>
+      </section>
 
-      <h3>확정된 제품 범위</h3>
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>기능</th><th>v1 동작</th><th>경계</th></tr></thead>
+      <section id="connect">
+        <div class="scenario-head"><span class="scenario-no">SCENARIO 01</span><h2>처음 한 번만 연결한다</h2></div>
+        <p class="section-intro">공용 매핑 파일은 인증 수단이 아니라 “내 Knox ID를 찾는 주소록”입니다. Linux ID는 Farad 안에서 조회에만 쓰고 Relay에는 보내지 않습니다.</p>
+        <ol class="sequence">
+          <li><span class="actor">Farad</span><div class="step-copy"><b>현재 Linux 계정으로 공용 매핑 파일 조회</b><span>자기 행의 <code>senderKnoxId</code> 한 건만 읽고 전체 파일은 보관하지 않습니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>256비트 이상의 client token 생성</b><span>원문은 로컬 보호 파일에 저장합니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b><code>{knoxId, token}</code> 등록을 pending으로 저장</b><span>token 원문 대신 hash를 저장합니다.</span></div></li>
+          <li><span class="actor">사용자</span><div class="step-copy"><b>메신저 봇을 열거나 말을 건다</b><span>Relay가 수신 envelope의 공식 <code>senderKnoxId</code>를 확인합니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b>pending Knox ID가 일치하면 active 전환</b><span>메신저 <code>userId</code>와 <code>chatroomId</code>도 같은 client에 연결합니다.</span></div></li>
+        </ol>
+        <div class="note">공용 파일을 읽을 수 있다는 사실만으로는 본인 증명이 되지 않습니다. 마지막 메신저 확인 단계가 “이 Knox 계정을 실제로 사용하는 사람”임을 확인합니다.</div>
+      </section>
+
+      <section id="restart">
+        <div class="scenario-head"><span class="scenario-no">SCENARIO 02</span><h2>Farad를 껐다 켜도 다시 매핑하지 않는다</h2></div>
+        <ol class="sequence">
+          <li><span class="actor">Farad</span><div class="step-copy"><b>로컬 보호 파일에서 client token 읽기</b><span>공용 매핑 파일과 Linux ID는 다시 보지 않습니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>Bearer token으로 Relay Long Poll 시작</b><span><code>GET /commands?waitSeconds=25</code></span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b>token hash로 active client 조회</b><span>저장된 Knox ID, messenger userId, chatroomId를 사용합니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b>대기 명령 또는 빈 응답 반환</b><span>Farad는 응답 직후 다음 Long Poll을 엽니다.</span></div></li>
+        </ol>
+        <div class="decision"><b>Farad가 기억하는 것은 client token 하나</b>별도 Linux ID, Knox ID, bindingId를 로컬 state에 중복 저장하지 않습니다. token이 없거나 Relay binding이 폐기된 경우에만 최초 연결을 다시 합니다.</div>
+      </section>
+
+      <section id="two-jobs">
+        <div class="scenario-head"><span class="scenario-no">SCENARIO 03</span><h2>사용자가 A 다음 B를 바로 실행한다</h2></div>
+        <p class="section-intro">A와 B는 서로 다른 Schedule입니다. 두 클릭은 각각 다른 <code>commandId</code>가 되고 Farad는 두 실행을 동시에 유지할 수 있습니다.</p>
+        <div class="clicks"><span class="button">Schedule A 실행</span><span>1초 뒤</span><span class="button">Schedule B 실행</span></div>
+
+        <table class="queue">
+          <thead><tr><th>순서</th><th>Relay</th><th>Farad 판단</th><th>결과</th></tr></thead>
           <tbody>
-            <tr><td>홈</td><td>사용자의 inbound 메시지 → LLM 사용량 조회 / Farad 예약 작업 조회</td><td>메시지 본문은 해석·저장·전달하지 않고 홈 열기 신호로만 사용</td></tr>
-            <tr><td>목록</td><td>원격 허용 Schedule을 페이지 단위로 조회</td><td>실제 이름·prompt·경로 대신 검수된 안전한 별칭과 상태만 표시</td></tr>
-            <tr><td>실행</td><td>선택 → 확인 → 기존 Run now 실행</td><td>동일 Schedule 중복 실행 거절, 다른 Schedule은 허용</td></tr>
-            <tr><td>진행 보고</td><td>Schedule의 LLM이 상태 키워드 전송</td><td>자유 문자열, 파일명, 경로, 원문 결과 전송 금지</td></tr>
-            <tr><td>사용자 선택</td><td>고정 action 버튼으로 답변</td><td>자유 입력 없음. 일회용 actionToken만 사용</td></tr>
-            <tr><td>실행 권한</td><td>데스크톱 Run now와 같은 Schedule 설정 사용</td><td>메신저가 새 도구 권한을 부여하거나 승인 UI를 대신하지 않음</td></tr>
+            <tr><td>1</td><td><code>commandId=101</code><br><code>itemToken=A*</code></td><td>A의 활성 run 없음</td><td><span class="status run">A 시작</span></td></tr>
+            <tr><td>2</td><td><code>commandId=102</code><br><code>itemToken=B*</code></td><td>B의 활성 run 없음</td><td><span class="status run">B 시작</span></td></tr>
+            <tr><td>3</td><td>각 result를 독립 저장</td><td><code>runRef=A-7</code><br><code>runRef=B-3</code></td><td>진행 카드 분리</td></tr>
+            <tr><td>4</td><td>명령별 ACK</td><td>A와 B 각각 완료</td><td>서로 영향 없음</td></tr>
           </tbody>
         </table>
-      </div>
 
-      <div class="warning"><strong>공개 문서 주의</strong> 이 페이지에는 실제 Relay IP, 사용자 ID, 토큰, 사내 호스트명, Schedule 이름과 prompt를 넣지 않습니다. 예시는 모두 placeholder입니다.</div>
-    </section>
-
-    <section id="architecture">
-      <div class="section-title"><span class="section-number mono">02</span><h2>전체 구조와 책임 경계</h2></div>
-      <p class="intro">사용자마다 Farad가 자신의 호스트에서 실행됩니다. 사내 메신저 API에는 중앙 VM만 접근할 수 있으므로 모든 메신저 통신은 Relay를 통과합니다. Relay가 Farad의 업무 내용을 소유하지 않도록, 실제 task ID와 실행 정보는 Farad 내부에 유지합니다.</p>
-
-      <figure class="figure">
-        <div class="figure-head"><strong>런타임 토폴로지</strong><span>화살표는 요청과 응답이 오가는 통신 경로입니다.</span></div>
-        <svg viewBox="0 0 1040 500" role="img" aria-labelledby="arch-title arch-desc">
-          <title id="arch-title">Farad, 중앙 VM Relay, 메신저 API의 전체 구조</title>
-          <desc id="arch-desc">여러 사용자 호스트의 Farad가 중앙 VM Relay와 Long Poll로 연결되고, Relay만 사내 메신저 API와 통신합니다.</desc>
-          <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#707070"/></marker>
-          </defs>
-          <rect x="24" y="34" width="316" height="392" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
-          <text x="48" y="70" fill="var(--text)" font-size="18" font-weight="600">사용자 호스트 · 여러 대</text>
-          <text x="48" y="96" fill="var(--muted)" font-size="13">각 사용자의 Farad 프로세스가 자기 Schedule 권위를 가짐</text>
-          <rect x="54" y="132" width="256" height="106" rx="9" fill="var(--raised)" stroke="var(--border)"/>
-          <text x="76" y="164" fill="var(--text)" font-size="16" font-weight="600">Farad Schedule runtime</text>
-          <text x="76" y="191" fill="var(--text-2)" font-size="13">목록 · Run now · 실행 상태</text>
-          <text x="76" y="214" fill="var(--muted)" font-size="12">실제 task ID / prompt / 결과는 여기만</text>
-          <rect x="54" y="266" width="256" height="126" rx="9" fill="var(--raised)" stroke="var(--border)"/>
-          <text x="76" y="298" fill="var(--text)" font-size="16" font-weight="600">Relay client + token gate</text>
-          <text x="76" y="325" fill="var(--text-2)" font-size="13">Long Poll · command ACK</text>
-          <text x="76" y="348" fill="var(--text-2)" font-size="13">safe schedule projection</text>
-          <text x="76" y="371" fill="var(--text-2)" font-size="13">progress / remote choice tools</text>
-
-          <rect x="408" y="34" width="292" height="392" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
-          <text x="432" y="70" fill="var(--text)" font-size="18" font-weight="600">중앙 VM · 단일 Relay</text>
-          <text x="432" y="96" fill="var(--muted)" font-size="13">메신저 API와 통신할 수 있는 유일한 서버</text>
-          <rect x="438" y="132" width="232" height="122" rx="9" fill="var(--raised)" stroke="var(--border)"/>
-          <text x="460" y="164" fill="var(--text)" font-size="16" font-weight="600">Relay API</text>
-          <text x="460" y="188" fill="var(--text-2)" font-size="13">홈 · LLM 사용량 · navigation</text>
-          <text x="460" y="211" fill="var(--text-2)" font-size="13">inbound /message · pairing · Long Poll</text>
-          <text x="460" y="234" fill="var(--muted)" font-size="12">card renderer · keyword validation</text>
-          <rect x="438" y="282" width="232" height="110" rx="9" fill="var(--inset)" stroke="var(--border)"/>
-          <text x="460" y="314" fill="var(--text)" font-size="16" font-weight="600">VM 로컬 SQLite WAL</text>
-          <text x="460" y="341" fill="var(--text-2)" font-size="13">command · ACK · dedupe</text>
-          <text x="460" y="364" fill="var(--text-2)" font-size="13">chatroom · msgKey · action route</text>
-
-          <rect x="768" y="94" width="248" height="268" rx="12" fill="var(--surface)" stroke="var(--border-strong)"/>
-          <text x="792" y="132" fill="var(--text)" font-size="18" font-weight="600">사내 메신저</text>
-          <text x="792" y="158" fill="var(--muted)" font-size="13">RP 서버 + 사용자 1:1 대화방</text>
-          <rect x="798" y="192" width="188" height="64" rx="9" fill="var(--raised)" stroke="var(--border)"/>
-          <text x="820" y="221" fill="var(--text)" font-size="15" font-weight="600">Message API</text>
-          <text x="820" y="243" fill="var(--text-2)" font-size="12">Create · Chat · Update</text>
-          <rect x="798" y="278" width="188" height="54" rx="9" fill="var(--raised)" stroke="var(--border)"/>
-          <text x="820" y="310" fill="var(--text)" font-size="14">Adaptive Card 1.3</text>
-
-          <line x1="310" y1="329" x2="438" y2="209" stroke="var(--muted)" stroke-width="2" marker-end="url(#arrow)"/>
-          <line x1="438" y1="233" x2="310" y2="352" stroke="var(--muted)" stroke-width="2" marker-end="url(#arrow)"/>
-          <text x="346" y="257" fill="var(--text-2)" font-size="12" transform="rotate(-43 346 257)">Long Poll / REST</text>
-          <line x1="670" y1="205" x2="798" y2="205" stroke="var(--muted)" stroke-width="2" marker-end="url(#arrow)"/>
-          <line x1="798" y1="239" x2="670" y2="239" stroke="var(--muted)" stroke-width="2" marker-end="url(#arrow)"/>
-          <text x="711" y="193" fill="var(--text-2)" font-size="12">사내 API</text>
-          <text x="734" y="258" fill="var(--text-2)" font-size="11" text-anchor="middle">POST /message · 사용자 입력</text>
-        </svg>
-        <figcaption>Relay는 업무 데이터베이스가 아니라 배달·변환 계층입니다. 전체 Schedule과 실행 결과의 정본은 Farad에 남습니다.</figcaption>
-      </figure>
-
-      <h3>누가 무엇의 권위인가?</h3>
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>상태</th><th>단일 권위</th><th>Relay 보관 여부</th></tr></thead>
-          <tbody>
-            <tr><td>Schedule 정의, 실제 task ID, prompt, 경로</td><td>사용자 호스트의 Farad</td><td>보관하지 않음</td></tr>
-            <tr><td>같은 Schedule 실행 중 여부</td><td>Farad <code>SchedulerEngine</code></td><td>카드 표시용 projection만</td></tr>
-            <tr><td>홈 navigation과 LLM 사용량 카드</td><td>Relay application service</td><td>보관</td></tr>
-            <tr><td>활성 keyword vocabulary</td><td>Relay 운영 정책</td><td>정본과 버전 보관</td></tr>
-            <tr><td>LLM이 사용 가능한 keyword snapshot</td><td>Farad가 동기화한 vocabulary snapshot</td><td>vocabulary version으로 대조</td></tr>
-            <tr><td>inbound event ID, chatroomId, msgKey, action dedupe</td><td>Relay SQLite</td><td>본문 없이 식별자·처리 상태만 보관</td></tr>
-            <tr><td>실행 transcript와 도구 결과</td><td>Farad session</td><td>보관하지 않음</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="decision"><strong>중요한 경계</strong> Scheduled session의 기존 headless 정책은 풀지 않습니다. 로컬 승인과 자유 입력용 <code>AskUserQuestion</code>은 계속 차단하고, 메신저에는 keyword 전용 <code>ReportRemoteProgress</code>와 <code>RequestRemoteChoice</code>만 별도로 제공합니다.</div>
-    </section>
-
-    <section id="flows">
-      <div class="section-title"><span class="section-number mono">03</span><h2>사용자 경험을 만드는 다섯 가지 시퀀스</h2></div>
-
-      <h3>1. 사용자가 말을 걸면 홈 메뉴로 응답</h3>
-      <p>중앙 VM의 Relay가 <code>http://{연계서버IP:port}/message</code>에서 메신저 RP 서버의 POST를 기다립니다. 사용자가 1:1 대화방에 메시지를 보내면 Relay는 방·발신자·event 식별 정보를 확인하고 홈 카드 전송 의도를 SQLite에 기록한 뒤 HTTP 200을 반환합니다. 실제 카드는 HTTP 응답 body가 아니라 메신저 <code>ChatRequest</code>로 보냅니다.</p>
-      <pre>사용자  → 메신저 RP   "안녕" 또는 임의 메시지
-메신저 RP → Relay     POST http://{연계서버IP:port}/message
-                         { roomInfo, senderInfo, eventId, messageType, ... }
-Relay   → SQLite      inbound dedupe + HOME delivery intent 원자 기록
-Relay   → 메신저 RP   HTTP 200 OK
-Relay   → 메신저 API  ChatRequest(home Adaptive Card)
-메신저  → 사용자      [📊 LLM 사용량 조회] [🗓️ Farad 예약 작업 조회]</pre>
-      <div class="decision"><strong>자유 텍스트 처리 원칙</strong> v1은 사용자가 쓴 문장을 명령이나 prompt로 해석하지 않습니다. 내용은 로그·SQLite·Farad·LLM으로 전달하지 않고 “홈을 열어 달라”는 신호로만 사용합니다. 카드 버튼 응답은 같은 endpoint에서 별도의 action event로 분기합니다.</div>
-      <div class="card-preview" aria-label="메신저 홈 카드 예시">
-        <strong>Farad</strong>
-        <span>원하는 기능을 선택해 주세요.</span>
-        <div class="card-actions">
-          <span class="card-action">📊 LLM 사용량 조회</span>
-          <span class="card-action">🗓️ Farad 예약 작업 조회</span>
+        <div class="run-chart" role="img" aria-label="Schedule A와 B가 겹쳐 실행되는 타임라인">
+          <div class="axis"><span>실행 시간</span><span>0s</span><span>10s</span><span>20s</span><span>30s</span><span>40s</span><span>50s</span></div>
+          <div class="track"><span class="track-name">Schedule A</span><div class="track-line"><span class="bar a">runRef A-7 · running</span></div></div>
+          <div class="track"><span class="track-name">Schedule B</span><div class="track-line"><span class="bar b">runRef B-3 · running</span></div></div>
         </div>
-      </div>
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>동작</th><th>처리 주체</th><th>Farad 연결</th></tr></thead>
-          <tbody>
-            <tr><td>홈, 사용량 카드, 사용량 새로고침</td><td>Relay</td><td>불필요</td></tr>
-            <tr><td>Schedule 목록, 상세, 실행, 진행, 선택</td><td>Farad + Relay</td><td>필요</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <pre>{
-  "type": "Action.Submit",
-  "title": "📊 LLM 사용량 조회",
-  "data": {
-    "requestUrl": "https://relay.example.invalid/v1/action",
-    "actionToken": "opaque-single-use-token"
-  }
-}</pre>
-      <p>버튼 payload에는 동작 이름이나 사용자·Schedule ID를 넣지 않습니다. Relay의 <code>action_routes</code>가 <code>actionToken</code>을 Relay-only 또는 Farad-required 동작으로 해석합니다. 사용량 조회에 Farad 인증이 필요 없다는 뜻은 익명 공개라는 뜻이 아니며, Relay는 메신저 sender와 chatroom을 계속 검증합니다.</p>
-      <pre>class ActionScope(StrEnum):
-    RELAY_ONLY = "relay_only"
-    FARAD_REQUIRED = "farad_required"
 
-route = action_routes.consume(action_token, sender, chatroom_id)
-if route.scope is ActionScope.RELAY_ONLY:
-    return relay_menu_service.handle(route)
-return farad_command_service.enqueue(route)</pre>
-      <div class="note"><strong>현재 확정한 범위</strong> 수신 URL과 “방 정보 같은 routing 정보가 온다”는 사실만 확정합니다. 실제 필드명, 암호화·서명, event ID, 텍스트와 Adaptive Card 응답의 구분 값은 상세 수신 API 명세를 받은 뒤 adapter schema에 고정합니다.</div>
-
-      <h3>2. 최초 1회 Farad 연결</h3>
-      <p>이 연결은 Schedule 기능에만 필요합니다. 비밀 파일을 운영자가 배포하지 않고 Farad가 자기 호스트에서 긴 랜덤 credential을 만든 뒤, 사용자가 이미 로그인한 사내 메신저에서 본인 연결을 승인합니다.</p>
-      <div class="flow-grid" aria-label="최초 연결 단계">
-        <div class="flow-item"><b>Farad가 credential 생성</b><span>화면이나 로그에 원문을 노출하지 않고 민감 파일에 저장</span></div>
-        <div class="flow-item"><b>Relay에 pairing 등록</b><span>짧은 만료시간과 single-use pairing ID 발급</span></div>
-        <div class="flow-item"><b>메신저에서 본인 승인</b><span>inbound sender userId와 pairing을 결합</span></div>
-        <div class="flow-item"><b>Long Poll 시작</b><span>Relay가 credential hash와 account binding을 확인</span></div>
-      </div>
-      <div class="note"><strong>NFS의 역할</strong> OS 계정 → 사내 메신저 ID 입력 힌트를 둘 수는 있지만 인증 수단이 아닙니다. 비밀 credential은 Farad가 직접 생성하며 NFS 공용 매핑에 넣지 않습니다.</div>
-      <div class="warning"><strong>v1 transport 가정</strong> Farad는 설정된 고정 IP의 Relay를 신뢰합니다. 인증서·CA·공개키 pin은 넣지 않지만, 여러 사용자를 구분하고 오접속을 막기 위한 client credential과 최초 메신저 승인은 유지합니다.</div>
-
-      <h3>3. Long Poll로 명령 받기</h3>
-      <pre>Farad  → Relay   GET /v1/commands?cursor=42&amp;waitSeconds=25
-Relay  → Farad   25초 안에 명령이 없으면 빈 응답
-Farad  → Relay   즉시 다음 Long Poll 연결
-
-사용자 → 메신저  Adaptive Card 버튼 클릭
-메신저 → Relay   POST /message (action event + room/sender info)
-Relay  → SQLite  action 소비와 commandId=43을 먼저 영속화
-Relay  → Farad   { commandId: 43, kind: "LIST_SCHEDULES" }
-Farad  → Relay   처리 결과 전송
-Farad  → Relay   ACK commandId=43</pre>
-      <p class="small">25초는 의미 있는 업무 timeout이 아니라 proxy idle timeout보다 짧게 잡은 연결 유지 예시입니다. 실제 값은 VM 앞단의 proxy/load balancer 설정을 확인해 결정합니다.</p>
-      <div class="decision"><strong>신호를 놓치지 않는 이유</strong> Long Poll 응답 자체가 명령의 정본이 아닙니다. Relay가 command를 SQLite에 먼저 저장하고 Farad의 ACK가 오기 전까지 다시 전달하므로, 응답 도중 연결이 끊겨도 명령은 남습니다.</div>
-
-      <h3>4. 원격 허용 Schedule 보기 → 선택 → 실행</h3>
-      <figure class="figure">
-        <div class="figure-head"><strong>원격 Run now 시퀀스</strong><span>목록 선택과 실제 실행 사이에 확인 단계를 둡니다.</span></div>
-        <svg viewBox="0 0 1040 720" role="img" aria-labelledby="run-title run-desc">
-          <title id="run-title">메신저에서 Schedule 목록을 보고 선택하여 실행하는 시퀀스</title>
-          <desc id="run-desc">사용자가 목록을 요청하면 Relay가 Farad에 command를 전달하고, Farad가 안전한 목록을 반환합니다. 사용자가 항목을 선택하고 확인하면 Farad가 기존 Run now 경로로 실행합니다.</desc>
-          <defs><marker id="seq-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#707070"/></marker></defs>
-          <g fill="var(--text)" font-size="15" font-weight="600" text-anchor="middle">
-            <text x="115" y="42">사용자</text><text x="370" y="42">메신저</text><text x="650" y="42">Relay</text><text x="925" y="42">Farad</text>
-          </g>
-          <g stroke="var(--border-strong)" stroke-width="1.5" stroke-dasharray="5 7"><line x1="115" y1="62" x2="115" y2="685"/><line x1="370" y1="62" x2="370" y2="685"/><line x1="650" y1="62" x2="650" y2="685"/><line x1="925" y1="62" x2="925" y2="685"/></g>
-          <g stroke="var(--muted)" stroke-width="1.6" marker-end="url(#seq-arrow)">
-            <line x1="115" y1="104" x2="370" y2="104"/><line x1="370" y1="146" x2="650" y2="146"/><line x1="650" y1="188" x2="925" y2="188"/>
-            <line x1="925" y1="250" x2="650" y2="250"/><line x1="650" y1="292" x2="370" y2="292"/>
-            <line x1="115" y1="360" x2="370" y2="360"/><line x1="370" y1="402" x2="650" y2="402"/><line x1="650" y1="444" x2="925" y2="444"/>
-            <line x1="925" y1="506" x2="650" y2="506"/><line x1="650" y1="548" x2="370" y2="548"/>
-            <line x1="115" y1="606" x2="370" y2="606"/><line x1="370" y1="648" x2="650" y2="648"/><line x1="650" y1="680" x2="925" y2="680"/>
-          </g>
-          <g fill="var(--text-2)" font-size="12" text-anchor="middle">
-            <text x="242" y="94">① 예약 작업 조회</text><text x="510" y="136">② action 영속화</text><text x="787" y="178">③ LIST_SCHEDULES</text>
-            <text x="787" y="240">④ 안전한 page projection</text><text x="510" y="282">⑤ 검수된 별칭 목록 카드</text>
-            <text x="242" y="350">⑥ 조용한 수달 선택</text><text x="510" y="392">⑦ itemToken 전달</text><text x="787" y="434">⑧ 현재 상태 재검증</text>
-            <text x="787" y="496">⑨ 확인용 action 발급</text><text x="510" y="538">⑩ “실행할까요?” 카드</text>
-            <text x="242" y="596">⑪ 실행</text><text x="510" y="638">⑫ single-use 확인</text><text x="787" y="670">⑬ 기존 Run now 호출</text>
-          </g>
-        </svg>
-        <figcaption>Relay는 실제 task ID를 알 필요가 없습니다. Farad가 만든 짧은 수명의 itemToken을 같은 Farad로 되돌려 보냅니다.</figcaption>
-      </figure>
-
-      <h3>메신저 실행도 데스크톱 Run now와 같은 경로</h3>
-      <pre>scheduler.run_now(
-    task_id,
-    apply_check=False,
-    consume_run_limit=False,
-)
-# 제안 controller가 task_started/task_skipped signal을 typed 결과로 변환하고
-# audit origin만 "messenger"로 기록</pre>
-      <p>메신저용 별도 실행 엔진이나 더 강한 임의 제한을 만들지 않습니다. 기존 <code>run_now()</code>가 확인하는 <code>running/checking</code> gate를 그대로 통과하므로 같은 Schedule은 거절되고, 다른 Schedule은 동시에 실행됩니다. 원격 선택을 기다리는 동안에도 그 Schedule은 <code>RUNNING</code>입니다.</p>
-
-      <h3>5. 실행 중 진행 카드와 사용자 선택</h3>
-      <figure class="figure">
-        <div class="figure-head"><strong>keyword 기반 원격 상호작용</strong><span>기존 AskUserQuestion과 별도 경로입니다.</span></div>
-        <svg viewBox="0 0 1040 560" role="img" aria-labelledby="choice-title choice-desc">
-          <title id="choice-title">실행 중 LLM이 진행 카드를 보내고 사용자가 버튼으로 응답하는 시퀀스</title>
-          <desc id="choice-desc">Scheduled LLM이 상태와 행동 키워드로 원격 선택을 요청하면 Farad가 검증하여 Relay에 전송하고, Relay가 카드로 렌더링합니다. 사용자의 버튼 응답은 일회용 action token을 거쳐 enum 값으로 LLM에 돌아옵니다.</desc>
-          <defs><marker id="choice-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#707070"/></marker></defs>
-          <g fill="var(--text)" font-size="15" font-weight="600" text-anchor="middle">
-            <text x="110" y="42">Scheduled LLM</text><text x="360" y="42">Farad gate</text><text x="650" y="42">Relay</text><text x="925" y="42">사용자</text>
-          </g>
-          <g stroke="var(--border-strong)" stroke-width="1.5" stroke-dasharray="5 7"><line x1="110" y1="62" x2="110" y2="525"/><line x1="360" y1="62" x2="360" y2="525"/><line x1="650" y1="62" x2="650" y2="525"/><line x1="925" y1="62" x2="925" y2="525"/></g>
-          <g stroke="var(--muted)" stroke-width="1.6" marker-end="url(#choice-arrow)">
-            <line x1="110" y1="116" x2="360" y2="116"/><line x1="360" y1="174" x2="650" y2="174"/><line x1="650" y1="232" x2="925" y2="232"/>
-            <line x1="925" y1="326" x2="650" y2="326"/><line x1="650" y1="384" x2="360" y2="384"/><line x1="360" y1="442" x2="110" y2="442"/>
-          </g>
-          <g fill="var(--text-2)" font-size="12" text-anchor="middle">
-            <text x="235" y="105">① RequestRemoteChoice(status, actions, strategy)</text>
-            <text x="505" y="163">② keyword vocabulary 검증</text>
-            <text x="787" y="221">③ Adaptive Card 렌더링</text>
-            <text x="787" y="315">④ [🔄 다시 하기] 클릭</text>
-            <text x="505" y="373">⑤ actionToken 소비 · dedupe</text>
-            <text x="235" y="431">⑥ REMOTE_CHOICE: RETRY</text>
-          </g>
-          <rect x="758" y="252" width="164" height="44" rx="8" fill="var(--surface)" stroke="var(--border)"/>
-          <text x="840" y="279" fill="var(--text)" font-size="12" text-anchor="middle">[🔄 다시 하기] [⏹️ 그만하기]</text>
-          <rect x="274" y="466" width="172" height="46" rx="8" fill="var(--warning-soft)" stroke="var(--warning)"/>
-          <text x="360" y="486" fill="var(--text)" font-size="11" text-anchor="middle">응답 대기 중에도 같은 Schedule</text>
-          <text x="360" y="501" fill="var(--text)" font-size="11" text-anchor="middle">실행 슬롯은 계속 점유</text>
-        </svg>
-        <figcaption>다른 Schedule은 동시에 실행할 수 있지만, 선택을 기다리는 실행도 해당 Schedule의 활성 실행으로 간주합니다.</figcaption>
-      </figure>
-    </section>
-
-    <section id="keywords">
-      <div class="section-title"><span class="section-number mono">04</span><h2>버전이 있는 폐쇄형 키워드 계약</h2></div>
-      <p class="intro">LLM은 문장이나 이모지를 만들지 않고 허용된 enum만 고릅니다. Relay가 키워드를 검수된 한국어와 고정 이모지로 렌더링하므로, 메신저로 구체적인 업무 텍스트가 흘러가는 통로를 구조적으로 닫습니다.</p>
-
-      <div class="split">
-        <article class="panel">
-          <h4>상태 keyword</h4>
-          <ul class="plain-list">
-            <li><code>succeeded</code> → ✅ 성공했어요</li>
-            <li><code>failed</code> → ❌ 실패했어요</li>
-            <li><code>running</code> → ⏳ 진행하고 있어요</li>
-            <li><code>choice_required</code> → ⚠️ 선택이 필요해요</li>
-            <li><code>desktop_required</code> → 💻 데스크톱에서 확인해 주세요</li>
-          </ul>
-        </article>
-        <article class="panel">
-          <h4>행동·전략 keyword</h4>
-          <ul class="plain-list">
-            <li><code>retry</code> → 🔄 다시 하기</li>
-            <li><code>try_different</code> → 🛣️ 다르게 시도하기</li>
-            <li><code>diagnose</code> → 🔍 원인을 확인하고 시도</li>
-            <li><code>stop</code> → ⏹️ 그만하기</li>
-            <li><code>back</code> / <code>home</code> → ↩️ 뒤로 / 🏠 처음으로</li>
-          </ul>
-        </article>
-      </div>
-
-      <div class="card-preview" aria-label="실패 선택 카드 예시">
-        <strong>❌ 실패했어요</strong>
-        <span>다음 동작을 선택해 주세요.</span>
-        <div class="card-actions">
-          <span class="card-action">🔄 다시 하기</span>
-          <span class="card-action">🛣️ 다르게 시도하기</span>
-          <span class="card-action">🔍 원인을 확인하고 시도</span>
-          <span class="card-action">⏹️ 그만하기</span>
+        <div class="result-rule">
+          <div><b>동시 실행 단위</b><span>Farad 전체가 아니라 Schedule별 single-flight</span></div>
+          <div><b>메시지 분리 단위</b><span><code>commandId</code>와 <code>runRef</code>로 진행·완료를 각각 연결</span></div>
         </div>
-      </div>
 
-      <h3>v1 wire payload</h3>
-      <pre>{
-  "status": "failed",
-  "actions": ["retry", "try_different", "stop"],
-  "strategyKeywords": ["diagnose"],
-  "vocabularyVersion": 1
-}</pre>
-      <p>추천 전략은 배열로 보내되 v1 validator는 <code>maxItems: 1</code>로 제한합니다. 이후 자유 조립을 열더라도 등록된 키워드 조합만 허용하고, 임의 문자열·임의 이모지·임의 순서는 허용하지 않습니다. wire 모양은 그대로 유지됩니다.</p>
-
-      <h3>Farad와 Relay가 같은 규칙으로 두 번 검증</h3>
-      <pre>class StrategyKeyword(StrEnum):
-    DIAGNOSE = "diagnose"
-
-@dataclass(frozen=True)
-class RemoteChoiceRequest:
-    status: StatusKeyword
-    actions: tuple[ActionKeyword, ...]
-    strategy_keywords: tuple[StrategyKeyword, ...]
-    vocabulary_version: int
-
-def validate(request: RemoteChoiceRequest) -> None:
-    if len(request.strategy_keywords) > 1:
-        raise InvalidRemotePayload("v1 allows one strategy keyword")</pre>
-      <ul class="plain-list">
-        <li>도구 schema는 <code>status</code>, <code>actions</code>, <code>strategyKeywords</code>를 enum으로 선언합니다.</li>
-        <li><code>message</code>, <code>detail</code>, <code>reasonText</code>, 파일명, 경로, 로그, 도구 이름·인자, 원문 결과 필드는 존재하지 않습니다.</li>
-        <li>LLM은 이모지를 고르지 않습니다. 각 keyword의 이모지와 문구는 Relay renderer에 고정됩니다.</li>
-        <li>알 수 없는 값, vocabulary version 불일치, 허용되지 않은 조합은 거절합니다. 전략이 유효하지 않을 때는 일반 <code>try_different</code>만 표시합니다.</li>
-        <li>버튼의 <code>actionToken</code>은 Relay가 발급하며 LLM에게 노출하지 않습니다.</li>
-      </ul>
-      <div class="note"><strong>왜 키워드인가?</strong> “실패했어요”, “다시 하기”처럼 누구나 같은 뜻으로 이해하는 표현은 고정 문구가 가장 안전합니다. 구체적인 제안이 필요할 때만 <code>diagnose</code> 같은 승인 keyword 하나를 더해 선택지를 늘립니다.</div>
-    </section>
-
-    <section id="relay-api">
-      <div class="section-title"><span class="section-number mono">05</span><h2>Farad ↔ Relay 제안 API</h2></div>
-      <p class="intro">아래 endpoint 이름은 구현 초안입니다. 이름보다 중요한 것은 durable command, 명시적 ACK, vocabulary version, idempotency의 의미입니다. v1은 고정 Relay IP를 신뢰하는 사내망 가정을 사용하며 TLS/CA/pinning은 범위에서 제외합니다.</p>
-
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">/v1/pairings</span><span class="tag proposed">제안</span></div>
-        <p>Farad가 생성한 client credential로 pairing을 시작합니다. Relay는 짧은 수명의 pairing ID를 만들고 메신저 승인과 결합합니다.</p>
-      </div>
-      <div class="api-block">
-        <div class="api-head"><span class="method">GET</span><span class="path">/v1/commands?cursor={n}&amp;waitSeconds=25</span><span class="tag proposed">제안</span></div>
-        <p>Farad 프로세스당 하나의 Long Poll. 반환된 command는 ACK 전까지 Relay SQLite에 남습니다.</p>
-      </div>
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">/v1/commands/{commandId}/result</span><span class="tag proposed">제안</span></div>
-        <p>LIST, SELECT, RUN command의 처리 결과를 전달합니다. 같은 idempotency key로 재요청해도 효과는 한 번이어야 합니다.</p>
-      </div>
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">/v1/commands/{commandId}/ack</span><span class="tag proposed">제안</span></div>
-        <p>Farad가 결과를 안전하게 제출한 뒤 ACK합니다. Relay는 ACK된 command를 전달 대상에서 제외합니다.</p>
-      </div>
-      <div class="api-block">
-        <div class="api-head"><span class="method">GET</span><span class="path">/v1/keyword-vocabulary?knownVersion={v}</span><span class="tag proposed">제안</span></div>
-        <p>활성 keyword vocabulary snapshot을 동기화합니다. 동일 버전이면 본문 없이 유지할 수 있습니다.</p>
-      </div>
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">/v1/interactions</span><span class="tag proposed">제안</span></div>
-        <p>진행 또는 선택 요청의 상태·행동·전략 keyword를 전송합니다. Relay는 검증 후 새 Adaptive Card를 보내거나 기존 msgKey를 갱신합니다.</p>
-      </div>
-
-      <h3>LIST_SCHEDULES 응답 예시</h3>
-      <p>Schedule은 로컬에서 <code>remote_enabled=False</code>가 기본입니다. 사용자가 원격 허용을 켜고 승인된 <code>remote_alias_id</code> 하나를 고른 항목만 목록에 포함합니다. 별칭은 한 사용자 안에서 구분 가능해야 하며 실제 이름에서 자동 생성하지 않습니다.</p>
-      <pre>{
-  "commandId": 43,
-  "scheduleGeneration": 18,
-  "items": [
-    {
-      "itemToken": "opaque-single-use-token",
-      "aliasId": "QUIET_OTTER",
-      "state": "ready"
-    },
-    {
-      "itemToken": "opaque-single-use-token-2",
-      "aliasId": "GREEN_FOX",
-      "state": "running"
-    }
-  ],
-  "nextCursor": "opaque-page-cursor"
-}</pre>
-      <ul class="plain-list">
-        <li><code>aliasId</code>는 원격 허용 시 선택한 검수된 별칭입니다. Relay는 <code>QUIET_OTTER</code>를 “조용한 수달”처럼 고정 문구로 표시합니다.</li>
-        <li>Relay에는 실제 task ID나 Schedule 이름을 보내지 않습니다.</li>
-        <li><code>itemToken</code>은 Farad 설치, schedule generation, 만료시간에 묶인 single-use 값입니다.</li>
-        <li>선택 후 실행 확인 시 Farad가 삭제·비활성·현재 실행 중 여부를 다시 검사합니다.</li>
-      </ul>
-
-      <h3>Run now 결과는 fire-and-forget 문자열이 아니어야 한다</h3>
-      <pre>{
-  "decision": "accepted",
-  "runRef": "opaque-run-ref",
-  "origin": "messenger"
-}</pre>
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>결과</th><th>메신저 표시</th><th>Farad 의미</th></tr></thead>
-          <tbody>
-            <tr><td><code>accepted</code></td><td>실행을 시작했어요.</td><td>기존 Run now 경로 진입</td></tr>
-            <tr><td><code>already_running</code></td><td>같은 작업이 이미 실행 중이에요.</td><td>동일 Schedule single-flight</td></tr>
-            <tr><td><code>disabled</code></td><td>현재 실행할 수 없는 작업이에요.</td><td>Schedule 상태 재검증 실패</td></tr>
-            <tr><td><code>stale_selection</code></td><td>목록이 변경되었어요. 다시 열어 주세요.</td><td>schedule generation 또는 digest 불일치</td></tr>
-            <tr><td><code>relay_unavailable</code></td><td>Farad와 연결되어 있지 않아요.</td><td>client lease 없음</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="messenger-api">
-      <div class="section-title"><span class="section-number mono">06</span><h2>Relay ↔ 사내 메신저 API 매핑</h2></div>
-      <p class="intro">이 절은 제공된 메신저 API 설명을 Relay 구현 관점으로 재배열한 것입니다. 실제 연계 명세와 다른 철자나 필드가 있을 수 있으므로 구현 전 원문 spec 또는 테스트 서버로 확인해야 합니다.</p>
-
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">/messsage/api/v1.0/message/createChatroomRequest</span><span class="tag confirmed">제공된 명세</span></div>
-        <p>사용자별 1:1 대화방을 생성합니다. 양방향 응답이 필요하므로 <code>chatType=0</code> 사용을 우선 검토합니다. 같은 방장과 수신자의 1:1 방은 기존 방이 반환되므로 <code>chatroomId</code>를 Relay SQLite에 저장해 재사용합니다.</p>
-        <pre>{
-  "requestId": 1721000000001,
-  "chatType": 0,
-  "receivers": [123456789]
-}</pre>
-      </div>
-
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">/message/api/v1.0/message/chatRequest</span><span class="tag confirmed">제공된 명세</span></div>
-        <p>홈 카드, 목록 카드, 실행 확인, 진행/질문 카드를 전송합니다. Adaptive Card는 <code>msgType=19</code>, <code>chatMsg</code>에는 Adaptive Card JSON 문자열을 넣습니다. 한 요청에 최대 10개 메시지, 일반 내용은 최대 3,300자라는 제약을 반영합니다.</p>
-        <pre>{
-  "requestId": 1721000000002,
-  "chatroomId": 99887766,
-  "chatMessageParams": [
-    {
-      "msgId": 1721000000003,
-      "msgType": 19,
-      "chatMsg": "{ ... Adaptive Card 1.3 JSON ... }"
-    }
-  ]
-}</pre>
-        <p>응답의 <code>msgKey</code>와 <code>sentTime</code>을 저장합니다. <code>msgKey</code>는 이후 카드 갱신과 회수에 필요합니다.</p>
-      </div>
-
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">/message/api/v1.0/message/updateMessageRequest</span><span class="tag confirmed">제공된 명세</span></div>
-        <p>버튼 비활성화, 실행 중 상태, 선택 완료 표시처럼 같은 카드를 갱신합니다. Adaptive Card 갱신은 <code>msgType=20</code>을 사용하고 ChatRequest에서 받은 <code>msgKey</code>를 전달합니다.</p>
-      </div>
-
-      <div class="api-block">
-        <div class="api-head"><span class="method">POST</span><span class="path">http://{연계서버IP:port}/message</span><span class="tag confirmed">URL 확정</span><span class="tag open">Body 상세 대기</span></div>
-        <p>사용자가 메신저 대화방에 메시지를 보내거나 카드 버튼을 누를 때 메신저 RP 서버가 호출하는 inbound endpoint입니다. 중앙 VM의 Relay가 지정된 IP와 port에서 이 경로를 리스닝합니다. 현재는 방·발신자·event·메시지 종류를 식별할 정보가 온다고 가정하고, 실제 필드명은 추후 명세로 교체합니다.</p>
-        <pre>{
-  "roomInfo": "&lt;placeholder: 1:1 방 식별 정보&gt;",
-  "senderInfo": "&lt;placeholder: 발신자 식별 정보&gt;",
-  "eventId": "&lt;placeholder: 중복 제거용 식별자&gt;",
-  "messageType": "&lt;placeholder: TEXT 또는 ACTION 구분&gt;",
-  "payload": "&lt;placeholder: 상세 명세 수신 후 확정&gt;"
-}</pre>
-        <div class="table-shell">
-          <table>
-            <thead><tr><th>수신 종류</th><th>Relay 처리</th><th>Farad 전달</th></tr></thead>
-            <tbody>
-              <tr><td>일반 사용자 메시지</td><td>본문 폐기 → 홈 카드 delivery 생성</td><td>하지 않음</td></tr>
-              <tr><td>Adaptive Card action</td><td>actionToken 검증 → route 실행</td><td>Farad-required action만 durable command로 전달</td></tr>
-              <tr><td>중복 event</td><td>이미 처리한 결과로 간주하고 HTTP 200</td><td>재적용하지 않음</td></tr>
-              <tr><td>지원하지 않는 방/종류</td><td>내용을 처리하지 않고 제한된 audit 후 HTTP 200</td><td>하지 않음</td></tr>
-            </tbody>
-          </table>
+        <h3>메신저에는 이렇게 보입니다</h3>
+        <div class="message-card">
+          <h3>예약 작업 2개가 실행 중이에요</h3>
+          <p>각 작업의 진행 상황은 별도 카드로 알려드릴게요.</p>
+          <div class="card-actions"><span>Schedule A 상태 보기</span><span>Schedule B 상태 보기</span></div>
+          <div class="card-actions utility"><span>↩️ 뒤로</span><span>🏠 홈으로</span></div>
         </div>
-        <p>Relay는 최소 검증과 <code>inbound_dedup</code> 기록, 필요한 delivery/command intent의 commit을 마친 뒤 HTTP 200만 반환합니다. 카드 생성과 전송은 outbox worker가 이어서 수행하므로 메신저 RP의 요청 timeout에 묶이지 않습니다.</p>
-      </div>
+      </section>
 
-      <h3>Adaptive Card action 규칙</h3>
-      <pre>{
-  "type": "Action.Submit",
-  "title": "🔄 다시 하기",
-  "data": {
-    "requestUrl": "https://relay.example.invalid/v1/action",
-    "actionToken": "opaque-single-use-token"
-  }
-}</pre>
-      <ul class="plain-list">
-        <li>카드 표시는 Adaptive Card 1.3 범위 안에서 구현합니다.</li>
-        <li><code>actionToken</code>에는 task ID, run ID, action 의미를 평문으로 넣지 않습니다.</li>
-        <li>Relay는 sender가 account binding의 messenger userId와 같은지 먼저 확인합니다.</li>
-        <li>action을 SQLite에 원자적으로 기록한 뒤 200을 반환하고, Farad 전달이 필요한 동작만 durable command로 이어갑니다.</li>
-      </ul>
-
-      <h3>카드 운영 규칙</h3>
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>카드</th><th>갱신 방식</th><th>규칙</th></tr></thead>
+      <section id="same-job">
+        <div class="scenario-head"><span class="scenario-no">SCENARIO 04</span><h2>사용자가 A를 두 번 실행한다</h2></div>
+        <p class="section-intro">Relay는 두 클릭을 안전하게 접수하지만, 실행 권위인 Farad가 두 번째 명령을 거절합니다. Relay가 임의로 실행 상태를 판단하지 않습니다.</p>
+        <div class="clicks"><span class="button">Schedule A 실행</span><span>1초 뒤</span><span class="button">Schedule A 다시 실행</span></div>
+        <table class="queue">
+          <thead><tr><th>명령</th><th>Farad 검사</th><th>결과</th></tr></thead>
           <tbody>
-            <tr><td>홈·목록·상세</td><td>하나의 navigation 카드를 <code>UpdateMessageRequest</code>로 갱신</td><td>↩️ 뒤로 / 🏠 처음으로 / 새로고침 / 페이지 이동 제공</td></tr>
-            <tr><td>실행 진행</td><td>실행 중인 Schedule마다 별도 카드</td><td>서로 다른 Schedule의 진행을 동시에 표시</td></tr>
-            <tr><td>사용자 선택</td><td>선택 즉시 같은 카드를 비활성·결과 상태로 갱신</td><td>중복 클릭은 동일 actionToken 소비로 차단</td></tr>
-            <tr><td>LLM 사용량</td><td>승인된 template에 수치만 채워 새 카드 또는 갱신</td><td>임의 Adaptive Card JSON은 allowlist/schema 검증 없이 전달하지 않음</td></tr>
+            <tr><td><code>commandId=201</code></td><td>A의 활성 run 없음</td><td><span class="status run">accepted</span> 새 실행 시작</td></tr>
+            <tr><td><code>commandId=202</code></td><td>A의 <code>runRef=A-8</code>가 이미 활성</td><td><span class="status stop">already_running</span> 새 실행 없음</td></tr>
           </tbody>
         </table>
-      </div>
-      <div class="note"><strong>뒤로 가기는 중단이 아닙니다.</strong> navigation 카드만 이전 화면으로 바꾸며 실행은 계속됩니다. 실행을 멈추는 동작은 별도의 <code>⏹️ 그만하기</code> 버튼으로만 제공합니다.</div>
+        <div class="run-chart" role="img" aria-label="첫 Schedule A만 실행되고 두 번째 요청은 거절되는 타임라인">
+          <div class="axis"><span>실행 시간</span><span>0s</span><span>10s</span><span>20s</span><span>30s</span><span>40s</span><span>50s</span></div>
+          <div class="track"><span class="track-name">첫 번째 A</span><div class="track-line"><span class="bar a">runRef A-8 · running</span></div></div>
+          <div class="track"><span class="track-name">두 번째 A</span><div class="track-line"><span class="bar reject">already running</span></div></div>
+        </div>
+        <div class="note">메신저에는 “같은 작업이 이미 실행 중이에요” 카드가 표시되고, 기존 A 실행은 중단되지 않습니다.</div>
+      </section>
 
-      <div class="warning"><strong>명세 철자 확인 필요</strong> 제공된 설명에는 <code>/messsage</code>, <code>result.coe</code>, <code>chatrommId</code>, <code>processedMessageEntires</code>처럼 오타로 보이는 표기가 있습니다. 테스트 서버 또는 정식 OpenAPI 문서에서 실제 필드명을 확인해야 합니다.</div>
-    </section>
+      <section id="offline">
+        <div class="scenario-head"><span class="scenario-no">SCENARIO 05</span><h2>클릭 직후 Farad 연결이 끊긴다</h2></div>
+        <p class="section-intro">Long Poll 응답 자체는 명령의 정본이 아닙니다. Relay가 먼저 SQLite에 저장하고 Farad의 ACK를 받기 전까지 보관합니다.</p>
+        <ol class="sequence">
+          <li><span class="actor">사용자</span><div class="step-copy"><b>Schedule A 실행 클릭</b><span>메신저 RP가 action event를 Relay에 전달합니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b><code>commandId=301</code>을 SQLite에 먼저 저장</b><span>이 시점부터 네트워크 응답이 끊겨도 명령은 남습니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>Long Poll 연결이 끊어짐</b><span>아직 ACK가 없으므로 command는 pending입니다.</span></div></li>
+          <li><span class="actor">Farad</span><div class="step-copy"><b>재연결 후 같은 command 수신</b><span>처리 결과를 제출하고 ACK합니다.</span></div></li>
+          <li><span class="actor">Relay</span><div class="step-copy"><b>ACK 이후에만 전달 완료 처리</b><span>메신저 webhook 재전송도 inbound msgId로 중복 제거합니다.</span></div></li>
+        </ol>
+        <div class="note">명령 보관 만료시간은 운영 정책으로 별도 확정해야 합니다. 핵심 계약은 “persist before deliver, ACK after result”입니다.</div>
+      </section>
 
-    <section id="state">
-      <div class="section-title"><span class="section-number mono">07</span><h2>상태와 저장소: 중앙 DB는 VM 로컬 SQLite 하나</h2></div>
-      <p class="intro">중앙 Relay가 한 VM에서 동작하는 v1에는 별도 DB 서버가 필요하지 않습니다. SQLite WAL을 VM 로컬 디스크에 두고, NFS에는 DB와 command queue를 두지 않습니다.</p>
-
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>저장 위치</th><th>보관하는 것</th><th>보관하지 않는 것</th></tr></thead>
+      <section id="ownership">
+        <h2>두 종류의 token을 혼동하지 않는다</h2>
+        <p class="section-intro">메신저 OpenAPI 인증 token과 Farad client token은 소유자와 목적이 완전히 다릅니다.</p>
+        <table class="token-table">
           <tbody>
-            <tr><td>Farad 민감 파일</td><td>원본 client credential</td><td>메신저 inbound event, 중앙 command queue</td></tr>
-            <tr><td>Farad runtime/session</td><td>Schedule 정의, task ID, prompt, transcript, 결과, 실행 상태</td><td>메신저 msgKey 정본</td></tr>
-            <tr><td>선택적 NFS 설정</td><td>Relay 고정 IP, OS 계정 → 메신저 ID 입력 힌트</td><td>비밀 token, SQLite, 자주 바뀌는 상태</td></tr>
-            <tr><td>VM 로컬 SQLite WAL</td><td>account binding, credential hash, chatroom, inbound dedupe, outbox delivery, command, ACK, action route, keyword vocabulary</td><td>사용자 자유 텍스트, 전체 Schedule 목록, 실제 task ID, prompt, 경로, tool 결과</td></tr>
+            <tr><th>Messenger API token</th><td>Relay VM 배포 비밀. OpenAPI의 <code>Authorization: Bearer</code> 헤더에 사용하며 Farad에 배포하지 않습니다.</td></tr>
+            <tr><th>Farad client token</th><td>각 Farad 설치가 생성하는 비밀. Relay Long Poll 인증에 사용하며 Relay는 hash만 저장합니다.</td></tr>
+            <tr><th>actionToken</th><td>한 카드 버튼을 한 동작에 연결하는 짧은 수명의 opaque 값. Schedule ID나 prompt를 포함하지 않습니다.</td></tr>
+            <tr><th>itemToken / runRef</th><td>Farad가 실제 Schedule과 실행을 안전하게 식별하는 opaque 참조. 메신저에 내부 ID를 노출하지 않습니다.</td></tr>
           </tbody>
         </table>
-      </div>
 
-      <h3>Relay의 최소 논리 테이블</h3>
-      <div class="split">
-        <article class="panel"><h4>accounts / credentials</h4><p>messenger userId, Farad 설치 식별자, credential hash, 활성/폐기 상태를 연결합니다.</p></article>
-        <article class="panel"><h4>pairings / chatrooms</h4><p>만료되는 pairing과 재사용할 1:1 chatroomId를 보관합니다.</p></article>
-        <article class="panel"><h4>commands</h4><p>commandId, 대상 client, payload, cursor, ACK, 만료를 보관합니다. 미ACK command는 다시 배달합니다.</p></article>
-        <article class="panel"><h4>deliveries / cards</h4><p>outbox delivery intent, requestId, msgId, msgKey, card generation, 시도 횟수와 마지막 전송 상태를 기록합니다.</p></article>
-        <article class="panel"><h4>action_routes</h4><p>actionToken, scope, kind, 대상 client/runRef, card generation, 만료와 소비 여부를 관리합니다.</p></article>
-        <article class="panel"><h4>keyword_vocabulary</h4><p>vocabularyVersion, keyword ID, 고정 문구·이모지, 허용 조합, deprecated 상태를 관리합니다.</p></article>
-        <article class="panel"><h4>inbound_dedup</h4><p>event ID, room/sender 식별자, event kind, 처리 상태를 저장해 재적용을 막습니다. 자유 텍스트 본문은 넣지 않습니다.</p></article>
-        <article class="panel"><h4>navigation / safe views</h4><p>현재 화면, 검수된 별칭, opaque itemToken, TTL만 짧게 보관합니다. task ID는 넣지 않습니다.</p></article>
-      </div>
+        <h3>저장 위치</h3>
+        <div class="ownership">
+          <article>
+            <h3>Farad 사용자 호스트</h3>
+            <ul>
+              <li>보호된 client token 원문</li>
+              <li>Schedule 정의와 실제 ID</li>
+              <li>실행 상태와 single-flight</li>
+              <li>세션 transcript와 상세 결과</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Relay VM SQLite</h3>
+            <ul>
+              <li>client token hash와 Knox binding</li>
+              <li>messenger userId와 chatroomId</li>
+              <li>inbound dedupe와 action route</li>
+              <li>command, ACK, delivery outbox</li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
-      <h3>10,000개 누적을 가정한 반복 경로</h3>
-      <ul class="plain-list">
-        <li>Long Poll 조회는 대상 client와 미ACK cursor를 index로 찾고 전체 command를 스캔하지 않습니다.</li>
-        <li>inbound event dedupe와 action 소비는 unique index로 O(1)에 가깝게 처리합니다.</li>
-        <li>카드 갱신은 chatroomId와 msgKey를 직접 조회합니다.</li>
-        <li>만료 command, inbound dedupe, action route, view는 bounded batch로 정리합니다.</li>
-        <li>Farad Schedule 목록은 기존 index/read model을 사용하고 매 Long Poll마다 NFS 파일을 다시 읽지 않습니다.</li>
-      </ul>
-    </section>
+      <section id="scope">
+        <h2>Relay를 여기서 더 키우지 않는다</h2>
+        <p class="section-intro">Relay는 durable message broker 경계까지만 갖고, Schedule 업무 규칙은 Farad에 남깁니다.</p>
+        <div class="implementation">
+          <div>
+            <h3>Relay에 필요한 것</h3>
+            <ul class="plain">
+              <li><code>POST /message</code> 수신</li>
+              <li>Messenger v2 암복호화·송신</li>
+              <li>client 등록과 token hash 검증</li>
+              <li>Long Poll command queue와 ACK</li>
+              <li>actionToken, dedupe, delivery retry</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Relay에 넣지 않을 것</h3>
+            <ul class="plain">
+              <li>Linux ID와 공용 매핑 파일</li>
+              <li>Schedule 정의·prompt·경로</li>
+              <li>LLM 판단과 transcript</li>
+              <li>실행 가능 여부와 single-flight</li>
+              <li>자유 텍스트 보관</li>
+            </ul>
+          </div>
+        </div>
+        <div class="decision" style="margin-top: 30px;"><b>최종 동시 실행 규칙</b>서로 다른 Schedule은 동시에 실행할 수 있습니다. 동일 Schedule에는 활성 실행이 하나만 존재합니다. Relay는 클릭을 잃지 않고 전달하고, Farad가 이 규칙을 최종 판정합니다.</div>
+      </section>
 
-    <section id="security">
-      <div class="section-title"><span class="section-number mono">08</span><h2>보안 모델: 막는 것과 막지 않는 것을 분명히 한다</h2></div>
-
-      <div class="split">
-        <article class="panel">
-          <h4>v1이 막는 것</h4>
-          <ul class="plain-list">
-            <li>LLM의 파일명·경로·로그·원문 결과 자유 전송</li>
-            <li>사용자가 보낸 자유 텍스트의 저장·Farad/LLM 전달</li>
-            <li>다른 사용자의 카드 action 재사용</li>
-            <li>같은 action의 중복 적용</li>
-            <li>만료되거나 이전 화면 generation의 선택 실행</li>
-            <li>같은 Schedule 동시 실행</li>
-            <li>Relay DB에 전체 Schedule/prompt 저장</li>
-          </ul>
-        </article>
-        <article class="panel">
-          <h4>v1이 막지 않는 것</h4>
-          <ul class="plain-list">
-            <li>승인 keyword 선택과 전송 시각을 이용한 의도적 은닉 통신</li>
-            <li>고정 IP를 신뢰한 사내 구간의 도청·spoofing</li>
-            <li>상세 수신 명세 확정 전의 application-level webhook 서명 검증</li>
-            <li>사용자가 수정한 로컬 Farad binary 자체의 진위 증명</li>
-            <li>승인된 단어 조합이 전달하는 업무 사실</li>
-            <li>사용자 계정이나 VM 관리자 권한 탈취</li>
-          </ul>
-        </article>
-      </div>
-
-      <h3>보안 검증 순서</h3>
-      <ol class="plain-list">
-        <li><code>POST /message</code>의 body 크기·content type·요청 timeout을 제한하고, 운영 방화벽에서 메신저 RP 출발지만 허용합니다.</li>
-        <li>상세 명세가 제공하는 암호화·서명·sender/room 식별 규칙을 inbound adapter에서 검증합니다.</li>
-        <li>event ID를 SQLite unique key로 먼저 확인하고 중복 요청은 재적용하지 않습니다.</li>
-        <li>일반 메시지는 본문을 폐기하고 room/sender를 홈 delivery route에만 사용합니다.</li>
-        <li>카드 action이면 sender가 연결된 messenger userId인지 확인하고 actionToken을 검사합니다.</li>
-        <li>Relay가 Farad-required action에 대해 client credential과 account binding을 확인합니다.</li>
-        <li>commandId와 actionToken의 중복 여부를 확인합니다.</li>
-        <li>actionToken의 TTL, card generation, scope, 허용 action, 대상 client를 검사합니다.</li>
-        <li>Farad가 itemToken을 실제 Schedule에 로컬로 해석하고 최신 상태를 재검증합니다.</li>
-        <li>진행/선택 메시지는 Farad와 Relay가 같은 keyword vocabulary로 두 번 검사합니다.</li>
-      </ol>
-
-      <div class="note"><strong>HTTP 200의 의미</strong> “카드를 사용자에게 이미 보냈다”가 아니라 “inbound event와 필요한 delivery/command intent를 안전하게 기록했다”는 뜻입니다. 전송 실패는 outbox가 재시도하며, RP 서버의 webhook 재전송과 중복 카드를 분리합니다.</div>
-
-      <div class="warning"><strong>고정 IP 신뢰는 명시적인 위험 수용입니다.</strong> v1에서는 Relay IP를 설정하고 별도 인증서·CA·공개키 pin 없이 신뢰합니다. 이 선택은 운영을 단순하게 하지만 사내망 구간의 기밀성과 서버 진위를 보장하지 않습니다. 위협 모델이 바뀌면 wire schema가 아니라 transport 계층에 HTTPS 또는 pinning을 추가해야 합니다.</div>
-      <div class="note"><strong>로컬 앱 진위의 한계</strong> 사용자가 자신의 호스트에서 Farad를 실행하고 수정할 수 있으므로 Relay가 “공식 binary 그대로”임을 증명할 수는 없습니다. Relay가 신뢰하는 대상은 메신저로 승인된 사용자와 발급된 client credential입니다.</div>
-    </section>
-
-    <section id="implementation">
-      <div class="section-title"><span class="section-number mono">09</span><h2>구현 영향과 역할 분담</h2></div>
-      <p class="intro">Farad scheduler를 다시 만들 필요는 없지만, 사용자 메시지 수신부터 홈 응답·Relay 연결·원격 선택까지 하나의 정식 vertical slice가 필요합니다. 핵심 위험은 inbound HTTP 요청과 outbound 카드 전송을 한 요청처럼 취급해 event를 잃거나 중복 처리하는 것, 그리고 headless scheduled agent가 안전한 원격 응답을 기다리고 재개하는 경계입니다.</p>
-
-      <h3>Farad에서 재사용하는 것</h3>
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>현재 구성요소</th><th>재사용</th><th>필요한 보강</th></tr></thead>
-          <tbody>
-            <tr><td><code>ScheduledTask</code></td><td>Schedule 정의와 저장</td><td><code>remote_enabled</code>, 승인된 <code>remote_alias_id</code> 추가; 기본 비노출</td></tr>
-            <tr><td><code>SchedulerEngine.run_now()</code></td><td>동일 Schedule single-flight와 기존 실행 정책</td><td>accepted/rejected typed result와 messenger origin</td></tr>
-            <tr><td><code>ScheduleExecutor</code></td><td>격리 SCHEDULED session, timeout, 종료 기록</td><td>remote interaction gateway 주입</td></tr>
-            <tr><td><code>SessionWorkflowService</code></td><td>기존 query loop와 transcript 경로</td><td>원격 선택 결과를 tool result로 복귀</td></tr>
-            <tr><td><code>TaskRunRecord</code></td><td>RUNNING/COMPLETED/FAILED history</td><td>origin과 opaque remote run reference 연결</td></tr>
-            <tr><td><code>AskUserQuestion</code></td><td>재사용하지 않음</td><td>자유 문자열·Other 입력·로컬 UI 전용으로 유지</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Farad 신규 구성요소</h3>
-      <ul class="summary-list">
-        <li><b>RelayTransport</b><span>pairing, Long Poll, ACK, retry, shutdown, vocabulary fetch를 담당하는 async network adapter</span></li>
-        <li><b>RemoteScheduleController</b><span>safe schedule projection, itemToken 검증, Run now 결과를 소유하는 application service</span></li>
-        <li><b>RemoteKeywordVocabulary</b><span>versioned snapshot과 상태·행동·전략 keyword validation을 제공하는 bounded provider</span></li>
-        <li><b>ReportRemoteProgress</b><span>상태 keyword를 비동기로 제출하고 전송 결과를 transcript tool result로 남기는 schedule-only tool</span></li>
-        <li><b>RequestRemoteChoice</b><span>선택 카드를 보내고 action/timeout/abort 중 하나로 Future를 해소하는 schedule-only tool</span></li>
-        <li><b>Qt ↔ asyncio proxy</b><span>Long Poll에서 받은 LIST/RUN command를 Qt 소유 SchedulerEngine으로 안전하게 전달</span></li>
-        <li><b>Credential store</b><span>Farad가 생성한 원본 credential만 좁은 권한으로 보호</span></li>
-      </ul>
-
-      <h3>중앙 VM 담당 구현 범위</h3>
-      <ul class="checklist">
-        <li>SQLite WAL schema와 migration, unique index, TTL cleanup을 정의한다.</li>
-        <li>지정된 내부 IP:port에서 <code>POST /message</code>를 받는 inbound HTTP listener를 운영한다.</li>
-        <li>수신 API 상세 schema·암호화·서명은 <code>MessengerInboundAdapter</code>에 격리하고, application service에는 정규화된 room/sender/event kind만 넘긴다.</li>
-        <li>일반 메시지의 본문을 adapter 경계에서 폐기하고, inbound dedupe와 HOME outbox intent를 한 SQLite transaction으로 commit한다.</li>
-        <li>pairing/account binding과 credential hash 검증을 구현한다.</li>
-        <li>Long Poll command queue를 persist-before-deliver, ACK-after-result로 구현한다.</li>
-        <li>CreateChatroom, ChatRequest, UpdateMessageRequest adapter를 구현한다.</li>
-        <li>Adaptive Card 1.3 payload와 Action.Submit action route를 구현한다.</li>
-        <li>keyword vocabulary 정본, 고정 renderer, 조합 validation, vocabulary version endpoint를 구현한다.</li>
-        <li>event ID/actionToken 중복, webhook 재전송, outbound 실패, process crash를 포함한 idempotency 테스트를 만든다.</li>
-        <li>requestId/msgId int64 unique ID 생성 규칙을 정하고 ms 충돌을 막는다.</li>
-        <li>운영 로그에서 credential, actionToken, 내부 payload 원문을 마스킹한다.</li>
-      </ul>
-
-      <h3>권장 구현 단계</h3>
-      <div class="flow-grid five">
-        <div class="flow-item"><b>1 · 수신과 홈</b><span>POST /message, dedupe, outbox, 홈 카드</span></div>
-        <div class="flow-item"><b>2 · 연결과 실행</b><span>pairing, Long Poll, 목록, 선택, 같은 Run now</span></div>
-        <div class="flow-item"><b>3 · keyword 진행</b><span>고정 vocabulary와 progress card/update</span></div>
-        <div class="flow-item"><b>4 · 원격 선택</b><span>RequestRemoteChoice, action, timeout, abort</span></div>
-        <div class="flow-item"><b>5 · 운영 강화</b><span>재시작, dedupe, stale action, 부하·장애 테스트</span></div>
-      </div>
-
-      <h3>구현 전에 함께 결정할 항목</h3>
-      <ul class="checklist">
-        <li>Relay 앞단 proxy/load balancer의 idle timeout과 Long Poll wait/client timeout 값</li>
-        <li><code>POST /message</code>의 실제 body schema, content type, event ID, 방/발신자 필드와 TEXT/ACTION 구분 값</li>
-        <li>수신 body의 암호화·서명·key 전달/회전 방식과 메신저 RP source 인증 방법</li>
-        <li>RP 서버의 retry 조건·timeout, 최대 body 크기, 허용 chat type과 rate limit</li>
-        <li>원격 선택의 기본 TTL, 미응답 시 실패/계속/데스크톱 확인 중 어떤 정책을 적용할지</li>
-        <li>Adaptive Card 최대 payload, action 수, version 1.3 실제 지원 범위</li>
-        <li>카드 update/recall 실패 시 새 카드 전송 여부와 사용자에게 보일 중복 처리</li>
-        <li>keyword vocabulary 추가·deprecated·rollback의 배포 절차</li>
-        <li>Relay 장애나 재시작 중 inbound/action dedupe와 outbox를 얼마 동안 보관할지</li>
-        <li>고정 IP 신뢰 가정을 언제 HTTPS/pinning으로 재검토할지</li>
-      </ul>
-
-      <div class="decision"><strong>현재 합의의 최종 형태</strong> 사용자가 메신저에 말을 걸면 중앙 Relay의 <code>POST /message</code>가 이를 받아 홈 카드를 보냅니다. 자유 텍스트는 홈 열기 신호일 뿐 Farad나 LLM의 입력이 되지 않습니다. 이후 메신저는 홈·사용량·목록·실행·진행·제한된 선택을 제공하는 안전한 리모컨으로 동작하며, 실제 실행은 기존 Run now와 같고 같은 Schedule만 single-flight입니다.</div>
-    </section>
-
-    <section id="glossary">
-      <div class="section-title"><span class="section-number mono">10</span><h2>짧은 용어 사전</h2></div>
-      <div class="table-shell">
-        <table>
-          <thead><tr><th>용어</th><th>이 문서에서의 뜻</th></tr></thead>
-          <tbody>
-            <tr><td>Farad</td><td>사용자 호스트에서 실행되는 데스크톱 agent 앱. Schedule과 실행의 권위</td></tr>
-            <tr><td>Relay</td><td>중앙 VM에서 Farad와 사내 메신저 API 사이를 연결하는 서비스</td></tr>
-            <tr><td>Long Poll</td><td>서버가 일정 시간 HTTP 응답을 보류해 새 command를 빠르게 전달하는 방식</td></tr>
-            <tr><td>ACK</td><td>Farad가 command 처리 결과를 안전하게 제출했다는 확인</td></tr>
-            <tr><td>inbound event</td><td>메신저 RP가 <code>POST /message</code>로 전달하는 사용자 메시지 또는 카드 action 도착 사건</td></tr>
-            <tr><td>outbox</td><td>HTTP 200 전에 SQLite에 기록해 두고 별도 worker가 재시도하는 outbound 카드 전송 의도</td></tr>
-            <tr><td>itemToken</td><td>실제 task ID 대신 목록 선택에 사용하는 짧은 수명의 opaque token</td></tr>
-            <tr><td>actionToken</td><td>Adaptive Card 버튼 한 번을 특정 account/scope/action에 연결하는 single-use opaque token</td></tr>
-            <tr><td>keyword vocabulary</td><td>LLM이 선택할 수 있는 상태·행동·전략 keyword와 고정 렌더링 규칙의 버전된 목록</td></tr>
-            <tr><td>strategyKeyword</td><td>일반 행동보다 구체적인 승인 전략. v1에서는 한 요청에 최대 하나</td></tr>
-            <tr><td>single-flight</td><td>같은 Schedule의 활성 실행을 한 개로 제한하는 규칙</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <footer>
-      <div>이 문서는 현재 설계 합의를 설명하는 구현 전 아키텍처 문서입니다. 실제 사내 API 명세와 운영 환경을 확인하면서 제안 endpoint와 timeout을 확정해야 합니다.</div>
-      <div class="made-with" aria-label="Made with Farad">
-        <svg viewBox="0 0 502 502" role="img" aria-label="Farad mark"><title>Farad mark</title><path d="M 32 452.784 L 175 452.784 Q 189 452.784 200.157 444.326 L 239.843 414.241 Q 251 405.784 262.157 414.241 L 301.843 444.326 Q 313 452.784 327 452.784 L 470 452.784 Q 484 452.784 477 440.659 L 405.5 316.818 Q 398.5 304.693 385.597 299.26 L 339.7 279.933 Q 326.797 274.5 328.543 260.609 L 334.754 211.197 Q 336.5 197.306 329.5 185.182 L 258 61.34 Q 251 49.216 244 61.34 L 172.5 185.182 Q 165.5 197.306 167.246 211.197 L 173.457 260.609 Q 175.203 274.5 162.3 279.933 L 116.403 299.26 Q 103.5 304.693 96.5 316.818 L 25 440.659 Q 18 452.784 32 452.784 Z" fill="#4F70D6"/></svg>
-        <span>Made with Farad</span>
-      </div>
-    </footer>
-  </main>
-  <script>
-    const exportName = "farad-schedule-messenger-relay-architecture";
-
-    async function renderReport() {
-      const report = document.getElementById("report-container");
-      return html2canvas(report, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: getComputedStyle(document.documentElement)
-          .getPropertyValue("--page").trim() || "#ffffff"
-      });
-    }
-
-    function setButtonState(button, text) {
-      const original = button.textContent;
-      button.textContent = text;
-      window.setTimeout(() => { button.textContent = original; }, 1400);
-    }
-
-    async function copyAsImage(button) {
-      try {
-        const canvas = await renderReport();
-        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
-        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-        setButtonState(button, "Copied");
-      } catch (error) {
-        setButtonState(button, "Failed");
-      }
-    }
-
-    async function downloadPNG(button) {
-      const canvas = await renderReport();
-      const link = document.createElement("a");
-      link.download = `${exportName}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-      setButtonState(button, "Saved");
-    }
-
-    async function downloadPDF(button) {
-      const canvas = await renderReport();
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imageHeight = canvas.height * pageWidth / canvas.width;
-      const image = canvas.toDataURL("image/png");
-      let offset = 0;
-      pdf.addImage(image, "PNG", 0, offset, pageWidth, imageHeight);
-      while (imageHeight + offset > pageHeight) {
-        offset -= pageHeight;
-        pdf.addPage();
-        pdf.addImage(image, "PNG", 0, offset, pageWidth, imageHeight);
-      }
-      pdf.save(`${exportName}.pdf`);
-      setButtonState(button, "Saved");
-    }
-  </script>
+      <footer>현재 확정된 설계 계약을 시나리오로 정리한 문서입니다. pairing·Long Poll·Schedule adapter는 다음 구현 단계이며, command 보관 TTL과 오프라인 사용자 표시 문구는 운영 정책 확정이 필요합니다.</footer>
+    </main>
+  </div>
 </body>
 </html>
