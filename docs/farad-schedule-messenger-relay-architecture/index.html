@@ -156,6 +156,23 @@
 
     .thesis p { margin: 0; }
 
+    .explorer-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      margin-top: 20px;
+      padding: 9px 15px;
+      border: 1px solid #b9c7ee;
+      border-radius: 8px;
+      color: #2f4f9d;
+      background: #f6f8fe;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .explorer-link:hover { border-color: var(--blue); background: var(--blue-soft); }
+
     .figure {
       margin: 28px 0 0;
       padding: 24px;
@@ -484,6 +501,7 @@
       <a href="#tables">테이블 역할</a>
       <a href="#failure">장애가 나면</a>
       <a href="#conclusion">결론</a>
+      <a href="state-explorer.html">화면·DB 탐색기 ↗</a>
       <div class="meta">현재 구현 기준<br>Relay schema v8<br>2026-07-18</div>
     </nav>
 
@@ -495,6 +513,7 @@
           <b>DB는 스케줄 내용을 저장하려고 두는 것이 아닙니다.</b>
           <p>메신저와 Farad가 서로 다른 시간에 움직여도 요청이 사라지지 않도록, Relay가 받은 이벤트·보낼 카드·대기 중인 명령·버튼의 목적지를 기록하는 작은 영속 장부입니다.</p>
         </div>
+        <a class="explorer-link" href="state-explorer.html">화면과 DB가 함께 변하는 과정 보기 →</a>
       </header>
 
       <section id="mental-model">
