@@ -1,4 +1,163 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-16T08:09:21+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</title><link href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/" rel="alternate" type="text/html" title="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획" /><published>2026-07-16T08:09:20+09:00</published><updated>2026-07-16T08:09:20+09:00</updated><id>https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/"><![CDATA[<h1 id="farad-사내-메신저-relay-및-remote-모드-구현-계획">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-19T18:05:31+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</title><link href="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/" rel="alternate" type="text/html" title="Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션" /><published>2026-07-19T00:00:00+09:00</published><updated>2026-07-19T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/"><![CDATA[<h1 id="farad-vwp에서-바로-쓰는-gui-ai-agent-애플리케이션">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</h1>
+
+<p>Farad 입문 영상에 사용할 최종 내레이션 대본이다. 화면에서는 <code class="language-plaintext highlighter-rouge">Farad</code>, 음성에서는 <code class="language-plaintext highlighter-rouge">패럿</code>으로
+읽는다. 특정 직무에 한정하지 않고 파일 조사, 커맨드 실행, 데이터 분석, 결과 검증처럼 VWP에서
+반복되는 일반적인 업무를 기준으로 설명한다.</p>
+
+<h2 id="실행">실행</h2>
+
+<p>VWP 터미널에서 화면처럼 명령어를 입력하면, 바로 이런 창이 뜹니다.</p>
+
+<p>이게 Farad, 패럿입니다.</p>
+
+<p>한 줄로 소개하면, VWP에서 바로 쓰는 GUI AI Agent 애플리케이션입니다.</p>
+
+<p>겉으로는 채팅창처럼 보이지만, 답변만 주고 끝나는 채팅과는 조금 다릅니다. 현재 업무 폴더의 파일을
+직접 확인하고, 필요한 커맨드를 실행하고, 그 결과를 다시 보면서 작업을 이어갈 수 있습니다.</p>
+
+<p>먼저 왜 이런 형태로 만들었는지부터 짧게 설명하겠습니다.</p>
+
+<h2 id="개발-배경">개발 배경</h2>
+
+<p>패럿은 여러 코딩 에이전트를 사용해 본 경험에서 시작했습니다.</p>
+
+<p>제가 터미널 기반 코딩 에이전트를 사용해 보니, 파일을 찾고 코드를 수정하고 테스트를 실행하는 능력은
+상당히 좋았습니다. 그런데 작업이 여러 개로 늘어나면 이전 세션을 찾거나, 긴 실행 결과를 다시 읽거나,
+중단한 작업을 이어가는 부분은 데스크톱 앱이 확실히 편했고요.</p>
+
+<p>Codex Desktop이나 Claude Cowork 같은 도구를 보면서, 이 두 가지를 VWP 환경에서도 함께 사용할 수
+있으면 좋겠다고 생각했습니다.</p>
+
+<p>처음부터 저 혼자 쓰려고 만든 건 아닙니다. 다른 분들이 VWP에서 쉽게 쓸 수 있어야 했고, 동시에 만든
+저도 실제 업무에서 계속 사용할 수 있어야 했습니다. 직접 사용하지 않으면 작은 불편을 계속 놓치게
+되니까요.</p>
+
+<p>그래서 기능을 정할 때도 설명할 때만 그럴듯한 것보다는, 실제로 자주 꺼내 쓸 기능을 우선했습니다.</p>
+
+<p>VWP는 여러 사용자가 노드를 공유하고, 사양이 항상 넉넉한 환경도 아닙니다. 그래서 화려하게 움직이는
+화면보다 세션을 열고, 긴 대화를 읽고, 결과를 스크롤하는 기본 동작이 가볍게 느껴지도록 신경을
+썼습니다.</p>
+
+<h2 id="일반-채팅과-agent의-차이">일반 채팅과 Agent의 차이</h2>
+
+<p>그럼 일반적인 AI 채팅과 Agent는 무엇이 다를까요.</p>
+
+<p>예를 들어, 내 컴퓨터에 설치된 Python 버전을 알려달라고 해보겠습니다.</p>
+
+<p>기존 채팅에서는 Python 버전 확인 커맨드를 알려주고, 사용자에게 직접 실행해 보라고 답할 수 있습니다.
+그러면 사람이 터미널로 이동해서 커맨드를 실행하고, 결과를 복사해서 다시 채팅에 넣어야 합니다.</p>
+
+<p>그런데 저 중간 과정을 꼭 사람이 해야 할까요. 여기서 Agent가 시작됩니다.</p>
+
+<p>같은 질문을 패럿에 입력하면, LLM이 Python 버전을 확인하기 위한 Bash 실행을 요청합니다. 패럿은 실제
+VWP에서 커맨드를 실행하고, 나온 결과를 다시 LLM에게 전달합니다. 그러면 LLM이 실제 결과를 보고
+설치된 버전을 답합니다.</p>
+
+<p>커맨드 하나에서는 작은 차이지만, 여러 파일과 실행 결과를 오가는 작업에서는 이 차이가 꽤 커집니다.</p>
+
+<h2 id="llm과-agent-harness">LLM과 Agent Harness</h2>
+
+<p>여기서 한 가지는 정확히 구분해 두는 게 좋습니다.</p>
+
+<p>LLM이 직접 파일을 열거나 터미널을 조작하는 것은 아닙니다. LLM은 사용자의 요청과 현재 작업 정보를
+보고, 다음에 무엇을 할지 판단합니다.</p>
+
+<p>파일을 읽어야겠다고 판단하면 읽기 도구를 요청하고, 커맨드가 필요하면 Bash 도구를 요청합니다. 이건
+어디까지나 실행 요청입니다.</p>
+
+<p>실제 실행 주체는 패럿의 Agent Harness입니다. 패럿이 사용할 수 있는 도구와 현재 Working Folder를
+관리하고, 실행 전에 권한을 확인한 뒤 도구를 동작시킵니다. 그리고 파일 내용이나 커맨드 출력 같은 실제
+결과를 다시 LLM에게 전달합니다.</p>
+
+<p>LLM은 그 결과를 보고 답변할 수도 있고, 다음 파일을 확인하거나 다른 커맨드를 요청할 수도 있습니다.</p>
+
+<p>그래서 LLM과 Agent 애플리케이션은 같은 말이 아닙니다. 같은 LLM을 사용하더라도 어떤 도구를 제공하고,
+권한을 어떻게 확인하고, 세션 정보를 어떻게 관리하느냐에 따라 실제 사용 경험은 달라집니다.</p>
+
+<p>정리하면, LLM은 다음 행동을 판단하고, 패럿은 그 행동을 실제 VWP 작업으로 연결합니다. 이 흐름이
+필요한 만큼 반복되는 것이 Agent의 기본 동작 방식입니다.</p>
+
+<h2 id="통계-데이터로-작업해-보기">통계 데이터로 작업해 보기</h2>
+
+<p>이제 준비된 예제 데이터로 실제 흐름을 보겠습니다.</p>
+
+<p>먼저 <code class="language-plaintext highlighter-rouge">/cd</code>로 Working Folder를 지정합니다. Working Folder는 현재 세션에서 패럿이 파일을 찾고
+커맨드를 실행할 기준 위치입니다. 작업이 바뀌면 이 위치부터 바꿔주면 됩니다.</p>
+
+<p>이번 예제는 두 가지 실행 방식의 시간과 메모리 사용량을 기록한 교육용 합성 데이터입니다. 실제
+시스템의 성능 수치는 아닙니다.</p>
+
+<p>처음부터 분석 결론을 달라고 하지 않고, 데이터 상태부터 확인해 보겠습니다. 전체 행 수와 컬럼의 의미,
+결측치, 중복, 이상치가 있는지 살펴보되 아직 파일은 수정하지 말라고 요청했습니다.</p>
+
+<p>패럿은 전체 100건을 확인하고, 메모리 값이 비어 있는 행 1건과 실행 시간이 유난히 긴 이상치 후보
+1건을 찾았습니다. 중복 데이터는 없고요.</p>
+
+<p>이렇게 조사 범위와 수정 여부를 함께 말해주면, 처음 보는 폴더에서도 비교적 안전하게 작업을 시작할 수
+있습니다.</p>
+
+<p>이제 baseline과 optimized 방식을 비교해 보겠습니다.</p>
+
+<p>실행 시간은 평균만 보지 않고 중앙값과 표준편차를 함께 확인하고, 성공률과 평균 메모리 사용량도
+비교하도록 요청했습니다. 평균은 이상치 하나에도 영향을 받을 수 있기 때문에, 분포가 얼마나
+일정한지도 같이 보는 겁니다.</p>
+
+<p>분석을 위해 커맨드 실행이 필요하면 승인 화면이 나타납니다. 패럿이 실행하려는 커맨드와 작업 위치를
+보여주기 때문에 내용을 확인한 다음, 이번 한 번만 허용하거나 비슷한 작업을 계속 허용할 수 있습니다.</p>
+
+<p>결과를 보면 optimized 방식은 실행 시간 중앙값이 약 11% 낮고, 실행 시간의 편차도 작습니다. 성공률은
+두 방식이 같고요. 대신 평균 peak memory는 약 8% 더 사용합니다.</p>
+
+<p>더 빠르고 일정하지만, 메모리 비용은 조금 늘어난 셈입니다. 다만 이 데이터만으로 실행 방식 하나가
+모든 차이의 원인이라고 단정할 수는 없습니다.</p>
+
+<p>이번에는 답변만 받고 끝내지 않고, 같은 분석을 다시 실행할 수 있도록 코드와 보고서로 남겨보겠습니다.</p>
+
+<p>패럿이 Python 분석 코드를 만들고 실제로 실행한 다음, Markdown 보고서와 비교 그래프를 생성합니다.
+마지막에는 생성된 보고서의 숫자가 원본 데이터와 맞는지도 다시 확인합니다.</p>
+
+<p>코딩을 직접 하지 않더라도, 결과만 받아보는 데서 끝나지 않고 재현 가능한 분석 과정까지 남길 수
+있습니다.</p>
+
+<h2 id="svg와-세션-관리">SVG와 세션 관리</h2>
+
+<p>분석 과정 전체를 한눈에 보고 싶다면, 답변 안에 SVG 다이어그램을 만들어 달라고 요청할 수도 있습니다.</p>
+
+<p>LLM이 원본 데이터, 품질 점검, 방식 비교, 최종 해석의 관계를 SVG 내용으로 만들고, 패럿이 이를 검증한
+뒤 채팅 안에서 바로 렌더링합니다.</p>
+
+<p>여기서 SVG는 Bash처럼 시스템을 실행하는 도구가 아닙니다. LLM이 만든 답변을 패럿이 읽기 쉬운 벡터
+그래픽으로 표현하는 기능입니다.</p>
+
+<p>그리고 패럿을 데스크톱 앱으로 만든 이유 중 하나가 세션 관리입니다.</p>
+
+<p>실제 업무에서는 분석, 로그 확인, 코드 수정처럼 여러 작업을 번갈아 진행하게 됩니다. 패럿에서는
+작업마다 세션을 나눌 수 있고, 대화뿐 아니라 어떤 파일을 읽고 어떤 도구를 실행했는지도 같은 흐름에
+남습니다.</p>
+
+<p>새 작업은 <code class="language-plaintext highlighter-rouge">/new</code>나 <code class="language-plaintext highlighter-rouge">Ctrl+N</code>으로 시작하고, <code class="language-plaintext highlighter-rouge">Ctrl+K</code>를 누르면 이전 세션을 검색해서 바로 이어갈 수
+있습니다.</p>
+
+<h2 id="처음-사용할-때-기억할-것">처음 사용할 때 기억할 것</h2>
+
+<p><code class="language-plaintext highlighter-rouge">/cd</code>는 Working Folder를 바꾸고, 입력 중 <code class="language-plaintext highlighter-rouge">@</code> 기호를 사용하면 특정 파일을 직접 지정할 수 있습니다.
+<code class="language-plaintext highlighter-rouge">Ctrl+K</code>는 세션 검색, <code class="language-plaintext highlighter-rouge">Ctrl+N</code>은 새 세션, <code class="language-plaintext highlighter-rouge">Ctrl+L</code>은 채팅 입력으로 이동입니다. 진행 중인 작업을
+멈추려면 <code class="language-plaintext highlighter-rouge">Esc</code>를 누르면 되고, 모델을 바꾸고 싶다면 <code class="language-plaintext highlighter-rouge">/model</code>을 사용하면 됩니다.</p>
+
+<p>처음부터 전부 외울 필요는 없습니다. 사실 처음에는 세 가지만 기억하면 됩니다.</p>
+
+<p>VWP에서 패럿을 실행하고, <code class="language-plaintext highlighter-rouge">/cd</code>로 업무 폴더를 지정하고, 먼저 조사만 부탁해 보는 겁니다.</p>
+
+<blockquote>
+  <p>이 폴더가 어떤 작업을 위한 곳인지 파악해줘. 아직 파일을 수정하거나 커맨드를 실행하지 말고,
+근거가 된 파일과 함께 설명해줘.</p>
+</blockquote>
+
+<p>그 결과를 확인한 다음 필요한 커맨드를 실행하거나, 문제의 원인을 찾거나, 분석 결과를 파일로 남기는
+작업까지 이어가면 됩니다.</p>
+
+<p>Agent는 질문에 답만 해주는 채팅이라기보다, 실제 작업 결과를 보고 다음 행동으로 이어주는 도구에
+가깝습니다. 처음에는 작은 조사 하나부터 맡겨보면, 패럿이 일하는 방식도 금방 익숙해질 겁니다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션]]></summary></entry><entry><title type="html">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</title><link href="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/" rel="alternate" type="text/html" title="Farad 사내 메신저 Relay 및 Remote 모드 구현 계획" /><published>2026-07-16T08:09:20+09:00</published><updated>2026-07-16T08:09:20+09:00</updated><id>https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-messenger-relay-remote-mode-plan/"><![CDATA[<h1 id="farad-사내-메신저-relay-및-remote-모드-구현-계획">Farad 사내 메신저 Relay 및 Remote 모드 구현 계획</h1>
 
 <blockquote>
   <p>기준 스펙: <a href="/farad/farad-messenger-relay-remote-mode-spec/">Farad 사내 메신저 Relay 및 Remote 모드 통합 스펙</a></p>
@@ -3198,1286 +3357,4 @@ index, transcript I/O/repair, nonblocking explicit-refresh snapshot, Qt permissi
   <li>전체 repository test suite, ruff, mypy는 문서 조사 범위를 넘어 실행하지 않음</li>
 </ul>
 
-<p>문서만 추가했으며 Farad 제품 소스나 기존 사용자 변경은 수정하지 않았다.</p>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[OpenCode · Claude Code · Codex · Farad 아키텍처 비교 — 전체 인덱스]]></summary></entry><entry><title type="html">Farad 아키텍처 최종 판정과 P0/P1/P2 로드맵</title><link href="https://hvppycoding.github.io/research/farad-architecture-roadmap/" rel="alternate" type="text/html" title="Farad 아키텍처 최종 판정과 P0/P1/P2 로드맵" /><published>2026-07-13T23:56:00+09:00</published><updated>2026-07-13T23:56:00+09:00</updated><id>https://hvppycoding.github.io/research/farad-architecture-roadmap</id><content type="html" xml:base="https://hvppycoding.github.io/research/farad-architecture-roadmap/"><![CDATA[<h1 id="farad-아키텍처-최종-판정과-p0p1p2-로드맵">Farad 아키텍처 최종 판정과 P0/P1/P2 로드맵</h1>
-
-<blockquote>
-  <p><a href="https://hvppycoding.github.io/research/coding-agent-architecture-comparison/">전체 보고서 인덱스</a></p>
-</blockquote>
-
-<blockquote>
-  <p>기준일: 2026-07-13<br />
-근거: <a href="https://hvppycoding.github.io/research/opencode-claude-code-codex-farad-comparison/">교차 비교</a>, <a href="https://hvppycoding.github.io/research/farad-architecture-audit/">Farad 개별 감사</a>,
-현재 source/docs/tests<br />
-설계 순서: <code class="language-plaintext highlighter-rouge">authority → thread/process → flow → hot path → persistence → failure boundary</code></p>
-</blockquote>
-
-<h2 id="1-판정">1. 판정</h2>
-
-<p>Farad는 재작성 대상이 아니다. 현재 중심 구조는 유지할 가치가 있다.</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">hvppyai</code>는 HTTP/types/streaming만 소유하고 agent loop는 Farad app에 있다.</li>
-  <li><code class="language-plaintext highlighter-rouge">query_loop</code>는 callback-inverted flat async generator다.</li>
-  <li><code class="language-plaintext highlighter-rouge">UiSession</code>과 <code class="language-plaintext highlighter-rouge">AsyncSession</code>은 Qt projection과 async execution을 나눈다.</li>
-  <li><code class="language-plaintext highlighter-rouge">TurnContext</code>와 run readiness snapshot이 한 turn의 일관성을 지키려 한다.</li>
-  <li>capability discovery/exposure/dispatch와 Registry/Factory/Loader가 구분돼 있다.</li>
-  <li>transcript, session index, scheduler, subagent가 임시 채팅이 아니라 product domain이다.</li>
-  <li>NFS, 10,000 entity, explicit refresh를 문서 수준의 hard contract로 이미 선언했다.</li>
-</ul>
-
-<p>문제는 이 방향이 틀렸다는 것이 아니라, 몇몇 current path가 그 계약을 깨거나 enforcement가 비어
-있다는 것이다. 가장 중요한 결론은 다음과 같다.</p>
-
-<blockquote>
-  <p><strong>Farad의 다음 architecture phase는 기능 추가보다 계약-구현 gap을 닫는 phase여야 한다. 특히
-command sandbox, storage I/O ownership, scheduler due index, refresh truth, cross-thread snapshot,
-HTTP client lifecycle을 먼저 고치지 않고 app-server나 더 큰 agent team을 얹으면 결함의 영향 반경만
-넓어진다.</strong></p>
-</blockquote>
-
-<h2 id="2-보존수정보류-결정">2. 보존·수정·보류 결정</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>결정</th>
-      <th>대상</th>
-      <th>이유</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>보존</td>
-      <td>hvppyai에 agent loop를 두지 않는 경계</td>
-      <td>provider-neutral SDK와 app policy 분리</td>
-    </tr>
-    <tr>
-      <td>보존</td>
-      <td><code class="language-plaintext highlighter-rouge">UiSession ↔ proxy ↔ AsyncSession</code> 구조</td>
-      <td>native Qt/async ownership에 맞음</td>
-    </tr>
-    <tr>
-      <td>보존</td>
-      <td>flat <code class="language-plaintext highlighter-rouge">query_loop</code> + callback/event contract</td>
-      <td>테스트와 headless reuse 가능</td>
-    </tr>
-    <tr>
-      <td>보존</td>
-      <td>explicit refresh + targeted invalidation</td>
-      <td>NFS, 재현성, 저사양 환경에 적합</td>
-    </tr>
-    <tr>
-      <td>보존</td>
-      <td>append-only transcript와 marker twin</td>
-      <td>cache/replay/context 충실도</td>
-    </tr>
-    <tr>
-      <td>수정</td>
-      <td>transcript sync write/index·rewind·repair</td>
-      <td>shared async loop와 NFS hot path를 block하고 corruption을 숨길 수 있음</td>
-    </tr>
-    <tr>
-      <td>수정</td>
-      <td>scheduler 60초 전량 sweep</td>
-      <td>Qt thread에서 누적 N에 비례</td>
-    </tr>
-    <tr>
-      <td>수정</td>
-      <td>settings/endpoint/MCP refresh</td>
-      <td>5분 poll, per-turn stat, Qt periodic reconcile, blocking MCP가 explicit-refresh 계약과 불일치</td>
-    </tr>
-    <tr>
-      <td>수정</td>
-      <td>permission UI snapshot read</td>
-      <td>Qt가 async object를 직접 역참조하고 cold disk read 가능</td>
-    </tr>
-    <tr>
-      <td>수정</td>
-      <td>model client lifecycle</td>
-      <td>교체된 owned HTTP client close 누락, readiness 중복</td>
-    </tr>
-    <tr>
-      <td>추가</td>
-      <td>command execution containment</td>
-      <td>permission policy 밖의 OS enforcement 없음</td>
-    </tr>
-    <tr>
-      <td>추출</td>
-      <td><code class="language-plaintext highlighter-rouge">AsyncSession</code>/<code class="language-plaintext highlighter-rouge">UiSession</code> 일부 책임</td>
-      <td>서로 다른 failure/authority가 거대 class에 집중</td>
-    </tr>
-    <tr>
-      <td>보류</td>
-      <td>full app-server/remote daemon</td>
-      <td>두 번째 실제 client 요구 전에는 YAGNI</td>
-    </tr>
-    <tr>
-      <td>보류</td>
-      <td>범용 distributed agent cluster</td>
-      <td>local desktop/HPC 문제를 먼저 해결</td>
-    </tr>
-    <tr>
-      <td>보류</td>
-      <td>workflow VM/DSL</td>
-      <td>artifact-aware orchestration으로 부족한 실사용 근거가 생길 때</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="명시적-non-goal">명시적 non-goal</h3>
-
-<ul>
-  <li>Farad 전체 재작성이나 <code class="language-plaintext highlighter-rouge">query_loop</code>의 SDK 이동</li>
-  <li>NFS 위 SQLite를 conversation canonical store로 채택</li>
-  <li>freshness를 이유로 per-turn file watch/stat을 다시 도입</li>
-  <li>실제 enforcement 없이 allow/deny parser를 “sandbox”로 명명</li>
-  <li>두 번째 독립 surface 전에 daemon/app-server/JSON-RPC를 선제 구축</li>
-  <li>구체 workflow 없이 distributed agent team이나 범용 workflow VM을 제품 목표로 설정</li>
-</ul>
-
-<h2 id="3-6축-현재-판정">3. 6축 현재 판정</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>축</th>
-      <th>현재 authority/계약</th>
-      <th>확인된 gap</th>
-      <th>목표 상태</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Authority</td>
-      <td>AsyncSession=turn/transcript/tool/permission, UiSession=Qt projection</td>
-      <td>UI snapshot이 AsyncSession을 직접 읽는 예외, ModelSelection의 client 소유 불명확</td>
-      <td>command/query snapshot만 경계 통과; resource owner가 close까지 소유</td>
-    </tr>
-    <tr>
-      <td>Thread/process</td>
-      <td>Qt main + 단일 asyncio worker + child processes</td>
-      <td>sync transcript/NFS I/O가 async loop block, scheduler I/O가 Qt block, agent child OS 격리 없음</td>
-      <td>Qt/async/storage/process executor 각각 명시; cross-thread mutable read 0</td>
-    </tr>
-    <tr>
-      <td>Flow</td>
-      <td>readiness → turn context → query loop → event → disk/UI</td>
-      <td>dirty MCP가 turn을 기다리고 settings/endpoint가 timer·turn·deployment poll 세 축에서 refresh</td>
-      <td>turn은 last-completed immutable snapshot만 소비; refresh는 명시적 별도 publish</td>
-    </tr>
-    <tr>
-      <td>Hot path</td>
-      <td>문서상 O(1)/visible-only, explicit refresh</td>
-      <td>per-envelope manifest rewrite, 60초 O(N) task stat/sort, cold transcript double scan, Qt의 periodic endpoint stat/fanout</td>
-      <td>due heap/index, bounded active-chunk repair, zero per-turn·periodic config reconcile</td>
-    </tr>
-    <tr>
-      <td>Persistence</td>
-      <td>chunk JSONL + indices, session/schedule files</td>
-      <td>index parse failure가 empty로 축소되고 rewind 뒤 full projection이 반복될 수 있음</td>
-      <td>JSONL canonical; index는 검증·lag·repair 가능한 projection; bounded recovery</td>
-    </tr>
-    <tr>
-      <td>Failure</td>
-      <td>typed AgentEvent, terminal reason, disk-first ordering</td>
-      <td>sandbox unavailable semantics 없음, background refresh/repair와 turn failure 결합 가능</td>
-      <td>fail-closed managed policy, stale snapshot 표시, terminal event/repair invariant</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="4-현재-source에서-우선-처리할-gap">4. 현재 source에서 우선 처리할 gap</h2>
-
-<p>아래 표는 이 로드맵의 판단을 다시 추적할 수 있는 최소 evidence map이다. 줄 번호는 기준일의
-working tree 기준이며 이후 수정으로 움직일 수 있다. 상세 해석은 <a href="https://hvppycoding.github.io/research/farad-architecture-audit/">Farad 감사</a>의
-§8~§20, 제품 간 대안과 한계는 <a href="https://hvppycoding.github.io/research/opencode-claude-code-codex-farad-comparison/">교차 비교</a>의 §5, §9, §14~§20에 있다.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>쟁점</th>
-      <th>current source evidence</th>
-      <th>선언된 contract / 분석 연결</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>5분 settings poll</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/settings_service.py:34-82,174-183</code>; composition에서 시작: <code class="language-plaintext highlighter-rouge">packages/farad/farad/app/services_factory.py:217-220</code></td>
-      <td><code class="language-plaintext highlighter-rouge">AGENTS.md:89-98</code>, <code class="language-plaintext highlighter-rouge">docs/layers.md</code>의 explicit refresh; Farad 감사 §8</td>
-    </tr>
-    <tr>
-      <td>turn-start endpoint/MCP refresh</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/run_readiness.py:67-84</code>; <code class="language-plaintext highlighter-rouge">packages/farad/farad/app/services_factory.py:701-712</code>; <code class="language-plaintext highlighter-rouge">packages/farad/farad/app/services.py:546-613</code></td>
-      <td><code class="language-plaintext highlighter-rouge">docs/mcp.md:84-90</code>의 non-blocking readiness; Farad 감사 §8~§9</td>
-    </tr>
-    <tr>
-      <td>Qt→async permission direct read</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/proxies.py:455-483</code></td>
-      <td>Qt/async ownership 계약; Farad 감사 §10, 교차 비교 §5</td>
-    </tr>
-    <tr>
-      <td>loop-ready 전 PostBox direct mutation</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/proxies.py:506-564</code></td>
-      <td>async-owned state는 proxy ingress queue 뒤 loop에서 mutate; Farad 감사 §10</td>
-    </tr>
-    <tr>
-      <td>sync transcript I/O와 double scan</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/async_session.py:394-416,2112-2143</code>; <code class="language-plaintext highlighter-rouge">packages/farad/farad/session/transcript_store.py:447-451,820-829</code></td>
-      <td>disk-before-UI와 10k hot-path 계약; Farad 감사 §12</td>
-    </tr>
-    <tr>
-      <td>per-entry index rewrite와 silent empty index</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/session/transcript_store.py:232-258,264-312,913-932</code></td>
-      <td>JSONL canonical/projection repair 필요; Farad 감사 §12, 교차 비교 §14</td>
-    </tr>
-    <tr>
-      <td>Qt 60초 full scheduler sweep</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/scheduler/engine.py:42,58-95,239-286</code>; <code class="language-plaintext highlighter-rouge">packages/farad/farad/scheduler/store.py:141-158</code></td>
-      <td>반복 경로 O(1)/visible-only 계약; Farad 감사 §19</td>
-    </tr>
-    <tr>
-      <td>replaced model client close 누락</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/services.py:172-257,315-350</code>; shutdown은 current client만 닫음: <code class="language-plaintext highlighter-rouge">packages/farad/farad/app/shutdown.py:308-316</code></td>
-      <td>resource owner가 close까지 소유; Farad 감사 §20</td>
-    </tr>
-    <tr>
-      <td>hook descendant cleanup 미보장</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/hooks/runner.py:154-240</code></td>
-      <td>timeout/cancel은 process tree terminal invariant까지 닫아야 함; Farad 감사 §13</td>
-    </tr>
-    <tr>
-      <td>cold registry loader의 sync discovery</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/registry.py:81-103</code>; <code class="language-plaintext highlighter-rouge">packages/farad/farad/{skills,plugins,agents,connectors}/registry.py</code>의 <code class="language-plaintext highlighter-rouge">_load()</code></td>
-      <td>explicit 시점뿐 아니라 Qt/shared asyncio loop에서 content read 금지; Farad 감사 §8</td>
-    </tr>
-    <tr>
-      <td>plugin hook executable wiring 미확인</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/plugins/models.py:29-62</code>; settings hook executor는 <code class="language-plaintext highlighter-rouge">packages/farad/farad/hooks/runner.py</code></td>
-      <td>metadata discovery와 production execution을 같은 기능으로 표현 금지; Farad 감사 §17</td>
-    </tr>
-    <tr>
-      <td>NSS home 규약 위반</td>
-      <td><code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime_resolver.py:142</code>; <code class="language-plaintext highlighter-rouge">packages/farad/farad/app/runtime/turn_context_provider.py:1124-1148</code>; <code class="language-plaintext highlighter-rouge">packages/farad/farad/scheduler/check_runner.py:220</code></td>
-      <td><code class="language-plaintext highlighter-rouge">$HOME</code> 불일치 fixture와 account-owned path contract; Farad 감사 §17</td>
-    </tr>
-    <tr>
-      <td>workspace internal MCP 미완</td>
-      <td><code class="language-plaintext highlighter-rouge">AGENTS.md:246-253</code>; internal registration seam: <code class="language-plaintext highlighter-rouge">packages/farad/farad/mcp/manager.py:65-124</code></td>
-      <td>known product gap이며 외부 MCP 재시작 문제와 별개</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="41-경쟁-제품에서-취할-패턴과-취하지-않을-구조">4.1 경쟁 제품에서 취할 패턴과 취하지 않을 구조</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Farad gap</th>
-      <th>참고할 패턴</th>
-      <th>Farad식 적용</th>
-      <th>그대로 복제하지 않는 것</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>command containment</td>
-      <td>Codex의 permission과 OS sandbox 분리, 실행 시점 enforcement</td>
-      <td><code class="language-plaintext highlighter-rouge">ExecutionBoundary</code>를 tool policy 뒤의 별도 application boundary로 두고 platform capability를 정직하게 노출</td>
-      <td>Rust runtime 전체, 모든 subprocess를 같은 profile로 취급, 지원 불가 플랫폼의 silent fallback</td>
-    </tr>
-    <tr>
-      <td>command/event ordering</td>
-      <td>Codex의 ordered <code class="language-plaintext highlighter-rouge">Submission/Event</code> control plane</td>
-      <td>기존 proxy/<code class="language-plaintext highlighter-rouge">AgentEvent</code>에 command ID, sequence, snapshot generation을 추가하고 in-process conformance test</td>
-      <td>두 번째 surface가 없는데 app-server/JSON-RPC부터 도입</td>
-    </tr>
-    <tr>
-      <td>future embedding</td>
-      <td>OpenCode의 transport-independent server/API</td>
-      <td>실제 headless/remote/web client 요구가 생기면 이미 검증된 application protocol에 transport를 붙임</td>
-      <td>directory-global server instance, V1/V2 이중 runtime, permissive host execution default</td>
-    </tr>
-    <tr>
-      <td>workflow UX</td>
-      <td>Claude Code의 permission explanation, hooks, subagent lifecycle</td>
-      <td>Farad의 Qt interaction과 scheduler에 명시적 상태·failure reason을 보강</td>
-      <td>Agent SDK의 live-session subprocess topology를 Farad 전체에 복제, vendor-specific context authority, opt-in sandbox를 기본 보안으로 표현</td>
-    </tr>
-    <tr>
-      <td>replay + 목록 조회</td>
-      <td>Codex의 canonical log와 query projection 분리</td>
-      <td>JSONL은 canonical, NFS-friendly derived index는 version/lag/repair state를 가짐</td>
-      <td>NFS 위 SQLite를 canonical writer로 전환하거나 10k 성능이 자동 보장된다고 가정</td>
-    </tr>
-    <tr>
-      <td>provider/API breadth</td>
-      <td>OpenCode의 provider/server 경계</td>
-      <td><code class="language-plaintext highlighter-rouge">hvppyai</code>의 provider-neutral SDK 경계를 보존하고 app policy를 올리지 않음</td>
-      <td>provider별 semantics를 core turn state에 누적</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>이 표는 소스나 내부 이름을 포팅하자는 뜻이 아니다. 비교 제품에서 검증된 <strong>경계의 이유</strong>만 취하고,
-Farad의 Qt·NFS·single-runtime 전제에 맞는 더 작은 계약으로 다시 설계한다.</p>
-
-<h3 id="f-01-agent-command는-permission을-거쳐도-os-격리되지-않는다">F-01. Agent command는 permission을 거쳐도 OS 격리되지 않는다</h3>
-
-<p>현재 permission engine은 tool/input을 allow/ask/deny하는 정책 계층이다. 그러나 Bash와 child process가
-기술적으로 workspace/network boundary를 넘지 못하게 하는 Seatbelt/bubblewrap/Windows sandbox 계층은
-확인되지 않는다. repository의 sandbox 검색 결과는 prompt template의 Jinja sandbox 정도이며 command
-containment가 아니다.</p>
-
-<p>process spawn surface도 Bash 하나가 아니다.</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">core/background_shell.py</code></li>
-  <li><code class="language-plaintext highlighter-rouge">app/local_shell_runner.py</code></li>
-  <li><code class="language-plaintext highlighter-rouge">hooks/runner.py</code></li>
-  <li><code class="language-plaintext highlighter-rouge">core/subprocess_utils.py</code></li>
-  <li>MCP stdio connection</li>
-  <li>capability worker, scheduler check, updater/diagnostics 등 app-owned process</li>
-</ul>
-
-<p>모두 같은 risk가 아니므로 무조건 한 wrapper로 묶으면 안 된다. <strong>model 또는 untrusted extension이
-인자를 결정하는 process</strong>와 <strong>Farad가 고정 argv로 띄우는 trusted support process</strong>를 분류해야 한다.</p>
-
-<p>판정: 보안 P0.</p>
-
-<h3 id="f-02-transcript-disk-first-path가-asyncio-loop를-동기-block한다">F-02. transcript disk-first path가 asyncio loop를 동기 block한다</h3>
-
-<p><code class="language-plaintext highlighter-rouge">AsyncSession.append_transcript_entry()</code>는 disk-first ordering을 지키지만 async method 안에서
-<code class="language-plaintext highlighter-rouge">TranscriptStore.append_entry()</code>를 직접 호출한다. store는 매 envelope마다 JSONL line append와
-index manifest temp-write + <code class="language-plaintext highlighter-rouge">os.replace</code>를 수행한다. NFS round trip이 긴 순간 하나의 session뿐 아니라
-같은 asyncio loop의 다른 session/MCP/tool 작업도 멈출 수 있다.</p>
-
-<p>cold open도 <code class="language-plaintext highlighter-rouge">load_all()</code> 뒤 <code class="language-plaintext highlighter-rouge">max_numeric_message_id()</code>가 다시 <code class="language-plaintext highlighter-rouge">load_raw_all()</code>을 호출해 transcript를
-두 번 읽는다. 이것은 1회성 path이지만 긴 session/NFS에서 interactive latency와 shared loop fairness를
-해친다.</p>
-
-<p>disk-first 자체는 옳다. 고쳐야 하는 것은 ordering이 아니라 <strong>어느 executor에서 어떤 projection을
-매번 durability 조건으로 삼는가</strong>다.</p>
-
-<p>판정: performance/correctness P0.</p>
-
-<h3 id="f-03-scheduler가-qt-thread에서-60초마다-전량-task를-훑는다">F-03. Scheduler가 Qt thread에서 60초마다 전량 task를 훑는다</h3>
-
-<p><code class="language-plaintext highlighter-rouge">SchedulerEngine._tick()</code>은 main-thread QTimer에서 <code class="language-plaintext highlighter-rouge">ScheduleStore.list_tasks()</code>를 호출한다. list는
-각 schedule metadata를 stat하고 history signature도 확인한 뒤 전부 <code class="language-plaintext highlighter-rouge">next_run_at</code>으로 sort한다.
-directory path list가 cache돼도 task/history stat은 N개에 비례한다. N=10,000에서 60초마다 UI가
-같은 비용을 내므로 “반복 경로 O(1) 또는 visible-only” hard gate와 정면 충돌한다.</p>
-
-<p>badge sync도 signal burst를 250ms로 coalesce할 뿐 <code class="language-plaintext highlighter-rouge">list_tasks()</code> 전체를 다시 호출한다. debounce는
-algorithmic bound를 바꾸지 않는다.</p>
-
-<p>판정: hard-contract P0.</p>
-
-<h3 id="f-04-refresh-authority가-세-갈래이며-run-readiness도-external-readiness를-기다린다">F-04. Refresh authority가 세 갈래이며 run readiness도 external readiness를 기다린다</h3>
-
-<p>문서는 settings·endpoint·capability external edit를 explicit refresh에서만 반영하고 ordinary turn은
-last completed snapshot을 써야 한다고 명시한다. 그러나 현재 settings/endpoint는 세 갈래 freshness
-authority를 가진다.</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">SettingsService</code>의 5분 QTimer가 global settings/providers mtime을 poll하고 Qt thread에서 변경 파일을 읽는다.</li>
-  <li><code class="language-plaintext highlighter-rouge">ConfigProvider.get()</code>과 readiness/context resolve가 turn마다 folder tier를 포함해 mtime을 여러 번 본다.</li>
-  <li>20분 deployment poller callback이 forced endpoint config reconcile을 Qt에서 수행한다. 현재 기본
-composition에는 discovery provider가 없어서 Ollama network probe는 실행되지 않지만 tier stat,
-selection update, signal fanout은 남고 callback 이름은 실제 의미를 흐린다. 향후 discovery provider를
-주입한다면 동기 network 구현을 worker/async boundary 없이 이 경로에 연결하면 안 된다.</li>
-</ul>
-
-<p>MCP도 production wiring은
-<code class="language-plaintext highlighter-rouge">refresh_mcp_for_run(wait=True)</code>를 <code class="language-plaintext highlighter-rouge">RunReadinessBuilder</code>에 넣고, builder는 이를 await한 뒤
-<code class="language-plaintext highlighter-rouge">AgentRunStarted</code>를 보낸다.</p>
-
-<p>clean turn에서는 dirty gate로 빠질 수 있지만 다음 경우에는 blocking 가능하다.</p>
-
-<ul>
-  <li>첫 run (<code class="language-plaintext highlighter-rouge">_mcp_dirty=True</code>)</li>
-  <li>working folder/config/plugin/connector change 뒤</li>
-  <li>이미 진행 중인 refresh를 clean turn이 <code class="language-plaintext highlighter-rouge">wait=True</code>로 만났을 때</li>
-</ul>
-
-<p><code class="language-plaintext highlighter-rouge">refresh_endpoints_for_run()</code>도 <code class="language-plaintext highlighter-rouge">ConfigProvider.refresh()</code>를 통해 tier mtime을 turn path에서 stat한다.
-capability discovery 자체는 no-standing-scan과 targeted invalidation을 대체로 지키므로, 잘 된 경로까지
-blanket cache rewrite로 바꾸지 말아야 한다.</p>
-
-<p>판정: contract drift P0.</p>
-
-<h3 id="f-05-permission-snapshot-read가-thread-boundary를-우회한다">F-05. Permission snapshot read가 thread boundary를 우회한다</h3>
-
-<p>write는 proxy로 asyncio loop에 schedule하지만, <code class="language-plaintext highlighter-rouge">AsyncSessionHandleProxy</code>의 read methods는 Qt thread에서
-weakref로 <code class="language-plaintext highlighter-rouge">AsyncSession</code>과 그 <code class="language-plaintext highlighter-rouge">PermissionManager</code>를 직접 호출한다. comment는 read-only snapshot이며
-cold miss disk read만 가능하다고 정당화하지만, <code class="language-plaintext highlighter-rouge">docs/layers.md</code>는 handoff가 proxy를 통과하더라도
-asyncio half에 대한 direct call을 금지하고 Qt/async mutable state 변경을 각 thread로 제한한다.</p>
-
-<p>더 중요한 것은 UI event handler에서 cold JSON read가 생길 수 있다는 점이다. GIL 때문에 안전해
-보이는 것과 authority/thread contract가 안전한 것은 다르다.</p>
-
-<p>판정: correctness P0.</p>
-
-<h3 id="f-06-modelselection이-교체된-http-client의-수명을-닫지-않는다">F-06. ModelSelection이 교체된 HTTP client의 수명을 닫지 않는다</h3>
-
-<p><code class="language-plaintext highlighter-rouge">ModelSelection</code>은 endpoint/model/settings 변경 때 <code class="language-plaintext highlighter-rouge">_client = None</code>으로 만든다. <code class="language-plaintext highlighter-rouge">AsyncHvppyAI</code>는 owned
-<code class="language-plaintext highlighter-rouge">httpx.AsyncClient</code>를 가지고 <code class="language-plaintext highlighter-rouge">await close()</code>가 필요하지만 shutdown은 현재 field에 남아 있는 client만
-닫는다. 여러 번 선택/refresh하면 이전 pool이 GC에 맡겨지고 connection/resource leak가 될 수 있다.</p>
-
-<p><code class="language-plaintext highlighter-rouge">RunReadiness</code>가 <code class="language-plaintext highlighter-rouge">llm_client</code>를 생성하지만 실제 turn context는 다시 <code class="language-plaintext highlighter-rouge">client_provider(model,
-endpoints)</code>를 호출하고 readiness field 사용처가 보이지 않는다. snapshot이 중복 client creation과
-authority 혼선을 만든다.</p>
-
-<p>판정: resource correctness P0.</p>
-
-<h3 id="f-07-transcript-index-실패와-rewind가-bounded-query-계약을-무너뜨릴-수-있다">F-07. Transcript index 실패와 rewind가 bounded-query 계약을 무너뜨릴 수 있다</h3>
-
-<p>현재 index parse가 실패하면 empty index로 축소되고, 기존 chunk를 검증·재구성하거나 corruption을
-surface하지 않는다. 그 뒤 새 append가 새 index를 쓰면 과거 chunk가 논리적으로 orphan될 수 있다.
-malformed JSONL도 마지막 불완전 tail과 중간 corruption을 구분하지 않고 건너뛴다.</p>
-
-<p>또 rewind marker가 하나라도 생기면 여러 pagination/tail path가 correctness를 위해 full logical
-projection으로 fallback한다. 한 번의 edit가 10,000-message session의 이후 반복 경로를 계속 O(N)으로
-만들 수 있다. 따라서 index는 단순 cache라는 선언만으로 충분하지 않고, integrity state와
-rewind-aware generation/interval projection, bounded rebuild가 필요하다.</p>
-
-<p>판정: silent corruption/orphan 가능성은 correctness P0, rewind의 반복 성능은 scale P1. 둘 다 F-02와
-같은 projection 계약에서 설계하되 canonical transcript를 버리지 않는다.</p>
-
-<h2 id="5-목표-아키텍처">5. 목표 아키텍처</h2>
-
-<pre class="mermaid">
-flowchart TB
-    UI[Qt UI + UiSession projections]
-    CMD[Typed SessionCommand ingress]
-    RCTRL[RuntimeControlCommand ingress]
-    EVT[Typed AgentEvent snapshots]
-    ACTOR[AsyncSession actor / TurnCoordinator]
-    SNAP[Atomic RuntimeSnapshot provider]
-    CPOOL[ModelClientPool]
-    LOOP[query_loop]
-    TOOL[ToolRouter + PermissionPolicy]
-    LOCAL[Local process request]
-    MTRUST[MCP trust / credential adapter]
-    REMOTE[Remote HTTP/SSE MCP]
-    STDIO[stdio MCP spawn request]
-    CONTAIN[ExecutionBoundary]
-    PROC[Managed local child process]
-    STORE[TranscriptWriter lane]
-    JSONL[(Canonical chunk JSONL)]
-    IDX[(Repairable transcript index)]
-    SCHED[Scheduler due-index authority]
-    SIDX[(Derived scheduler index)]
-    REFRESH[Explicit refresh/reconcile service]
-
-    UI --&gt; CMD
-    UI --&gt; RCTRL
-    CMD --&gt;|thread-safe ordered call| ACTOR
-    ACTOR --&gt;|read last completed generation| SNAP
-    ACTOR --&gt;|acquire once by selection key| CPOOL
-    CPOOL --&gt;|turn-scoped lease| LOOP
-    ACTOR --&gt; LOOP
-    LOOP --&gt; TOOL
-    TOOL --&gt; LOCAL
-    LOCAL --&gt; CONTAIN
-    TOOL --&gt; MTRUST
-    MTRUST --&gt; REMOTE
-    MTRUST --&gt; STDIO
-    STDIO --&gt; CONTAIN
-    CONTAIN --&gt; PROC
-    LOOP --&gt; STORE
-    STORE --&gt; JSONL
-    STORE --&gt; IDX
-    ACTOR --&gt; EVT
-    EVT --&gt;|queued Qt signal| UI
-
-    RCTRL --&gt; REFRESH
-    REFRESH --&gt;|build off hot path| SNAP
-    SCHED --&gt;|next due only| CMD
-    SCHED --&gt; SIDX
-
-</pre>
-
-<p>핵심은 새 layer 수가 아니다.</p>
-
-<ul>
-  <li>UI는 async object가 아니라 event로 받은 immutable snapshot만 읽는다.</li>
-  <li>turn은 refresh를 수행하지 않고 이미 publish된 runtime snapshot의 selection key/generation을 읽은 뒤,
-client lease를 정확히 한 번 acquire/release한다.</li>
-  <li>transcript write는 session ordering을 보존하되 event loop 밖에서 blocking I/O를 한다.</li>
-  <li>canonical line append와 derived index checkpoint의 durability를 분리한다.</li>
-  <li>scheduler timer는 전체 목록이 아니라 가장 가까운 due item만 본다.</li>
-  <li>command containment는 permission decision 뒤 <strong>local child process</strong> boundary를 강제한다. HTTP/SSE MCP의
-원격 side effect는 local sandbox 대상이 아니며 trust, credential, permission, server policy로 다룬다.</li>
-</ul>
-
-<p>아래 <code class="language-plaintext highlighter-rouge">Phase 0~6</code>은 work package 번호이고, 실제 dependency는 §13 graph가 권위다. <code class="language-plaintext highlighter-rouge">P0/P1/P2</code>는 위험
-우선순위다. Phase 2의 scale 작업과 Phase 3의 snapshot 작업은 Phase 0 계약 뒤 병렬 가능하며, Phase
-4~5가 P1 응집도·계약, Phase 6이 P2 제품 확장을 주로 수행한다.</p>
-
-<h2 id="6-phase-0--contract와-계측을-먼저-고정">6. Phase 0 — contract와 계측을 먼저 고정</h2>
-
-<p>구현보다 먼저 <code class="language-plaintext highlighter-rouge">docs/layers.md</code>, <code class="language-plaintext highlighter-rouge">docs/config.md</code>, <code class="language-plaintext highlighter-rouge">docs/architecture.md</code>, <code class="language-plaintext highlighter-rouge">docs/agent.md</code>,
-<code class="language-plaintext highlighter-rouge">docs/session.md</code>, <code class="language-plaintext highlighter-rouge">docs/scheduler.md</code>, <code class="language-plaintext highlighter-rouge">docs/permission.md</code>에 아래 결정을 명시한다. 새 구조가 기존 규약
-표에 안 맞으면 문서를 먼저 고치는 repository rule을 따른다. 현재 architecture Mermaid의 정의되지 않은
-stale node도 이 단계에서 parse gate와 함께 바로잡는다.</p>
-
-<h3 id="작업">작업</h3>
-
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">RuntimeSnapshot</code>의 authority와 publish 시점을 정의한다.</li>
-  <li>transcript canonical/index durability와 crash repair 범위를 정의한다.</li>
-  <li>scheduler due-index authority, external edit reconcile, clock jump/timezone semantics를 정의한다.</li>
-  <li>containment 대상 process taxonomy와 platform capability 상태를 정의한다.</li>
-  <li>UI가 받을 permission catalog snapshot schema를 정의한다.</li>
-  <li>model client owner/lease/close sequence를 정의한다.</li>
-  <li>core snapshot generation 1 전 prompt admission과 optional MCP generation 0 의미를 정의한다.</li>
-</ol>
-
-<h3 id="먼저-추가할-실패형-gate">먼저 추가할 실패형 gate</h3>
-
-<ul>
-  <li>turn start에서 config tier stat/content read가 호출되면 fail</li>
-  <li>standing settings timer나 deployment poller가 user endpoint config reconcile을 수행하면 fail</li>
-  <li>향후 discovery provider가 wiring될 경우 Qt thread에서 network probe가 실행되면 fail</li>
-  <li>clean/dirty turn 모두 slow MCP future를 기다리지 않음</li>
-  <li>scheduler tick에서 <code class="language-plaintext highlighter-rouge">list_tasks</code>, glob, N개 stat, sort가 호출되면 fail</li>
-  <li>permission UI read가 <code class="language-plaintext highlighter-rouge">AsyncSession</code> weakref를 dereference하면 fail</li>
-  <li>hook timeout/cancel 뒤 descendant process가 남으면 fail</li>
-  <li>explicit discovery도 Qt/shared asyncio turn loop에서 file content를 읽으면 fail</li>
-  <li>model switch N회 후 생성 client N개 모두 정확히 한 번 close</li>
-  <li>transcript append가 asyncio heartbeat를 막지 않음</li>
-  <li>cold transcript materialization이 raw chunk를 한 번만 순회</li>
-  <li>malformed index가 silent empty history로 축소되지 않고 bounded repair/quarantine로 전환</li>
-  <li>rewind가 존재해도 normal pagination이 full projection fallback을 호출하지 않음</li>
-</ul>
-
-<h3 id="exit-criterion">Exit criterion</h3>
-
-<p>문서와 failure-reproduction harness가 현재 gap을 재현하고, 어떤 component가 각 state를 소유하는지
-표 하나로 설명된다. main branch를 red로 두지는 않는다. 각 guard는 대응 구현과 같은 tranche에서
-활성화하거나, 불가피하면 명시적 temporary <code class="language-plaintext highlighter-rouge">xfail</code>과 제거 issue/조건을 함께 둔다.</p>
-
-<h2 id="7-phase-1--correctnesssecurity-기반-닫기">7. Phase 1 — correctness/security 기반 닫기</h2>
-
-<h3 id="71-executionboundary">7.1 ExecutionBoundary</h3>
-
-<p><code class="language-plaintext highlighter-rouge">PermissionManager</code> 안에 sandbox를 넣지 않는다. 다음 Protocol을 별도 application service로 둔다.</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ExecutionBoundary
-  capabilities(profile, platform) -&gt; ContainmentCapabilities
-  prepare(request, decision, workspace) -&gt; ExecutionPlan
-  spawn(plan) -&gt; ManagedProcess
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">ExecutionPlan</code>은 argv/shell, cwd, read/write roots, network, environment policy, process tree와 backend
-capability report를 담는다. Bash/background shell/user-configured hook처럼 local child argv나 input을
-model 또는 extension이 통제하는 path와 stdio MCP server <strong>spawn</strong>이 이 plan을 거친다. 이미 원격에 있는
-HTTP/SSE MCP의 side effect는 이 boundary가 막을 수 없다.</p>
-
-<p>현재 <code class="language-plaintext highlighter-rouge">.git</code>/<code class="language-plaintext highlighter-rouge">.env</code> hard guard는 built-in Edit/Write에만 적용되고 Bash/hook에는 동일한 불변식을 주지
-않는다. containment 전까지는 UI와 문서도 이를 “Edit/Write guard”로 좁혀 표현하고 Full Access 또는
-shell access를 filesystem containment로 오해하게 만들지 않는다.</p>
-
-<p>platform 후보:</p>
-
-<ul>
-  <li>macOS: Seatbelt profile</li>
-  <li>Linux/RHEL: bubblewrap 우선, user namespace/SELinux/site policy 감지</li>
-  <li>Windows: restricted token/Job Object/AppContainer 가능성을 spike 후 결정</li>
-</ul>
-
-<p>중요 계약:</p>
-
-<ul>
-  <li>filesystem, network, process-tree, socket/syscall capability마다 <code class="language-plaintext highlighter-rouge">enforced / unavailable / disabled</code>를
-따로 보고한다.</li>
-  <li>선택 profile의 required guarantee를 모두 만족할 때만 overall state를 <code class="language-plaintext highlighter-rouge">enforced</code>로 표시한다.</li>
-  <li>backend name, unavailable reason, profile satisfaction을 별도 field로 둔다. Job Object처럼 process-tree만
-잡는 backend를 filesystem/network까지 enforced라고 표시하지 않는다.</li>
-  <li>backend unavailable을 sandboxed 또는 degraded-enforced라고 표시하지 않는다.</li>
-  <li>managed config는 <code class="language-plaintext highlighter-rouge">fail_if_unavailable</code>을 강제할 수 있다.</li>
-  <li>사용자 선택 fallback은 <code class="language-plaintext highlighter-rouge">unavailable</code> 상태의 명시적 approval과 UI 경고를 남기며, 자동 fallback은 없다.</li>
-  <li>support process(capability worker 등)와 untrusted command를 다른 profile로 둔다.</li>
-  <li>network/socket allowance는 filesystem allowance와 별도다.</li>
-  <li>HTTP/SSE MCP는 local containment 대신 server trust, credential scope, permission과 provenance를 기록한다.</li>
-</ul>
-
-<h3 id="72-cross-thread-permission-snapshot">7.2 Cross-thread permission snapshot</h3>
-
-<p>async side가 mutation commit 후 <code class="language-plaintext highlighter-rouge">PermissionCatalogSnapshot</code> event를 내보내고 <code class="language-plaintext highlighter-rouge">UiSession</code>이 이를
-projection으로 보관한다. dialog/list/pill은 그 snapshot만 읽는다. scope path까지 primitive/immutable
-data로 복사한다.</p>
-
-<p>같은 원칙으로 loop가 아직 준비되지 않았을 때 <code class="language-plaintext highlighter-rouge">UiPostBoxProxy</code>가 PostBox를 직접 mutate하는 fallback도
-proxy-owned startup ingress queue로 바꾼 뒤 loop-ready event에서 drain한다.</p>
-
-<h3 id="73-model-client-lifecycle">7.3 Model client lifecycle</h3>
-
-<p><code class="language-plaintext highlighter-rouge">ModelSelection</code>의 nullable client field를 <code class="language-plaintext highlighter-rouge">ModelClientPool</code> + <code class="language-plaintext highlighter-rouge">ModelClientLease</code>로 교체한다. pool은
-현재 config generation의 client와 실제 in-flight lease가 남은 draining generation만 보유한다. endpoint
-또는 credential reference가 바뀌면 old generation은 새 lease를 받지 않고 마지막 lease 반환 즉시
-<code class="language-plaintext highlighter-rouge">close()</code>된다. shutdown은 admission을 닫고 bounded drain 뒤 남은 run을 취소한 다음 생성된 모든 client를
-정확히 한 번 닫는다. pool key와 diagnostics에는 raw secret을 넣지 않는다.</p>
-
-<p><code class="language-plaintext highlighter-rouge">RuntimeSnapshot</code>에는 live resource가 아니라 model selection key와 endpoint/config generation만 둔다.
-<code class="language-plaintext highlighter-rouge">RunReadiness</code>는 client를 생성하거나 보관하지 않는다. <code class="language-plaintext highlighter-rouge">TurnCoordinator</code>가 admission 시
-<code class="language-plaintext highlighter-rouge">TurnContextProvider</code>를 통해 해당 generation의 lease를 정확히 한 번 acquire하고 terminal/cancel/error
-path에서 release한다. 현재 readiness와 context provider가 각각 client를 선택하는 이중 authority는 제거한다.</p>
-
-<p>production <code class="language-plaintext highlighter-rouge">fallback_model</code>이 빈 문자열인 현 상태도 제품 truth와 맞춘다. fallback을 실제 지원할 것이면
-immutable selection/lease 계약으로 wiring하고, 그렇지 않으면 UI·문서에서 core scaffolding을 완성
-기능으로 표현하지 않는다.</p>
-
-<h3 id="74-account-home-path-correctness">7.4 Account-home path correctness</h3>
-
-<p>HPC에서 <code class="language-plaintext highlighter-rouge">$HOME</code>과 passwd/NSS home이 다를 수 있다는 hard contract에 맞춰 runtime resolver, turn context,
-scheduler check 등 account-relative path를 <code class="language-plaintext highlighter-rouge">expand_account_path()</code>로 통일한다. 모든 <code class="language-plaintext highlighter-rouge">expanduser()</code>를
-기계적으로 바꾸지 말고 user-selected arbitrary path, display normalization, account-owned storage를
-분류한다. mismatched <code class="language-plaintext highlighter-rouge">HOME</code> fixture에서 permission/cwd/storage가 NSS home을 쓰는지 검증한다.</p>
-
-<h3 id="exit-criterion-1">Exit criterion</h3>
-
-<ul>
-  <li>untrusted command의 containment 상태와 backend가 UI/diagnostics에 보인다.</li>
-  <li>managed fail-closed test가 실제 prohibited read/write/network를 막는다.</li>
-  <li>timeout/cancel 뒤 local child와 descendant process가 0개 남는다.</li>
-  <li>Qt thread가 async permission object/disk를 읽지 않는다.</li>
-  <li>loop-ready 이전 PostBox ingress도 async-owned state를 직접 mutate하지 않는다.</li>
-  <li>model switch/turn overlap/shutdown에서 client leak과 double-close가 없다.</li>
-  <li>mismatched <code class="language-plaintext highlighter-rouge">$HOME</code> 환경에서 account-owned path가 passwd/NSS home과 일치한다.</li>
-</ul>
-
-<h2 id="8-phase-2--nfs와-10000-entity-hot-path-수정">8. Phase 2 — NFS와 10,000 entity hot path 수정</h2>
-
-<h3 id="81-transcript-writer-lane">8.1 Transcript writer lane</h3>
-
-<p>권장 구조:</p>
-
-<ol>
-  <li>session은 sequence를 매긴 append request를 bounded per-session writer에 보낸다.</li>
-  <li>blocking append는 전용 bounded storage executor에서 수행한다.</li>
-  <li>완료를 await한 뒤 in-memory cache와 UI event를 갱신해 disk-first를 유지한다.</li>
-  <li>writer failure는 해당 session turn을 실패시키되 다른 session event loop를 멈추지 않는다.</li>
-</ol>
-
-<p>manifest를 매 line rewrite하지 않는다.</p>
-
-<ul>
-  <li>chunk JSONL line이 canonical이다.</li>
-  <li>index는 active chunk의 last indexed byte offset/sequence를 checkpoint한다.</li>
-  <li>index checkpoint는 turn end, batch threshold, chunk rotation, orderly shutdown에 수행한다.</li>
-  <li>crash 후 최대 active chunk 하나만 incremental repair한다.</li>
-  <li>chunk size bound 때문에 repair cost도 bounded다.</li>
-</ul>
-
-<p>durability는 모호한 “저장됨” 한 단어로 표현하지 않는다.</p>
-
-<ul>
-  <li>각 envelope는 canonical JSONL에 <code class="language-plaintext highlighter-rouge">write + flush</code>된 뒤에만 cache/UI event를 publish한다.</li>
-  <li>이 baseline은 process-crash ordering이지 power-loss durability라고 부르지 않는다. terminal·clean shutdown
-file <code class="language-plaintext highlighter-rouge">fsync</code>와 새 chunk/atomic-replace 뒤 directory <code class="language-plaintext highlighter-rouge">fsync</code>를 추가할지는 local SSD와 대상 NFS의 p95
-측정으로 Phase 0에서 결정한다. user prompt마다 무조건 <code class="language-plaintext highlighter-rouge">fsync</code>하는 설계를 근거 없이 고정하지 않는다.</li>
-  <li>선택한 backend가 해당 보장을 제공하지 못하면 diagnostics에 durability state를 낮춰 표시하고 기록한다.
-실패를 무시한 채 power-durable이라고 주장하지 않는다.</li>
-  <li>index는 derived data이므로 checkpoint <code class="language-plaintext highlighter-rouge">fsync</code> 실패가 canonical append를 되돌리지는 않지만 stale/repair
-required state를 남긴다.</li>
-</ul>
-
-<p>index load는 <code class="language-plaintext highlighter-rouge">valid / tail-truncated-recoverable / index-missing-rebuildable /
-chunk-corrupt-quarantined / repair-failed-read-only</code> 같은 integrity state를 반환한다. 마지막 partial line과
-중간 corruption을 구분하고, silent empty index로 계속 append하지 않는다. rewind는 active generation 또는
-visible interval을 index에 투영해 정상 pagination이 영구 full reconstruction으로 떨어지지 않게 한다.
-<code class="language-plaintext highlighter-rouge">flush</code>, file <code class="language-plaintext highlighter-rouge">fsync</code>, directory <code class="language-plaintext highlighter-rouge">fsync</code> 중 무엇을 어느 terminal/batch에서 보장할지는 NFS 비용과 함께
-명문화하고 latency·crash fault-injection gate로 고정한다.</p>
-
-<p><code class="language-plaintext highlighter-rouge">load_all + max_numeric_message_id</code>는 한 scan에서 transcript projection과 counters를 함께 반환하는
-<code class="language-plaintext highlighter-rouge">TranscriptLoadSnapshot</code>으로 통합한다. rewind가 있는 경우에도 두 번째 raw scan을 만들지 않는다.</p>
-
-<h3 id="82-scheduler-due-index">8.2 Scheduler due index</h3>
-
-<p>60초 sweep을 min-heap/generation map 기반 due authority로 교체한다.</p>
-
-<ul>
-  <li>startup/explicit refresh에서 schedule definitions를 한 번 reconcile</li>
-  <li>CRUD write 직후 해당 task만 heap/index 갱신</li>
-  <li>timer는 heap head까지 single-shot</li>
-  <li>stale heap entry는 generation token으로 O(log N) 제거</li>
-  <li>clock/timezone change는 bounded rebuild라는 명시적 event</li>
-  <li>external file edit는 explicit Refresh에서만 반영</li>
-  <li>badge count는 <code class="language-plaintext highlighter-rouge">unseen_count/running_count</code> aggregate projection으로 O(1)</li>
-</ul>
-
-<p><code class="language-plaintext highlighter-rouge">scheduler-index.json</code>을 derived sequential index로 둘 수 있다. canonical <code class="language-plaintext highlighter-rouge">schedule.json</code>과 history가
-우선이며 index mismatch는 startup/explicit repair에서 rebuild한다. NFS에서 file 10,000개 content를
-읽지 않도록 directory signature + index + changed item stat을 사용한다.</p>
-
-<h3 id="exit-criterion-2">Exit criterion</h3>
-
-<ul>
-  <li>synthetic 10,000 schedules에서 idle timer path의 file I/O와 sort가 0</li>
-  <li>one task CRUD가 O(log N) 이하이며 전체 rebuild를 호출하지 않음</li>
-  <li>transcript append 중 Qt/async heartbeat가 유지</li>
-  <li>crash/reopen 후 active chunk repair가 정해진 bound를 넘지 않음</li>
-  <li>NFS latency fake에서 다른 session turn이 진행 가능</li>
-</ul>
-
-<h2 id="9-phase-3--run-readiness와-explicit-refresh-일치">9. Phase 3 — run readiness와 explicit refresh 일치</h2>
-
-<h3 id="91-last-completed-snapshot">9.1 Last-completed snapshot</h3>
-
-<p><code class="language-plaintext highlighter-rouge">RunReadinessBuilder.build()</code>는 network/disk refresh를 하지 않는다. 다음 immutable data를 O(1)로 읽는다.</p>
-
-<ul>
-  <li>catalog generation과 active/searchable tool snapshot</li>
-  <li>latest completed MCP tool/server snapshot + stale/refreshing indicator</li>
-  <li>endpoint/runtime snapshot</li>
-  <li>model selection key + endpoint/config generation</li>
-  <li>settings path metadata(필요하다면 이미 계산된 값)</li>
-</ul>
-
-<p>live <code class="language-plaintext highlighter-rouge">ModelClientLease</code>는 snapshot에 넣지 않고 turn admission에서 acquire한다.</p>
-
-<h3 id="92-bootstrap과-prompt-admission">9.2 Bootstrap과 prompt admission</h3>
-
-<ul>
-  <li>settings, endpoint/model selection, builtin permission/tool처럼 model call에 필수인 core snapshot generation 1이
-publish되기 전에는 prompt를 model run으로 admit하지 않는다. UI 입력을 보관할 수는 있지만 상태를
-<code class="language-plaintext highlighter-rouge">Starting runtime</code>으로 명시한다.</li>
-  <li>startup의 core config read는 허용된 1회 reconcile이며, 실패하면 stale arbitrary object로 진행하지 않고
-actionable error를 낸다. persisted snapshot을 재사용하려면 schema/config fingerprint 검증을 먼저 한다.</li>
-  <li>external MCP와 optional marketplace capability는 generation 0의 typed empty/stale snapshot으로 시작할 수
-있고 background reconcile 결과를 다음 turn부터 publish한다. slow/hung MCP는 core admission을 막지 않는다.</li>
-  <li>유효 endpoint/model이 없으면 prompt를 소비하지 않고 설정 복구 surface로 보낸다.</li>
-</ul>
-
-<h3 id="93-refresh-owner">9.3 Refresh owner</h3>
-
-<ul>
-  <li>core bootstrap gate 뒤 optional discovery/reconcile은 window show 후 background에서 snapshot을 publish</li>
-  <li><code class="language-plaintext highlighter-rouge">SettingsService</code> 5분 mtime timer는 제거</li>
-  <li>settings/UI mutation은 write 직후 affected cache와 snapshot을 직접 rebuild</li>
-  <li>folder switch는 folder-key registry LRU miss에만 lazy discovery</li>
-  <li><code class="language-plaintext highlighter-rouge">/reload</code>, Customize Refresh, capability tool은 explicit full/targeted reconcile</li>
-  <li>ordinary turn은 refresh task가 돌아도 기다리지 않음</li>
-  <li>endpoint/model picker의 Refresh는 명시적 trigger에서 수행하고, 향후 Ollama discovery provider를
-wiring할 경우 worker/async I/O로 실행해 Qt deployment poller에는 섞지 않음</li>
-  <li>“MCP required” 같은 future policy가 필요하면 turn 전체 implicit wait 대신 사용자가 선택한 readiness
-requirement와 bounded timeout을 별도 상태로 정의</li>
-</ul>
-
-<p>endpoint <code class="language-plaintext highlighter-rouge">ConfigProvider.refresh()</code>도 turn path에서 제거하고 readiness와 <code class="language-plaintext highlighter-rouge">TurnContextProvider</code>가 같은
-한 번의 runtime resolution을 공유한다. in-app write는 cache reset + snapshot publish, external edit는
-explicit refresh만 반영한다.</p>
-
-<h3 id="exit-criterion-3">Exit criterion</h3>
-
-<ul>
-  <li>slow/hung MCP가 ordinary prompt persistence와 model start를 block하지 않음</li>
-  <li>최초 core snapshot 전에는 model run admission이 차단되고 optional MCP generation 0은 nonblocking임</li>
-  <li>turn-start path의 stat/read/connect call count가 0</li>
-  <li>Qt periodic timer path의 local settings/endpoint reconcile count가 0</li>
-  <li>explicit discovery의 file content read는 전용 worker/storage lane에서만 실행됨</li>
-  <li>refresh 완료 전/후 turn이 각각 어떤 generation을 사용했는지 event에 기록</li>
-  <li>single exposure toggle은 해당 item만 patch하고 registry 전체 scan 없음</li>
-</ul>
-
-<h2 id="10-phase-4--hotspot을-authority-단위로-분해">10. Phase 4 — hotspot을 authority 단위로 분해</h2>
-
-<p>파일 길이만 보고 class를 쪼개지 않는다. 서로 다른 state owner/failure boundary를 기준으로 한다.</p>
-
-<h3 id="asyncsession">AsyncSession</h3>
-
-<p>현재 이미 <code class="language-plaintext highlighter-rouge">PendingInteractionStore</code>, <code class="language-plaintext highlighter-rouge">QueryIOBuilder</code>, <code class="language-plaintext highlighter-rouge">PostBoxPump</code>, event types 같은 seam이 있다. 다음
-후보를 우선한다.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>추출 후보</th>
-      <th>소유 state</th>
-      <th>추출 이유</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">TranscriptRuntime</code></td>
-      <td>active transcript snapshot, append/load sequence, counters</td>
-      <td>storage failure/thread boundary가 turn policy와 다름</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">TurnCoordinator</code></td>
-      <td>active task, run IDs, trigger, terminal outcome</td>
-      <td>lifecycle state machine을 독립 테스트</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">GoalContinuationController</code></td>
-      <td>reminder cadence, resume kick, goal state</td>
-      <td>일반 chat turn과 변경 이유가 다름</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">ToolActivityTracker</code></td>
-      <td>awaiting/cancel/background/abort result</td>
-      <td>terminal tool invariant 한곳에</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><code class="language-plaintext highlighter-rouge">query_loop</code> 자체는 app-agnostic이므로 더 많은 app service를 안으로 넣지 않는다.</p>
-
-<h3 id="uisession">UiSession</h3>
-
-<p>이미 bubbles/event dispatcher가 분리됐지만 permission, stream, pending posts, duration, selection
-projection이 남아 있다.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>추출 후보</th>
-      <th>소유 state</th>
-      <th>원칙</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">UiPermissionProjection</code></td>
-      <td>committed snapshot + pending command IDs/optimistic display state</td>
-      <td>mutation authority는 async side에만 두고 direct read 금지</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">UiStreamingProjection</code></td>
-      <td>streaming parts/rate/reset</td>
-      <td>paint model과 lifecycle 일치</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">UiPendingProjection</code></td>
-      <td>pending post snapshot/reconcile</td>
-      <td>PostBox delivery SSoT와 구분</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">UiTurnMetricsProjection</code></td>
-      <td>durations/context/last request</td>
-      <td>10k visible-window만 갱신</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>QObject/signal root는 <code class="language-plaintext highlighter-rouge">UiSession</code>에 남겨도 된다. helper가 signal ownership까지 무리하게 분산하면
-wiring만 복잡해진다.</p>
-
-<h3 id="capabilitycatalog">CapabilityCatalog</h3>
-
-<p>catalog state, derived exposure, mutation facade, Qt signal bridge가 다른 이유로 바뀐다면 분리한다.
-registry list를 UI에 캐시시키거나 generic “extension manager” 하나로 skills/plugins/MCP를 평탄화하지
-않는다.</p>
-
-<h3 id="subagentmanager-admission">SubAgentManager admission</h3>
-
-<p>active agent는 hard cap 32라 일부 linear lookup이 사실상 bounded지만 pending run은 10,000까지 허용한다.
-<code class="language-plaintext highlighter-rouge">_pending_run_ids</code>의 remove/index/count scan은 ordered dict 또는 deque+id index와 O(1) counter로 바꾸고,
-cancel·queue-position update가 전체 pending list를 훑으면 fail하는 guard를 둔다. 이것은 manager를 여러
-wrapper로 쪼개기보다 admission authority의 자료구조를 바로잡는 작업이다.</p>
-
-<h3 id="exit-criterion-4">Exit criterion</h3>
-
-<ul>
-  <li>각 추출 class의 mutable state owner가 하나</li>
-  <li>기존 public behavior와 event ordering 유지</li>
-  <li><code class="language-plaintext highlighter-rouge">AsyncSession</code>/<code class="language-plaintext highlighter-rouge">UiSession</code>이 composition/wiring 중심으로 줄어듦</li>
-  <li>새 abstraction이 실제 두 개 이상의 caller/failure path를 단순화</li>
-</ul>
-
-<h2 id="11-phase-5--typed-application-protocol-강화">11. Phase 5 — typed application protocol 강화</h2>
-
-<p>app-server를 만들지 않고도 Codex/OpenCode의 장점을 취할 수 있다.</p>
-
-<h3 id="sessioncommand">SessionCommand</h3>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SubmitUserText
-SteerTurn
-CancelTurn
-ResolveApproval
-ResolveQuestion
-SetPermissionMode
-CloseSession
-</code></pre></div></div>
-
-<p>각 command는 session ID, command ID, created sequence, 필요한 snapshot generation을 가진다. 현재 proxy
-method를 억지로 JSON-RPC로 만들 필요는 없지만, ordering과 result/error contract는 타입으로 고정한다.</p>
-
-<h3 id="runtimecontrolcommand">RuntimeControlCommand</h3>
-
-<p>shared runtime refresh는 특정 session actor의 command가 아니다.</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RefreshCapabilities
-RefreshEndpoints
-MutateSettingsOrExposure
-ReconcileFolderScope
-</code></pre></div></div>
-
-<p>이 command는 application-level ingress에서 <code class="language-plaintext highlighter-rouge">ExplicitRefreshService</code>로 들어가 새 <code class="language-plaintext highlighter-rouge">RuntimeSnapshot</code>
-generation을 publish한다. SessionCommand와 RuntimeControlCommand 사이 ordering은 generation ID로 관찰하며,
-shared refresh authority를 임의 session queue에 넣지 않는다.</p>
-
-<h3 id="agentevent">AgentEvent</h3>
-
-<p>현재 typed event를 유지하되 다음을 명시한다.</p>
-
-<ul>
-  <li>run/turn/tool terminal event exactly once</li>
-  <li>readiness generation과 containment state</li>
-  <li>permission catalog snapshot commit</li>
-  <li>refresh started/completed/stale는 runtime metadata이며 transcript 주입 대상 아님</li>
-  <li>UI reconnect/re-materialize 시 authoritative snapshot을 만드는 방법</li>
-</ul>
-
-<h3 id="toolartifacttrace-conformance">Tool·artifact·trace conformance</h3>
-
-<p>모든 model-visible tool path에 공통 prefix/terminal contract를 적용하되 execution boundary는 tool kind별로
-분기한다.</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>discover/dispatch capability
-  → exposure snapshot
-  → schema validation
-  → hook/policy
-  → permission
-  → [in-process built-in | local child → ExecutionBoundary |
-     remote MCP → trust/credential/server-policy adapter |
-     stdio MCP server spawn → ExecutionBoundary]
-  → bounded result 또는 artifact spill
-  → transcript commit
-  → terminal AgentEvent exactly once
-</code></pre></div></div>
-
-<p>parallel-safe 선언이 없으면 직렬을 기본으로 하고, cancel·timeout·permission deny에서도 terminal result가
-반드시 닫혀야 한다. remote MCP side effect는 local sandbox가 되지 않는다는 trust state도 event에 남긴다.
-large-output spill은 현재 MCP의 부분 구현을 전체 tool contract로 평탄화하되,
-node-local/NFS 저장 위치, secret redaction, 파일 권한, TTL/cleanup, model preview bound를 함께 결정한다.
-session/turn/tool/child/MCP correlation ID는 event·log·artifact metadata에 전달하되 runtime health/trace를
-대화 transcript의 model context로 주입하지 않는다. plugin·skill·MCP provenance와 승인 당시 source
-fingerprint도 같은 audit envelope에서 조회 가능해야 한다.</p>
-
-<h3 id="언제-server로-승격할-것인가">언제 server로 승격할 것인가</h3>
-
-<p>다음 중 하나가 실제 requirement가 될 때만 protocol transport를 도입한다.</p>
-
-<ul>
-  <li>headless scheduler process</li>
-  <li>두 번째 native/web client</li>
-  <li>remote HPC execution host</li>
-  <li>crash-isolated runtime daemon</li>
-</ul>
-
-<p>그 전에는 in-process typed boundary와 conformance test로 충분하다.</p>
-
-<h2 id="12-phase-6--제품-기능-확장">12. Phase 6 — 제품 기능 확장</h2>
-
-<p>기반이 닫힌 후에 진행한다.</p>
-
-<ol>
-  <li>알려진 미완인 workspace in-process MCP</li>
-  <li>artifact-aware multi-agent orchestration의 resume/budget/merge 강화</li>
-  <li>extension trust UI 제품화와, publisher identity/signing-root 요구가 생길 때의 조건부 signature</li>
-  <li>plugin hook을 metadata-only로 유지할지 executable feature로 지원할지 결정; 지원 시 HookRunner와
-ExecutionBoundary에 명시적으로 wiring</li>
-  <li>local derived search/index와 repair diagnostics</li>
-  <li>필요 시 headless adapter/app protocol transport</li>
-</ol>
-
-<p>Claude Code agent teams나 Codex deep thread graph를 그대로 목표로 삼지 않는다. 실제 workflow가 shared
-task DAG/mailbox/peer communication을 요구하고 current orchestrate-workflow로 해결되지 않는다는 evidence가
-있을 때 확장한다. cryptographic publisher signature는 publisher identity와 signing-root 운영 요구가
-생길 때만 조건부로 도입한다.</p>
-
-<h2 id="13-우선순위-표">13. 우선순위 표</h2>
-
-<pre class="mermaid">
-flowchart TB
-    GATE[&quot;P0 · contract와 실패형 gate&quot;] --&gt; SAFE[&quot;P0 · execution boundary&lt;br/&gt;permission snapshot · client lifecycle&quot;]
-    GATE --&gt; SCALE[&quot;P0 · transcript writer/index&lt;br/&gt;scheduler due index&quot;]
-    GATE --&gt; READY[&quot;P0 · last-completed runtime snapshot&quot;]
-    SAFE -.-&gt;|client owner/lease contract| READY
-    SAFE --&gt; COH[&quot;P1 · authority 기준 hotspot 분해&quot;]
-    SCALE --&gt; COH
-    READY --&gt; COH
-    COH --&gt; PROTO[&quot;P1 · command/event/tool/artifact conformance&quot;]
-    PROTO --&gt; TRACE[&quot;P1 · provenance와 correlation&quot;]
-    TRACE --&gt; WMCP[&quot;P2 · workspace MCP와 orchestration 확장&quot;]
-    TRACE -.-&gt;|실제 두 번째 surface 요구| REMOTE[&quot;P2 조건부 · remote/app-server&quot;]
-
-</pre>
-
-<p>Phase 2의 transcript/scheduler scale 수정과 Phase 3의 runtime snapshot 수정은 Phase 0 계약 뒤 병렬로
-진행할 수 있다. snapshot 구현에는 Phase 1 전체가 아니라 client owner/lease 결정만 직접 선행한다.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: right">순위</th>
-      <th>항목</th>
-      <th>영향</th>
-      <th>선행 조건</th>
-      <th>완료 증거</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: right">P0-1</td>
-      <td>OS execution containment</td>
-      <td>보안/신뢰</td>
-      <td>process inventory, docs</td>
-      <td>실제 prohibited action integration test</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P0-2</td>
-      <td>scheduler due index</td>
-      <td>UI/NFS/10k</td>
-      <td>scheduler authority spec</td>
-      <td>10k idle tick zero-I/O gate</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P0-3</td>
-      <td>transcript writer/index/integrity projection</td>
-      <td>async fairness/NFS/recovery</td>
-      <td>durability·rewind spec</td>
-      <td>latency/crash/corruption/repair test</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P0-4</td>
-      <td>explicit nonblocking runtime snapshot</td>
-      <td>turn/Qt latency·명세 일치</td>
-      <td>snapshot schema</td>
-      <td>slow MCP/config-stat/periodic-reconcile fail guard</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P0-5</td>
-      <td>permission snapshot event</td>
-      <td>thread correctness</td>
-      <td>primitive DTO</td>
-      <td>cross-thread dereference fail guard</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P0-6</td>
-      <td>LLM client lifecycle</td>
-      <td>connection/resource correctness</td>
-      <td>owner/lease choice</td>
-      <td>switch/overlap/shutdown test</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P0-7</td>
-      <td>NSS account-path correctness</td>
-      <td>HPC 경로/permission</td>
-      <td>path taxonomy</td>
-      <td>mismatched-HOME test</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P1-1</td>
-      <td>AsyncSession authority extraction</td>
-      <td>변경 용이성</td>
-      <td>P0 flow 안정화</td>
-      <td>state-machine unit tests</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P1-2</td>
-      <td>UiSession projection extraction</td>
-      <td>Qt 안정성</td>
-      <td>permission snapshot</td>
-      <td>signal/projection regression tests</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P1-3</td>
-      <td>command/event conformance</td>
-      <td>surface independence</td>
-      <td>P0/P1 types</td>
-      <td>end-to-end ordering suite</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P1-4</td>
-      <td>tool/artifact contract</td>
-      <td>correctness·NFS·secret</td>
-      <td>execution boundary</td>
-      <td>cancel/deny/spill/TTL conformance suite</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P1-5</td>
-      <td>extension provenance와 correlation</td>
-      <td>공급망·관측성</td>
-      <td>typed event/tool IDs</td>
-      <td>source identity/content digest/fingerprint 저장, 변경 시 재승인, trace continuity test</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P2-1</td>
-      <td>workspace MCP</td>
-      <td>known product gap</td>
-      <td>containment/tool routing</td>
-      <td>MCP contract tests</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P2-2</td>
-      <td>orchestration recovery/budget</td>
-      <td>autonomy</td>
-      <td>command/event lifecycle</td>
-      <td>crash/resume/artifact tests</td>
-    </tr>
-    <tr>
-      <td style="text-align: right">P2-조건부</td>
-      <td>remote/app-server surface</td>
-      <td>새 client가 있을 때만</td>
-      <td>protocol conformance</td>
-      <td>separate client proof</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="14-리스크-레지스터">14. 리스크 레지스터</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>리스크</th>
-      <th style="text-align: right">가능성</th>
-      <th style="text-align: right">영향</th>
-      <th>완화</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>bubblewrap/user namespace가 HPC에서 금지</td>
-      <td style="text-align: right">높음</td>
-      <td style="text-align: right">높음</td>
-      <td>capability detection, managed fail-closed, site-approved backend</td>
-    </tr>
-    <tr>
-      <td>async storage offload가 ordering을 깨뜨림</td>
-      <td style="text-align: right">중</td>
-      <td style="text-align: right">높음</td>
-      <td>per-session sequence/single writer/terminal flush test</td>
-    </tr>
-    <tr>
-      <td>batched index가 crash 후 stale</td>
-      <td style="text-align: right">높음(의도)</td>
-      <td style="text-align: right">중</td>
-      <td>index를 derived로 선언, bounded active-chunk repair</td>
-    </tr>
-    <tr>
-      <td>due heap이 system clock jump를 놓침</td>
-      <td style="text-align: right">중</td>
-      <td style="text-align: right">높음</td>
-      <td>clock-change detector와 bounded rebuild</td>
-    </tr>
-    <tr>
-      <td>background refresh snapshot이 stale</td>
-      <td style="text-align: right">정상 상태</td>
-      <td style="text-align: right">중</td>
-      <td>generation/stale 표시, explicit refresh, old snapshot 사용 계약</td>
-    </tr>
-    <tr>
-      <td>client lease가 shutdown을 지연</td>
-      <td style="text-align: right">중</td>
-      <td style="text-align: right">중</td>
-      <td>bounded drain 후 cancel/close sequence</td>
-    </tr>
-    <tr>
-      <td>remote MCP side effect가 local sandbox 밖</td>
-      <td style="text-align: right">높음</td>
-      <td style="text-align: right">높음</td>
-      <td>server trust, least-privilege credential, permission, executable/endpoint provenance</td>
-    </tr>
-    <tr>
-      <td>first valid runtime snapshot 부재</td>
-      <td style="text-align: right">중</td>
-      <td style="text-align: right">높음</td>
-      <td>core prompt admission gate와 typed optional-MCP generation 0</td>
-    </tr>
-    <tr>
-      <td>hook/child descendant가 timeout 뒤 생존</td>
-      <td style="text-align: right">중</td>
-      <td style="text-align: right">높음</td>
-      <td>process group/Job ownership과 descendant-zero integration test</td>
-    </tr>
-    <tr>
-      <td>class 추출이 wrapper만 늘림</td>
-      <td style="text-align: right">중</td>
-      <td style="text-align: right">중</td>
-      <td>state owner/failure boundary 없는 추출 거부</td>
-    </tr>
-    <tr>
-      <td>full protocol이 조기 platform화</td>
-      <td style="text-align: right">중</td>
-      <td style="text-align: right">높음</td>
-      <td>transport는 실제 두 번째 surface까지 보류</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="15-지표">15. 지표</h2>
-
-<p>architecture 개선은 LOC 감소가 아니라 다음 지표로 판정한다.</p>
-
-<ul>
-  <li>prompt submit → first model stream latency(p50/p95), MCP slow server 유무별</li>
-  <li>asyncio heartbeat max stall, transcript append/open 중</li>
-  <li>Qt event loop max stall, 10k schedules/session sidebar 상태에서</li>
-  <li>turn-start filesystem stat/content read count</li>
-  <li>transcript append당 NFS operations와 manifest rewrite 횟수</li>
-  <li>rewind 후 pagination의 full-projection fallback 횟수와 integrity repair 범위</li>
-  <li>scheduler idle tick file I/O/sort count</li>
-  <li>Qt periodic callback의 settings content read와 endpoint reconcile count; discovery wiring 시 network call count</li>
-  <li>client created/closed/active connection count</li>
-  <li>tool call terminal-event completeness</li>
-  <li>refresh generation mismatch/stale snapshot duration</li>
-  <li>session resume repair 범위와 시간</li>
-</ul>
-
-<h2 id="16-하지-말아야-할-단기-처방">16. 하지 말아야 할 단기 처방</h2>
-
-<ul>
-  <li>sync transcript append에 <code class="language-plaintext highlighter-rouge">asyncio.to_thread()</code>만 매번 호출해 ordering과 thread 수를 운에 맡기기</li>
-  <li>scheduler sweep interval을 60초에서 5분으로 늘려 O(N) 문제 숨기기</li>
-  <li>MCP wait timeout만 줄이고 ordinary turn이 refresh에 의존하는 구조 유지</li>
-  <li>5분 settings poll을 20분 deployment poller로 옮겨 timer 수만 줄이기</li>
-  <li>permission snapshot dict에 lock 하나만 붙여 Qt direct read 정당화</li>
-  <li>old client를 <code class="language-plaintext highlighter-rouge">gc.collect()</code>에 맡기기</li>
-  <li>sandbox라고 이름 붙인 allow/deny parser를 추가하기</li>
-  <li><code class="language-plaintext highlighter-rouge">AsyncSession</code>을 파일 여러 개로만 쪼개고 state authority는 그대로 공유하기</li>
-  <li>SQLite를 NFS canonical store로 도입하기</li>
-  <li>index parse 실패를 empty history로 삼고 다음 append로 덮어쓰기</li>
-  <li>app-server를 먼저 만들고 protocol semantics를 나중에 정하기</li>
-</ul>
-
-<h2 id="17-최종-권고">17. 최종 권고</h2>
-
-<p>가장 논리적인 순서는 다음과 같다.</p>
-
-<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>계약·실패형 gate
-  → [command containment + thread/resource correctness
-     | transcript/scheduler의 NFS·10k hot path
-     | last-completed runtime snapshot] 병렬
-  → authority 단위 hotspot 분해
-  → typed application protocol
-  → workspace MCP와 orchestration 확장
-  → 실제 필요가 생길 때 remote/app-server
-</code></pre></div></div>
-
-<p>이 순서는 화려한 기능을 미루기 위한 YAGNI가 아니다. 반대로 scheduler, multi-agent, plugin, remote
-surface를 production level로 키우기 위해 지금 아니면 더 비싸지는 기반을 먼저 닫는 순서다.</p>
-
-<p>Farad는 OpenCode처럼 server-first일 필요도, Claude Agent SDK의 live-session subprocess topology를
-전체 제품에 복제할 필요도, Codex처럼 모든 surface의 거대 Rust kernel일 필요도 없다. Farad의 승리
-조건은 이미 선택한 product boundary를
-정확히 지키는 것이다.</p>
-
-<blockquote>
-  <p><strong>Qt는 projection, asyncio session은 turn authority, transcript는 replay authority, derived index는
-query accelerator, explicit refresh는 snapshot publisher, permission은 policy, containment는 OS
-enforcement. 이 일곱 문장이 코드와 테스트에서 모두 사실이면 Farad의 architecture는 비교 대상과
-다른 것이 아니라 목적에 맞게 더 정확한 것이다.</strong></p>
-</blockquote>
-
-<style>pre.mermaid{overflow-x:auto;background:transparent;border:0;padding:0}.mermaid svg{max-width:100%;height:auto}</style>
-
-<script type="module">
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.16.0/dist/mermaid.esm.min.mjs";
-mermaid.initialize({startOnLoad:true,securityLevel:"strict"});
-</script>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[Farad 아키텍처 최종 판정과 P0/P1/P2 로드맵]]></summary></entry></feed>
+<p>문서만 추가했으며 Farad 제품 소스나 기존 사용자 변경은 수정하지 않았다.</p>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[OpenCode · Claude Code · Codex · Farad 아키텍처 비교 — 전체 인덱스]]></summary></entry></feed>
