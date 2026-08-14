@@ -9,7 +9,7 @@
     :root {
       color-scheme: light dark;
       --canvas: #f2f2f2; --page: #ffffff; --surface: #f7f7f7; --inset: #f4f4f4;
-      --text: #171717; --text-secondary: #3f3f3f; --muted: #5f5f5f;
+      --text: #171717; --text-secondary: #3f3f3f; --muted: #5f5f5f; --faint: #707070;
       --border: #e3e3e3; --strong-border: #cfcfcf; --divider: #efefef;
       --accent: #0e79cf;
       --notice-info: #eaf4fb; --notice-warning: #fbf3df;
@@ -19,7 +19,7 @@
     @media (prefers-color-scheme: dark) {
       :root {
         --canvas: #121212; --page: #181818; --surface: #1e1e1e; --inset: #121212;
-        --text: #eeeeee; --text-secondary: #c6c6c6; --muted: #9a9a9a;
+        --text: #eeeeee; --text-secondary: #c6c6c6; --muted: #9a9a9a; --faint: #8a8a8a;
         --border: #3c3c3c; --strong-border: #4d4d4d; --divider: #262626;
         --accent: #2a82d0;
         --notice-info: #1b2a35; --notice-warning: #2a2418;
@@ -164,7 +164,7 @@
       font-weight: 600;
     }
 
-    .farad-artifact td { border-bottom: 1px solid var(--divider); color: var(--text-secondary); }
+    .farad-artifact td { border-bottom: 1px solid var(--divider); color: var(--text); }
     .farad-artifact img, .farad-artifact svg { display: block; max-width: 100%; height: auto; }
 
     /* ── Named parts ───────────────────────────────────────────────────── */
@@ -184,19 +184,21 @@
     .farad-artifact__note[data-farad-notice="success"] { background: var(--notice-success); }
     .farad-artifact__note[data-farad-notice="danger"] { background: var(--notice-danger); }
 
-    /* Secondary text sits one step under the body size, not two. */
-    .farad-artifact :is(figcaption, .farad-artifact__kicker) {
+    /* Secondary text sits one step under the body size, not two. Caption and
+       kicker are declared apart: grouping them puts the shared colour at a
+       higher weight than the kicker's own rule, which then never applies. */
+    .farad-artifact figcaption {
+      margin-top: 9px;
       color: var(--text-secondary);
       font-size: 15px;
+      line-height: 1.5;
     }
-
-    .farad-artifact figcaption { margin-top: 9px; line-height: 1.5; }
 
     /* The kicker takes one more step down in size and gains weight, so it reads
        as a label under the title rather than as the document's first sentence.
        Weight carries that signal, so the ink steps back a shade to compensate;
        secondary ink at 600 sits heavier on the page than the title deserves. */
-    .farad-artifact__kicker { color: var(--muted); font-size: 14px; font-weight: 600; }
+    .farad-artifact__kicker { color: var(--faint); font-size: 14px; font-weight: 600; }
     .farad-artifact > h1 + .farad-artifact__kicker { margin-top: 6px; }
 
     .farad-artifact__footer {
