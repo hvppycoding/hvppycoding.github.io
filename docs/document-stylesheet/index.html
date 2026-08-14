@@ -5,59 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>여백은 요소의 것이다 — 문서용 CSS 노트</title>
   <style>
+    /* Tokens. The dark set swaps in from the system preference. */
     :root {
       color-scheme: light dark;
-      --canvas: #f2f2ef;
-      --page: #ffffff;
-      --surface: #f7f7f5;
-      --inset: #f4f4f2;
-      --text: #171717;
-      --text-secondary: #3f3f3f;
-      --muted: #5f5f5f;
-      --border: #e3e3df;
-      --strong-border: #cfcfc9;
-      --divider: #efefec;
+      --canvas: #f2f2f2; --page: #ffffff; --surface: #f7f7f7; --inset: #f4f4f4;
+      --text: #171717; --text-secondary: #3f3f3f; --muted: #5f5f5f;
+      --border: #e3e3e3; --strong-border: #cfcfcf; --divider: #efefef;
       --accent: #0e79cf;
-      --notice-info: #eaf4fb;
-      --notice-warning: #fbf3df;
-      --notice-success: #eaf6ee;
-      --notice-danger: #faecea;
+      --notice-info: #eaf4fb; --notice-warning: #fbf3df;
+      --notice-success: #eaf6ee; --notice-danger: #faecea;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --canvas: #121212;
-        --page: #181818;
-        --surface: #1e1e1e;
-        --inset: #121212;
-        --text: #eeeeee;
-        --text-secondary: #c6c6c6;
-        --muted: #9a9a9a;
-        --border: #3c3c3c;
-        --strong-border: #4d4d4d;
-        --divider: #262626;
+        --canvas: #121212; --page: #181818; --surface: #1e1e1e; --inset: #121212;
+        --text: #eeeeee; --text-secondary: #c6c6c6; --muted: #9a9a9a;
+        --border: #3c3c3c; --strong-border: #4d4d4d; --divider: #262626;
         --accent: #2a82d0;
-        --notice-info: #1b2a35;
-        --notice-warning: #2a2418;
-        --notice-success: #1b2b21;
-        --notice-danger: #2d201f;
+        --notice-info: #1b2a35; --notice-warning: #2a2418;
+        --notice-success: #1b2b21; --notice-danger: #2d201f;
       }
     }
 
-    html {
-      min-width: 320px;
-      background: var(--canvas);
-    }
-
-    body {
-      margin: 0;
-      background: var(--canvas);
-    }
-
-    .farad-artifact,
-    .farad-artifact * {
-      box-sizing: border-box;
-    }
+    html { min-width: 320px; background: var(--canvas); }
+    body { margin: 0; background: var(--canvas); }
+    .farad-artifact, .farad-artifact * { box-sizing: border-box; }
 
     /* ── Document surface ──────────────────────────────────────────────── */
 
@@ -81,10 +53,16 @@
     .farad-artifact[data-farad-width="wide"] { --doc-width: 1000px; }
     .farad-artifact[data-farad-width="full"] { --doc-width: 100%; }
 
-    /* ── Flow rhythm ───────────────────────────────────────────────────────
-       One rule spaces every sibling, then headings claim more room above than
-       below. Spacing lives on the elements, never on a wrapper, so a heading
-       keeps its space wherever it appears in the flow. */
+    /* ── Flow ──────────────────────────────────────────────────────────────
+       Distances follow a rendered Markdown page: one gap between siblings,
+       more above a heading. Spacing lives on the elements, never on a wrapper,
+       so a heading keeps its space wherever it appears. The browser-margin
+       reset sits inside :where() because a plain `.farad-artifact p { margin:
+       0 }` outranks the flow rule and would silently zero every gap it sets. */
+
+    :where(.farad-artifact) :where(p, ul, ol, blockquote, pre, figure) { margin: 0; }
+    :where(.farad-artifact p) { margin-bottom: 16px; }
+    :where(.farad-artifact p:last-child) { margin-bottom: 0; }
 
     .farad-artifact > * + * { margin-top: 16px; }
 
@@ -95,54 +73,22 @@
       line-height: 1.35;
     }
 
-    /* The rule under a title belongs to that title: it sits close under the
-       text and carries visible ink, so the space below it reads as the gap
-       before the body rather than as a floating separator. */
-    .farad-artifact > h1 {
-      margin-top: 0;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--strong-border);
-      font-size: 30px;
-      letter-spacing: -0.02em;
-    }
+    /* The title carries no rule under it; its size and the line below it
+       already mark the start of the document. */
+    .farad-artifact > h1 { margin-top: 0; font-size: 30px; letter-spacing: -0.02em; }
 
     .farad-artifact > h2 {
-      margin-top: 42px;
+      margin-top: 24px;
       padding-bottom: 5px;
       border-bottom: 1px solid var(--border);
       font-size: 22px;
       letter-spacing: -0.01em;
     }
 
-    .farad-artifact > h3 { margin-top: 32px; font-size: 18px; }
-    .farad-artifact > h4 { margin-top: 26px; font-size: 16.5px; }
-
-    /* A block with its own edge — table, code block, figure, note — needs more
-       air than two paragraphs do, or the line after it reads as one more row of
-       the block. Its own margins collapse with a neighbour's, so a heading still
-       keeps the larger space it claims above. */
-    .farad-artifact :is(pre, table, figure, .farad-artifact__note) {
-      margin-block: 26px;
-    }
-
-    /* Last, so a heading binds what follows even when that is one of the blocks
-       above. */
-    .farad-artifact > :is(h1, h2, h3, h4) + * { margin-top: 20px; }
+    .farad-artifact > h3 { margin-top: 24px; font-size: 18px; }
+    .farad-artifact > h4 { margin-top: 24px; font-size: 16.5px; }
 
     /* ── Prose ─────────────────────────────────────────────────────────── */
-
-    /* Browser margins are reset at zero weight. An ordinary `.farad-artifact p`
-       reset would outrank the flow rules above and silently zero every gap they
-       set, so the reset must stay lighter than them. */
-    :where(.farad-artifact) :where(p, ul, ol, blockquote, pre, figure) {
-      margin: 0;
-    }
-
-    /* A paragraph still carries its own space below, so paragraphs nested in a
-       quote, a list item, or a note are spaced without extra rules. Adjacent
-       margins collapse, so the top-level rhythm stays at the flow value. */
-    :where(.farad-artifact p) { margin-bottom: 16px; }
-    :where(.farad-artifact p:last-child) { margin-bottom: 0; }
 
     .farad-artifact a {
       color: var(--accent);
@@ -152,26 +98,14 @@
     }
 
     .farad-artifact :is(ul, ol) { padding-left: 1.6em; }
-    .farad-artifact li + li { margin-top: 7px; }
-    .farad-artifact li > :is(ul, ol) { margin-top: 7px; }
+    .farad-artifact li + li, .farad-artifact li > :is(ul, ol) { margin-top: 4px; }
     .farad-artifact li::marker { color: var(--muted); }
+    .farad-artifact strong { font-weight: 600; }
+    .farad-artifact hr { margin: 36px 0; border: 0; border-top: 1px solid var(--divider); }
 
     /* A quote reads as a quote through indentation and quieter ink; the design
        language keeps accent rails off notes and quotes alike. */
-    .farad-artifact blockquote {
-      padding-left: 20px;
-      color: var(--text-secondary);
-    }
-
-    .farad-artifact hr {
-      margin: 36px 0;
-      border: 0;
-      border-top: 1px solid var(--divider);
-    }
-
-    .farad-artifact strong { font-weight: 600; }
-
-    /* ── Code ──────────────────────────────────────────────────────────── */
+    .farad-artifact blockquote { padding-left: 20px; color: var(--text-secondary); }
 
     .farad-artifact :is(code, pre) {
       font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
@@ -190,7 +124,7 @@
       background: var(--inset);
       overflow-x: auto;
       font-size: 14px;
-      line-height: 1.65;
+      line-height: 1.5;
     }
 
     .farad-artifact pre code {
@@ -199,8 +133,6 @@
       background: none;
       font-size: inherit;
     }
-
-    /* ── Table ─────────────────────────────────────────────────────────── */
 
     /* A block-level table sizes to its content and scrolls on its own, so a wide
        table never widens the page and needs no wrapper element. */
@@ -215,7 +147,7 @@
     }
 
     .farad-artifact :is(th, td) {
-      padding: 11px 14px;
+      padding: 9px 13px;
       border: 0;
       text-align: left;
       vertical-align: top;
@@ -227,14 +159,10 @@
       font-weight: 600;
     }
 
-    .farad-artifact td {
-      border-bottom: 1px solid var(--divider);
-      color: var(--text-secondary);
-    }
+    .farad-artifact td { border-bottom: 1px solid var(--divider); color: var(--text-secondary); }
+    .farad-artifact img, .farad-artifact svg { display: block; max-width: 100%; height: auto; }
 
-    .farad-artifact tbody tr:last-child td { border-bottom: 0; }
-
-    /* ── Note ──────────────────────────────────────────────────────────── */
+    /* ── Named parts ───────────────────────────────────────────────────── */
 
     .farad-artifact__note {
       padding: 14px 16px;
@@ -251,34 +179,15 @@
     .farad-artifact__note[data-farad-notice="success"] { background: var(--notice-success); }
     .farad-artifact__note[data-farad-notice="danger"] { background: var(--notice-danger); }
 
-    /* ── Figure, metadata, credit ──────────────────────────────────────── */
-
-    .farad-artifact img,
-    .farad-artifact svg {
-      display: block;
-      max-width: 100%;
-      height: auto;
-    }
-
-    /* Secondary text — caption, kicker, metadata — is quieter through color and
-       sits one step under the body size, not two. */
-    .farad-artifact figcaption {
-      margin-top: 9px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .farad-artifact__kicker { margin-bottom: 0; color: var(--muted); font-size: 15px; }
-    .farad-artifact > .farad-artifact__kicker + h1 { margin-top: 6px; }
-
-    .farad-artifact__meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 18px;
-      color: var(--muted);
+    /* Secondary text sits one step under the body size, not two. */
+    .farad-artifact :is(figcaption, .farad-artifact__kicker, .farad-artifact__meta) {
+      color: var(--text-secondary);
       font-size: 15px;
     }
+
+    .farad-artifact figcaption { margin-top: 9px; line-height: 1.5; }
+    .farad-artifact > h1 + .farad-artifact__kicker { margin-top: 6px; }
+    .farad-artifact__meta { display: flex; flex-wrap: wrap; gap: 4px 18px; }
 
     .farad-artifact__footer {
       margin-top: 48px;
@@ -286,11 +195,7 @@
       border-top: 1px solid var(--border);
     }
 
-    .farad-artifact__credit {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1;
-    }
+    .farad-artifact__credit { color: var(--muted); font-size: 14px; line-height: 1; }
 
     /* The only serif in the document: the Farad wordmark. */
     .farad-artifact__wordmark {
@@ -300,16 +205,10 @@
       font-size: 15px;
     }
 
-    .farad-artifact[data-farad-credit="off"] .farad-artifact__footer {
-      display: none !important;
-    }
+    .farad-artifact[data-farad-credit="off"] .farad-artifact__footer { display: none !important; }
 
     @media (max-width: 700px) {
-      .farad-artifact {
-        width: 100%;
-        margin: 0;
-        padding: 32px 20px 28px;
-      }
+      .farad-artifact { width: 100%; margin: 0; padding: 32px 20px 28px; }
     }
 
     /* ── Print ─────────────────────────────────────────────────────────────
@@ -319,63 +218,34 @@
     @media print {
       :root {
         color-scheme: light;
-        --canvas: #ffffff;
-        --page: #ffffff;
-        --surface: #f7f7f5;
-        --inset: #f4f4f2;
-        --text: #171717;
-        --text-secondary: #3f3f3f;
-        --muted: #5f5f5f;
-        --border: #d8d8d3;
-        --strong-border: #cfcfc9;
-        --divider: #e8e8e4;
-        --accent: #0e64aa;
-        --notice-info: #eaf4fb;
-        --notice-warning: #fbf3df;
-        --notice-success: #eaf6ee;
-        --notice-danger: #faecea;
+        --canvas: #ffffff; --page: #ffffff;
+        --border: #d8d8d8; --divider: #e8e8e8; --accent: #0e64aa;
       }
 
-      html,
-      body {
+      html, body {
         background: #ffffff;
         print-color-adjust: exact;
         -webkit-print-color-adjust: exact;
       }
 
-      .farad-artifact {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      .farad-artifact p,
-      .farad-artifact li {
-        orphans: 3;
-        widows: 3;
-      }
-
-      .farad-artifact :is(h1, h2, h3, h4) {
-        break-after: avoid;
-        page-break-after: avoid;
-      }
+      .farad-artifact { width: 100%; margin: 0; padding: 0; }
+      .farad-artifact :is(p, li) { orphans: 3; widows: 3; }
+      .farad-artifact :is(h1, h2, h3, h4) { break-after: avoid; page-break-after: avoid; }
+      .farad-artifact thead { display: table-header-group; }
+      .farad-artifact a { color: var(--text); }
 
       .farad-artifact :is(pre, figure, table, .farad-artifact__note) {
         break-inside: avoid;
         page-break-inside: avoid;
       }
-
-      .farad-artifact thead { display: table-header-group; }
-
-      .farad-artifact a { color: var(--text); }
     }
   </style>
 </head>
 <body>
   <!-- EDITABLE CONTENT START -->
   <article class="farad-artifact" data-farad-template="standalone-doc-v1" data-farad-credit="on" data-farad-width="wide">
-    <p class="farad-artifact__kicker">CSS 노트 · 2026-08-14</p>
     <h1>여백은 요소의 것이다</h1>
+    <p class="farad-artifact__kicker">CSS 노트 · 2026-08-14</p>
     <p>문서용 HTML을 만들 때 흔히 컴포넌트 카탈로그부터 짠다. 그러면 소제목이 앞 문단에
       달라붙고, 그 증상을 마진으로 하나씩 때우게 된다. 왜 그렇게 되는지와, 규칙 세 줄로
       끝나는 대안을 정리한다.</p>
@@ -422,12 +292,10 @@
       복사해 위 여백을 다시 0으로 만들거나. 두 길 다 지저분한 쪽으로 간다.</p>
 
     <h2>고침 — 리듬을 요소로</h2>
-    <p>여백을 요소로 되돌리면 뼈대가 다섯 줄로 수렴한다.</p>
-    <pre><code>.doc &gt; * + *                    { margin-top: 16px; }
-.doc &gt; :is(h1,h2,h3,h4)        { margin-bottom: 0; }
-.doc &gt; h2                      { margin-top: 42px; }
-.doc &gt; h3                      { margin-top: 32px; }
-.doc &gt; :is(h1,h2,h3,h4) + *    { margin-top: 20px; }</code></pre>
+    <p>여백을 요소로 되돌리면 뼈대가 세 줄로 수렴한다.</p>
+    <pre><code>.doc &gt; * + *                 { margin-top: 16px; }
+.doc &gt; :is(h1,h2,h3,h4)     { margin-bottom: 0; }
+.doc &gt; :is(h2,h3,h4)        { margin-top: 24px; }</code></pre>
     <p>첫 줄이 모든 형제 사이를 채우고, 나머지가 제목만 덮어쓴다. 제목은 이제 자기 여백을
       직접 들고 다니므로 문서 어디에 나와도 같은 값을 갖는다.</p>
 
@@ -445,16 +313,24 @@
     <p>같은 이유로 문단에는 아래 여백을 하나 남겨 둔다. 인용이나 목록 <em>안에</em> 들어간
       문단은 형제 규칙이 닿지 않는데, 인접 마진은 상쇄되므로 바깥 리듬은 그대로다.</p>
 
-    <h3>경계가 있는 블록은 더 띄운다</h3>
-    <p>표·코드 블록·그림·노트는 자기 테두리를 갖는다. 이런 블록 다음 줄에 문단 간격만
-      주면 그 줄이 블록의 마지막 행처럼 읽힌다.</p>
-    <pre><code>.doc :is(pre, table, figure) { margin-block: 26px; }</code></pre>
-
     <h3>위를 아래보다 넓게</h3>
-    <p>제목의 위 여백을 아래의 두 배 안팎으로 준다. 그래야 제목이 <em>아래</em> 내용에 붙어
-      읽히고, 앞 문단과 다음 절 사이에 애매하게 떠 있지 않는다. 위아래가 같으면 제목은
-      어느 쪽에도 속하지 않는 줄이 된다. 반대로 위만 지나치게 벌리면 제목이 자기 절에서
-      떨어져 나간다.</p>
+    <p>제목의 위 여백을 아래보다 넓게 준다. 그래야 제목이 <em>아래</em> 내용에 붙어 읽히고,
+      앞 문단과 다음 절 사이에 애매하게 떠 있지 않는다. 위아래가 같으면 제목은 어느 쪽에도
+      속하지 않는 줄이 된다. 반대로 위만 지나치게 벌리면 제목이 자기 절에서 떨어져 나간다.
+      한 배 반이면 충분하고, 두 배를 넘기면 다시 떠 보이기 시작한다.</p>
+
+    <h3>값은 만들지 말고 가져온다</h3>
+    <p>이 문서의 간격은 손으로 고른 값이 아니라 GitHub Docs의 CSS 번들에서 실측해 가져온
+      것이다. 형제 사이는 전부 16px, 제목 위만 24px. 렌더된 Markdown은 대부분의 독자가 이미
+      눈금을 맞춰둔 표면이라, 거기 맞추면 문서가 <em>디자인된 것</em>이 아니라
+      <em>평범한 것</em>으로 읽힌다. 그리고 각 조합을 일일이 튜닝하는 것보다 훨씬 싸다.</p>
+    <p>같은 이유로 표·코드 블록·그림에 주던 특별 여백도 없앴다. 자기 테두리가 이미 아래 줄과
+      갈라주는데 거기만 더 벌리면 나머지 페이지가 지키는 리듬 하나가 깨진다.</p>
+
+    <h3>제목 밑줄은 제목에만</h3>
+    <p>문서 제목에는 밑줄을 두지 않는다. 크기와 바로 아래 줄이 이미 문서의 시작을
+      알리는데, 여기에 가로선까지 그으면 첫 두 줄 안에 가로 경계가 둘 생긴다. 섹션 제목의
+      밑줄은 남긴다 — 그건 안 그으면 이어져 버릴 절들을 갈라주는 일을 한다.</p>
 
     <h3>margin-bottom 하나에 기대지 않기</h3>
     <p>아래 여백만으로 리듬을 만들면 인접 마진 상쇄가 엔진과 인쇄에서 다르게 동작하고,
