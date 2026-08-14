@@ -95,30 +95,54 @@
       line-height: 1.35;
     }
 
+    /* The rule under a title belongs to that title: it sits close under the
+       text and carries visible ink, so the space below it reads as the gap
+       before the body rather than as a floating separator. */
     .farad-artifact > h1 {
       margin-top: 0;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--strong-border);
       font-size: 30px;
       letter-spacing: -0.02em;
     }
 
     .farad-artifact > h2 {
-      margin-top: 52px;
-      padding-bottom: 9px;
-      border-bottom: 1px solid var(--divider);
+      margin-top: 42px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--border);
       font-size: 22px;
       letter-spacing: -0.01em;
     }
 
-    .farad-artifact > h3 { margin-top: 34px; font-size: 18px; }
+    .farad-artifact > h3 { margin-top: 32px; font-size: 18px; }
     .farad-artifact > h4 { margin-top: 26px; font-size: 16.5px; }
 
-    .farad-artifact > :is(h1, h2, h3, h4) + * { margin-top: 14px; }
+    /* A block with its own edge — table, code block, figure, note — needs more
+       air than two paragraphs do, or the line after it reads as one more row of
+       the block. Its own margins collapse with a neighbour's, so a heading still
+       keeps the larger space it claims above. */
+    .farad-artifact :is(pre, table, figure, .farad-artifact__note) {
+      margin-block: 26px;
+    }
+
+    /* Last, so a heading binds what follows even when that is one of the blocks
+       above. */
+    .farad-artifact > :is(h1, h2, h3, h4) + * { margin-top: 20px; }
 
     /* ── Prose ─────────────────────────────────────────────────────────── */
 
-    .farad-artifact p { margin: 0; }
+    /* Browser margins are reset at zero weight. An ordinary `.farad-artifact p`
+       reset would outrank the flow rules above and silently zero every gap they
+       set, so the reset must stay lighter than them. */
+    :where(.farad-artifact) :where(p, ul, ol, blockquote, pre, figure) {
+      margin: 0;
+    }
+
+    /* A paragraph still carries its own space below, so paragraphs nested in a
+       quote, a list item, or a note are spaced without extra rules. Adjacent
+       margins collapse, so the top-level rhythm stays at the flow value. */
+    :where(.farad-artifact p) { margin-bottom: 16px; }
+    :where(.farad-artifact p:last-child) { margin-bottom: 0; }
 
     .farad-artifact a {
       color: var(--accent);
@@ -127,7 +151,7 @@
       text-underline-offset: 3px;
     }
 
-    .farad-artifact :is(ul, ol) { margin: 0; padding-left: 1.6em; }
+    .farad-artifact :is(ul, ol) { padding-left: 1.6em; }
     .farad-artifact li + li { margin-top: 7px; }
     .farad-artifact li > :is(ul, ol) { margin-top: 7px; }
     .farad-artifact li::marker { color: var(--muted); }
@@ -135,7 +159,6 @@
     /* A quote reads as a quote through indentation and quieter ink; the design
        language keeps accent rails off notes and quotes alike. */
     .farad-artifact blockquote {
-      margin: 0;
       padding-left: 20px;
       color: var(--text-secondary);
     }
@@ -162,7 +185,6 @@
     }
 
     .farad-artifact pre {
-      margin: 0;
       padding: 14px 16px;
       border-radius: 8px;
       background: var(--inset);
@@ -238,15 +260,16 @@
       height: auto;
     }
 
-    .farad-artifact figure { margin: 0; }
+    /* Secondary text — caption, kicker, metadata — is quieter through color and
+       sits one step under the body size, not two. */
     .farad-artifact figcaption {
       margin-top: 9px;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
       line-height: 1.5;
     }
 
-    .farad-artifact__kicker { color: var(--muted); font-size: 14px; }
+    .farad-artifact__kicker { margin-bottom: 0; color: var(--muted); font-size: 15px; }
     .farad-artifact > .farad-artifact__kicker + h1 { margin-top: 6px; }
 
     .farad-artifact__meta {
@@ -254,7 +277,7 @@
       flex-wrap: wrap;
       gap: 4px 18px;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .farad-artifact__footer {
@@ -398,20 +421,40 @@
       브라우저 기본값과 충돌하거나, 클래스를 새로 만들며 <code>margin: 0 0 N</code> 패턴을
       복사해 위 여백을 다시 0으로 만들거나. 두 길 다 지저분한 쪽으로 간다.</p>
 
-    <h2>고침 — 리듬 세 줄</h2>
-    <p>여백을 요소로 되돌리면 규칙이 세 줄로 수렴한다.</p>
+    <h2>고침 — 리듬을 요소로</h2>
+    <p>여백을 요소로 되돌리면 뼈대가 다섯 줄로 수렴한다.</p>
     <pre><code>.doc &gt; * + *                    { margin-top: 16px; }
 .doc &gt; :is(h1,h2,h3,h4)        { margin-bottom: 0; }
-.doc &gt; h2                      { margin-top: 52px; }
-.doc &gt; h3                      { margin-top: 34px; }
-.doc &gt; :is(h1,h2,h3,h4) + *    { margin-top: 14px; }</code></pre>
+.doc &gt; h2                      { margin-top: 42px; }
+.doc &gt; h3                      { margin-top: 32px; }
+.doc &gt; :is(h1,h2,h3,h4) + *    { margin-top: 20px; }</code></pre>
     <p>첫 줄이 모든 형제 사이를 채우고, 나머지가 제목만 덮어쓴다. 제목은 이제 자기 여백을
       직접 들고 다니므로 문서 어디에 나와도 같은 값을 갖는다.</p>
 
+    <h3>리셋이 리듬을 이긴다</h3>
+    <p>여기까지 짜고 나면 규칙은 맞는데 화면은 여전히 붙어 있는 일이 생긴다. 범인은 보통
+      브라우저 기본 마진을 지우려고 맨 위에 적어둔 리셋이다.</p>
+    <pre><code>.doc p       { margin: 0; }   /* 0,1,1 */
+.doc &gt; * + * { margin-top: 16px; }   /* 0,1,0 */</code></pre>
+    <p>리셋이 더 구체적이라 뒤에 오는 리듬 규칙을 <strong>전부</strong> 덮는다. 선언 순서와
+      무관하고, 개발자 도구에서 규칙이 취소선으로 보이기 전까지는 알아채기 어렵다. 이 글의
+      스타일시트도 이 한 줄 때문에 제목과 표 아래 여백이 실제로는 0px이었다.</p>
+    <p>리셋을 <code>:where()</code>로 감싸 가중치를 0으로 내리면 리듬 규칙이 다시 이긴다.</p>
+    <pre><code>:where(.doc) :where(p, ul, ol, blockquote, pre, figure) { margin: 0; }
+:where(.doc p) { margin-bottom: 16px; }</code></pre>
+    <p>같은 이유로 문단에는 아래 여백을 하나 남겨 둔다. 인용이나 목록 <em>안에</em> 들어간
+      문단은 형제 규칙이 닿지 않는데, 인접 마진은 상쇄되므로 바깥 리듬은 그대로다.</p>
+
+    <h3>경계가 있는 블록은 더 띄운다</h3>
+    <p>표·코드 블록·그림·노트는 자기 테두리를 갖는다. 이런 블록 다음 줄에 문단 간격만
+      주면 그 줄이 블록의 마지막 행처럼 읽힌다.</p>
+    <pre><code>.doc :is(pre, table, figure) { margin-block: 26px; }</code></pre>
+
     <h3>위를 아래보다 넓게</h3>
-    <p>제목의 위 여백을 아래의 두세 배로 준다. 그래야 제목이 <em>아래</em> 내용에 붙어
+    <p>제목의 위 여백을 아래의 두 배 안팎으로 준다. 그래야 제목이 <em>아래</em> 내용에 붙어
       읽히고, 앞 문단과 다음 절 사이에 애매하게 떠 있지 않는다. 위아래가 같으면 제목은
-      어느 쪽에도 속하지 않는 줄이 된다.</p>
+      어느 쪽에도 속하지 않는 줄이 된다. 반대로 위만 지나치게 벌리면 제목이 자기 절에서
+      떨어져 나간다.</p>
 
     <h3>margin-bottom 하나에 기대지 않기</h3>
     <p>아래 여백만으로 리듬을 만들면 인접 마진 상쇄가 엔진과 인쇄에서 다르게 동작하고,
@@ -423,7 +466,7 @@
       <code>code</code>, <code>pre</code>, <code>blockquote</code>, <code>table</code>,
       <code>hr</code>로 쓰인다. 이 태그들을 루트 아래에 스코프해서 전부 스타일하면, 본문을
       쓸 때 클래스가 필요 없어진다.</p>
-    <pre><code>.doc :is(ul, ol) { margin: 0; padding-left: 1.6em; }
+    <pre><code>.doc :is(ul, ol) { padding-left: 1.6em; }
 .doc li + li     { margin-top: 7px; }
 .doc code        { padding: 0.14em 0.4em; border-radius: 5px;
                    background: var(--inset); font-size: 0.875em; }</code></pre>
@@ -457,6 +500,7 @@
       <li>목록·인용·인라인 코드·코드 블록이 전부 스타일을 갖는가</li>
       <li>본문 마크업에 여백을 때우려고 넣은 클래스나 인라인 <code>style</code>이 없는가</li>
       <li>넓은 표가 페이지를 넓히지 않고 자기 안에서 스크롤하는가</li>
+      <li>브라우저 마진 리셋이 리듬 규칙보다 가중치가 낮은가 — 값이 아니라 실측으로</li>
     </ol>
     <p>여백이 틀렸다면 그 자리에 마진을 더할 게 아니라, 그 요소의 규칙이 틀린 것이다.</p>
 
