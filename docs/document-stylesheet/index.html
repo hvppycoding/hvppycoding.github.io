@@ -103,9 +103,14 @@
     .farad-artifact strong { font-weight: 600; }
     .farad-artifact hr { margin: 36px 0; border: 0; border-top: 1px solid var(--divider); }
 
-    /* A quote reads as a quote through indentation and quieter ink; the design
-       language keeps accent rails off notes and quotes alike. */
-    .farad-artifact blockquote { padding-left: 20px; color: var(--text-secondary); }
+    /* Indentation and quieter ink alone are too weak to mark a quote once the
+       page already indents lists. A neutral rule at the edge is the ordinary
+       Markdown convention; keep it grey, since a coloured one reads as a callout. */
+    .farad-artifact blockquote {
+      border-left: 3px solid var(--strong-border);
+      padding-left: 17px;
+      color: var(--text-secondary);
+    }
 
     .farad-artifact :is(code, pre) {
       font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
@@ -180,7 +185,7 @@
     .farad-artifact__note[data-farad-notice="danger"] { background: var(--notice-danger); }
 
     /* Secondary text sits one step under the body size, not two. */
-    .farad-artifact :is(figcaption, .farad-artifact__kicker, .farad-artifact__meta) {
+    .farad-artifact :is(figcaption, .farad-artifact__kicker) {
       color: var(--text-secondary);
       font-size: 15px;
     }
@@ -189,10 +194,10 @@
 
     /* The kicker takes one more step down in size and gains weight, so it reads
        as a label under the title rather than as the document's first sentence.
-       Weight separates it without moving it off the text's own left edge. */
-    .farad-artifact__kicker { font-size: 14px; font-weight: 600; }
+       Weight carries that signal, so the ink steps back a shade to compensate;
+       secondary ink at 600 sits heavier on the page than the title deserves. */
+    .farad-artifact__kicker { color: var(--muted); font-size: 14px; font-weight: 600; }
     .farad-artifact > h1 + .farad-artifact__kicker { margin-top: 6px; }
-    .farad-artifact__meta { display: flex; flex-wrap: wrap; gap: 4px 18px; }
 
     .farad-artifact__footer {
       margin-top: 48px;
@@ -254,7 +259,6 @@
     <p>문서용 HTML을 만들 때 흔히 컴포넌트 카탈로그부터 짠다. 그러면 소제목이 앞 문단에
       달라붙고, 그 증상을 마진으로 하나씩 때우게 된다. 왜 그렇게 되는지와, 규칙 세 줄로
       끝나는 대안을 정리한다.</p>
-    <p class="farad-artifact__meta"><span>대상: 문서·리포트용 HTML을 직접 짜는 사람</span><span>범위: 순수 CSS</span></p>
 
     <h2>증상</h2>
     <p>튜닝을 마친 스타일시트인데도 소제목 위 여백이 자리에 따라 달라진다. 아래는 같은
