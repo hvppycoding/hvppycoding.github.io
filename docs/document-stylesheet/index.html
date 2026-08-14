@@ -187,9 +187,10 @@
 
     .farad-artifact figcaption { margin-top: 9px; line-height: 1.5; }
 
-    /* The kicker sits on the title's own line width, right-aligned, so it reads
-       as a dateline rather than as the document's first sentence. */
-    .farad-artifact__kicker { text-align: right; }
+    /* The kicker takes one more step down in size and gains weight, so it reads
+       as a label under the title rather than as the document's first sentence.
+       Weight separates it without moving it off the text's own left edge. */
+    .farad-artifact__kicker { font-size: 14px; font-weight: 600; }
     .farad-artifact > h1 + .farad-artifact__kicker { margin-top: 6px; }
     .farad-artifact__meta { display: flex; flex-wrap: wrap; gap: 4px 18px; }
 
