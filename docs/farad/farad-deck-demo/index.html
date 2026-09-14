@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2026-09-14T17:39:09+09:00">
+  <meta property="article:published_time" content="2026-09-14T17:43:23+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드">
     <meta itemprop="description" content="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드">
-    <meta itemprop="datePublished" content="2026-09-14T17:39:09+09:00">
+    <meta itemprop="datePublished" content="2026-09-14T17:43:23+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2026-09-14T17:39:09+09:00">2026-09-14</time>
+        <time datetime="2026-09-14T17:43:23+09:00">2026-09-14</time>
       </span>
     
 
@@ -195,7 +195,7 @@
 
 <ul>
   <li>페이지에서는 <strong>슬라이드가 세로로 쌓인 스택</strong>으로 읽힌다.</li>
-  <li>오른쪽 위 <strong>발표</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
+  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
   <li>창을 좁히면 680px 아래에서 16:9를 풀고 읽히는 카드로 바뀐다.</li>
 </ul>
 
@@ -342,6 +342,19 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--icon {
   padding: 7px !important;
   gap: 0;
+}
+
+/* The corner marks sit alone on a stage the size of the screen, with no text
+   beside them to lend them weight, so they are drawn larger than an icon that
+   rides next to a label. The slide's own type grows with the screen while a
+   fixed mark would not, so on a projector the mark follows the viewport too,
+   between a laptop floor and a wall-screen ceiling. The px pair stands in
+   where clamp() is unknown. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__corner .farad-artifact--deck-demo__icon {
+  width: 20px !important;
+  height: 20px !important;
+  width: clamp(20px, 2.2vmin, 28px) !important;
+  height: clamp(20px, 2.2vmin, 28px) !important;
 }
 
 /* The overlay controls sit on the slide itself rather than on chrome, so they
@@ -809,7 +822,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
              strips JavaScript shows no dead control. -->
         <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary" data-farad-present="" hidden="">
           <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1.6 2.2h12.8M3.1 2.2v7.9h9.8V2.2M5.7 13.8 8 10.1l2.3 3.7" /></svg>
-          발표
+          Present
         </button>
       </div>
     </div>
@@ -823,10 +836,10 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
       <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
       <div class="farad-artifact--deck-demo__corner">
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__full" data-farad-nav="full" title="전체 화면" aria-label="전체 화면으로" hidden="">
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__full" data-farad-nav="full" title="Full screen" aria-label="Enter full screen" hidden="">
           <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.4 6.4 2.6 2.6M2.6 6.1V2.6h3.5M9.6 6.4l3.8-3.8M9.9 2.6h3.5v3.5M9.6 9.6l3.8 3.8M13.4 9.9v3.5H9.9M6.4 9.6l-3.8 3.8M6.1 13.4H2.6V9.9" /></svg>
         </button>
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__close" data-farad-nav="exit" title="나가기" aria-label="발표 종료">
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__close" data-farad-nav="exit" title="Exit" aria-label="Exit the presentation">
           <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6" /></svg>
         </button>
       </div>
@@ -955,7 +968,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
         <div class="farad-artifact--deck-demo__pad">
           <h2 class="farad-artifact--deck-demo__slide-title">발표 모드는 브라우저 전체화면에 기대지 않는다</h2>
           <ul class="farad-artifact--deck-demo__list">
-            <li class="farad-artifact--deck-demo__item">발표를 누르면 덱이 <strong>화면을 그대로 덮는다</strong>. iPhone Safari처럼 <code>requestFullscreen</code>이 아예 없는 곳에서도 똑같이 동작한다</li>
+            <li class="farad-artifact--deck-demo__item">Present를 누르면 덱이 <strong>화면을 그대로 덮는다</strong>. iPhone Safari처럼 <code>requestFullscreen</code>이 아예 없는 곳에서도 똑같이 동작한다</li>
             <li class="farad-artifact--deck-demo__item">브라우저 크롬까지 지우고 싶으면 우측 상단 <strong>확대 아이콘</strong>이 한 단계 더 올려 준다. 나가는 건 그 옆의 ✕ 또는 Esc</li>
             <li class="farad-artifact--deck-demo__item">스케일은 컨테이너 쿼리 단위라 <strong>CSS만으로</strong> 된다. 스크립트가 걸러져도 슬라이드 스택으로 읽힌다</li>
             <li class="farad-artifact--deck-demo__item">키보드는 <code>document</code>가 아니라 덱에만 바인딩한다 — 안 그러면 Confluence 단축키를 가로챈다</li>
@@ -965,7 +978,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
       <section class="farad-artifact--deck-demo__slide" data-farad-slide="closing">
         <div class="farad-artifact--deck-demo__pad">
-          <h2 class="farad-artifact--deck-demo__slide-title">위의 발표 버튼을 눌러 보세요</h2>
+          <h2 class="farad-artifact--deck-demo__slide-title">위의 Present를 눌러 보세요</h2>
           <p class="farad-artifact--deck-demo__lead">
             ← → 로 넘기고, Esc나 우측 상단 ✕ 로 빠져나옵니다.
           </p>
@@ -975,9 +988,9 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     </div>
 
     <div class="farad-artifact--deck-demo__pager">
-        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">이전</button>
+        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">Prev</button>
         <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 8</span>
-        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">다음</button>
+        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
       </div>
 
     </div>
@@ -1175,7 +1188,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-09-14T17:39:09+09:00">2026-09-14</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-09-14T17:43:23+09:00">2026-09-14</time></p>
 
       </footer>
 
