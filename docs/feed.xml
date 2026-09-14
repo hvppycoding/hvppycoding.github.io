@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T17:43:24+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T17:43:23+09:00</published><updated>2026-09-14T17:43:23+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T17:58:50+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T17:58:49+09:00</published><updated>2026-09-14T17:58:49+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -6,7 +6,7 @@
 
 <ul>
   <li>페이지에서는 <strong>슬라이드가 세로로 쌓인 스택</strong>으로 읽힌다.</li>
-  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
+  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 검은 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 또는 우측 하단 <code class="language-plaintext highlighter-rouge">‹ ›</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
   <li>창을 좁히면 680px 아래에서 16:9를 풀고 읽히는 카드로 바뀐다.</li>
 </ul>
 
@@ -22,7 +22,7 @@
   --accent: #0e79cf;
   --notice-info: #eaf4fb; --notice-warning: #fbf3df;
   --notice-success: #eaf6ee; --notice-danger: #faecea;
-  --stage: #ebebeb;
+  --stage: #000000;
   width: 100%;
   max-width: 100%;
   margin: 0;
@@ -47,7 +47,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   --accent: #2a82d0;
   --notice-info: #1b2a35; --notice-warning: #2a2418;
   --notice-success: #1b2b21; --notice-danger: #2d201f;
-  --stage: #101010;
+  --stage: #000000;
 }
 
 .farad-artifact.farad-artifact--deck-demo, .farad-artifact.farad-artifact--deck-demo * { box-sizing: border-box; }
@@ -155,34 +155,41 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   gap: 0;
 }
 
-/* The corner marks sit alone on a stage the size of the screen, with no text
-   beside them to lend them weight, so they are drawn larger than an icon that
-   rides next to a label. The slide's own type grows with the screen while a
-   fixed mark would not, so on a projector the mark follows the viewport too,
-   between a laptop floor and a wall-screen ceiling. The px pair stands in
-   where clamp() is unknown. */
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__corner .farad-artifact--deck-demo__icon {
+/* The marks on the presentation stage sit alone on a screen-sized black field,
+   with no text beside them to lend them weight, so they are drawn larger and
+   lighter than an icon that rides next to a label. The slide's own type grows
+   with the screen while a fixed mark would not, so on a projector the mark
+   follows the viewport too, between a laptop floor and a wall-screen ceiling.
+   The px pair stands in where clamp() is unknown. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__corner .farad-artifact--deck-demo__icon,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pager .farad-artifact--deck-demo__icon {
   width: 20px !important;
   height: 20px !important;
   width: clamp(20px, 2.2vmin, 28px) !important;
   height: clamp(20px, 2.2vmin, 28px) !important;
+  stroke-width: 1.5;
 }
 
-/* The overlay controls sit on the slide itself rather than on chrome, so they
-   carry no plate of their own — just the mark, in the deck's own text colour,
-   which keeps them right in both themes. The plate appears under the pointer,
-   the one moment the hit area needs an edge; `--inset` is too close to the page
-   to read there, so the hover uses the border tone. */
+/* The overlay controls float on the black stage the way a video player's do:
+   white, translucent, and without a plate until the pointer arrives, when the
+   mark comes to full strength on a faint plate. Where the screen is exactly
+   16:9 the slide fills it and the same marks land on the slide, so their groups
+   blend by difference: white stays white on the black stage and turns black on
+   a white slide, and the same rule serves a dark slide unchanged. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--bare {
   border-color: transparent !important;
   background: transparent !important;
-  color: var(--text) !important;
+  color: #ffffff !important;
+  opacity: 0.6;
+  transition: opacity 120ms ease, background-color 120ms ease;
 }
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--bare:hover {
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--bare:hover,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--bare:focus-visible {
   border-color: transparent !important;
-  background: var(--border) !important;
-  color: var(--text) !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  opacity: 1;
 }
 
 /* The call to action reads as one: a bare outlined button disappears into a
@@ -472,13 +479,19 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
 .farad-artifact.farad-artifact--deck-demo[data-farad-credit="off"] .farad-artifact--deck-demo__credit { display: none !important; }
 
-/* Pager. Present only while the deck is presenting. */
+/* Pager. Present only while the deck is presenting, so it is drawn for the
+   black stage like the corner marks, and its size follows the viewport with
+   them. */
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pager { display: none; }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__counter {
-  color: var(--muted);
+  padding: 0 4px;
+  color: #ffffff;
+  opacity: 0.6;
   font-size: 14px !important;
+  font-size: clamp(14px, 1.6vmin, 19px) !important;
+  font-weight: 500;
   line-height: 1.4 !important;
   text-align: center;
   white-space: nowrap;
@@ -512,7 +525,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   border: 0;
   display: block;
   padding: 0;
-  background: var(--stage, #ebebeb);
+  background: var(--stage, #000000);
   overscroll-behavior: contain;
 }
 
@@ -528,25 +541,32 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   position: relative;
   width: 100%;
   height: 100%;
-  background: var(--stage, #ebebeb);
+  /* Black, not a grey: the field around a projected slide is the room's dark,
+     and a white slide reads as the lit thing on it in both themes. */
+  background: var(--stage, #000000);
 }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck::backdrop { background: #000000; }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__bar { display: none; }
 
+/* The pager floats in the bottom-right corner instead of taking a strip of its
+   own, so the slide gets the whole height of the screen; a strip would cost
+   the slide height and hand it back as side margins on a 16:9 monitor. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__pager {
   display: flex;
-  flex: 0 0 auto;
-  flex-wrap: wrap;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 8px;
+  gap: 2px;
+  /* On the group, not the buttons: a group with a z-index is a stacking
+     context of its own, and a blend set inside it would see only the group. */
+  mix-blend-mode: difference;
 }
 
 /* Leaving is the control a reader looks for first, so it sits in the corner
-   they already watch rather than in the pager strip at the bottom. */
+   they already watch rather than beside the pager. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__corner { display: none; }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__corner {
@@ -558,6 +578,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   /* Slides are positioned too, and they come later in the document, so the
      corner needs a layer of its own to stay above the current slide. */
   z-index: 1;
+  mix-blend-mode: difference;
 }
 
 
@@ -574,9 +595,9 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   overflow: auto;
 }
 
-/* One slide at a time, sized so a 16:9 box always fits above the pager strip.
-   The dynamic viewport units repeat the declaration because a phone browser
-   that lacks them still needs the first pair. */
+/* One slide at a time, sized so a 16:9 box always fits the screen. The dynamic
+   viewport units repeat the declaration because a phone browser that lacks
+   them still needs the first pair. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__slide { display: none; }
 
 /* A hidden slide generates no box and so does not count, which would make
@@ -586,8 +607,8 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__slide[data-farad-current] {
   display: grid;
   flex: 0 0 auto;
-  width: min(100vw, calc((100vh - 52px) * 16 / 9));
-  width: min(100dvw, calc((100dvh - 52px) * 16 / 9));
+  width: min(100vw, calc(100vh * 16 / 9));
+  width: min(100dvw, calc(100dvh * 16 / 9));
   border: 0;
   border-radius: 0;
 }
@@ -791,7 +812,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
         <div class="farad-artifact--deck-demo__pad">
           <h2 class="farad-artifact--deck-demo__slide-title">위의 Present를 눌러 보세요</h2>
           <p class="farad-artifact--deck-demo__lead">
-            ← → 로 넘기고, Esc나 우측 상단 ✕ 로 빠져나옵니다.
+            ← → 또는 우측 하단 ‹ › 로 넘기고, Esc나 우측 상단 ✕ 로 빠져나옵니다.
           </p>
         </div>
       </section>
@@ -799,9 +820,13 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     </div>
 
     <div class="farad-artifact--deck-demo__pager">
-        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">Prev</button>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon" data-farad-nav="prev" title="Previous slide" aria-label="Previous slide">
+          <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3.2 5.2 8l4.8 4.8" /></svg>
+        </button>
         <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 8</span>
-        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon" data-farad-nav="next" title="Next slide" aria-label="Next slide">
+          <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3.2 10.8 8 6 12.8" /></svg>
+        </button>
       </div>
 
     </div>
@@ -969,6 +994,14 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 <p>처음엔 <code class="language-plaintext highlighter-rouge">requestFullscreen()</code>을 기본 경로로 두고, 거부당했을 때만 <code class="language-plaintext highlighter-rouge">position: fixed</code>로 덮는 폴백을 뒀다. 그런데 iPhone Safari에는 <code class="language-plaintext highlighter-rouge">Element.requestFullscreen</code>이 아예 없어서 폰에서는 <strong>항상</strong> 폴백이 돌고, 그 폴백은 <code class="language-plaintext highlighter-rouge">:fullscreen</code>과 한 셀렉터 목록으로 묶여 있었다. CSS 셀렉터 목록은 하나라도 파싱되지 않으면 규칙 전체가 버려지므로, <code class="language-plaintext highlighter-rouge">:fullscreen</code>을 모르는 브라우저에서는 배경도 슬라이드 숨김도 없이 위치만 고정되는 최악의 조합이 된다.</p>
 
 <p>지금은 순서를 뒤집었다. Present는 언제나 덱을 뷰포트에 고정하고, 진짜 전체화면은 그 안에서 한 번 더 누르는 선택지다. 덕분에 CSS에서 <code class="language-plaintext highlighter-rouge">:fullscreen</code> 셀렉터가 완전히 사라졌고, 상태는 <code class="language-plaintext highlighter-rouge">data-farad-presenting</code> 속성 하나가 전부다.</p>
+
+<h3 id="컨트롤은-무대와-슬라이드-양쪽에-걸친다">컨트롤은 무대와 슬라이드 양쪽에 걸친다</h3>
+
+<p>발표 무대는 회색이 아니라 검정이다. 프로젝터에서 슬라이드 주변은 어두운 방이고, 흰 슬라이드가 그 위에서 빛나는 물건으로 읽혀야 한다. 그런데 화면이 정확히 16:9이면 여백이 사라져 슬라이드가 화면을 꽉 채우고, 검정 무대 위에 놓으려던 흰색 컨트롤이 흰 슬라이드 위에 놓인다.</p>
+
+<p>그림자를 깔아 버티는 대신 컨트롤 그룹에 <code class="language-plaintext highlighter-rouge">mix-blend-mode: difference</code>를 걸었다. 검정 위의 흰색은 흰색으로, 흰 슬라이드 위의 흰색은 검정으로 뒤집히므로 어느 쪽에서도 한 가지 색으로 읽힌다. 다만 블렌드는 <strong>그룹 자체</strong>에 걸어야 한다 — <code class="language-plaintext highlighter-rouge">z-index</code>를 가진 요소는 그 자체가 stacking context라, 그 안의 자식에 블렌드를 걸면 그룹 내부만 합성 대상이 되어 아무 일도 일어나지 않는다.</p>
+
+<p>페이저도 하단 스트립에서 우측 하단 <code class="language-plaintext highlighter-rouge">‹ 1 / 8 ›</code> 로 옮겼다. 스트립은 슬라이드가 쓸 수 있는 높이를 52px 깎았고, 16:9 모니터에서 그 손실은 좌우 여백으로 돌아왔다. 띄우고 나니 슬라이드가 화면 높이를 전부 쓴다.</p>
 
 <h3 id="차트는-인라인-svg다">차트는 인라인 SVG다</h3>
 
