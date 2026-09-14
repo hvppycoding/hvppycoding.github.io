@@ -35,7 +35,7 @@
 
 
 
-  <meta property="article:published_time" content="2026-09-14T00:00:00+09:00">
+  <meta property="article:published_time" content="2026-09-14T15:11:50+09:00">
 
 
 
@@ -152,7 +152,7 @@
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드">
     <meta itemprop="description" content="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드">
-    <meta itemprop="datePublished" content="2026-09-14T00:00:00+09:00">
+    <meta itemprop="datePublished" content="2026-09-14T15:11:50+09:00">
     
 
     <div class="page__inner-wrap">
@@ -172,7 +172,7 @@
         <i class="far fa-calendar-alt" aria-hidden="true"></i> 
         -->
         
-        <time datetime="2026-09-14T00:00:00+09:00">2026-09-14</time>
+        <time datetime="2026-09-14T15:11:50+09:00">2026-09-14</time>
       </span>
     
 
@@ -248,7 +248,23 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
 /* Deck shell */
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck { width: 100%; max-width: 100%; background: var(--page); }
+/* The deck is a <dialog> so that presenting can hand it to the browser's top
+   layer, where no host z-index can cover it and neither fixed positioning nor a
+   stacking order of our own is needed. Closed, it must read as an ordinary
+   block: the UA sheet would otherwise hide it and give it a border, padding and
+   centred margins. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck {
+  display: block;
+  position: static;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: var(--page);
+  color: var(--text);
+}
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:focus { outline: none; }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__bar {
@@ -603,6 +619,14 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   position: fixed;
   inset: 0;
   z-index: 9999;
+  /* A dialog's UA height is fit-content, which wins over the bottom offset, so
+     the size is stated rather than inferred from `inset`. */
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -610,6 +634,8 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   background: var(--stage, #ebebeb);
   overscroll-behavior: contain;
 }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck::backdrop { background: #000000; }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__bar { display: none; }
 
@@ -700,7 +726,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 </style>
 
 <article id="farad-artifact--deck-demo__root" class="farad-artifact farad-artifact--deck-demo" data-farad-template="confluence-deck-v1" data-farad-credit="on">
-  <div class="farad-artifact--deck-demo__deck" tabindex="-1">
+  <dialog class="farad-artifact--deck-demo__deck" tabindex="-1">
 
     <div class="farad-artifact--deck-demo__bar">
       <p class="farad-artifact--deck-demo__deck-name">Confluence 페이지 안에서 발표하기</p>
@@ -878,7 +904,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
       <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
     </div>
 
-  </div>
+  </dialog>
 </article>
 
 <script>
@@ -910,12 +936,17 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
   function presenting() { return deck.hasAttribute("data-farad-presenting"); }
 
-  /* Presenting pins the deck over the viewport rather than calling the
-     Fullscreen API, so it behaves the same where that API is missing or
-     refused. Real fullscreen is a second, optional step. */
+  /* Presenting raises the deck into the top layer as a modal dialog, which no
+     host stacking order can cover and which Escape closes on its own. Where
+     that is unavailable the deck pins itself instead — the same CSS, minus the
+     immunity. Real fullscreen is a further, optional step; it only removes the
+     browser's own chrome. */
   function start() {
     show(index);
     deck.setAttribute("data-farad-presenting", "");
+    if (deck.showModal && !deck.open) {
+      try { deck.showModal(); } catch (error) { /* already open, or detached */ }
+    }
     deck.focus();
   }
 
@@ -943,6 +974,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     exitFullscreen();
     deck.removeAttribute("data-farad-presenting");
     deck.removeAttribute("data-farad-fullscreen");
+    if (deck.open && deck.close) { deck.close(); }
   }
 
   present.addEventListener("click", start);
@@ -981,6 +1013,13 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
   document.addEventListener("fullscreenchange", syncFullscreen);
   document.addEventListener("webkitfullscreenchange", syncFullscreen);
+
+  /* Escape on a modal dialog closes it without reaching the keydown handler. */
+  deck.addEventListener("close", function () {
+    exitFullscreen();
+    deck.removeAttribute("data-farad-presenting");
+    deck.removeAttribute("data-farad-fullscreen");
+  });
 
   show(0);
   present.hidden = false;
@@ -1035,7 +1074,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
         
 
-  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-09-14T00:00:00+09:00">2026-09-14</time></p>
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-09-14T15:11:50+09:00">2026-09-14</time></p>
 
       </footer>
 
