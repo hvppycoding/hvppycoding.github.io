@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T16:42:56+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T00:00:00+09:00</published><updated>2026-09-14T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T16:47:57+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T00:00:00+09:00</published><updated>2026-09-14T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -153,6 +153,23 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--icon {
   padding: 7px !important;
   gap: 0;
+}
+
+/* The overlay controls sit on the slide itself rather than on chrome, so they
+   carry no plate of their own — just the mark, in the deck's own text colour,
+   which keeps them right in both themes. The plate appears under the pointer,
+   the one moment the hit area needs an edge; `--inset` is too close to the page
+   to read there, so the hover uses the border tone. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--bare {
+  border-color: transparent !important;
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--bare:hover {
+  border-color: transparent !important;
+  background: var(--border) !important;
+  color: var(--text) !important;
 }
 
 /* The call to action reads as one: a bare outlined button disappears into a
@@ -512,8 +529,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 }
 
 /* Leaving is the control a reader looks for first, so it sits in the corner
-   they already watch rather than in the pager strip at the bottom. Both are
-   filled rather than outlined: they float over slide artwork, not over chrome. */
+   they already watch rather than in the pager strip at the bottom. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__corner { display: none; }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__corner {
@@ -610,10 +626,10 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
       <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
       <div class="farad-artifact--deck-demo__corner">
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__full" data-farad-nav="full" title="Full screen" aria-label="Enter full screen" hidden="">
-          <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.2 2.2H2.2v4M9.8 2.2h4v4M9.8 13.8h4v-4M6.2 13.8H2.2v-4" /></svg>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__full" data-farad-nav="full" title="Full screen" aria-label="Enter full screen" hidden="">
+          <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.4 6.4 2.6 2.6M2.6 6.1V2.6h3.5M9.6 6.4l3.8-3.8M9.9 2.6h3.5v3.5M9.6 9.6l3.8 3.8M13.4 9.9v3.5H9.9M6.4 9.6l-3.8 3.8M6.1 13.4H2.6V9.9" /></svg>
         </button>
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__close" data-farad-nav="exit" title="Exit" aria-label="Exit the presentation">
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__close" data-farad-nav="exit" title="Exit" aria-label="Exit the presentation">
           <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6" /></svg>
         </button>
       </div>
