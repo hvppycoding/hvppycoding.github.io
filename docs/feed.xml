@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T16:47:57+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T00:00:00+09:00</published><updated>2026-09-14T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T17:39:10+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T17:39:09+09:00</published><updated>2026-09-14T17:39:09+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -6,7 +6,7 @@
 
 <ul>
   <li>페이지에서는 <strong>슬라이드가 세로로 쌓인 스택</strong>으로 읽힌다.</li>
-  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
+  <li>오른쪽 위 <strong>발표</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
   <li>창을 좁히면 680px 아래에서 16:9를 풀고 읽히는 카드로 바뀐다.</li>
 </ul>
 
@@ -420,20 +420,24 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   line-height: 1.45 !important;
 }
 
-/* The slide number sits inside the slide box, so it scales with it and never
-   needs a fixed or sticky position. */
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__number {
+/* The slide number is a CSS counter, so deleting or reordering slides can never
+   leave a stale number behind. It sits inside the slide box, scales with it,
+   and needs neither a fixed nor a sticky position. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__stage { counter-reset: farad-slide; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide { counter-increment: farad-slide; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide::after {
+  content: counter(farad-slide);
   position: absolute;
   right: calc(2.4 * var(--u));
   bottom: calc(1.8 * var(--u));
-  margin: 0;
   color: var(--faint);
   font-size: calc(1.4 * var(--u)) !important;
   line-height: 1 !important;
   font-variant-numeric: tabular-nums;
 }
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide[data-farad-slide="cover"] .farad-artifact--deck-demo__number { display: none; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide[data-farad-slide="cover"]::after { display: none; }
 
 /* Credit */
 
@@ -562,6 +566,10 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
    that lacks them still needs the first pair. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__slide { display: none; }
 
+/* A hidden slide generates no box and so does not count, which would make
+   every presented slide "1". The pager already says where the reader is. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__slide::after { display: none; }
+
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__slide[data-farad-current] {
   display: grid;
   flex: 0 0 auto;
@@ -594,7 +602,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide::before { display: none; }
   .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pad { padding: 22px 20px; gap: 12px; }
   .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__columns { grid-template-columns: minmax(0, 1fr); }
-  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__number { right: 14px; bottom: 9px; }
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide::after { right: 14px; bottom: 9px; }
 }
 </style>
 
@@ -612,7 +620,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
              strips JavaScript shows no dead control. -->
         <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary" data-farad-present="" hidden="">
           <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1.6 2.2h12.8M3.1 2.2v7.9h9.8V2.2M5.7 13.8 8 10.1l2.3 3.7" /></svg>
-          Present
+          발표
         </button>
       </div>
     </div>
@@ -626,10 +634,10 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
       <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
       <div class="farad-artifact--deck-demo__corner">
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__full" data-farad-nav="full" title="Full screen" aria-label="Enter full screen" hidden="">
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__full" data-farad-nav="full" title="전체 화면" aria-label="전체 화면으로" hidden="">
           <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.4 6.4 2.6 2.6M2.6 6.1V2.6h3.5M9.6 6.4l3.8-3.8M9.9 2.6h3.5v3.5M9.6 9.6l3.8 3.8M13.4 9.9v3.5H9.9M6.4 9.6l-3.8 3.8M6.1 13.4H2.6V9.9" /></svg>
         </button>
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__close" data-farad-nav="exit" title="Exit" aria-label="Exit the presentation">
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--bare farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__close" data-farad-nav="exit" title="나가기" aria-label="발표 종료">
           <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6" /></svg>
         </button>
       </div>
@@ -644,7 +652,6 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             pptx를 첨부하는 대신, 슬라이드를 페이지에 그대로 붙이고 거기서 발표한다.
           </p>
         </div>
-        <p class="farad-artifact--deck-demo__number">1</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
@@ -656,7 +663,6 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             <li class="farad-artifact--deck-demo__item">학습 데이터의 양이 비교가 안 된다</li>
           </ul>
         </div>
-        <p class="farad-artifact--deck-demo__number">2</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
@@ -673,7 +679,6 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             </div>
           </div>
         </div>
-        <p class="farad-artifact--deck-demo__number">3</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
@@ -710,7 +715,6 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             <figcaption class="farad-artifact--deck-demo__caption">그림 1. 본문 글자 크기(px)를 슬라이드 폭에 대해 그린 것. 이 덱의 본문은 <code>1.7cqw</code>라 폭의 1.7%로 따라 커지고, 픽셀로 박아 둔 17pt짜리 덱은 1920px 프로젝터에서도 17px에 머문다. 값은 정의에서 바로 계산했다.</figcaption>
           </figure>
         </div>
-        <p class="farad-artifact--deck-demo__number">4</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
@@ -745,7 +749,6 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             </table>
           </div>
         </div>
-        <p class="farad-artifact--deck-demo__number">5</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
@@ -757,38 +760,35 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             <li class="farad-artifact--deck-demo__item">행 높이 = 둘 중 큰 쪽. 평소엔 16:9, 넘치면 길어진다</li>
           </ul>
         </div>
-        <p class="farad-artifact--deck-demo__number">6</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
         <div class="farad-artifact--deck-demo__pad">
           <h2 class="farad-artifact--deck-demo__slide-title">발표 모드는 브라우저 전체화면에 기대지 않는다</h2>
           <ul class="farad-artifact--deck-demo__list">
-            <li class="farad-artifact--deck-demo__item">Present를 누르면 덱이 <strong>화면을 그대로 덮는다</strong>. iPhone Safari처럼 <code>requestFullscreen</code>이 아예 없는 곳에서도 똑같이 동작한다</li>
+            <li class="farad-artifact--deck-demo__item">발표를 누르면 덱이 <strong>화면을 그대로 덮는다</strong>. iPhone Safari처럼 <code>requestFullscreen</code>이 아예 없는 곳에서도 똑같이 동작한다</li>
             <li class="farad-artifact--deck-demo__item">브라우저 크롬까지 지우고 싶으면 우측 상단 <strong>확대 아이콘</strong>이 한 단계 더 올려 준다. 나가는 건 그 옆의 ✕ 또는 Esc</li>
             <li class="farad-artifact--deck-demo__item">스케일은 컨테이너 쿼리 단위라 <strong>CSS만으로</strong> 된다. 스크립트가 걸러져도 슬라이드 스택으로 읽힌다</li>
             <li class="farad-artifact--deck-demo__item">키보드는 <code>document</code>가 아니라 덱에만 바인딩한다 — 안 그러면 Confluence 단축키를 가로챈다</li>
           </ul>
         </div>
-        <p class="farad-artifact--deck-demo__number">7</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide" data-farad-slide="closing">
         <div class="farad-artifact--deck-demo__pad">
-          <h2 class="farad-artifact--deck-demo__slide-title">위의 Present를 눌러 보세요</h2>
+          <h2 class="farad-artifact--deck-demo__slide-title">위의 발표 버튼을 눌러 보세요</h2>
           <p class="farad-artifact--deck-demo__lead">
             ← → 로 넘기고, Esc나 우측 상단 ✕ 로 빠져나옵니다.
           </p>
         </div>
-        <p class="farad-artifact--deck-demo__number">8</p>
       </section>
 
     </div>
 
     <div class="farad-artifact--deck-demo__pager">
-        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">Prev</button>
+        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">이전</button>
         <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 8</span>
-        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
+        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">다음</button>
       </div>
 
     </div>
