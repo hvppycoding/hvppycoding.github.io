@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T17:58:50+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T17:58:49+09:00</published><updated>2026-09-14T17:58:49+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T18:19:53+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T18:19:52+09:00</published><updated>2026-09-14T18:19:52+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -168,6 +168,22 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   width: clamp(20px, 2.2vmin, 28px) !important;
   height: clamp(20px, 2.2vmin, 28px) !important;
   stroke-width: 1.5;
+}
+
+/* The pager's chevrons belong to the number between them rather than to the
+   stage, so they are drawn near its cap height instead of at the corner marks'
+   size. A chevron fills only the middle third of its square box, so the tight
+   padding below is what closes the visual gap; the button keeps enough box
+   around the mark to stay an easy target. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pager .farad-artifact--deck-demo__icon {
+  width: 14px !important;
+  height: 14px !important;
+  width: clamp(14px, 1.5vmin, 18px) !important;
+  height: clamp(14px, 1.5vmin, 18px) !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pager .farad-artifact--deck-demo__button--icon {
+  padding: 7px 2px !important;
 }
 
 /* The overlay controls float on the black stage the way a video player's do:
@@ -486,11 +502,11 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pager { display: none; }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__counter {
-  padding: 0 4px;
+  padding: 0 2px;
   color: #ffffff;
   opacity: 0.6;
-  font-size: 14px !important;
-  font-size: clamp(14px, 1.6vmin, 19px) !important;
+  font-size: 15px !important;
+  font-size: clamp(15px, 1.7vmin, 20px) !important;
   font-weight: 500;
   line-height: 1.4 !important;
   text-align: center;
@@ -559,7 +575,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   right: 12px;
   bottom: 12px;
   align-items: center;
-  gap: 2px;
+  gap: 0;
   /* On the group, not the buttons: a group with a z-index is a stacking
      context of its own, and a blend set inside it would see only the group. */
   mix-blend-mode: difference;
