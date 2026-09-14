@@ -1,4 +1,690 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-07-19T18:20:03+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</title><link href="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/" rel="alternate" type="text/html" title="Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션" /><published>2026-07-19T00:00:00+09:00</published><updated>2026-07-19T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/"><![CDATA[<h1 id="farad-vwp에서-바로-쓰는-gui-ai-agent-애플리케이션">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T14:16:00+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T14:15:59+09:00</published><updated>2026-09-14T14:15:59+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+
+<p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
+
+<p>보는 법:</p>
+
+<ul>
+  <li>페이지에서는 <strong>슬라이드가 세로로 쌓인 스택</strong>으로 읽힌다.</li>
+  <li>오른쪽 위 <strong>Present</strong>를 누르면 전체화면 발표 모드로 바뀐다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고 <code class="language-plaintext highlighter-rouge">Esc</code> 로 나온다.</li>
+  <li>창을 좁히면 680px 아래에서 16:9를 풀고 읽히는 카드로 바뀐다.</li>
+</ul>
+
+<style> and <script> blocks unchanged. Edit the slides and delete
+     the ones the deck does not need.
+  3. Paste this fragment directly into a Confluence Data Center HTML Macro.
+
+  The deck reads as a stack of slides in the page and expands to full screen
+  when the reader presses the present button. Without JavaScript it stays a
+  readable stack, so nothing is lost when a site strips scripts.
+-->
+<style>
+/* Tokens. Every selector below carries the artifact modifier, and every
+   font-size and line-height is !important, because host and macro CSS style
+   bare elements with ID selectors and !important of their own. */
+.farad-artifact.farad-artifact--deck-demo {
+  color-scheme: light;
+  --page: #ffffff; --surface: #f7f7f7; --inset: #f4f4f4;
+  --text: #171717; --text-secondary: #3f3f3f; --muted: #5f5f5f; --faint: #707070;
+  --border: #e3e3e3; --strong-border: #cfcfcf; --divider: #efefef;
+  --accent: #0e79cf;
+  --notice-info: #eaf4fb; --notice-warning: #fbf3df;
+  --notice-success: #eaf6ee; --notice-danger: #faecea;
+  --stage: #ebebeb;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  background: var(--page);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR",
+    "Noto Sans CJK KR", "Malgun Gothic", sans-serif;
+  font-size: 16px !important;
+  font-weight: 400;
+  line-height: 1.6 !important;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
+  color-scheme: dark;
+  --page: #181818; --surface: #1e1e1e; --inset: #121212;
+  --text: #eeeeee; --text-secondary: #c6c6c6; --muted: #9a9a9a; --faint: #8a8a8a;
+  --border: #3c3c3c; --strong-border: #4d4d4d; --divider: #262626;
+  --accent: #2a82d0;
+  --notice-info: #1b2a35; --notice-warning: #2a2418;
+  --notice-success: #1b2b21; --notice-danger: #2d201f;
+  --stage: #101010;
+}
+
+.farad-artifact.farad-artifact--deck-demo, .farad-artifact.farad-artifact--deck-demo * { box-sizing: border-box; }
+
+/* Host themes pin a fixed pt line-height on bare elements inside the content
+   body, which squeezes text that takes its size from us. Inheritance is
+   restored for every descendant first; every rule below is more specific. */
+.farad-artifact.farad-artifact--deck-demo * { line-height: inherit !important; }
+
+/* Deck shell */
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck { width: 100%; max-width: 100%; background: var(--page); }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:focus { outline: none; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck-name {
+  margin: 0;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 15px !important;
+  font-weight: 600;
+  line-height: 1.4 !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__controls { display: flex; align-items: center; gap: 10px; }
+
+/* Confluence styles bare buttons through AUI, so every visual property is
+   restated with !important rather than inherited. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button {
+  border: 1px solid var(--strong-border) !important;
+  border-radius: 6px !important;
+  padding: 6px 13px !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  text-shadow: none !important;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button:hover { background: var(--inset) !important; }
+
+.farad-artifact.farad-artifact--deck-demo :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Stage and slides.
+
+   `container-type: inline-size` and not `size`: size containment would make the
+   slide height independent of its contents, so copy that does not fit would be
+   clipped silently — the failure mode that makes generated PowerPoint
+   unreliable. With inline-size the block axis still follows the content.
+
+   Every internal length is a multiple of --u, the slide's scale unit. It is
+   1cqw, one percent of the slide's own width, so a slide reads the same in a
+   narrow macro column and on a projector. `cqh` is deliberately unused: it
+   would require `container-type: size` and bring the clipping back. The
+   @supports rule is what keeps the unit safe — a browser without container
+   query units keeps the 10px fallback, which matches a 1000px column, and a
+   custom property would otherwise swallow the unknown unit and break calc().
+
+   The ratio comes from an empty grid item rather than from the slide box. A box
+   that carries `aspect-ratio` over a definite width takes its block-axis
+   min-content size from that ratio, so `min-height: min-content` on the slide
+   itself resolves back to the ratio and an overfull slide spills across the one
+   below it instead of growing. Laying the spacer and the content in the same
+   grid cell makes the row the taller of the two, which is the wanted rule:
+   16:9 normally, and taller than its neighbours when the copy does not fit. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__stage { display: flex; flex-direction: column; gap: 18px; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide {
+  --u: 10px;
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--page);
+}
+
+@supports (width: 1cqw) {
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide { --u: 1cqw; }
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide::before {
+  content: "";
+  grid-area: 1 / 1;
+  aspect-ratio: 16 / 9;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pad {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: calc(1.4 * var(--u));
+  min-width: 0;
+  padding: calc(4.6 * var(--u)) calc(5.4 * var(--u));
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide[data-farad-slide="cover"] .farad-artifact--deck-demo__pad { justify-content: center; gap: calc(1.8 * var(--u)); }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide[data-farad-slide="closing"] .farad-artifact--deck-demo__pad { justify-content: center; }
+
+/* Slide type. Headings carry the root id because host themes reach headings
+   with ID selectors, and an ID beats any number of classes. */
+#farad-artifact--deck-demo__root.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__cover-title,
+#farad-artifact--deck-demo__root.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide-title {
+  margin: 0;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.22 !important;
+  text-align: left !important;
+  text-wrap: balance;
+}
+
+#farad-artifact--deck-demo__root.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__cover-title { font-size: calc(5 * var(--u)) !important; }
+#farad-artifact--deck-demo__root.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide-title { font-size: calc(3.4 * var(--u)) !important; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__kicker {
+  margin: 0;
+  color: var(--faint);
+  font-size: calc(1.5 * var(--u)) !important;
+  font-weight: 600;
+  line-height: 1.4 !important;
+  letter-spacing: 0.01em;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__lead,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__prose,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__item {
+  margin: 0;
+  color: var(--text);
+  font-size: calc(2 * var(--u)) !important;
+  line-height: 1.5 !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__lead { color: var(--text-secondary); }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u);
+  margin: 0;
+  padding-left: 1.3em;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__item::marker { color: var(--muted); }
+.farad-artifact.farad-artifact--deck-demo strong { font-weight: 600; }
+
+/* Inline code is styled here rather than left bare: host themes give `code`
+   their own face and background, and an unstyled token would not scale with
+   the slide. */
+.farad-artifact.farad-artifact--deck-demo code {
+  padding: 0.14em 0.4em;
+  border-radius: 5px;
+  background: var(--inset);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.875em !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: calc(2.2 * var(--u));
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__panel {
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.8 * var(--u));
+  min-width: 0;
+  border-radius: 8px;
+  padding: calc(1.8 * var(--u)) calc(2 * var(--u));
+  background: var(--surface);
+}
+
+#farad-artifact--deck-demo__root.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__panel-title {
+  margin: 0;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text);
+  font-size: calc(1.7 * var(--u)) !important;
+  font-weight: 600;
+  line-height: 1.35 !important;
+  text-align: left !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__panel[data-farad-notice="info"] { background: var(--notice-info); }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__panel[data-farad-notice="warning"] { background: var(--notice-warning); }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__panel[data-farad-notice="success"] { background: var(--notice-success); }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__panel[data-farad-notice="danger"] { background: var(--notice-danger); }
+
+/* A slide table keeps one line per cell so the columns hold their rhythm at
+   presentation distance; the wrapper scrolls when that will not fit rather than
+   pushing the slide wider than the page. Confluence paints a header fill and a
+   sort-arrow image on every `th`; both are overridden, and the repeat and
+   position longhands are kept so a surviving arrow cannot tile across the
+   header. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table-wrap { max-width: 100%; overflow-x: auto; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table { width: 100%; border: 0; border-collapse: collapse; background: transparent; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table-head,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table-cell {
+  border: 0;
+  padding: calc(1.1 * var(--u)) calc(1.4 * var(--u));
+  color: var(--text);
+  font-size: calc(1.7 * var(--u)) !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+  vertical-align: top;
+  white-space: nowrap !important;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A cell that holds a sentence rather than a value opts back into wrapping. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table-head[data-farad-wrap],
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table-cell[data-farad-wrap] { white-space: normal !important; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table-head {
+  border-bottom: 1px solid var(--strong-border);
+  background-color: transparent !important;
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  font-weight: 600;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__table-cell { border-bottom: 1px solid var(--divider); font-weight: 400; }
+
+.farad-artifact.farad-artifact--deck-demo img, .farad-artifact.farad-artifact--deck-demo svg { display: block; max-width: 100%; height: auto; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__figure { margin: 0; display: flex; flex: 1 1 auto; flex-direction: column; gap: calc(0.8 * var(--u)); min-height: 0; min-width: 0; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__figure img, .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__figure svg { flex: 1 1 auto; min-height: 0; object-fit: contain; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__caption {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: calc(1.5 * var(--u)) !important;
+  line-height: 1.45 !important;
+}
+
+/* The slide number sits inside the slide box, so it scales with it and never
+   needs a fixed or sticky position. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__number {
+  position: absolute;
+  right: calc(2.4 * var(--u));
+  bottom: calc(1.8 * var(--u));
+  margin: 0;
+  color: var(--faint);
+  font-size: calc(1.4 * var(--u)) !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide[data-farad-slide="cover"] .farad-artifact--deck-demo__number { display: none; }
+
+/* Credit */
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+/* The only serif in the fragment: the Farad wordmark. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__wordmark {
+  color: var(--text-secondary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo[data-farad-credit="off"] .farad-artifact--deck-demo__credit { display: none !important; }
+
+/* Pager. Present only while the deck is presenting. */
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pager { display: none; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__counter {
+  color: var(--muted);
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  text-align: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Presenting.
+
+   The browser raises a fullscreen element into the top layer, so the presented
+   deck needs neither fixed positioning nor a z-index. The `presenting`
+   attribute is the fallback for hosts that refuse the Fullscreen API: only
+   there does the deck pin itself over the viewport. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  background: var(--stage);
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__bar,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__bar { display: none; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__pager,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__pager {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__stage,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__stage {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* One slide at a time, sized so a 16:9 box always fits above the pager strip. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__slide,
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__slide { display: none; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__slide[data-farad-current],
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__slide[data-farad-current] {
+  display: grid;
+  flex: 0 0 auto;
+  width: min(100vw, calc((100vh - 46px) * 16 / 9));
+  border: 0;
+  border-radius: 0;
+}
+
+/* Print. One slide per sheet, so a browser print becomes a handout. */
+@media print {
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__bar,
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pager { display: none !important; }
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__stage { gap: 0; }
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide {
+    display: grid !important;
+    border: 1px solid var(--border);
+    break-inside: avoid;
+    break-after: page;
+    page-break-after: always;
+  }
+}
+
+/* Narrow screens. A 16:9 box in a phone-width column would set body copy near
+   seven pixels, so below this width the deck stops pretending to be slides:
+   the ratio spacer is dropped, each slide becomes a content-height card, and
+   the scale unit returns to a readable fixed size. */
+@media (max-width: 680px) {
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide { --u: 7px; }
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__slide::before { display: none; }
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__pad { padding: 22px 20px; gap: 12px; }
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__columns { grid-template-columns: minmax(0, 1fr); }
+  .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__number { right: 14px; bottom: 9px; }
+}
+</style>
+
+<article id="farad-artifact--deck-demo__root" class="farad-artifact farad-artifact--deck-demo" data-farad-template="confluence-deck-v1" data-farad-credit="on">
+  <div class="farad-artifact--deck-demo__deck" tabindex="-1">
+
+    <div class="farad-artifact--deck-demo__bar">
+      <p class="farad-artifact--deck-demo__deck-name">Confluence 페이지 안에서 발표하기</p>
+      <div class="farad-artifact--deck-demo__controls">
+        <span class="farad-artifact--deck-demo__credit">
+          <span class="farad-artifact--deck-demo__made-with">Made with</span>
+          <span class="farad-artifact--deck-demo__wordmark">Farad</span>
+        </span>
+        <!-- The button stays hidden until the script unhides it, so a site that
+             strips JavaScript shows no dead control. -->
+        <button type="button" class="farad-artifact--deck-demo__button" data-farad-present="" hidden="">Present</button>
+      </div>
+    </div>
+
+    <div class="farad-artifact--deck-demo__stage">
+
+      <section class="farad-artifact--deck-demo__slide" data-farad-slide="cover">
+        <div class="farad-artifact--deck-demo__pad">
+          <p class="farad-artifact--deck-demo__kicker">Farad 아티팩트 · 덱 라우트 데모</p>
+          <h1 class="farad-artifact--deck-demo__cover-title">Confluence 페이지 안에서 발표하기</h1>
+          <p class="farad-artifact--deck-demo__lead">
+            pptx를 첨부하는 대신, 슬라이드를 페이지에 그대로 붙이고 거기서 전체화면으로 발표한다.
+          </p>
+        </div>
+        <p class="farad-artifact--deck-demo__number">1</p>
+      </section>
+
+      <section class="farad-artifact--deck-demo__slide">
+        <div class="farad-artifact--deck-demo__pad">
+          <h2 class="farad-artifact--deck-demo__slide-title">에이전트는 pptx보다 HTML을 훨씬 잘 만든다</h2>
+          <ul class="farad-artifact--deck-demo__list">
+            <li class="farad-artifact--deck-demo__item">HTML은 렌더해서 <strong>스스로 확인하고 고칠 수 있다</strong>. pptx는 EMU 좌표를 눈 감고 찍는 작업이다</li>
+            <li class="farad-artifact--deck-demo__item">flex·grid는 내용이 늘어나면 알아서 밀린다. pptx는 한글 12pt가 몇 줄인지 폰트 메트릭으로 추정해야 한다</li>
+            <li class="farad-artifact--deck-demo__item">학습 데이터의 양이 비교가 안 된다</li>
+          </ul>
+        </div>
+        <p class="farad-artifact--deck-demo__number">2</p>
+      </section>
+
+      <section class="farad-artifact--deck-demo__slide">
+        <div class="farad-artifact--deck-demo__pad">
+          <h2 class="farad-artifact--deck-demo__slide-title">목적지가 형식을 정한다</h2>
+          <div class="farad-artifact--deck-demo__columns">
+            <div class="farad-artifact--deck-demo__panel" data-farad-notice="success">
+              <h3 class="farad-artifact--deck-demo__panel-title">웹 덱</h3>
+              <p class="farad-artifact--deck-demo__prose">컨플루언스에 올리거나 그냥 발표만 하면 된다. 링크 하나로 끝나고 항상 최신이다.</p>
+            </div>
+            <div class="farad-artifact--deck-demo__panel">
+              <h3 class="farad-artifact--deck-demo__panel-title">PPTX</h3>
+              <p class="farad-artifact--deck-demo__prose">받는 사람이 PowerPoint에서 직접 고쳐야 하거나, 사내 마스터 템플릿 심의를 타야 할 때.</p>
+            </div>
+          </div>
+        </div>
+        <p class="farad-artifact--deck-demo__number">3</p>
+      </section>
+
+      <section class="farad-artifact--deck-demo__slide">
+        <div class="farad-artifact--deck-demo__pad">
+          <h2 class="farad-artifact--deck-demo__slide-title">실패 모드가 다르다</h2>
+          <div class="farad-artifact--deck-demo__table-wrap">
+            <table class="farad-artifact--deck-demo__table">
+              <thead>
+                <tr>
+                  <th class="farad-artifact--deck-demo__table-head" scope="col">내용이 넘칠 때</th>
+                  <th class="farad-artifact--deck-demo__table-head" scope="col">PPTX</th>
+                  <th class="farad-artifact--deck-demo__table-head" scope="col">이 덱</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="farad-artifact--deck-demo__table-cell">결과</td>
+                  <td class="farad-artifact--deck-demo__table-cell">조용히 잘림</td>
+                  <td class="farad-artifact--deck-demo__table-cell">슬라이드가 길어짐</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--deck-demo__table-cell">만든 사람이 아는가</td>
+                  <td class="farad-artifact--deck-demo__table-cell">열어보기 전엔 모름</td>
+                  <td class="farad-artifact--deck-demo__table-cell">한눈에 보임</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--deck-demo__table-cell">화면 크기 대응</td>
+                  <td class="farad-artifact--deck-demo__table-cell">고정</td>
+                  <td class="farad-artifact--deck-demo__table-cell">폭에 비례해 스케일</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="farad-artifact--deck-demo__number">4</p>
+      </section>
+
+      <section class="farad-artifact--deck-demo__slide">
+        <div class="farad-artifact--deck-demo__pad">
+          <h2 class="farad-artifact--deck-demo__slide-title">비율은 슬라이드가 아니라 빈 칸이 담당한다</h2>
+          <ul class="farad-artifact--deck-demo__list">
+            <li class="farad-artifact--deck-demo__item"><code>aspect-ratio</code>를 슬라이드에 직접 주면 block 축 <code>min-content</code>가 <strong>비율에서 전이된 값</strong>이 된다 — 넘친 내용이 다음 슬라이드를 침범한다</li>
+            <li class="farad-artifact--deck-demo__item">그래서 비율은 <strong>빈 그리드 아이템</strong>이 갖고, 내용과 같은 셀에 겹친다</li>
+            <li class="farad-artifact--deck-demo__item">행 높이 = 둘 중 큰 쪽. 평소엔 16:9, 넘치면 길어진다</li>
+          </ul>
+        </div>
+        <p class="farad-artifact--deck-demo__number">5</p>
+      </section>
+
+      <section class="farad-artifact--deck-demo__slide">
+        <div class="farad-artifact--deck-demo__pad">
+          <h2 class="farad-artifact--deck-demo__slide-title">JS가 없어도 내용은 그대로 읽힌다</h2>
+          <ul class="farad-artifact--deck-demo__list">
+            <li class="farad-artifact--deck-demo__item">스케일은 컨테이너 쿼리 단위라 <strong>CSS만으로</strong> 동작한다</li>
+            <li class="farad-artifact--deck-demo__item">JS는 전체화면·키보드·카운터만 얹는다. 관리자가 HTML 매크로를 끄거나 사이트가 스크립트를 걸러도 슬라이드 스택으로 남는다</li>
+            <li class="farad-artifact--deck-demo__item">키보드는 <code>document</code>가 아니라 덱에만 바인딩한다 — 안 그러면 Confluence 단축키를 가로챈다</li>
+          </ul>
+        </div>
+        <p class="farad-artifact--deck-demo__number">6</p>
+      </section>
+
+      <section class="farad-artifact--deck-demo__slide" data-farad-slide="closing">
+        <div class="farad-artifact--deck-demo__pad">
+          <h2 class="farad-artifact--deck-demo__slide-title">위의 Present를 눌러 보세요</h2>
+          <p class="farad-artifact--deck-demo__lead">
+            전체화면으로 바뀌고 ← → 로 넘어갑니다. Esc로 빠져나옵니다.
+          </p>
+        </div>
+        <p class="farad-artifact--deck-demo__number">7</p>
+      </section>
+
+    </div>
+
+    <div class="farad-artifact--deck-demo__pager">
+      <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">Prev</button>
+      <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 7</span>
+      <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
+      <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="exit">Exit</button>
+    </div>
+
+  </div>
+</article>
+
+<script>
+/* Presentation mode. Everything is scoped to this deck: the keyboard listener
+   lives on the deck element rather than the document, so Confluence keeps its
+   own shortcuts, and nothing is written to storage or fetched. */
+(function () {
+  var root = document.getElementById("farad-artifact--deck-demo__root");
+  if (!root || root.hasAttribute("data-farad-ready")) { return; }
+  root.setAttribute("data-farad-ready", "");
+
+  var deck = root.querySelector(".farad-artifact--deck-demo__deck");
+  var slides = root.querySelectorAll(".farad-artifact--deck-demo__slide");
+  var counter = root.querySelector("[data-farad-counter]");
+  var present = root.querySelector("[data-farad-present]");
+  if (!deck || !slides.length || !present) { return; }
+
+  var index = 0;
+
+  function show(next) {
+    index = Math.max(0, Math.min(slides.length - 1, next));
+    for (var i = 0; i < slides.length; i++) {
+      if (i === index) { slides[i].setAttribute("data-farad-current", ""); }
+      else { slides[i].removeAttribute("data-farad-current"); }
+    }
+    if (counter) { counter.textContent = index + 1 + " / " + slides.length; }
+  }
+
+  function presenting() {
+    return document.fullscreenElement === deck ||
+      deck.getAttribute("data-farad-presenting") === "fallback";
+  }
+
+  /* Some hosts frame the page without allowing fullscreen. Pinning the deck
+     over the viewport is the only remaining way to present, so it is used only
+     after the Fullscreen API has actually refused. */
+  function pin() {
+    deck.setAttribute("data-farad-presenting", "fallback");
+    deck.focus();
+  }
+
+  function start() {
+    show(index);
+    if (deck.requestFullscreen) {
+      deck.requestFullscreen().then(function () { deck.focus(); }, pin);
+    } else {
+      pin();
+    }
+  }
+
+  function stop() {
+    if (document.fullscreenElement === deck && document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+    deck.removeAttribute("data-farad-presenting");
+  }
+
+  present.addEventListener("click", start);
+
+  deck.addEventListener("click", function (event) {
+    var button = event.target.closest ? event.target.closest("[data-farad-nav]") : null;
+    if (!button) { return; }
+    var action = button.getAttribute("data-farad-nav");
+    if (action === "prev") { show(index - 1); }
+    else if (action === "next") { show(index + 1); }
+    else { stop(); }
+  });
+
+  deck.addEventListener("keydown", function (event) {
+    if (!presenting()) { return; }
+    var key = event.key;
+    if (key === "ArrowRight" || key === "PageDown" || key === " ") { show(index + 1); }
+    else if (key === "ArrowLeft" || key === "PageUp") { show(index - 1); }
+    else if (key === "Home") { show(0); }
+    else if (key === "End") { show(slides.length - 1); }
+    else if (key === "Escape") { stop(); }
+    else { return; }
+    event.preventDefault();
+  });
+
+  document.addEventListener("fullscreenchange", function () {
+    if (document.fullscreenElement !== deck) {
+      deck.removeAttribute("data-farad-presenting");
+    }
+  });
+
+  show(0);
+  present.hidden = false;
+})();
+</script>
+
+<h2 id="설계-메모">설계 메모</h2>
+
+<p>슬라이드 폭에 비례해 글자가 커지는 것은 컨테이너 쿼리 단위(<code class="language-plaintext highlighter-rouge">cqw</code>) 하나로 처리했다. JS로 <code class="language-plaintext highlighter-rouge">transform: scale()</code>을 계산하는 reveal.js 방식이 아니라, 스케일 자체가 CSS라서 스크립트가 없어도 레이아웃이 성립한다.</p>
+
+<p>한 가지 함정이 있었다. 슬라이드에 <code class="language-plaintext highlighter-rouge">aspect-ratio: 16 / 9</code>를 직접 주면, 폭이 확정된 상자의 block 축 <code class="language-plaintext highlighter-rouge">min-content</code> 크기가 <strong>비율에서 전이된 값</strong>으로 결정된다. 그래서 <code class="language-plaintext highlighter-rouge">min-height: min-content</code>를 붙여도 상자가 자라지 않고, 넘친 내용이 박스 밖으로 흘러 다음 슬라이드를 덮어썼다. 비율을 빈 그리드 아이템에 옮기고 내용과 같은 셀에 겹치니 행 높이가 둘 중 큰 쪽이 되어, 평소에는 16:9이고 내용이 넘치면 슬라이드가 길어진다. 생성된 PowerPoint가 조용히 글자를 잘라먹는 것과 정확히 반대되는 동작이다.</p>
+
+<p>컨테이너 타입을 <code class="language-plaintext highlighter-rouge">size</code>가 아니라 <code class="language-plaintext highlighter-rouge">inline-size</code>로 둔 것도 같은 이유다. <code class="language-plaintext highlighter-rouge">size</code>는 블록 축까지 containment를 걸어 높이가 내용과 무관해지므로, 잘림이 그대로 돌아온다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드]]></summary></entry><entry><title type="html">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</title><link href="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/" rel="alternate" type="text/html" title="Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션" /><published>2026-07-19T18:20:03+09:00</published><updated>2026-07-19T18:20:03+09:00</updated><id>https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/"><![CDATA[<h1 id="farad-vwp에서-바로-쓰는-gui-ai-agent-애플리케이션">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</h1>
 
 <p>Farad 입문 영상에 사용할 내레이션 대본이다. 화면에서는 <code class="language-plaintext highlighter-rouge">Farad</code>, 음성에서는 <code class="language-plaintext highlighter-rouge">패럿</code>으로 읽는다.
 특정 직무에 한정하지 않고 파일 조사, 커맨드 실행, 데이터 분석, 결과 검증처럼 VWP에서 반복되는
@@ -3316,63 +4002,4 @@ Farad의 표시명은 한국어여도 내부 <code class="language-plaintext hig
   <li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md">PPTX Skill 진입점과 QA 절차</a></li>
   <li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/editing.md">템플릿 편집 워크플로와 스크립트</a></li>
   <li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/pptxgenjs.md">PptxGenJS 생성·호환성 가이드</a></li>
-</ul>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[Anthropic pptx Skill 벤치마크]]></summary></entry><entry><title type="html">OpenCode · Claude Code · Codex · Farad 아키텍처 비교 — 전체 인덱스</title><link href="https://hvppycoding.github.io/research/coding-agent-architecture-comparison/" rel="alternate" type="text/html" title="OpenCode · Claude Code · Codex · Farad 아키텍처 비교 — 전체 인덱스" /><published>2026-07-13T23:57:00+09:00</published><updated>2026-07-13T23:57:00+09:00</updated><id>https://hvppycoding.github.io/research/coding-agent-architecture-comparison</id><content type="html" xml:base="https://hvppycoding.github.io/research/coding-agent-architecture-comparison/"><![CDATA[<h1 id="opencode--claude-code--codex--farad-아키텍처-비교--전체-인덱스">OpenCode · Claude Code · Codex · Farad 아키텍처 비교 — 전체 인덱스</h1>
-
-<p>OpenCode, Claude Code, Codex, Farad를 동일한 제품·아키텍처 축으로 비교하는 근거 기반 조사 묶음이다.</p>
-
-<blockquote>
-  <p>상태: <strong>완료</strong> — 2026-07-13 기준, 8개 Markdown / 6,451행 / 약 430 KiB<br />
-범위: 제품 topology, authority, agent loop, context/transcript, tool·permission·sandbox, MCP·extension,
-multi-agent·scheduler, provider, UI, persistence, NFS/10k, failure/recovery, Farad 실행 로드맵</p>
-</blockquote>
-
-<h2 id="먼저-읽을-문서">먼저 읽을 문서</h2>
-
-<ol>
-  <li><a href="https://hvppycoding.github.io/research/opencode-claude-code-codex-farad-comparison/">교차 비교와 최종 판정</a></li>
-  <li><a href="https://hvppycoding.github.io/research/farad-architecture-roadmap/">Farad 판정 및 P0/P1/P2 로드맵</a></li>
-  <li>필요한 제품의 개별 보고서와 <a href="https://hvppycoding.github.io/research/coding-agent-comparison-methodology/">조사 방법론</a></li>
-</ol>
-
-<h2 id="산출물">산출물</h2>
-
-<ul>
-  <li><a href="https://hvppycoding.github.io/research/coding-agent-comparison-methodology/">00-methodology.md</a> — 조사 범위, 공통 평가축, 증거 등급, 비교 제약</li>
-  <li><a href="https://hvppycoding.github.io/research/opencode-architecture-analysis/">01-opencode-report.md</a> — OpenCode 독립 보고서</li>
-  <li><a href="https://hvppycoding.github.io/research/claude-code-architecture-analysis/">02-claude-code-report.md</a> — Claude Code 독립 보고서</li>
-  <li><a href="https://hvppycoding.github.io/research/codex-architecture-analysis/">03-codex-report.md</a> — Codex 독립 보고서</li>
-  <li><a href="https://hvppycoding.github.io/research/farad-architecture-audit/">04-farad-report.md</a> — Farad 현재 소스 감사와 최신 architecture diagram</li>
-  <li><a href="https://hvppycoding.github.io/research/opencode-claude-code-codex-farad-comparison/">05-cross-product-comparison.md</a> — 동일 축 교차 비교 및 use-case 판정</li>
-  <li><a href="https://hvppycoding.github.io/research/farad-architecture-roadmap/">06-farad-verdict-and-roadmap.md</a> — Farad 격차, 의존 순서, 종료 기준</li>
-</ul>
-
-<h2 id="고정된-증거-경계">고정된 증거 경계</h2>
-
-<ul>
-  <li>OpenCode: <code class="language-plaintext highlighter-rouge">anomalyco/opencode@b3a012cbdde854b0fe14f95b1c48543bf6517c0a</code>, package 1.17.18</li>
-  <li>Claude Code: 조사 당시 공식 문서 + npm <code class="language-plaintext highlighter-rouge">latest</code> 2.1.207 표지, local CLI 2.1.206,
-2.1.88 sourcemap 내부 관찰은 별도 C급 증거</li>
-  <li>Codex: <code class="language-plaintext highlighter-rouge">openai/codex@2b0b37abb7b29ea272fa856d6dff9221a6bd9ba8</code>와 공식 문서</li>
-  <li>Farad: 2026-07-13 현재 worktree source/docs/tests; focused test 1,527개 통과</li>
-</ul>
-
-<h2 id="핵심-결론">핵심 결론</h2>
-
-<ul>
-  <li>단일 승자는 없다: OpenCode는 provider/API, Claude Code는 terminal workflow, Codex는 ordered runtime와
-local command containment, Farad는 provider-neutral native desktop과 HPC/NFS 제품 계약이 강하다.</li>
-  <li>Farad는 재작성보다 계약-구현 gap closing이 맞다. 최우선은 OS execution boundary, scheduler due
-index, transcript I/O/repair, nonblocking explicit-refresh snapshot, Qt permission snapshot, client lifecycle다.</li>
-  <li>server/app protocol과 깊은 agent team은 실제 두 번째 surface·workflow 요구가 생길 때까지 조건부다.</li>
-</ul>
-
-<h2 id="검증">검증</h2>
-
-<ul>
-  <li>Farad runtime/transcript/tool/MCP/session/scheduler/settings 관련 focused test: <strong>1,527 passed</strong></li>
-  <li>Mermaid CLI 11.16.0 실제 render: <strong>6개 보고서, 19개 chart 모두 통과</strong></li>
-  <li>상대 Markdown link 존재 여부와 fenced block 균형: 통과</li>
-  <li>전체 repository test suite, ruff, mypy는 문서 조사 범위를 넘어 실행하지 않음</li>
-</ul>
-
-<p>문서만 추가했으며 Farad 제품 소스나 기존 사용자 변경은 수정하지 않았다.</p>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[OpenCode · Claude Code · Codex · Farad 아키텍처 비교 — 전체 인덱스]]></summary></entry></feed>
+</ul>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[Anthropic pptx Skill 벤치마크]]></summary></entry></feed>
