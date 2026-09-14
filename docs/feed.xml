@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T14:16:00+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T14:15:59+09:00</published><updated>2026-09-14T14:15:59+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T15:00:29+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T00:00:00+09:00</published><updated>2026-09-14T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -6,18 +6,10 @@
 
 <ul>
   <li>페이지에서는 <strong>슬라이드가 세로로 쌓인 스택</strong>으로 읽힌다.</li>
-  <li>오른쪽 위 <strong>Present</strong>를 누르면 전체화면 발표 모드로 바뀐다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고 <code class="language-plaintext highlighter-rouge">Esc</code> 로 나온다.</li>
+  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>Full screen</strong>을 한 번 더 누른다.</li>
   <li>창을 좁히면 680px 아래에서 16:9를 풀고 읽히는 카드로 바뀐다.</li>
 </ul>
 
-<style> and <script> blocks unchanged. Edit the slides and delete
-     the ones the deck does not need.
-  3. Paste this fragment directly into a Confluence Data Center HTML Macro.
-
-  The deck reads as a stack of slides in the page and expands to full screen
-  when the reader presses the present button. Without JavaScript it stays a
-  readable stack, so nothing is lost when a site strips scripts.
--->
 <style>
 /* Tokens. Every selector below carries the artifact modifier, and every
    font-size and line-height is !important, because host and macro CSS style
@@ -108,6 +100,19 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button:hover { background: var(--inset) !important; }
+
+/* The call to action reads as one: a bare outlined button disappears into a
+   page that is already full of chrome. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--primary {
+  border-color: var(--text) !important;
+  background: var(--text) !important;
+  color: var(--page) !important;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--primary:hover {
+  border-color: var(--text-secondary) !important;
+  background: var(--text-secondary) !important;
+}
 
 .farad-artifact.farad-artifact--deck-demo :focus-visible {
   outline: 2px solid var(--accent);
@@ -310,6 +315,33 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__figure { margin: 0; display: flex; flex: 1 1 auto; flex-direction: column; gap: calc(0.8 * var(--u)); min-height: 0; min-width: 0; }
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__figure img, .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__figure svg { flex: 1 1 auto; min-height: 0; object-fit: contain; }
 
+/* Charts are inline SVG: a macro cannot reach a charting library, and a raster
+   image of a chart goes soft the moment the deck is presented. Lengths inside
+   the viewBox are user units, so the drawing scales with the slide and the
+   tokens keep it in step with the theme. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart { width: 100%; height: auto; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-bar { fill: var(--strong-border); }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-bar--lead { fill: var(--accent); }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-line { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-line--muted { stroke: var(--strong-border); stroke-dasharray: 5 4; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-grid { stroke: var(--divider); stroke-width: 1; }
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-axis { stroke: var(--strong-border); stroke-width: 1; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-label {
+  fill: var(--muted);
+  font-family: inherit;
+  font-size: 6px !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__chart-value {
+  fill: var(--text);
+  font-family: inherit;
+  font-size: 7px !important;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__caption {
   margin: 0;
   color: var(--text-secondary);
@@ -367,40 +399,67 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
 /* Presenting.
 
-   The browser raises a fullscreen element into the top layer, so the presented
-   deck needs neither fixed positioning nor a z-index. The `presenting`
-   attribute is the fallback for hosts that refuse the Fullscreen API: only
-   there does the deck pin itself over the viewport. */
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen,
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] {
+   The deck covers the viewport by pinning itself rather than by entering the
+   Fullscreen API, so the mode also works where that API is absent (iOS Safari
+   offers it on video only) or refused (a host that frames the page). This is
+   the one place the fragment leaves normal flow, it happens only after the
+   reader presses Present, and Escape returns the page to the reader.
+
+   Real fullscreen is an extra step from the pager: it drops the browser chrome
+   and nothing else, so a single attribute styles both states and no rule needs
+   the `:fullscreen` pseudo-class. That matters — a browser that does not know
+   `:fullscreen` discards every selector grouped with it, which would leave the
+   deck pinned over the page with no background of its own. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   gap: 0;
   padding: 0;
-  background: var(--stage);
+  background: var(--stage, #ebebeb);
+  overscroll-behavior: contain;
 }
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-}
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__bar { display: none; }
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__bar,
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__bar { display: none; }
-
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__pager,
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__pager {
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__pager {
   display: flex;
   flex: 0 0 auto;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding: 8px;
 }
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__stage,
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__stage {
+/* Leaving is the control a reader looks for first, so it sits in the corner
+   they already watch rather than in the pager strip at the bottom. Both are
+   filled rather than outlined: they float over slide artwork, not over chrome. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__corner { display: none; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__corner {
+  display: flex;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  gap: 8px;
+  /* Slides are positioned too, and they come later in the document, so the
+     corner needs a layer of its own to stay above the current slide. */
+  z-index: 1;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__close {
+  padding: 6px 11px !important;
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+}
+
+/* Nothing to enter once the browser chrome is already gone. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-fullscreen] .farad-artifact--deck-demo__full { display: none; }
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__stage {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
@@ -410,15 +469,16 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   overflow: auto;
 }
 
-/* One slide at a time, sized so a 16:9 box always fits above the pager strip. */
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__slide,
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__slide { display: none; }
+/* One slide at a time, sized so a 16:9 box always fits above the pager strip.
+   The dynamic viewport units repeat the declaration because a phone browser
+   that lacks them still needs the first pair. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__slide { display: none; }
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck:fullscreen .farad-artifact--deck-demo__slide[data-farad-current],
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting="fallback"] .farad-artifact--deck-demo__slide[data-farad-current] {
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__slide[data-farad-current] {
   display: grid;
   flex: 0 0 auto;
-  width: min(100vw, calc((100vh - 46px) * 16 / 9));
+  width: min(100vw, calc((100vh - 52px) * 16 / 9));
+  width: min(100dvw, calc((100dvh - 52px) * 16 / 9));
   border: 0;
   border-radius: 0;
 }
@@ -462,8 +522,14 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
         </span>
         <!-- The button stays hidden until the script unhides it, so a site that
              strips JavaScript shows no dead control. -->
-        <button type="button" class="farad-artifact--deck-demo__button" data-farad-present="" hidden="">Present</button>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary" data-farad-present="" hidden="">Present</button>
       </div>
+    </div>
+
+    <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
+    <div class="farad-artifact--deck-demo__corner">
+      <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__full" data-farad-nav="full" hidden="">Full screen</button>
+      <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__close" data-farad-nav="exit" aria-label="Exit the presentation">&#10005;</button>
     </div>
 
     <div class="farad-artifact--deck-demo__stage">
@@ -473,7 +539,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
           <p class="farad-artifact--deck-demo__kicker">Farad 아티팩트 · 덱 라우트 데모</p>
           <h1 class="farad-artifact--deck-demo__cover-title">Confluence 페이지 안에서 발표하기</h1>
           <p class="farad-artifact--deck-demo__lead">
-            pptx를 첨부하는 대신, 슬라이드를 페이지에 그대로 붙이고 거기서 전체화면으로 발표한다.
+            pptx를 첨부하는 대신, 슬라이드를 페이지에 그대로 붙이고 거기서 발표한다.
           </p>
         </div>
         <p class="farad-artifact--deck-demo__number">1</p>
@@ -510,6 +576,43 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
       <section class="farad-artifact--deck-demo__slide">
         <div class="farad-artifact--deck-demo__pad">
+          <h2 class="farad-artifact--deck-demo__slide-title">폭이 바뀌면 글자도 같이 바뀐다</h2>
+          <figure class="farad-artifact--deck-demo__figure">
+            <svg class="farad-artifact--deck-demo__chart" viewBox="0 0 320 120" role="img">
+              <title>슬라이드 폭이 400px에서 1920px으로 넓어질 때 본문 글자는 6.8px에서 32.6px으로 커지고, 고정 17px은 그대로다.</title>
+              <line class="farad-artifact--deck-demo__chart-grid" x1="34" y1="76.6" x2="310" y2="76.6" />
+              <line class="farad-artifact--deck-demo__chart-grid" x1="34" y1="49.1" x2="310" y2="49.1" />
+              <line class="farad-artifact--deck-demo__chart-grid" x1="34" y1="21.7" x2="310" y2="21.7" />
+              <text class="farad-artifact--deck-demo__chart-label" x="28" y="106.1" text-anchor="end">0</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="28" y="78.7" text-anchor="end">10</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="28" y="51.2" text-anchor="end">20</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="28" y="23.8" text-anchor="end">30</text>
+              <polyline class="farad-artifact--deck-demo__chart-line farad-artifact--deck-demo__chart-line--muted" points="44.0,57.4 300.0,57.4" />
+              <polyline class="farad-artifact--deck-demo__chart-line" points="44.0,85.3 95.2,76.0 146.4,66.7 197.6,57.4 248.8,38.7 300.0,14.6" />
+              <circle class="farad-artifact--deck-demo__chart-bar--lead" cx="44.0" cy="85.3" r="2.2" />
+              <circle class="farad-artifact--deck-demo__chart-bar--lead" cx="95.2" cy="76.0" r="2.2" />
+              <circle class="farad-artifact--deck-demo__chart-bar--lead" cx="146.4" cy="66.7" r="2.2" />
+              <circle class="farad-artifact--deck-demo__chart-bar--lead" cx="197.6" cy="57.4" r="2.2" />
+              <circle class="farad-artifact--deck-demo__chart-bar--lead" cx="248.8" cy="38.7" r="2.2" />
+              <circle class="farad-artifact--deck-demo__chart-bar--lead" cx="300.0" cy="14.6" r="2.2" />
+              <line class="farad-artifact--deck-demo__chart-axis" x1="34" y1="104" x2="310" y2="104" />
+              <text class="farad-artifact--deck-demo__chart-label" x="44.0" y="113" text-anchor="middle">400</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="95.2" y="113" text-anchor="middle">600</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="146.4" y="113" text-anchor="middle">800</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="197.6" y="113" text-anchor="middle">1000</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="248.8" y="113" text-anchor="middle">1400</text>
+              <text class="farad-artifact--deck-demo__chart-label" x="300.0" y="113" text-anchor="middle">1920</text>
+              <text class="farad-artifact--deck-demo__chart-value" x="300" y="10.6" text-anchor="end">1.7cqw</text>
+              <text class="farad-artifact--deck-demo__chart-value" x="48" y="53.4">17px 고정</text>
+            </svg>
+            <figcaption class="farad-artifact--deck-demo__caption">그림 1. 본문 글자 크기(px)를 슬라이드 폭에 대해 그린 것. 이 덱의 본문은 <code>1.7cqw</code>라 폭의 1.7%로 따라 커지고, 픽셀로 박아 둔 17pt짜리 덱은 1920px 프로젝터에서도 17px에 머문다. 값은 정의에서 바로 계산했다.</figcaption>
+          </figure>
+        </div>
+        <p class="farad-artifact--deck-demo__number">4</p>
+      </section>
+
+      <section class="farad-artifact--deck-demo__slide">
+        <div class="farad-artifact--deck-demo__pad">
           <h2 class="farad-artifact--deck-demo__slide-title">실패 모드가 다르다</h2>
           <div class="farad-artifact--deck-demo__table-wrap">
             <table class="farad-artifact--deck-demo__table">
@@ -540,7 +643,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             </table>
           </div>
         </div>
-        <p class="farad-artifact--deck-demo__number">4</p>
+        <p class="farad-artifact--deck-demo__number">5</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
@@ -552,38 +655,38 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
             <li class="farad-artifact--deck-demo__item">행 높이 = 둘 중 큰 쪽. 평소엔 16:9, 넘치면 길어진다</li>
           </ul>
         </div>
-        <p class="farad-artifact--deck-demo__number">5</p>
+        <p class="farad-artifact--deck-demo__number">6</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide">
         <div class="farad-artifact--deck-demo__pad">
-          <h2 class="farad-artifact--deck-demo__slide-title">JS가 없어도 내용은 그대로 읽힌다</h2>
+          <h2 class="farad-artifact--deck-demo__slide-title">발표 모드는 브라우저 전체화면에 기대지 않는다</h2>
           <ul class="farad-artifact--deck-demo__list">
-            <li class="farad-artifact--deck-demo__item">스케일은 컨테이너 쿼리 단위라 <strong>CSS만으로</strong> 동작한다</li>
-            <li class="farad-artifact--deck-demo__item">JS는 전체화면·키보드·카운터만 얹는다. 관리자가 HTML 매크로를 끄거나 사이트가 스크립트를 걸러도 슬라이드 스택으로 남는다</li>
+            <li class="farad-artifact--deck-demo__item">Present를 누르면 덱이 <strong>화면을 그대로 덮는다</strong>. iPhone Safari처럼 <code>requestFullscreen</code>이 아예 없는 곳에서도 똑같이 동작한다</li>
+            <li class="farad-artifact--deck-demo__item">브라우저 크롬까지 지우고 싶으면 우측 상단 <strong>Full screen</strong>이 한 단계 더 올려 준다. 나가는 건 그 옆의 ✕ 또는 Esc</li>
+            <li class="farad-artifact--deck-demo__item">스케일은 컨테이너 쿼리 단위라 <strong>CSS만으로</strong> 된다. 스크립트가 걸러져도 슬라이드 스택으로 읽힌다</li>
             <li class="farad-artifact--deck-demo__item">키보드는 <code>document</code>가 아니라 덱에만 바인딩한다 — 안 그러면 Confluence 단축키를 가로챈다</li>
           </ul>
         </div>
-        <p class="farad-artifact--deck-demo__number">6</p>
+        <p class="farad-artifact--deck-demo__number">7</p>
       </section>
 
       <section class="farad-artifact--deck-demo__slide" data-farad-slide="closing">
         <div class="farad-artifact--deck-demo__pad">
           <h2 class="farad-artifact--deck-demo__slide-title">위의 Present를 눌러 보세요</h2>
           <p class="farad-artifact--deck-demo__lead">
-            전체화면으로 바뀌고 ← → 로 넘어갑니다. Esc로 빠져나옵니다.
+            ← → 로 넘기고, Esc나 우측 상단 ✕ 로 빠져나옵니다.
           </p>
         </div>
-        <p class="farad-artifact--deck-demo__number">7</p>
+        <p class="farad-artifact--deck-demo__number">8</p>
       </section>
 
     </div>
 
     <div class="farad-artifact--deck-demo__pager">
       <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">Prev</button>
-      <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 7</span>
+      <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 8</span>
       <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
-      <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="exit">Exit</button>
     </div>
 
   </div>
@@ -602,6 +705,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   var slides = root.querySelectorAll(".farad-artifact--deck-demo__slide");
   var counter = root.querySelector("[data-farad-counter]");
   var present = root.querySelector("[data-farad-present]");
+  var full = root.querySelector("[data-farad-nav='full']");
   if (!deck || !slides.length || !present) { return; }
 
   var index = 0;
@@ -615,33 +719,41 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     if (counter) { counter.textContent = index + 1 + " / " + slides.length; }
   }
 
-  function presenting() {
-    return document.fullscreenElement === deck ||
-      deck.getAttribute("data-farad-presenting") === "fallback";
-  }
+  function presenting() { return deck.hasAttribute("data-farad-presenting"); }
 
-  /* Some hosts frame the page without allowing fullscreen. Pinning the deck
-     over the viewport is the only remaining way to present, so it is used only
-     after the Fullscreen API has actually refused. */
-  function pin() {
-    deck.setAttribute("data-farad-presenting", "fallback");
+  /* Presenting pins the deck over the viewport rather than calling the
+     Fullscreen API, so it behaves the same where that API is missing or
+     refused. Real fullscreen is a second, optional step. */
+  function start() {
+    show(index);
+    deck.setAttribute("data-farad-presenting", "");
     deck.focus();
   }
 
-  function start() {
-    show(index);
-    if (deck.requestFullscreen) {
-      deck.requestFullscreen().then(function () { deck.focus(); }, pin);
-    } else {
-      pin();
-    }
+  function fullscreenDeck() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  function enterFullscreen() {
+    var request = deck.requestFullscreen || deck.webkitRequestFullscreen;
+    if (!request) { return; }
+    var result;
+    try { result = request.call(deck); } catch (error) { return; }
+    /* A refusal is not a failure here: the pinned overlay already presents. */
+    if (result && result.then) { result.then(null, function () {}); }
+  }
+
+  function exitFullscreen() {
+    if (fullscreenDeck() !== deck) { return; }
+    var exit = document.exitFullscreen || document.webkitExitFullscreen;
+    if (!exit) { return; }
+    try { exit.call(document); } catch (error) { /* already leaving */ }
   }
 
   function stop() {
-    if (document.fullscreenElement === deck && document.exitFullscreen) {
-      document.exitFullscreen();
-    }
+    exitFullscreen();
     deck.removeAttribute("data-farad-presenting");
+    deck.removeAttribute("data-farad-fullscreen");
   }
 
   present.addEventListener("click", start);
@@ -652,6 +764,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     var action = button.getAttribute("data-farad-nav");
     if (action === "prev") { show(index - 1); }
     else if (action === "next") { show(index + 1); }
+    else if (action === "full") { enterFullscreen(); }
     else { stop(); }
   });
 
@@ -667,24 +780,46 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     event.preventDefault();
   });
 
-  document.addEventListener("fullscreenchange", function () {
-    if (document.fullscreenElement !== deck) {
-      deck.removeAttribute("data-farad-presenting");
+  /* Escape leaves fullscreen before the deck ever sees the key, so the change
+     event is what ends the presentation in that case. */
+  function syncFullscreen() {
+    if (fullscreenDeck() === deck) {
+      deck.setAttribute("data-farad-fullscreen", "");
+    } else if (deck.hasAttribute("data-farad-fullscreen")) {
+      stop();
     }
-  });
+  }
+
+  document.addEventListener("fullscreenchange", syncFullscreen);
+  document.addEventListener("webkitfullscreenchange", syncFullscreen);
 
   show(0);
   present.hidden = false;
+  if (full && (deck.requestFullscreen || deck.webkitRequestFullscreen)) { full.hidden = false; }
 })();
 </script>
 
 <h2 id="설계-메모">설계 메모</h2>
 
-<p>슬라이드 폭에 비례해 글자가 커지는 것은 컨테이너 쿼리 단위(<code class="language-plaintext highlighter-rouge">cqw</code>) 하나로 처리했다. JS로 <code class="language-plaintext highlighter-rouge">transform: scale()</code>을 계산하는 reveal.js 방식이 아니라, 스케일 자체가 CSS라서 스크립트가 없어도 레이아웃이 성립한다.</p>
+<h3 id="스케일은-js가-아니라-css가-한다">스케일은 JS가 아니라 CSS가 한다</h3>
 
-<p>한 가지 함정이 있었다. 슬라이드에 <code class="language-plaintext highlighter-rouge">aspect-ratio: 16 / 9</code>를 직접 주면, 폭이 확정된 상자의 block 축 <code class="language-plaintext highlighter-rouge">min-content</code> 크기가 <strong>비율에서 전이된 값</strong>으로 결정된다. 그래서 <code class="language-plaintext highlighter-rouge">min-height: min-content</code>를 붙여도 상자가 자라지 않고, 넘친 내용이 박스 밖으로 흘러 다음 슬라이드를 덮어썼다. 비율을 빈 그리드 아이템에 옮기고 내용과 같은 셀에 겹치니 행 높이가 둘 중 큰 쪽이 되어, 평소에는 16:9이고 내용이 넘치면 슬라이드가 길어진다. 생성된 PowerPoint가 조용히 글자를 잘라먹는 것과 정확히 반대되는 동작이다.</p>
+<p>슬라이드 폭에 비례해 글자가 커지는 것은 컨테이너 쿼리 단위(<code class="language-plaintext highlighter-rouge">cqw</code>) 하나로 처리했다. JS로 <code class="language-plaintext highlighter-rouge">transform: scale()</code>을 계산하는 reveal.js 방식이 아니라, 스케일 자체가 CSS라서 스크립트가 없어도 레이아웃이 성립한다. 위 4번 슬라이드의 그래프가 그 차이다.</p>
 
-<p>컨테이너 타입을 <code class="language-plaintext highlighter-rouge">size</code>가 아니라 <code class="language-plaintext highlighter-rouge">inline-size</code>로 둔 것도 같은 이유다. <code class="language-plaintext highlighter-rouge">size</code>는 블록 축까지 containment를 걸어 높이가 내용과 무관해지므로, 잘림이 그대로 돌아온다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드]]></summary></entry><entry><title type="html">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</title><link href="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/" rel="alternate" type="text/html" title="Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션" /><published>2026-07-19T18:20:03+09:00</published><updated>2026-07-19T18:20:03+09:00</updated><id>https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/"><![CDATA[<h1 id="farad-vwp에서-바로-쓰는-gui-ai-agent-애플리케이션">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</h1>
+<p>컨테이너 타입은 <code class="language-plaintext highlighter-rouge">size</code>가 아니라 <code class="language-plaintext highlighter-rouge">inline-size</code>다. <code class="language-plaintext highlighter-rouge">size</code>는 블록 축까지 containment를 걸어 높이가 내용과 무관해지므로, 내용이 넘치면 조용히 잘린다 — 생성된 PowerPoint의 실패 모드가 그대로 돌아온다.</p>
+
+<h3 id="비율을-슬라이드에-직접-주면-안-된다">비율을 슬라이드에 직접 주면 안 된다</h3>
+
+<p>슬라이드에 <code class="language-plaintext highlighter-rouge">aspect-ratio: 16 / 9</code>를 직접 주면, 폭이 확정된 상자의 block 축 <code class="language-plaintext highlighter-rouge">min-content</code> 크기가 <strong>비율에서 전이된 값</strong>으로 결정된다. 그래서 <code class="language-plaintext highlighter-rouge">min-height: min-content</code>를 붙여도 상자가 자라지 않고, 넘친 내용이 박스 밖으로 흘러 다음 슬라이드를 덮어썼다. 비율을 빈 그리드 아이템에 옮기고 내용과 같은 셀에 겹치니 행 높이가 둘 중 큰 쪽이 되어, 평소에는 16:9이고 내용이 넘치면 슬라이드가 길어진다.</p>
+
+<h3 id="발표-모드는-fullscreen-api에-기대지-않는다">발표 모드는 Fullscreen API에 기대지 않는다</h3>
+
+<p>처음엔 <code class="language-plaintext highlighter-rouge">requestFullscreen()</code>을 기본 경로로 두고, 거부당했을 때만 <code class="language-plaintext highlighter-rouge">position: fixed</code>로 덮는 폴백을 뒀다. 그런데 iPhone Safari에는 <code class="language-plaintext highlighter-rouge">Element.requestFullscreen</code>이 아예 없어서 폰에서는 <strong>항상</strong> 폴백이 돌고, 그 폴백은 <code class="language-plaintext highlighter-rouge">:fullscreen</code>과 한 셀렉터 목록으로 묶여 있었다. CSS 셀렉터 목록은 하나라도 파싱되지 않으면 규칙 전체가 버려지므로, <code class="language-plaintext highlighter-rouge">:fullscreen</code>을 모르는 브라우저에서는 배경도 슬라이드 숨김도 없이 위치만 고정되는 최악의 조합이 된다.</p>
+
+<p>지금은 순서를 뒤집었다. Present는 언제나 덱을 뷰포트에 고정하고, 진짜 전체화면은 그 안에서 한 번 더 누르는 선택지다. 덕분에 CSS에서 <code class="language-plaintext highlighter-rouge">:fullscreen</code> 셀렉터가 완전히 사라졌고, 상태는 <code class="language-plaintext highlighter-rouge">data-farad-presenting</code> 속성 하나가 전부다.</p>
+
+<h3 id="차트는-인라인-svg다">차트는 인라인 SVG다</h3>
+
+<p>매크로 안에서는 차트 라이브러리를 불러올 수 없고, 차트를 이미지로 굽으면 발표 모드에서 확대되는 순간 뭉갠다. viewBox 안의 길이는 사용자 단위라 슬라이드와 함께 스케일되고, 색은 덱의 토큰을 그대로 쓰므로 다크 모드도 따라온다. viewBox는 슬라이드보다 납작하게 잡는다 — <code class="language-plaintext highlighter-rouge">width: 100%</code>인 SVG는 높이를 그 비율에서 가져오므로, 세로로 긴 viewBox는 슬라이드를 16:9 밖으로 밀어낸다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드]]></summary></entry><entry><title type="html">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</title><link href="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/" rel="alternate" type="text/html" title="Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션" /><published>2026-07-19T18:20:03+09:00</published><updated>2026-07-19T18:20:03+09:00</updated><id>https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/"><![CDATA[<h1 id="farad-vwp에서-바로-쓰는-gui-ai-agent-애플리케이션">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</h1>
 
 <p>Farad 입문 영상에 사용할 내레이션 대본이다. 화면에서는 <code class="language-plaintext highlighter-rouge">Farad</code>, 음성에서는 <code class="language-plaintext highlighter-rouge">패럿</code>으로 읽는다.
 특정 직무에 한정하지 않고 파일 조사, 커맨드 실행, 데이터 분석, 결과 검증처럼 VWP에서 반복되는
