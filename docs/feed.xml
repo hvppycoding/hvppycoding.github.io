@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T15:11:51+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T15:11:50+09:00</published><updated>2026-09-14T15:11:50+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T16:16:17+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T00:00:00+09:00</published><updated>2026-09-14T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -421,7 +421,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
    the one place the fragment leaves normal flow, it happens only after the
    reader presses Present, and Escape returns the page to the reader.
 
-   Real fullscreen is an extra step from the pager: it drops the browser chrome
+   Real fullscreen is an extra step from the corner: it drops the browser chrome
    and nothing else, so a single attribute styles both states and no rule needs
    the `:fullscreen` pseudo-class. That matters — a browser that does not know
    `:fullscreen` discards every selector grouped with it, which would leave the
@@ -438,12 +438,25 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   max-height: none;
   margin: 0;
   border: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: block;
   padding: 0;
   background: var(--stage, #ebebeb);
   overscroll-behavior: contain;
+}
+
+/* The presentation's own layout lives here rather than on the deck, because
+   this box — not the dialog — is what the Fullscreen API will accept. It fills
+   the deck while presenting in the page, and fills the screen once fullscreen
+   gives it the viewport; the same declarations serve both. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-presenting] .farad-artifact--deck-demo__screen {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* The corner controls anchor to this box in both states. */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--stage, #ebebeb);
 }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck::backdrop { background: #000000; }
@@ -552,11 +565,18 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
       </div>
     </div>
 
-    <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
-    <div class="farad-artifact--deck-demo__corner">
-      <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__full" data-farad-nav="full" hidden="">Full screen</button>
-      <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__close" data-farad-nav="exit" aria-label="Exit the presentation">&#10005;</button>
-    </div>
+    <!-- Everything the presentation shows lives in one box, because that box is
+         what goes fullscreen. A <dialog> cannot: the Fullscreen API rejects one
+         outright ("Dialog elements are invalid"), open or closed. A child of an
+         open modal dialog is accepted, so the dialog stays as it is and this
+         wrapper is what the request names. -->
+    <div class="farad-artifact--deck-demo__screen">
+
+      <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
+      <div class="farad-artifact--deck-demo__corner">
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__full" data-farad-nav="full" hidden="">Full screen</button>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__close" data-farad-nav="exit" aria-label="Exit the presentation">&#10005;</button>
+      </div>
 
     <div class="farad-artifact--deck-demo__stage">
 
@@ -710,9 +730,11 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     </div>
 
     <div class="farad-artifact--deck-demo__pager">
-      <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">Prev</button>
-      <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 8</span>
-      <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
+        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="prev">Prev</button>
+        <span class="farad-artifact--deck-demo__counter" data-farad-counter="">1 / 8</span>
+        <button type="button" class="farad-artifact--deck-demo__button" data-farad-nav="next">Next</button>
+      </div>
+
     </div>
 
   </dialog>
@@ -728,11 +750,12 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   root.setAttribute("data-farad-ready", "");
 
   var deck = root.querySelector(".farad-artifact--deck-demo__deck");
+  var screenBox = root.querySelector(".farad-artifact--deck-demo__screen");
   var slides = root.querySelectorAll(".farad-artifact--deck-demo__slide");
   var counter = root.querySelector("[data-farad-counter]");
   var present = root.querySelector("[data-farad-present]");
   var full = root.querySelector("[data-farad-nav='full']");
-  if (!deck || !slides.length || !present) { return; }
+  if (!deck || !screenBox || !slides.length || !present) { return; }
 
   var index = 0;
 
@@ -752,30 +775,38 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
      that is unavailable the deck pins itself instead — the same CSS, minus the
      immunity. Real fullscreen is a further, optional step; it only removes the
      browser's own chrome. */
-  function start() {
-    show(index);
-    deck.setAttribute("data-farad-presenting", "");
+  function openModal() {
     if (deck.showModal && !deck.open) {
       try { deck.showModal(); } catch (error) { /* already open, or detached */ }
     }
     deck.focus();
   }
 
-  function fullscreenDeck() {
+  function start() {
+    show(index);
+    deck.setAttribute("data-farad-presenting", "");
+    openModal();
+  }
+
+  function fullscreenElement() {
     return document.fullscreenElement || document.webkitFullscreenElement || null;
   }
 
+  /* The request names the screen box, never the deck: the Fullscreen API
+     rejects a <dialog> outright, with "Dialog elements are invalid", whether it
+     is open or closed. A child of an open modal dialog is accepted, so the
+     dialog stays open underneath and the two modes never have to trade places. */
   function enterFullscreen() {
-    var request = deck.requestFullscreen || deck.webkitRequestFullscreen;
+    var request = screenBox.requestFullscreen || screenBox.webkitRequestFullscreen;
     if (!request) { return; }
     var result;
-    try { result = request.call(deck); } catch (error) { return; }
-    /* A refusal is not a failure here: the pinned overlay already presents. */
+    try { result = request.call(screenBox); } catch (error) { return; }
+    /* A refusal is not a failure here: the in-page presentation still stands. */
     if (result && result.then) { result.then(null, function () {}); }
   }
 
   function exitFullscreen() {
-    if (fullscreenDeck() !== deck) { return; }
+    if (fullscreenElement() !== screenBox) { return; }
     var exit = document.exitFullscreen || document.webkitExitFullscreen;
     if (!exit) { return; }
     try { exit.call(document); } catch (error) { /* already leaving */ }
@@ -807,25 +838,39 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
     else if (key === "ArrowLeft" || key === "PageUp") { show(index - 1); }
     else if (key === "Home") { show(0); }
     else if (key === "End") { show(slides.length - 1); }
-    else if (key === "Escape") { stop(); }
+    /* While fullscreen the browser is already answering this press by leaving
+       fullscreen; ending the presentation as well would collapse both levels at
+       once, so the press is left alone and the next one ends it. */
+    else if (key === "Escape") {
+      if (fullscreenElement() === screenBox) { return; }
+      stop();
+    }
     else { return; }
     event.preventDefault();
   });
 
   /* Escape leaves fullscreen before the deck ever sees the key, so the change
-     event is what ends the presentation in that case. */
+     event is what puts the in-page presentation back. Leaving fullscreen is a
+     step back, not the end — the ✕ is what ends the presentation. */
   function syncFullscreen() {
-    if (fullscreenDeck() === deck) {
+    if (fullscreenElement() === screenBox) {
       deck.setAttribute("data-farad-fullscreen", "");
-    } else if (deck.hasAttribute("data-farad-fullscreen")) {
-      stop();
+      deck.focus();
+      return;
     }
+    deck.removeAttribute("data-farad-fullscreen");
   }
 
   document.addEventListener("fullscreenchange", syncFullscreen);
   document.addEventListener("webkitfullscreenchange", syncFullscreen);
 
-  /* Escape on a modal dialog closes it without reaching the keydown handler. */
+  /* A modal dialog answers Escape by closing itself, which would collapse both
+     levels at once when the deck is fullscreen inside it. Refusing the dialog's
+     own close request leaves Escape to the browser (which exits fullscreen) and
+     to the keydown handler below (which ends the presentation), so one press
+     steps back one level. */
+  deck.addEventListener("cancel", function (event) { event.preventDefault(); });
+
   deck.addEventListener("close", function () {
     exitFullscreen();
     deck.removeAttribute("data-farad-presenting");
@@ -834,7 +879,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
   show(0);
   present.hidden = false;
-  if (full && (deck.requestFullscreen || deck.webkitRequestFullscreen)) { full.hidden = false; }
+  if (full && (screenBox.requestFullscreen || screenBox.webkitRequestFullscreen)) { full.hidden = false; }
 })();
 </script>
 
