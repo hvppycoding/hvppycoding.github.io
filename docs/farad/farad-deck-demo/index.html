@@ -195,7 +195,7 @@
 
 <ul>
   <li>페이지에서는 <strong>슬라이드가 세로로 쌓인 스택</strong>으로 읽힌다.</li>
-  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>Full screen</strong>을 한 번 더 누른다.</li>
+  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
   <li>창을 좁히면 680px 아래에서 16:9를 풀고 읽히는 카드로 바뀐다.</li>
 </ul>
 
@@ -305,6 +305,44 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 }
 
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button:hover { background: var(--inset) !important; }
+
+/* Icons are inline SVG drawn in `currentColor`, so they follow the button's own
+   text colour through both themes and both button styles without a second rule.
+   `inline-flex` is what puts a glyph on the text baseline's optical centre;
+   `vertical-align` on the icon cannot, because the button is the flex line. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+}
+
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 15px !important;
+  height: 15px !important;
+  /* The button, never the drawing, is what a click reports — so the delegated
+     handler does not depend on `closest()` existing on SVG elements. */
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The play mark reads as a solid shape rather than an outline. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__icon--solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* A button carrying only an icon loses the side padding that sized it for text,
+   so it is squared off deliberately instead. */
+.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__button--icon {
+  padding: 7px !important;
+  gap: 0;
+}
 
 /* The call to action reads as one: a bare outlined button disappears into a
    page that is already full of chrome. */
@@ -678,11 +716,6 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   z-index: 1;
 }
 
-.farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__close {
-  padding: 6px 11px !important;
-  font-size: 15px !important;
-  line-height: 1.4 !important;
-}
 
 /* Nothing to enter once the browser chrome is already gone. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__deck[data-farad-fullscreen] .farad-artifact--deck-demo__full { display: none; }
@@ -750,7 +783,10 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
         </span>
         <!-- The button stays hidden until the script unhides it, so a site that
              strips JavaScript shows no dead control. -->
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary" data-farad-present="" hidden="">Present</button>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary" data-farad-present="" hidden="">
+          <svg class="farad-artifact--deck-demo__icon farad-artifact--deck-demo__icon--solid" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 2.7 13.1 8 5 13.3Z" /></svg>
+          Present
+        </button>
       </div>
     </div>
 
@@ -763,8 +799,12 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
       <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
       <div class="farad-artifact--deck-demo__corner">
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__full" data-farad-nav="full" hidden="">Full screen</button>
-        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__close" data-farad-nav="exit" aria-label="Exit the presentation">&#10005;</button>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__full" data-farad-nav="full" title="Full screen" aria-label="Enter full screen" hidden="">
+          <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.2 2.2H2.2v4M9.8 2.2h4v4M9.8 13.8h4v-4M6.2 13.8H2.2v-4" /></svg>
+        </button>
+        <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary farad-artifact--deck-demo__button--icon farad-artifact--deck-demo__close" data-farad-nav="exit" title="Exit" aria-label="Exit the presentation">
+          <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6" /></svg>
+        </button>
       </div>
 
     <div class="farad-artifact--deck-demo__stage">
@@ -898,7 +938,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
           <h2 class="farad-artifact--deck-demo__slide-title">발표 모드는 브라우저 전체화면에 기대지 않는다</h2>
           <ul class="farad-artifact--deck-demo__list">
             <li class="farad-artifact--deck-demo__item">Present를 누르면 덱이 <strong>화면을 그대로 덮는다</strong>. iPhone Safari처럼 <code>requestFullscreen</code>이 아예 없는 곳에서도 똑같이 동작한다</li>
-            <li class="farad-artifact--deck-demo__item">브라우저 크롬까지 지우고 싶으면 우측 상단 <strong>Full screen</strong>이 한 단계 더 올려 준다. 나가는 건 그 옆의 ✕ 또는 Esc</li>
+            <li class="farad-artifact--deck-demo__item">브라우저 크롬까지 지우고 싶으면 우측 상단 <strong>확대 아이콘</strong>이 한 단계 더 올려 준다. 나가는 건 그 옆의 ✕ 또는 Esc</li>
             <li class="farad-artifact--deck-demo__item">스케일은 컨테이너 쿼리 단위라 <strong>CSS만으로</strong> 된다. 스크립트가 걸러져도 슬라이드 스택으로 읽힌다</li>
             <li class="farad-artifact--deck-demo__item">키보드는 <code>document</code>가 아니라 덱에만 바인딩한다 — 안 그러면 Confluence 단축키를 가로챈다</li>
           </ul>
