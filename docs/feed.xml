@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T16:26:58+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T00:00:00+09:00</published><updated>2026-09-14T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-14T16:42:56+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T00:00:00+09:00</published><updated>2026-09-14T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -142,7 +142,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
   stroke-linejoin: round;
 }
 
-/* The play mark reads as a solid shape rather than an outline. */
+/* An author adding a filled glyph of their own reaches for this. */
 .farad-artifact.farad-artifact--deck-demo .farad-artifact--deck-demo__icon--solid {
   fill: currentColor;
   stroke: none;
@@ -595,7 +595,7 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
         <!-- The button stays hidden until the script unhides it, so a site that
              strips JavaScript shows no dead control. -->
         <button type="button" class="farad-artifact--deck-demo__button farad-artifact--deck-demo__button--primary" data-farad-present="" hidden="">
-          <svg class="farad-artifact--deck-demo__icon farad-artifact--deck-demo__icon--solid" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 2.7 13.1 8 5 13.3Z" /></svg>
+          <svg class="farad-artifact--deck-demo__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1.6 2.2h12.8M3.1 2.2v7.9h9.8V2.2M5.7 13.8 8 10.1l2.3 3.7" /></svg>
           Present
         </button>
       </div>
