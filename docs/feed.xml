@@ -1,4 +1,1078 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-15T00:54:48+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T18:24:45+09:00</published><updated>2026-09-14T18:24:45+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-09-15T00:55:15+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">AI 에이전트의 미래 — 서브에이전트가 스킬만 읽고 한 번에 만든 덱</title><link href="https://hvppycoding.github.io/farad/ai-agent-future-deck/" rel="alternate" type="text/html" title="AI 에이전트의 미래 — 서브에이전트가 스킬만 읽고 한 번에 만든 덱" /><published>2026-09-15T00:00:00+09:00</published><updated>2026-09-15T00:00:00+09:00</updated><id>https://hvppycoding.github.io/farad/ai-agent-future-deck</id><content type="html" xml:base="https://hvppycoding.github.io/farad/ai-agent-future-deck/"><![CDATA[<h1 id="ai-에이전트의-미래--서브에이전트가-스킬만-읽고-한-번에-만든-덱">AI 에이전트의 미래 — 서브에이전트가 스킬만 읽고 한 번에 만든 덱</h1>
+
+<p>아래 덱은 사람이 슬라이드를 짠 것이 아니다. 서브에이전트에게 Farad <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬의 <code class="language-plaintext highlighter-rouge">SKILL.md</code>와 덱 레퍼런스 <strong>두 파일만</strong> 읽히고, 주제(AI 에이전트의 미래)와 "숫자는 전부 실제로 가져온 출처에서만"이라는 제약을 준 뒤 한 번에 만들게 한 결과물을 그대로 붙였다. 재시도나 사람의 수정은 없다.</p>
+
+<p>이번에 빌드 계약을 바꿨다. 전에는 템플릿 HTML을 복사해서 편집 영역만 고치라고 시켰는데, 그러려면 에이전트가 쓰지도 못할 CSS·JS 36KB를 먼저 읽어야 했다. 지금은 <strong>콘텐츠만 쓰고 스크립트가 조립한다</strong>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>assemble.py --template deck --skeleton -o slides.html
+assemble.py --template deck --modifier farad-artifact--agent-future --content slides.html -o deck.html
+check_html.py --mode confluence deck.html
+</code></pre></div></div>
+
+<p>템플릿의 <code class="language-plaintext highlighter-rouge">&lt;style&gt;</code>·<code class="language-plaintext highlighter-rouge">&lt;script&gt;</code>가 모델의 입력에도 출력에도 오르지 않으므로 스타일이 어긋날 수가 없다. 검사기는 <code class="language-plaintext highlighter-rouge">OK: 0 warning(s).</code>, 조립 결과에서 콘텐츠를 다시 뽑아내면 원본과 byte 단위로 같다.</p>
+
+<p>보는 법:</p>
+
+<ul>
+  <li>페이지에서는 <strong>슬라이드가 세로로 쌓인 스택</strong>으로 읽힌다.</li>
+  <li>오른쪽 위 <strong>Present</strong>를 누르면 덱이 검은 화면을 덮는다. <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> 또는 우측 하단 <code class="language-plaintext highlighter-rouge">‹ ›</code> 로 넘기고, <code class="language-plaintext highlighter-rouge">Esc</code> 또는 우측 상단 <code class="language-plaintext highlighter-rouge">✕</code> 로 나온다. 브라우저 크롬까지 지우려면 그 옆 <strong>확대 아이콘</strong>을 한 번 더 누른다.</li>
+  <li>창을 좁히면 680px 아래에서 16:9를 풀고 읽히는 카드로 바뀐다.</li>
+</ul>
+
+<style>
+/* Tokens. Every selector below carries the artifact modifier, and every
+   font-size and line-height is !important, because host and macro CSS style
+   bare elements with ID selectors and !important of their own. */
+.farad-artifact.farad-artifact--agent-future {
+  color-scheme: light;
+  --page: #ffffff; --surface: #f7f7f7; --inset: #f4f4f4;
+  --text: #171717; --text-secondary: #3f3f3f; --muted: #5f5f5f; --faint: #707070;
+  --border: #e3e3e3; --strong-border: #cfcfcf; --divider: #efefef;
+  --accent: #0e79cf;
+  --notice-info: #eaf4fb; --notice-warning: #fbf3df;
+  --notice-success: #eaf6ee; --notice-danger: #faecea;
+  --stage: #000000;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  background: var(--page);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR",
+    "Noto Sans CJK KR", "Malgun Gothic", sans-serif;
+  font-size: 16px !important;
+  font-weight: 400;
+  line-height: 1.6 !important;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+html[data-color-mode="dark"] .farad-artifact.farad-artifact--agent-future {
+  color-scheme: dark;
+  --page: #181818; --surface: #1e1e1e; --inset: #121212;
+  --text: #eeeeee; --text-secondary: #c6c6c6; --muted: #9a9a9a; --faint: #8a8a8a;
+  --border: #3c3c3c; --strong-border: #4d4d4d; --divider: #262626;
+  --accent: #2a82d0;
+  --notice-info: #1b2a35; --notice-warning: #2a2418;
+  --notice-success: #1b2b21; --notice-danger: #2d201f;
+  --stage: #000000;
+}
+
+.farad-artifact.farad-artifact--agent-future, .farad-artifact.farad-artifact--agent-future * { box-sizing: border-box; }
+
+/* Host themes pin a fixed pt line-height on bare elements inside the content
+   body, which squeezes text that takes its size from us. Inheritance is
+   restored for every descendant first; every rule below is more specific. */
+.farad-artifact.farad-artifact--agent-future * { line-height: inherit !important; }
+
+/* Deck shell */
+
+/* The deck is a <dialog> so that presenting can hand it to the browser's top
+   layer, where no host z-index can cover it and neither fixed positioning nor a
+   stacking order of our own is needed. Closed, it must read as an ordinary
+   block: the UA sheet would otherwise hide it and give it a border, padding and
+   centred margins. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck {
+  display: block;
+  position: static;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: var(--page);
+  color: var(--text);
+}
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck:focus { outline: none; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck-name {
+  margin: 0;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 15px !important;
+  font-weight: 600;
+  line-height: 1.4 !important;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__controls { display: flex; align-items: center; gap: 10px; }
+
+/* Confluence styles bare buttons through AUI, so every visual property is
+   restated with !important rather than inherited. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button {
+  border: 1px solid var(--strong-border) !important;
+  border-radius: 6px !important;
+  padding: 6px 13px !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  text-shadow: none !important;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button:hover { background: var(--inset) !important; }
+
+/* Icons are inline SVG drawn in `currentColor`, so they follow the button's own
+   text colour through both themes and both button styles without a second rule.
+   `inline-flex` is what puts a glyph on the text baseline's optical centre;
+   `vertical-align` on the icon cannot, because the button is the flex line. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 15px !important;
+  height: 15px !important;
+  /* The button, never the drawing, is what a click reports — so the delegated
+     handler does not depend on `closest()` existing on SVG elements. */
+  pointer-events: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* An author adding a filled glyph of their own reaches for this. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__icon--solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* A button carrying only an icon loses the side padding that sized it for text,
+   so it is squared off deliberately instead. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button--icon {
+  padding: 7px !important;
+  gap: 0;
+}
+
+/* The marks on the presentation stage sit alone on a screen-sized black field,
+   with no text beside them to lend them weight, so they are drawn larger and
+   lighter than an icon that rides next to a label. The slide's own type grows
+   with the screen while a fixed mark would not, so on a projector the mark
+   follows the viewport too, between a laptop floor and a wall-screen ceiling.
+   The px pair stands in where clamp() is unknown. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__corner .farad-artifact--agent-future__icon,
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__pager .farad-artifact--agent-future__icon {
+  width: 20px !important;
+  height: 20px !important;
+  width: clamp(20px, 2.2vmin, 28px) !important;
+  height: clamp(20px, 2.2vmin, 28px) !important;
+  stroke-width: 1.5;
+}
+
+/* The pager's chevrons belong to the number between them rather than to the
+   stage, so they are drawn near its cap height instead of at the corner marks'
+   size. A chevron fills only the middle third of its square box, so the tight
+   padding below is what closes the visual gap; the button keeps enough box
+   around the mark to stay an easy target. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__pager .farad-artifact--agent-future__icon {
+  width: 14px !important;
+  height: 14px !important;
+  width: clamp(14px, 1.5vmin, 18px) !important;
+  height: clamp(14px, 1.5vmin, 18px) !important;
+}
+
+/* The bottom padding is 4px short of the top on purpose, which drops the
+   chevron 2px. Centring the boxes leaves the marks sitting high: the counter's
+   line box centres on the font's own ascent and descent, but "1 / 8" draws no
+   descender except the solidus, which reaches 3.2px below the baseline and
+   carries the eye's sense of the row with it. Two pixels covers the offset from
+   the 15px floor to the 20px ceiling, where it ranges 1.5px to 2.0px. The
+   button's height is unchanged, so the hit area does not move. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__pager .farad-artifact--agent-future__button--icon {
+  padding: 9px 2px 5px !important;
+}
+
+/* The overlay controls float on the black stage the way a video player's do:
+   white, translucent, and without a plate until the pointer arrives, when the
+   mark comes to full strength on a faint plate. Where the screen is exactly
+   16:9 the slide fills it and the same marks land on the slide, so their groups
+   blend by difference: white stays white on the black stage and turns black on
+   a white slide, and the same rule serves a dark slide unchanged. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button--bare {
+  border-color: transparent !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  opacity: 0.6;
+  transition: opacity 120ms ease, background-color 120ms ease;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button--bare:hover,
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button--bare:focus-visible {
+  border-color: transparent !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+/* The call to action reads as one: a bare outlined button disappears into a
+   page that is already full of chrome. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button--primary {
+  border-color: var(--text) !important;
+  background: var(--text) !important;
+  color: var(--page) !important;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__button--primary:hover {
+  border-color: var(--text-secondary) !important;
+  background: var(--text-secondary) !important;
+}
+
+.farad-artifact.farad-artifact--agent-future :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Stage and slides.
+
+   `container-type: inline-size` and not `size`: size containment would make the
+   slide height independent of its contents, so copy that does not fit would be
+   clipped silently — the failure mode that makes generated PowerPoint
+   unreliable. With inline-size the block axis still follows the content.
+
+   Every internal length is a multiple of --u, the slide's scale unit. It is
+   1cqw, one percent of the slide's own width, so a slide reads the same in a
+   narrow macro column and on a projector. `cqh` is deliberately unused: it
+   would require `container-type: size` and bring the clipping back. The
+   @supports rule is what keeps the unit safe — a browser without container
+   query units keeps the 10px fallback, which matches a 1000px column, and a
+   custom property would otherwise swallow the unknown unit and break calc().
+
+   The ratio comes from an empty grid item rather than from the slide box. A box
+   that carries `aspect-ratio` over a definite width takes its block-axis
+   min-content size from that ratio, so `min-height: min-content` on the slide
+   itself resolves back to the ratio and an overfull slide spills across the one
+   below it instead of growing. Laying the spacer and the content in the same
+   grid cell makes the row the taller of the two, which is the wanted rule:
+   16:9 normally, and taller than its neighbours when the copy does not fit. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__stage { display: flex; flex-direction: column; gap: 18px; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide {
+  --u: 10px;
+  container-type: inline-size;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--page);
+}
+
+@supports (width: 1cqw) {
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide { --u: 1cqw; }
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide::before {
+  content: "";
+  grid-area: 1 / 1;
+  aspect-ratio: 16 / 9;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__pad {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: calc(1.4 * var(--u));
+  min-width: 0;
+  padding: calc(4.6 * var(--u)) calc(5.4 * var(--u));
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide[data-farad-slide="cover"] .farad-artifact--agent-future__pad { justify-content: center; gap: calc(1.8 * var(--u)); }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide[data-farad-slide="closing"] .farad-artifact--agent-future__pad { justify-content: center; }
+
+/* Slide type. Headings carry the root id because host themes reach headings
+   with ID selectors, and an ID beats any number of classes. */
+#farad-artifact--agent-future__root.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__cover-title,
+#farad-artifact--agent-future__root.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide-title {
+  margin: 0;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.22 !important;
+  text-align: left !important;
+  text-wrap: balance;
+}
+
+#farad-artifact--agent-future__root.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__cover-title { font-size: calc(5 * var(--u)) !important; }
+#farad-artifact--agent-future__root.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide-title { font-size: calc(3.4 * var(--u)) !important; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__kicker {
+  margin: 0;
+  color: var(--faint);
+  font-size: calc(1.5 * var(--u)) !important;
+  font-weight: 600;
+  line-height: 1.4 !important;
+  letter-spacing: 0.01em;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__lead,
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__prose,
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__item {
+  margin: 0;
+  color: var(--text);
+  font-size: calc(2 * var(--u)) !important;
+  line-height: 1.5 !important;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__lead { color: var(--text-secondary); }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u);
+  margin: 0;
+  padding-left: 1.3em;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__item::marker { color: var(--muted); }
+.farad-artifact.farad-artifact--agent-future strong { font-weight: 600; }
+
+/* Inline code is styled here rather than left bare: host themes give `code`
+   their own face and background, and an unstyled token would not scale with
+   the slide. */
+.farad-artifact.farad-artifact--agent-future code {
+  padding: 0.14em 0.4em;
+  border-radius: 5px;
+  background: var(--inset);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.875em !important;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: calc(2.2 * var(--u));
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__panel {
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.8 * var(--u));
+  min-width: 0;
+  border-radius: 8px;
+  padding: calc(1.8 * var(--u)) calc(2 * var(--u));
+  background: var(--surface);
+}
+
+#farad-artifact--agent-future__root.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__panel-title {
+  margin: 0;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text);
+  font-size: calc(1.7 * var(--u)) !important;
+  font-weight: 600;
+  line-height: 1.35 !important;
+  text-align: left !important;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__panel[data-farad-notice="info"] { background: var(--notice-info); }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__panel[data-farad-notice="warning"] { background: var(--notice-warning); }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__panel[data-farad-notice="success"] { background: var(--notice-success); }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__panel[data-farad-notice="danger"] { background: var(--notice-danger); }
+
+/* A slide table keeps one line per cell so the columns hold their rhythm at
+   presentation distance; the wrapper scrolls when that will not fit rather than
+   pushing the slide wider than the page. Confluence paints a header fill and a
+   sort-arrow image on every `th`; both are overridden, and the repeat and
+   position longhands are kept so a surviving arrow cannot tile across the
+   header. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table-wrap { max-width: 100%; overflow-x: auto; }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table { width: 100%; border: 0; border-collapse: collapse; background: transparent; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table-head,
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table-cell {
+  border: 0;
+  padding: calc(1.1 * var(--u)) calc(1.4 * var(--u));
+  color: var(--text);
+  font-size: calc(1.7 * var(--u)) !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+  vertical-align: top;
+  white-space: nowrap !important;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A cell that holds a sentence rather than a value opts back into wrapping. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table-head[data-farad-wrap],
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table-cell[data-farad-wrap] { white-space: normal !important; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table-head {
+  border-bottom: 1px solid var(--strong-border);
+  background-color: transparent !important;
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  font-weight: 600;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__table-cell { border-bottom: 1px solid var(--divider); font-weight: 400; }
+
+.farad-artifact.farad-artifact--agent-future img, .farad-artifact.farad-artifact--agent-future svg { display: block; max-width: 100%; height: auto; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__figure { margin: 0; display: flex; flex: 1 1 auto; flex-direction: column; gap: calc(0.8 * var(--u)); min-height: 0; min-width: 0; }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__figure img, .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__figure svg { flex: 1 1 auto; min-height: 0; object-fit: contain; }
+
+/* Charts are inline SVG: a macro cannot reach a charting library, and a raster
+   image of a chart goes soft the moment the deck is presented. Lengths inside
+   the viewBox are user units, so the drawing scales with the slide and the
+   tokens keep it in step with the theme. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart { width: 100%; height: auto; }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-bar { fill: var(--strong-border); }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-bar--lead { fill: var(--accent); }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-line { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-line--muted { stroke: var(--strong-border); stroke-dasharray: 5 4; }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-grid { stroke: var(--divider); stroke-width: 1; }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-axis { stroke: var(--strong-border); stroke-width: 1; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-label {
+  fill: var(--muted);
+  font-family: inherit;
+  font-size: 6px !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__chart-value {
+  fill: var(--text);
+  font-family: inherit;
+  font-size: 7px !important;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__caption {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: calc(1.5 * var(--u)) !important;
+  line-height: 1.45 !important;
+}
+
+/* The slide number is a CSS counter, so deleting or reordering slides can never
+   leave a stale number behind. It sits inside the slide box, scales with it,
+   and needs neither a fixed nor a sticky position. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__stage { counter-reset: farad-slide; }
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide { counter-increment: farad-slide; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide::after {
+  content: counter(farad-slide);
+  position: absolute;
+  right: calc(2.4 * var(--u));
+  bottom: calc(1.8 * var(--u));
+  color: var(--faint);
+  font-size: calc(1.4 * var(--u)) !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide[data-farad-slide="cover"]::after { display: none; }
+
+/* Credit */
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+/* The only serif in the fragment: the Farad wordmark. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__wordmark {
+  color: var(--text-secondary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px !important;
+}
+
+.farad-artifact.farad-artifact--agent-future[data-farad-credit="off"] .farad-artifact--agent-future__credit { display: none !important; }
+
+/* Pager. Present only while the deck is presenting, so it is drawn for the
+   black stage like the corner marks, and its size follows the viewport with
+   them. */
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__pager { display: none; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__counter {
+  padding: 0 2px;
+  color: #ffffff;
+  opacity: 0.6;
+  font-size: 15px !important;
+  font-size: clamp(15px, 1.7vmin, 20px) !important;
+  font-weight: 500;
+  line-height: 1.4 !important;
+  text-align: center;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Presenting.
+
+   The deck covers the viewport by pinning itself rather than by entering the
+   Fullscreen API, so the mode also works where that API is absent (iOS Safari
+   offers it on video only) or refused (a host that frames the page). This is
+   the one place the fragment leaves normal flow, it happens only after the
+   reader presses Present, and Escape returns the page to the reader.
+
+   Real fullscreen is an extra step from the corner: it drops the browser chrome
+   and nothing else, so a single attribute styles both states and no rule needs
+   the `:fullscreen` pseudo-class. That matters — a browser that does not know
+   `:fullscreen` discards every selector grouped with it, which would leave the
+   deck pinned over the page with no background of its own. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  /* A dialog's UA height is fit-content, which wins over the bottom offset, so
+     the size is stated rather than inferred from `inset`. */
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  display: block;
+  padding: 0;
+  background: var(--stage, #000000);
+  overscroll-behavior: contain;
+}
+
+/* The presentation's own layout lives here rather than on the deck, because
+   this box — not the dialog — is what the Fullscreen API will accept. It fills
+   the deck while presenting in the page, and fills the screen once fullscreen
+   gives it the viewport; the same declarations serve both. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__screen {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* The corner controls anchor to this box in both states. */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* Black, not a grey: the field around a projected slide is the room's dark,
+     and a white slide reads as the lit thing on it in both themes. */
+  background: var(--stage, #000000);
+}
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck::backdrop { background: #000000; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__bar { display: none; }
+
+/* The pager floats in the bottom-right corner instead of taking a strip of its
+   own, so the slide gets the whole height of the screen; a strip would cost
+   the slide height and hand it back as side margins on a 16:9 monitor. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__pager {
+  display: flex;
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  align-items: center;
+  gap: 0;
+  /* On the group, not the buttons: a group with a z-index is a stacking
+     context of its own, and a blend set inside it would see only the group. */
+  mix-blend-mode: difference;
+}
+
+/* Leaving is the control a reader looks for first, so it sits in the corner
+   they already watch rather than beside the pager. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__corner { display: none; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__corner {
+  display: flex;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  gap: 8px;
+  /* Slides are positioned too, and they come later in the document, so the
+     corner needs a layer of its own to stay above the current slide. */
+  z-index: 1;
+  mix-blend-mode: difference;
+}
+
+
+/* Nothing to enter once the browser chrome is already gone. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-fullscreen] .farad-artifact--agent-future__full { display: none; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__stage {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* One slide at a time, sized so a 16:9 box always fits the screen. The dynamic
+   viewport units repeat the declaration because a phone browser that lacks
+   them still needs the first pair. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__slide { display: none; }
+
+/* A hidden slide generates no box and so does not count, which would make
+   every presented slide "1". The pager already says where the reader is. */
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__slide::after { display: none; }
+
+.farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__deck[data-farad-presenting] .farad-artifact--agent-future__slide[data-farad-current] {
+  display: grid;
+  flex: 0 0 auto;
+  width: min(100vw, calc(100vh * 16 / 9));
+  width: min(100dvw, calc(100dvh * 16 / 9));
+  border: 0;
+  border-radius: 0;
+}
+
+/* Print. One slide per sheet, so a browser print becomes a handout. */
+@media print {
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__bar,
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__pager { display: none !important; }
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__stage { gap: 0; }
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide {
+    display: grid !important;
+    border: 1px solid var(--border);
+    break-inside: avoid;
+    break-after: page;
+    page-break-after: always;
+  }
+}
+
+/* Narrow screens. A 16:9 box in a phone-width column would set body copy near
+   seven pixels, so below this width the deck stops pretending to be slides:
+   the ratio spacer is dropped, each slide becomes a content-height card, and
+   the scale unit returns to a readable fixed size. */
+@media (max-width: 680px) {
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide { --u: 7px; }
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide::before { display: none; }
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__pad { padding: 22px 20px; gap: 12px; }
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__columns { grid-template-columns: minmax(0, 1fr); }
+  .farad-artifact.farad-artifact--agent-future .farad-artifact--agent-future__slide::after { right: 14px; bottom: 9px; }
+}
+</style>
+
+<article id="farad-artifact--agent-future__root" class="farad-artifact farad-artifact--agent-future" data-farad-template="confluence-deck-v1" data-farad-credit="on">
+  <dialog class="farad-artifact--agent-future__deck" tabindex="-1">
+
+    <div class="farad-artifact--agent-future__bar">
+      <p class="farad-artifact--agent-future__deck-name"><!-- FARAD SLOT: name -->AI 에이전트의 미래<!-- /FARAD SLOT: name --></p>
+      <div class="farad-artifact--agent-future__controls">
+        <span class="farad-artifact--agent-future__credit">
+          <span class="farad-artifact--agent-future__made-with">Made with</span>
+          <span class="farad-artifact--agent-future__wordmark">Farad</span>
+        </span>
+        <!-- The button stays hidden until the script unhides it, so a site that
+             strips JavaScript shows no dead control. -->
+        <button type="button" class="farad-artifact--agent-future__button farad-artifact--agent-future__button--primary" data-farad-present="" hidden="">
+          <svg class="farad-artifact--agent-future__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1.6 2.2h12.8M3.1 2.2v7.9h9.8V2.2M5.7 13.8 8 10.1l2.3 3.7" /></svg>
+          Present
+        </button>
+      </div>
+    </div>
+
+    <!-- Everything the presentation shows lives in one box, because that box is
+         what goes fullscreen. A <dialog> cannot: the Fullscreen API rejects one
+         outright ("Dialog elements are invalid"), open or closed. A child of an
+         open modal dialog is accepted, so the dialog stays as it is and this
+         wrapper is what the request names. -->
+    <div class="farad-artifact--agent-future__screen">
+
+      <!-- Shown only while presenting. Both buttons stay hidden without JS. -->
+      <!-- Control labels. assemble.py --labels rewrites every label of
+           the deck at once, so a deck is never half translated. -->
+      <div class="farad-artifact--agent-future__corner">
+        <button type="button" class="farad-artifact--agent-future__button farad-artifact--agent-future__button--bare farad-artifact--agent-future__button--icon farad-artifact--agent-future__full" data-farad-nav="full" title="Full screen" aria-label="Enter full screen" hidden="">
+          <svg class="farad-artifact--agent-future__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.4 6.4 2.6 2.6M2.6 6.1V2.6h3.5M9.6 6.4l3.8-3.8M9.9 2.6h3.5v3.5M9.6 9.6l3.8 3.8M13.4 9.9v3.5H9.9M6.4 9.6l-3.8 3.8M6.1 13.4H2.6V9.9" /></svg>
+        </button>
+        <button type="button" class="farad-artifact--agent-future__button farad-artifact--agent-future__button--bare farad-artifact--agent-future__button--icon farad-artifact--agent-future__close" data-farad-nav="exit" title="Exit" aria-label="Exit the presentation">
+          <svg class="farad-artifact--agent-future__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6" /></svg>
+        </button>
+      </div>
+
+    <div class="farad-artifact--agent-future__stage">
+
+      <!-- FARAD SLOT: slides -->
+      <section class="farad-artifact--agent-future__slide" data-farad-slide="cover">
+        <div class="farad-artifact--agent-future__pad">
+          <p class="farad-artifact--agent-future__kicker">2026년 9월 · 실제 수치로 보는 에이전트 현황</p>
+          <h1 class="farad-artifact--agent-future__cover-title">에이전트 능력은 3개월마다 두 배로 빨라지지만, 확장 중인 조직은 아직 4곳 중 1곳도 안 된다</h1>
+          <p class="farad-artifact--agent-future__lead">
+            벤치마크, 확산률, 실패 예측까지 — 검증된 수치로 보는 AI 에이전트의 다음 단계.
+          </p>
+        </div>
+      </section>
+
+      <section class="farad-artifact--agent-future__slide">
+        <div class="farad-artifact--agent-future__pad">
+          <h2 class="farad-artifact--agent-future__slide-title">에이전트가 혼자 해내는 작업 길이가 3개월마다 두 배로 늘고 있다</h2>
+          <div class="farad-artifact--agent-future__table-wrap">
+            <table class="farad-artifact--agent-future__table">
+              <thead>
+                <tr>
+                  <th class="farad-artifact--agent-future__table-head" scope="col">모델</th>
+                  <th class="farad-artifact--agent-future__table-head" scope="col">50% 신뢰도로 끝내는 작업 길이</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell">Claude Opus 4.5</td>
+                  <td class="farad-artifact--agent-future__table-cell">5.3시간 (320분)</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell">GPT-5</td>
+                  <td class="farad-artifact--agent-future__table-cell">3.6시간 (214분)</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell">o3</td>
+                  <td class="farad-artifact--agent-future__table-cell">2.0시간 (121분)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="farad-artifact--agent-future__caption">표 1. METR, Time Horizon 1.1 (2026-01-29) — 50% 신뢰도로 자율 완수하는 소프트웨어 작업 길이. 2024년 이후 이 시간이 약 89일(3개월)마다 두 배로 늘고 있다.</p>
+        </div>
+      </section>
+
+      <section class="farad-artifact--agent-future__slide">
+        <div class="farad-artifact--agent-future__pad">
+          <h2 class="farad-artifact--agent-future__slide-title">1년 만에 컴퓨터 조작·코딩 벤치마크가 사실상 포화 상태에 이르렀다</h2>
+          <div class="farad-artifact--agent-future__table-wrap">
+            <table class="farad-artifact--agent-future__table">
+              <thead>
+                <tr>
+                  <th class="farad-artifact--agent-future__table-head" scope="col">벤치마크</th>
+                  <th class="farad-artifact--agent-future__table-head" scope="col">1년 전</th>
+                  <th class="farad-artifact--agent-future__table-head" scope="col">현재</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell" data-farad-wrap="">OSWorld (실제 OS 조작 작업 성공률)</td>
+                  <td class="farad-artifact--agent-future__table-cell">12%</td>
+                  <td class="farad-artifact--agent-future__table-cell">약 66%</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell" data-farad-wrap="">SWE-bench Verified (코딩 이슈 해결률)</td>
+                  <td class="farad-artifact--agent-future__table-cell">60%</td>
+                  <td class="farad-artifact--agent-future__table-cell">약 100%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="farad-artifact--agent-future__caption">표 2. Stanford HAI, <em>The 2026 AI Index Report</em>, Chapter 2: Technical Performance.</p>
+        </div>
+      </section>
+
+      <!-- Chart: adoption funnel from McKinsey's State of AI 2025 survey
+           (n=1,993, 105 countries, fielded 2025-06-25 to 2025-07-29).
+           Values: 88 / 72 / 39 / 23 (percent of organizations).
+           viewBox 0 0 320 120, baseline y=104. Scale rebased to a 0-100
+           top-of-axis (not the skeleton's 0-80) because these are
+           percentages: height = value/100*96, y = 104 - height.
+             88 -> height 84.48 -> y 19.52 -> label y 16.52
+             72 -> height 69.12 -> y 34.88 -> label y 31.88
+             39 -> height 37.44 -> y 66.56 -> label y 63.56
+             23 -> height 22.08 -> y 81.92 -> label y 78.92
+           Bar x/width kept from the skeleton's 4-column layout (49.5,
+           118.5, 187.5, 256.5; width 38). Lead bar is the last one (23%,
+           actually scaling), which is the slide's point. -->
+      <section class="farad-artifact--agent-future__slide">
+        <div class="farad-artifact--agent-future__pad">
+          <h2 class="farad-artifact--agent-future__slide-title">능력은 검증됐지만, 실제로 에이전트를 확장한 조직은 아직 4곳 중 1곳도 안 된다</h2>
+          <figure class="farad-artifact--agent-future__figure">
+            <svg class="farad-artifact--agent-future__chart" viewBox="0 0 320 120" role="img">
+              <title>막대 그래프: 조직의 AI 활용 88%에서 시작해 에이전트를 실제로 확장 중인 조직은 23%까지 좁아진다.</title>
+              <line class="farad-artifact--agent-future__chart-grid" x1="34" y1="8" x2="310" y2="8" />
+              <line class="farad-artifact--agent-future__chart-grid" x1="34" y1="32" x2="310" y2="32" />
+              <line class="farad-artifact--agent-future__chart-grid" x1="34" y1="56" x2="310" y2="56" />
+              <line class="farad-artifact--agent-future__chart-grid" x1="34" y1="80" x2="310" y2="80" />
+              <text class="farad-artifact--agent-future__chart-label" x="28" y="10.1" text-anchor="end">100</text>
+              <text class="farad-artifact--agent-future__chart-label" x="28" y="34.1" text-anchor="end">75</text>
+              <text class="farad-artifact--agent-future__chart-label" x="28" y="58.1" text-anchor="end">50</text>
+              <text class="farad-artifact--agent-future__chart-label" x="28" y="82.1" text-anchor="end">25</text>
+              <text class="farad-artifact--agent-future__chart-label" x="28" y="106.1" text-anchor="end">0</text>
+              <rect class="farad-artifact--agent-future__chart-bar" x="49.5" y="19.52" width="38" height="84.48" />
+              <rect class="farad-artifact--agent-future__chart-bar" x="118.5" y="34.88" width="38" height="69.12" />
+              <rect class="farad-artifact--agent-future__chart-bar" x="187.5" y="66.56" width="38" height="37.44" />
+              <rect class="farad-artifact--agent-future__chart-bar farad-artifact--agent-future__chart-bar--lead" x="256.5" y="81.92" width="38" height="22.08" />
+              <text class="farad-artifact--agent-future__chart-value" x="68.5" y="16.52" text-anchor="middle">88</text>
+              <text class="farad-artifact--agent-future__chart-value" x="137.5" y="31.88" text-anchor="middle">72</text>
+              <text class="farad-artifact--agent-future__chart-value" x="206.5" y="63.56" text-anchor="middle">39</text>
+              <text class="farad-artifact--agent-future__chart-value" x="275.5" y="78.92" text-anchor="middle">23</text>
+              <line class="farad-artifact--agent-future__chart-axis" x1="34" y1="104" x2="310" y2="104" />
+              <text class="farad-artifact--agent-future__chart-label" x="68.5" y="113" text-anchor="middle">AI 활용</text>
+              <text class="farad-artifact--agent-future__chart-label" x="137.5" y="113" text-anchor="middle">생성형 AI</text>
+              <text class="farad-artifact--agent-future__chart-label" x="206.5" y="113" text-anchor="middle">에이전트 실험</text>
+              <text class="farad-artifact--agent-future__chart-label" x="275.5" y="113" text-anchor="middle">에이전트 확장</text>
+            </svg>
+            <figcaption class="farad-artifact--agent-future__caption">그림 1. McKinsey, <em>The State of AI in 2025</em> 설문(1,993명, 105개국, 2025-06-25 ~ 2025-07-29) — 88%가 어떤 업무든 AI를 쓰지만 에이전트를 실제로 확장 중인 조직은 23%뿐이다.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="farad-artifact--agent-future__slide">
+        <div class="farad-artifact--agent-future__pad">
+          <h2 class="farad-artifact--agent-future__slide-title">확장을 막는 건 기술이 아니라 보안과 통제다</h2>
+          <div class="farad-artifact--agent-future__table-wrap">
+            <table class="farad-artifact--agent-future__table">
+              <thead>
+                <tr>
+                  <th class="farad-artifact--agent-future__table-head" scope="col">확장을 막는 요인</th>
+                  <th class="farad-artifact--agent-future__table-head" scope="col">최우선으로 꼽은 비율</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell">보안·리스크 우려</td>
+                  <td class="farad-artifact--agent-future__table-cell">62%</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell">기술적 한계</td>
+                  <td class="farad-artifact--agent-future__table-cell">38%</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell">규제 불확실성</td>
+                  <td class="farad-artifact--agent-future__table-cell">38%</td>
+                </tr>
+                <tr>
+                  <td class="farad-artifact--agent-future__table-cell">책임 있는 AI 툴 부족</td>
+                  <td class="farad-artifact--agent-future__table-cell">32%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="farad-artifact--agent-future__caption">표 3. Stanford HAI, <em>The 2026 AI Index Report</em> — 조직에 에이전트 확장을 가로막는 요인을 물은 설문(응답 비중 상위 4개, 보안이 2위와 24%p 차이로 1위).</p>
+        </div>
+      </section>
+
+      <section class="farad-artifact--agent-future__slide">
+        <div class="farad-artifact--agent-future__pad">
+          <h2 class="farad-artifact--agent-future__slide-title">그래서 지금 벌어지는 일: 프로젝트 취소와 '에이전트 워싱'</h2>
+          <div class="farad-artifact--agent-future__columns">
+            <div class="farad-artifact--agent-future__panel" data-farad-notice="danger">
+              <h3 class="farad-artifact--agent-future__panel-title">2027년 말까지 프로젝트 40% 이상 취소 전망</h3>
+              <p class="farad-artifact--agent-future__prose">비용 급증, 불분명한 사업 가치, 미흡한 리스크 통제가 주된 이유이며 모델 성능 부족은 원인에 없다.</p>
+            </div>
+            <div class="farad-artifact--agent-future__panel" data-farad-notice="warning">
+              <h3 class="farad-artifact--agent-future__panel-title">이름값과 실제 역량의 괴리</h3>
+              <p class="farad-artifact--agent-future__prose">에이전트 역량을 내세우는 수천 개 벤더 가운데, 실제로 그 이름값을 하는 곳은 약 130곳뿐이라고 본다.</p>
+            </div>
+          </div>
+          <p class="farad-artifact--agent-future__caption">출처: Gartner, 2025년 6월 25일 보도자료 (Hype Cycle for Agentic AI 기반 전망).</p>
+        </div>
+      </section>
+
+      <section class="farad-artifact--agent-future__slide">
+        <div class="farad-artifact--agent-future__pad">
+          <h2 class="farad-artifact--agent-future__slide-title">결론: 병목은 모델이 아니라 거버넌스다</h2>
+          <p class="farad-artifact--agent-future__lead">에이전트가 혼자 처리하는 작업 시간은 3개월마다 두 배로 늘고, 벤치마크는 1년 만에 포화됐다. 그런데도 실제 확장은 4곳 중 1곳에 못 미친다.</p>
+          <p class="farad-artifact--agent-future__prose">가장 많이 꼽히는 이유는 기술 한계가 아니라 보안·리스크 통제(62%)다. 능력이 앞서가는 속도만큼 권한·감사·리스크 관리 체계를 갖추지 못하면, 2027년까지 프로젝트 상당수가 접힐 것이라는 예측도 같은 지점을 가리킨다.</p>
+        </div>
+      </section>
+
+      <section class="farad-artifact--agent-future__slide" data-farad-slide="closing">
+        <div class="farad-artifact--agent-future__pad">
+          <h2 class="farad-artifact--agent-future__slide-title">다음 12개월의 승부처는 더 똑똑한 모델이 아니라 먼저 갖춘 통제다</h2>
+          <p class="farad-artifact--agent-future__lead">확장 여부는 권한·감사 로그·리스크 통제를 먼저 갖췄는지에 달려 있다.</p>
+          <p class="farad-artifact--agent-future__prose">다시 확인할 시점 — 2027년 말 Gartner 취소율 실측치, 그리고 다음 Stanford AI Index 보고서.</p>
+        </div>
+      </section>
+      <!-- /FARAD SLOT: slides -->
+
+    </div>
+
+      <!-- Pager labels, rewritten by assemble.py --labels. The counter text
+           is replaced by the script. -->
+      <div class="farad-artifact--agent-future__pager">
+        <button type="button" class="farad-artifact--agent-future__button farad-artifact--agent-future__button--bare farad-artifact--agent-future__button--icon" data-farad-nav="prev" title="Previous slide" aria-label="Previous slide">
+          <svg class="farad-artifact--agent-future__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3.2 5.2 8l4.8 4.8" /></svg>
+        </button>
+        <span class="farad-artifact--agent-future__counter" data-farad-counter="">1 / 6</span>
+        <button type="button" class="farad-artifact--agent-future__button farad-artifact--agent-future__button--bare farad-artifact--agent-future__button--icon" data-farad-nav="next" title="Next slide" aria-label="Next slide">
+          <svg class="farad-artifact--agent-future__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3.2 10.8 8 6 12.8" /></svg>
+        </button>
+      </div>
+
+    </div>
+
+  </dialog>
+</article>
+<!-- The presentation script is part of the template, and check_html.py
+     accepts it only while it matches the shipped one exactly. -->
+<script>
+/* Presentation mode. Everything is scoped to this deck: the keyboard listener
+   lives on the deck element rather than the document, so Confluence keeps its
+   own shortcuts, and nothing is written to storage or fetched. */
+(function () {
+  var root = document.getElementById("farad-artifact--agent-future__root");
+  if (!root || root.hasAttribute("data-farad-ready")) { return; }
+  root.setAttribute("data-farad-ready", "");
+
+  var deck = root.querySelector(".farad-artifact--agent-future__deck");
+  var screenBox = root.querySelector(".farad-artifact--agent-future__screen");
+  var slides = root.querySelectorAll(".farad-artifact--agent-future__slide");
+  var counter = root.querySelector("[data-farad-counter]");
+  var present = root.querySelector("[data-farad-present]");
+  var full = root.querySelector("[data-farad-nav='full']");
+  if (!deck || !screenBox || !slides.length || !present) { return; }
+
+  var index = 0;
+
+  function show(next) {
+    index = Math.max(0, Math.min(slides.length - 1, next));
+    for (var i = 0; i < slides.length; i++) {
+      if (i === index) { slides[i].setAttribute("data-farad-current", ""); }
+      else { slides[i].removeAttribute("data-farad-current"); }
+    }
+    if (counter) { counter.textContent = index + 1 + " / " + slides.length; }
+  }
+
+  function presenting() { return deck.hasAttribute("data-farad-presenting"); }
+
+  /* Presenting raises the deck into the top layer as a modal dialog, which no
+     host stacking order can cover and which Escape closes on its own. Where
+     that is unavailable the deck pins itself instead — the same CSS, minus the
+     immunity. Real fullscreen is a further, optional step; it only removes the
+     browser's own chrome. */
+  function openModal() {
+    if (deck.showModal && !deck.open) {
+      try { deck.showModal(); } catch (error) { /* already open, or detached */ }
+    }
+    deck.focus();
+  }
+
+  function start() {
+    show(index);
+    deck.setAttribute("data-farad-presenting", "");
+    openModal();
+  }
+
+  function fullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  /* The request names the screen box, never the deck: the Fullscreen API
+     rejects a <dialog> outright, with "Dialog elements are invalid", whether it
+     is open or closed. A child of an open modal dialog is accepted, so the
+     dialog stays open underneath and the two modes never have to trade places. */
+  function enterFullscreen() {
+    var request = screenBox.requestFullscreen || screenBox.webkitRequestFullscreen;
+    if (!request) { return; }
+    var result;
+    try { result = request.call(screenBox); } catch (error) { return; }
+    /* A refusal is not a failure here: the in-page presentation still stands. */
+    if (result && result.then) { result.then(null, function () {}); }
+  }
+
+  function exitFullscreen() {
+    if (fullscreenElement() !== screenBox) { return; }
+    var exit = document.exitFullscreen || document.webkitExitFullscreen;
+    if (!exit) { return; }
+    try { exit.call(document); } catch (error) { /* already leaving */ }
+  }
+
+  function stop() {
+    exitFullscreen();
+    deck.removeAttribute("data-farad-presenting");
+    deck.removeAttribute("data-farad-fullscreen");
+    if (deck.open && deck.close) { deck.close(); }
+  }
+
+  present.addEventListener("click", start);
+
+  deck.addEventListener("click", function (event) {
+    var button = event.target.closest ? event.target.closest("[data-farad-nav]") : null;
+    if (!button) { return; }
+    var action = button.getAttribute("data-farad-nav");
+    if (action === "prev") { show(index - 1); }
+    else if (action === "next") { show(index + 1); }
+    else if (action === "full") { enterFullscreen(); }
+    else { stop(); }
+  });
+
+  deck.addEventListener("keydown", function (event) {
+    if (!presenting()) { return; }
+    var key = event.key;
+    if (key === "ArrowRight" || key === "PageDown" || key === " ") { show(index + 1); }
+    else if (key === "ArrowLeft" || key === "PageUp") { show(index - 1); }
+    else if (key === "Home") { show(0); }
+    else if (key === "End") { show(slides.length - 1); }
+    /* While fullscreen the browser is already answering this press by leaving
+       fullscreen; ending the presentation as well would collapse both levels at
+       once, so the press is left alone and the next one ends it. */
+    else if (key === "Escape") {
+      if (fullscreenElement() === screenBox) { return; }
+      stop();
+    }
+    else { return; }
+    event.preventDefault();
+  });
+
+  /* Escape leaves fullscreen before the deck ever sees the key, so the change
+     event is what puts the in-page presentation back. Leaving fullscreen is a
+     step back, not the end — the ✕ is what ends the presentation. */
+  function syncFullscreen() {
+    if (fullscreenElement() === screenBox) {
+      deck.setAttribute("data-farad-fullscreen", "");
+      deck.focus();
+      return;
+    }
+    deck.removeAttribute("data-farad-fullscreen");
+  }
+
+  document.addEventListener("fullscreenchange", syncFullscreen);
+  document.addEventListener("webkitfullscreenchange", syncFullscreen);
+
+  /* A modal dialog answers Escape by closing itself, which would collapse both
+     levels at once when the deck is fullscreen inside it. Refusing the dialog's
+     own close request leaves Escape to the browser (which exits fullscreen) and
+     to the keydown handler below (which ends the presentation), so one press
+     steps back one level. */
+  deck.addEventListener("cancel", function (event) { event.preventDefault(); });
+
+  deck.addEventListener("close", function () {
+    exitFullscreen();
+    deck.removeAttribute("data-farad-presenting");
+    deck.removeAttribute("data-farad-fullscreen");
+  });
+
+  show(0);
+  present.hidden = false;
+  if (full && (screenBox.requestFullscreen || screenBox.webkitRequestFullscreen)) { full.hidden = false; }
+})();
+</script>
+
+<h2 id="수치-출처와-한-가지-단서">수치 출처와 한 가지 단서</h2>
+
+<p>덱에 적힌 숫자는 에이전트가 검색해서 실제로 가져온 것이고, 다음 두 건은 사후에 따로 확인했다.</p>
+
+<ul>
+  <li>METR, <a href="https://metr.org/blog/2026-1-29-time-horizon-1-1/"><em>Time Horizon 1.1</em></a> (2026-01-29) — 2024년 이후 배가 주기 89일, Claude Opus 4.5 320분.</li>
+  <li>Stanford HAI, <a href="https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_2_technical.pdf"><em>The 2026 AI Index Report</em> Chapter 2</a> — OSWorld 12% → 66.3%, SWE-bench Verified 60% → 거의 100%.</li>
+</ul>
+
+<p>단서 하나. McKinsey <em>State of AI 2025</em>(88/72/39/23%)와 Gartner 2025-06-25 보도자료(2027년까지 40% 이상 취소, 진짜 에이전트 벤더 약 130곳)는 원문 페이지가 타임아웃·403으로 막혀 검색 요약과 2차 출처를 거쳤다. 인용하려면 원 보고서를 직접 확인하는 편이 좋다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[AI 에이전트의 미래 — 서브에이전트가 스킬만 읽고 한 번에 만든 덱]]></summary></entry><entry><title type="html">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</title><link href="https://hvppycoding.github.io/farad/farad-deck-demo/" rel="alternate" type="text/html" title="Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드" /><published>2026-09-14T18:24:45+09:00</published><updated>2026-09-14T18:24:45+09:00</updated><id>https://hvppycoding.github.io/farad/farad-deck-demo</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-deck-demo/"><![CDATA[<h1 id="farad-아티팩트-덱-템플릿--confluence-페이지-안에서-바로-발표하는-html-슬라이드">Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드</h1>
 
 <p>아래는 Farad의 <code class="language-plaintext highlighter-rouge">farad-artifact</code> 스킬에 새로 추가한 <strong>슬라이드 덱 템플릿</strong>을 그대로 붙여 넣은 것이다. 원래 목적지는 Confluence Data Center의 HTML 매크로지만, 호스트 CSS를 견디도록 만들어서 이 블로그에서도 똑같이 동작한다.</p>
 
@@ -4213,137 +5287,4 @@ Farad의 표시명은 한국어여도 내부 <code class="language-plaintext hig
   <li>Anthropic, <a href="https://github.com/anthropics/skills#readme">Skills repository README</a> — skill의 역할과 예시 저장소 성격.</li>
   <li>Agent Skills, <a href="https://agentskills.io/specification">Specification</a> — 최소 디렉터리, metadata, resources, progressive disclosure 규약.</li>
   <li>Anthropic, <a href="https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/LICENSE.txt"><code class="language-plaintext highlighter-rouge">LICENSE.txt</code></a> — Apache License 2.0 및 상표 사용 권한이 포함되지 않음을 확인.</li>
-</ul>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[Anthropic brand-guidelines Skill 벤치마크]]></summary></entry><entry><title type="html">Anthropic `pptx` Skill 벤치마크</title><link href="https://hvppycoding.github.io/research/farad-artifact-anthropic-pptx-skill-benchmark/" rel="alternate" type="text/html" title="Anthropic `pptx` Skill 벤치마크" /><published>2026-07-14T23:50:34+09:00</published><updated>2026-07-14T23:50:34+09:00</updated><id>https://hvppycoding.github.io/research/farad-artifact-anthropic-pptx-skill-benchmark</id><content type="html" xml:base="https://hvppycoding.github.io/research/farad-artifact-anthropic-pptx-skill-benchmark/"><![CDATA[<h1 id="anthropic-pptx-skill-벤치마크">Anthropic <code class="language-plaintext highlighter-rouge">pptx</code> Skill 벤치마크</h1>
-
-<p>조사일: 2026-07-14<br />
-대상: <a href="https://github.com/anthropics/skills/tree/main/skills/pptx">Anthropic Skills / <code class="language-plaintext highlighter-rouge">skills/pptx</code></a></p>
-
-<h2 id="한-줄-평가">한 줄 평가</h2>
-
-<p>이 스킬의 가장 강한 부분은 <strong>PPTX를 코드로 만들었다고 끝내지 않고, 실제 렌더 결과를 사람이 보는 방식으로 반복 검수하는 계약</strong>이다. 반면 시각 지침은 "슬라이드는 언제나 강렬하고 시각적으로 풍부해야 한다"에 기울어 있어, Farad의 차분하고 정보 우선인 자료 생성 스킬에는 선별 이식이 필요하다.</p>
-
-<h2 id="범위와-파일-구조">범위와 파일 구조</h2>
-
-<p><code class="language-plaintext highlighter-rouge">SKILL.md</code>는 deck/slides/presentation 또는 <code class="language-plaintext highlighter-rouge">.pptx</code>가 입력·출력·편집 대상인 모든 요청에서 발동하도록 범위를 넓게 잡는다. 세 가지 경로를 제공한다.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>상황</th>
-      <th>핵심 흐름</th>
-      <th>상세 문서</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>기존 파일 읽기</td>
-      <td><code class="language-plaintext highlighter-rouge">markitdown</code> 텍스트 추출, thumbnail, 필요 시 raw XML</td>
-      <td><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md">SKILL.md</a></td>
-    </tr>
-    <tr>
-      <td>기존 템플릿 편집</td>
-      <td>썸네일 분석 → XML unpack → 구조 변경 → 내용 교체 → clean/pack</td>
-      <td><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/editing.md">editing.md</a></td>
-    </tr>
-    <tr>
-      <td>신규 생성</td>
-      <td>PptxGenJS로 슬라이드 생성</td>
-      <td><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/pptxgenjs.md">pptxgenjs.md</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>보조 스크립트는 <code class="language-plaintext highlighter-rouge">thumbnail.py</code>, Office unpack/pack, <code class="language-plaintext highlighter-rouge">add_slide.py</code>, <code class="language-plaintext highlighter-rouge">clean.py</code>로 구성된다. 템플릿 편집과 신규 생성을 한 방법으로 뭉개지 않고, 원본의 레이아웃·관계를 보존해야 하는 경우에는 OOXML 패키지를 다루며, 처음부터 만들 때만 PptxGenJS를 쓴다.</p>
-
-<h2 id="작업-방식에서-배울-점">작업 방식에서 배울 점</h2>
-
-<h3 id="1-템플릿을-먼저-읽고-콘텐츠를-레이아웃에-매핑한다">1. 템플릿을 먼저 읽고, 콘텐츠를 레이아웃에 매핑한다</h3>
-
-<p>템플릿 썸네일과 텍스트를 먼저 읽은 후 콘텐츠 섹션마다 사용할 기존 슬라이드를 선택한다. 슬라이드 구조를 모두 확정한 뒤에야 텍스트를 교체하고, 빈 자리에는 텍스트만 지우지 말고 이미지·shape까지 삭제하도록 요구한다. "템플릿 slot 수와 원본 항목 수는 다를 수 있다"는 경고는 실제 PPTX 생성 실패를 줄이는 좋은 규칙이다.</p>
-
-<p>Farad에도 그대로 가져갈 수 있다. <code class="language-plaintext highlighter-rouge">farad-artifact</code>는 기존 회사 템플릿이 주어지면 <strong>템플릿의 타입·여백·폰트·색을 관찰한 뒤, 자료의 정보 유형에 맞는 슬라이드 매핑을 먼저 제시</strong>해야 한다.</p>
-
-<h3 id="2-소스-변경과-패키지-무결성의-경계를-안다">2. 소스 변경과 패키지 무결성의 경계를 안다</h3>
-
-<p>슬라이드 복제는 XML 파일을 복사하지 말고 전용 스크립트를 쓰게 한다. 이는 notes, relationship ID, content type처럼 화면에 보이지 않는 패키지 관계를 지키기 위한 것이다. 편집 시에는 각 XML의 모든 placeholder(텍스트·그림·차트·아이콘·caption)를 찾아 교체하고, pack 단계에서 검증·정리를 한다.</p>
-
-<p>PptxGenJS 가이드도 색상값의 <code class="language-plaintext highlighter-rouge">#</code> 금지, 8자리 hex로 opacity를 표현하면 파일이 망가지는 문제, 옵션 객체 재사용에 따른 mutation 문제, proper bullet API 사용 등을 구체적으로 적는다. 결과적으로 디자인 안내서이면서 파일 생성의 실패 사전이다.</p>
-
-<h3 id="3-산출물-qa를-필수-단계로-둔다">3. 산출물 QA를 필수 단계로 둔다</h3>
-
-<p>가장 채택 가치가 높은 부분이다. 텍스트 QA(<code class="language-plaintext highlighter-rouge">markitdown</code>)와 시각 QA를 분리한다. 시각 QA는 LibreOffice로 PDF 변환 후 Poppler로 슬라이드별 JPEG를 만들고, 오버플로·겹침·가장자리 여백·정렬·대비·placeholder 잔존을 체크한다. 첫 렌더를 정답으로 보지 말고 <strong>최소 한 번은 문제를 고치고 다시 렌더</strong>하기 전에는 성공 선언을 금지한다.</p>
-
-<p>Farad에서는 이 흐름을 <code class="language-plaintext highlighter-rouge">생성 → render → 검토 목록 작성 → 수정 → 영향 슬라이드 재검토</code>로 표준화할 만하다. 다만 "문제가 반드시 있어야 한다"보다 "확인 항목별로 pass/fail 근거를 남긴다"가 더 실무적이다. 다중 에이전트의 fresh-eye 검토 권고는 유용하지만, Farad 스킬 자체가 에이전트 병렬 실행을 전제하면 안 된다. 가능할 때만 독립 시각 검토를 권장하는 수준이 적절하다.</p>
-
-<h2 id="시각-설계-지침-채택수정배제">시각 설계 지침: 채택·수정·배제</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>판정</th>
-      <th>지침</th>
-      <th>Farad 적용</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>채택</td>
-      <td>제목/본문 크기 대비, 일관된 간격, 최소 여백, 낮은 대비 방지</td>
-      <td>Farad 토큰과 폰트 기준으로 수치화한다.</td>
-    </tr>
-    <tr>
-      <td>채택</td>
-      <td>주제와 자료 구조에 맞는 레이아웃 선택, 템플릿의 무의미한 반복 방지</td>
-      <td>단, 변주는 정보 구조가 달라질 때만 한다.</td>
-    </tr>
-    <tr>
-      <td>수정</td>
-      <td>한 색의 dominance와 제한된 accent</td>
-      <td>Farad는 neutral/off-white를 기본으로, 강조색은 의미 상태·핵심 경로에만 쓴다.</td>
-    </tr>
-    <tr>
-      <td>수정</td>
-      <td>차트·아이콘·shape로 시각화</td>
-      <td>데이터·관계가 있는 때만 SVG 도표·차트를 쓴다. 장식용 아이콘은 기본적으로 생략한다.</td>
-    </tr>
-    <tr>
-      <td>배제</td>
-      <td>"모든 슬라이드에는 visual element"</td>
-      <td>제목·결론·결정문은 텍스트와 충분한 여백만으로 더 잘 읽힐 수 있다.</td>
-    </tr>
-    <tr>
-      <td>배제</td>
-      <td>bold palette, dark/light sandwich, 독특한 motif를 매번 강제</td>
-      <td>Farad의 지속적인 톤보다 특정 발표의 연출을 우선하는 규칙이다.</td>
-    </tr>
-    <tr>
-      <td>배제</td>
-      <td>이탤릭 accent, 색 원형 속 아이콘, full-bleed 이미지 등의 기본 권장</td>
-      <td>업무 문서에서는 장식 과잉과 LLM 생성물 같은 인상을 만들기 쉽다.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>특기할 점은 이 스킬도 <strong>제목 아래 accent line은 AI 생성 슬라이드의 표지이므로 금지</strong>한다. Farad가 피하려는 "그럴듯한 AI 자료"의 한 유형을 명시적으로 차단한 규칙이라 유지할 가치가 높다.</p>
-
-<h2 id="farad-artifact에-권장하는-이식안"><code class="language-plaintext highlighter-rouge">farad-artifact</code>에 권장하는 이식안</h2>
-
-<ol>
-  <li><strong>두 제작 경로</strong>: 템플릿이 있으면 분석·보존 편집, 없으면 Farad 기본 테마로 신규 생성. 두 경로를 한 프롬프트로 섞지 않는다.</li>
-  <li><strong>정보 우선 설계 brief</strong>: 독자, 결정/행동, 전달할 주장, 자료 형식(발표·HTML·Confluence), 필요한 diagram만 먼저 확정한다. 각 슬라이드/섹션의 visual은 내용 필요성으로 정당화한다.</li>
-  <li><strong>재사용 가능한 Farad 토큰</strong>: 오프화이트 배경, neutral text, 제한된 blue 계열 강조, 명확한 표·SVG diagram 규칙, 충분한 여백을 별도 <code class="language-plaintext highlighter-rouge">references/farad-style.md</code>에 둔다. 포맷별 구현 가이드와 브랜드 계약을 분리한다.</li>
-  <li><strong>포맷별 렌더 QA</strong>: PPTX는 슬라이드 이미지, HTML은 브라우저 screenshot, Confluence는 지원되는 markup/첨부 방식 검증으로 나눈다. 모든 경로에서 overflow, contrast, reading order, 링크·파일 경로, placeholder 잔존을 점검한다.</li>
-  <li><strong>완료 기준</strong>: 결과 파일뿐 아니라 원본 소스(예: PptxGenJS, inline SVG 또는 Mermaid 원문), 렌더 검토 흔적, 수정 후 확인 결과를 남긴다.</li>
-</ol>
-
-<h2 id="결론">결론</h2>
-
-<p>Anthropic <code class="language-plaintext highlighter-rouge">pptx</code>는 Farad가 참고할 <strong>제작·검증 엔진</strong>으로 훌륭하다. 특히 템플릿 보존, OOXML의 구체적 위험 방지, 렌더 기반 fix-and-verify 루프는 거의 그대로 채택할 만하다. 그러나 색·모티프·시각 요소를 강하게 요구하는 미학은 Farad의 목표와 다르다. <code class="language-plaintext highlighter-rouge">farad-artifact</code>는 이를 "정보를 더 빨리 이해시키는 경우에만 시각화한다"와 "조용한 기본값, 드문 강조"로 뒤집어야 한다.</p>
-
-<h2 id="원문-링크">원문 링크</h2>
-
-<ul>
-  <li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/SKILL.md">PPTX Skill 진입점과 QA 절차</a></li>
-  <li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/editing.md">템플릿 편집 워크플로와 스크립트</a></li>
-  <li><a href="https://github.com/anthropics/skills/blob/main/skills/pptx/pptxgenjs.md">PptxGenJS 생성·호환성 가이드</a></li>
-</ul>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[Anthropic pptx Skill 벤치마크]]></summary></entry></feed>
+</ul>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[Anthropic brand-guidelines Skill 벤치마크]]></summary></entry></feed>
