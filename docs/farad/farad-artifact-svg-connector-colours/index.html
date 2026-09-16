@@ -1,5 +1,5 @@
 <html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>farad-artifact SVG 다이어그램 연결선·테두리 색 비교</title>
+<title>farad-artifact SVG 다이어그램 연결선 색 미세 조정 비교</title>
 <style>
 body{margin:0;padding:24px 16px 48px;font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#fff;color:#171717;line-height:1.5}
 main{max-width:1280px;margin:0 auto}
@@ -13,9 +13,9 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
 .light{--page:#ffffff;--surface:#f7f7f7;--inset:#f4f4f4;--text:#171717;--text-secondary:#3f3f3f;--muted:#5f5f5f;--faint:#707070;--border:#e3e3e3;--strong-border:#cfcfcf;--accent:#0e79cf;--notice-info:#eaf4fb;background:var(--page);border:1px solid #e3e3e3;color:var(--text)}
 .dark{--page:#181818;--surface:#1e1e1e;--inset:#121212;--text:#eeeeee;--text-secondary:#c6c6c6;--muted:#9a9a9a;--faint:#8a8a8a;--border:#3c3c3c;--strong-border:#4d4d4d;--accent:#2a82d0;--notice-info:#1b2a35;background:var(--page);border:1px solid #181818;color:var(--text)}
 </style></head><body><main>
-<h1>farad-artifact SVG 다이어그램 연결선·테두리 색 비교</h1>
-<p class="lede">모델이 새 규칙 문서(svg-diagram.md)만 보고 그린 다이어그램 두 장입니다. A는 지금 색, B는 연결선만 <code>--faint</code>, B+는 상자 테두리까지 <code>--faint</code>로 맞춘 안입니다. 다크는 Confluence 다크 모드 토큰입니다.</p>
-<section><h2>A. <code>--strong-border</code> <span>#cfcfcf / 다크 #4d4d4d</span></h2><p class="desc">지금 — 덱 __flow 화살표와 같은 색</p><div class="row"><figure class="cell light wide"><figcaption>아키텍처 · 라이트</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
+<h1>farad-artifact SVG 다이어그램 연결선 색 미세 조정 비교</h1>
+<p class="lede">A(지금)를 기준으로 연결선만 조금씩 진하게 한 안입니다. 새 토큰을 만들지 않고 기존 테마 토큰 <code>--strong-border</code>와 <code>--faint</code>를 섞어 라이트·다크가 함께 따라갑니다.</p>
+<section><h2>A. 지금 <span>선 --strong-border #cfcfcf · 테두리 --border #e3e3e3</span></h2><p class="desc">기준</p><div class="row"><figure class="cell light wide"><figcaption>아키텍처 · 라이트</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
   <title>사내망의 웹 UI가 API 서버를 거쳐 작업 큐와 워커로 이어지고, 워커는 외부 메일 발송 서비스를 호출한 뒤 API 서버에 결과를 보고한다</title>
   <defs>
     <marker id="x1d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -187,11 +187,11 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
     <text x="250" y="270">종료</text>
   </g>
 </svg>
-</figure></div></section><section><h2>B. <code>--faint</code> <span>#707070 / 다크 #8a8a8a</span></h2><p class="desc">연결선만 진하게, 상자 테두리는 --border #e3e3e3 / 다크 #3c3c3c 그대로</p><div class="row"><figure class="cell light wide"><figcaption>아키텍처 · 라이트</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
+</figure></div></section><section><h2>A1. 선 25% 진하게 <span>라이트 #b7b7b7 / 다크 #5c5c5c</span></h2><p class="desc">테두리는 A 그대로. 선 = --strong-border에 --faint를 25% 섞음</p><div class="row"><figure class="cell light wide"><figcaption>아키텍처 · 라이트</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
   <title>사내망의 웹 UI가 API 서버를 거쳐 작업 큐와 워커로 이어지고, 워커는 외부 메일 발송 서비스를 호출한 뒤 API 서버에 결과를 보고한다</title>
   <defs>
-    <marker id="x5d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="p1d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1.2" />
     </marker>
   </defs>
   <g>
@@ -200,7 +200,7 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
     <rect x="196" y="88" width="90" height="52" rx="6" fill="var(--inset)" stroke="none" />
     <text x="202" y="98" font-size="6" fill="var(--faint)">외부</text>
   </g>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#x5d3-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1" marker-end="url(#p1d3-arrow)">
     <path d="M 62 56 H 90" />
     <path d="M 132 56 H 160" />
     <path d="M 198 56 H 226" />
@@ -225,8 +225,8 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
 </figure><figure class="cell dark wide"><figcaption>아키텍처 · 다크</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
   <title>사내망의 웹 UI가 API 서버를 거쳐 작업 큐와 워커로 이어지고, 워커는 외부 메일 발송 서비스를 호출한 뒤 API 서버에 결과를 보고한다</title>
   <defs>
-    <marker id="x6d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="p2d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1.2" />
     </marker>
   </defs>
   <g>
@@ -235,7 +235,7 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
     <rect x="196" y="88" width="90" height="52" rx="6" fill="var(--inset)" stroke="none" />
     <text x="202" y="98" font-size="6" fill="var(--faint)">외부</text>
   </g>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#x6d3-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1" marker-end="url(#p2d3-arrow)">
     <path d="M 62 56 H 90" />
     <path d="M 132 56 H 160" />
     <path d="M 198 56 H 226" />
@@ -260,11 +260,11 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
 </figure><figure class="cell light tall"><figcaption>플로차트 · 라이트</figcaption><svg viewBox="0 0 320 312" width="100%" role="img">
   <title>업로드된 파일의 크기와 바이러스를 검사해 모두 통과하면 저장하고, 크기 초과면 거부하며 바이러스 발견이면 격리 후 관리자에게 알린다</title>
   <defs>
-    <marker id="x7d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="p3d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1.2" />
     </marker>
   </defs>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#x7d1-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1" marker-end="url(#p3d1-arrow)">
     <path d="M 120 36 V 60" />
     <path d="M 120 96 V 152" />
     <path d="M 120 192 V 228" />
@@ -311,11 +311,11 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
 </figure><figure class="cell dark tall"><figcaption>플로차트 · 다크</figcaption><svg viewBox="0 0 320 312" width="100%" role="img">
   <title>업로드된 파일의 크기와 바이러스를 검사해 모두 통과하면 저장하고, 크기 초과면 거부하며 바이러스 발견이면 격리 후 관리자에게 알린다</title>
   <defs>
-    <marker id="x8d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="p4d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1.2" />
     </marker>
   </defs>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#x8d1-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 25%)" stroke-width="1" marker-end="url(#p4d1-arrow)">
     <path d="M 120 36 V 60" />
     <path d="M 120 96 V 152" />
     <path d="M 120 192 V 228" />
@@ -359,11 +359,11 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
     <text x="250" y="270">종료</text>
   </g>
 </svg>
-</figure></div></section><section><h2>B+. 연결선과 상자 테두리 모두 <code>--faint</code> <span>#707070 / 다크 #8a8a8a</span></h2><p class="desc">B에 더해 일반 상자·외부 상자·판단 마름모 테두리도 같은 색 (강조 상자는 --accent 유지)</p><div class="row"><figure class="cell light wide"><figcaption>아키텍처 · 라이트</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
+</figure></div></section><section><h2>A2. 선 40% 진하게 <span>라이트 #a9a9a9 / 다크 #656565</span></h2><p class="desc">테두리는 A 그대로. 선 = --strong-border에 --faint를 40% 섞음</p><div class="row"><figure class="cell light wide"><figcaption>아키텍처 · 라이트</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
   <title>사내망의 웹 UI가 API 서버를 거쳐 작업 큐와 워커로 이어지고, 워커는 외부 메일 발송 서비스를 호출한 뒤 API 서버에 결과를 보고한다</title>
   <defs>
-    <marker id="y5d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="q1d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
     </marker>
   </defs>
   <g>
@@ -372,7 +372,7 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
     <rect x="196" y="88" width="90" height="52" rx="6" fill="var(--inset)" stroke="none" />
     <text x="202" y="98" font-size="6" fill="var(--faint)">외부</text>
   </g>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#y5d3-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#q1d3-arrow)">
     <path d="M 62 56 H 90" />
     <path d="M 132 56 H 160" />
     <path d="M 198 56 H 226" />
@@ -382,23 +382,23 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
   <rect x="188" y="169" width="34" height="12" fill="var(--page)" />
   <text x="205" y="177" font-size="6" text-anchor="middle" fill="var(--muted)">결과 보고</text>
   <g font-size="7" font-weight="600" text-anchor="middle" fill="var(--text)">
-    <rect x="30" y="44" width="32" height="24" rx="4" fill="var(--surface)" stroke="var(--faint)" />
+    <rect x="30" y="44" width="32" height="24" rx="4" fill="var(--surface)" stroke="var(--border)" />
     <text x="46" y="58">웹 UI</text>
     <rect x="90" y="44" width="42" height="24" rx="4" fill="var(--notice-info)" stroke="var(--accent)" />
     <text x="111" y="58">API 서버</text>
-    <rect x="160" y="44" width="38" height="24" rx="4" fill="var(--surface)" stroke="var(--faint)" />
+    <rect x="160" y="44" width="38" height="24" rx="4" fill="var(--surface)" stroke="var(--border)" />
     <text x="179" y="58">작업 큐</text>
-    <rect x="226" y="44" width="30" height="24" rx="4" fill="var(--surface)" stroke="var(--faint)" />
+    <rect x="226" y="44" width="30" height="24" rx="4" fill="var(--surface)" stroke="var(--border)" />
     <text x="241" y="58">워커</text>
-    <rect x="208" y="104" width="66" height="24" rx="4" fill="var(--page)" stroke="var(--faint)" stroke-dasharray="3 2" />
+    <rect x="208" y="104" width="66" height="24" rx="4" fill="var(--page)" stroke="var(--border)" stroke-dasharray="3 2" />
     <text x="241" y="118" fill="var(--text-secondary)">메일 발송 서비스</text>
   </g>
 </svg>
 </figure><figure class="cell dark wide"><figcaption>아키텍처 · 다크</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
   <title>사내망의 웹 UI가 API 서버를 거쳐 작업 큐와 워커로 이어지고, 워커는 외부 메일 발송 서비스를 호출한 뒤 API 서버에 결과를 보고한다</title>
   <defs>
-    <marker id="y6d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="q2d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
     </marker>
   </defs>
   <g>
@@ -407,7 +407,7 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
     <rect x="196" y="88" width="90" height="52" rx="6" fill="var(--inset)" stroke="none" />
     <text x="202" y="98" font-size="6" fill="var(--faint)">외부</text>
   </g>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#y6d3-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#q2d3-arrow)">
     <path d="M 62 56 H 90" />
     <path d="M 132 56 H 160" />
     <path d="M 198 56 H 226" />
@@ -417,26 +417,26 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
   <rect x="188" y="169" width="34" height="12" fill="var(--page)" />
   <text x="205" y="177" font-size="6" text-anchor="middle" fill="var(--muted)">결과 보고</text>
   <g font-size="7" font-weight="600" text-anchor="middle" fill="var(--text)">
-    <rect x="30" y="44" width="32" height="24" rx="4" fill="var(--surface)" stroke="var(--faint)" />
+    <rect x="30" y="44" width="32" height="24" rx="4" fill="var(--surface)" stroke="var(--border)" />
     <text x="46" y="58">웹 UI</text>
     <rect x="90" y="44" width="42" height="24" rx="4" fill="var(--notice-info)" stroke="var(--accent)" />
     <text x="111" y="58">API 서버</text>
-    <rect x="160" y="44" width="38" height="24" rx="4" fill="var(--surface)" stroke="var(--faint)" />
+    <rect x="160" y="44" width="38" height="24" rx="4" fill="var(--surface)" stroke="var(--border)" />
     <text x="179" y="58">작업 큐</text>
-    <rect x="226" y="44" width="30" height="24" rx="4" fill="var(--surface)" stroke="var(--faint)" />
+    <rect x="226" y="44" width="30" height="24" rx="4" fill="var(--surface)" stroke="var(--border)" />
     <text x="241" y="58">워커</text>
-    <rect x="208" y="104" width="66" height="24" rx="4" fill="var(--page)" stroke="var(--faint)" stroke-dasharray="3 2" />
+    <rect x="208" y="104" width="66" height="24" rx="4" fill="var(--page)" stroke="var(--border)" stroke-dasharray="3 2" />
     <text x="241" y="118" fill="var(--text-secondary)">메일 발송 서비스</text>
   </g>
 </svg>
 </figure><figure class="cell light tall"><figcaption>플로차트 · 라이트</figcaption><svg viewBox="0 0 320 312" width="100%" role="img">
   <title>업로드된 파일의 크기와 바이러스를 검사해 모두 통과하면 저장하고, 크기 초과면 거부하며 바이러스 발견이면 격리 후 관리자에게 알린다</title>
   <defs>
-    <marker id="y7d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="q3d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
     </marker>
   </defs>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#y7d1-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#q3d1-arrow)">
     <path d="M 120 36 V 60" />
     <path d="M 120 96 V 152" />
     <path d="M 120 192 V 228" />
@@ -455,7 +455,7 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
   <text x="192" y="80" font-size="6" text-anchor="middle" fill="var(--muted)">초과</text>
   <rect x="188" y="165" width="20" height="14" fill="var(--page)" />
   <text x="198" y="174" font-size="6" text-anchor="middle" fill="var(--muted)">발견</text>
-  <g fill="var(--surface)" stroke="var(--faint)" stroke-width="1">
+  <g fill="var(--surface)" stroke="var(--border)" stroke-width="1">
     <rect x="94" y="12" width="52" height="24" rx="12" />
     <polygon points="120,60 156,78 120,96 84,78" />
     <polygon points="120,152 160,172 120,192 80,172" />
@@ -483,11 +483,11 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
 </figure><figure class="cell dark tall"><figcaption>플로차트 · 다크</figcaption><svg viewBox="0 0 320 312" width="100%" role="img">
   <title>업로드된 파일의 크기와 바이러스를 검사해 모두 통과하면 저장하고, 크기 초과면 거부하며 바이러스 발견이면 격리 후 관리자에게 알린다</title>
   <defs>
-    <marker id="y8d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M1 1 L7 4 L1 7" fill="none" stroke="var(--faint)" stroke-width="1.2" />
+    <marker id="q4d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
     </marker>
   </defs>
-  <g fill="none" stroke="var(--faint)" stroke-width="1" marker-end="url(#y8d1-arrow)">
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#q4d1-arrow)">
     <path d="M 120 36 V 60" />
     <path d="M 120 96 V 152" />
     <path d="M 120 192 V 228" />
@@ -506,7 +506,179 @@ figure{margin:0;padding:12px 14px 14px;border-radius:6px} figcaption{font-size:1
   <text x="192" y="80" font-size="6" text-anchor="middle" fill="var(--muted)">초과</text>
   <rect x="188" y="165" width="20" height="14" fill="var(--page)" />
   <text x="198" y="174" font-size="6" text-anchor="middle" fill="var(--muted)">발견</text>
-  <g fill="var(--surface)" stroke="var(--faint)" stroke-width="1">
+  <g fill="var(--surface)" stroke="var(--border)" stroke-width="1">
+    <rect x="94" y="12" width="52" height="24" rx="12" />
+    <polygon points="120,60 156,78 120,96 84,78" />
+    <polygon points="120,152 160,172 120,192 80,172" />
+    <rect x="105" y="228" width="30" height="24" rx="4" />
+    <rect x="105" y="276" width="30" height="24" rx="12" />
+    <rect x="228" y="66" width="44" height="24" rx="4" />
+    <rect x="235" y="114" width="30" height="24" rx="12" />
+    <rect x="235" y="160" width="30" height="24" rx="4" />
+    <rect x="224" y="208" width="52" height="24" rx="4" />
+    <rect x="235" y="256" width="30" height="24" rx="12" />
+  </g>
+  <g font-size="7" font-weight="600" text-anchor="middle" fill="var(--text)">
+    <text x="120" y="26">업로드 요청</text>
+    <text x="120" y="80">10MB 이하?</text>
+    <text x="120" y="174">바이러스 발견?</text>
+    <text x="120" y="242">저장</text>
+    <text x="120" y="290">완료</text>
+    <text x="250" y="80">거부 안내</text>
+    <text x="250" y="128">종료</text>
+    <text x="250" y="174">격리</text>
+    <text x="250" y="222">관리자 알림</text>
+    <text x="250" y="270">종료</text>
+  </g>
+</svg>
+</figure></div></section><section><h2>A3. 선 40% + 테두리 한 단계 <span>테두리 --strong-border #cfcfcf / 다크 #4d4d4d</span></h2><p class="desc">A2에 더해 상자 테두리를 --border → --strong-border</p><div class="row"><figure class="cell light wide"><figcaption>아키텍처 · 라이트</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
+  <title>사내망의 웹 UI가 API 서버를 거쳐 작업 큐와 워커로 이어지고, 워커는 외부 메일 발송 서비스를 호출한 뒤 API 서버에 결과를 보고한다</title>
+  <defs>
+    <marker id="r1d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
+    </marker>
+  </defs>
+  <g>
+    <rect x="18" y="20" width="250" height="60" rx="6" fill="var(--inset)" stroke="none" />
+    <text x="24" y="30" font-size="6" fill="var(--faint)">사내망</text>
+    <rect x="196" y="88" width="90" height="52" rx="6" fill="var(--inset)" stroke="none" />
+    <text x="202" y="98" font-size="6" fill="var(--faint)">외부</text>
+  </g>
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#r1d3-arrow)">
+    <path d="M 62 56 H 90" />
+    <path d="M 132 56 H 160" />
+    <path d="M 198 56 H 226" />
+    <path d="M 241 68 V 104" />
+    <path d="M 256 56 H 296 Q 300 56 300 60 V 171 Q 300 175 296 175 H 115 Q 111 175 111 171 V 68" stroke-dasharray="4 3" />
+  </g>
+  <rect x="188" y="169" width="34" height="12" fill="var(--page)" />
+  <text x="205" y="177" font-size="6" text-anchor="middle" fill="var(--muted)">결과 보고</text>
+  <g font-size="7" font-weight="600" text-anchor="middle" fill="var(--text)">
+    <rect x="30" y="44" width="32" height="24" rx="4" fill="var(--surface)" stroke="var(--strong-border)" />
+    <text x="46" y="58">웹 UI</text>
+    <rect x="90" y="44" width="42" height="24" rx="4" fill="var(--notice-info)" stroke="var(--accent)" />
+    <text x="111" y="58">API 서버</text>
+    <rect x="160" y="44" width="38" height="24" rx="4" fill="var(--surface)" stroke="var(--strong-border)" />
+    <text x="179" y="58">작업 큐</text>
+    <rect x="226" y="44" width="30" height="24" rx="4" fill="var(--surface)" stroke="var(--strong-border)" />
+    <text x="241" y="58">워커</text>
+    <rect x="208" y="104" width="66" height="24" rx="4" fill="var(--page)" stroke="var(--strong-border)" stroke-dasharray="3 2" />
+    <text x="241" y="118" fill="var(--text-secondary)">메일 발송 서비스</text>
+  </g>
+</svg>
+</figure><figure class="cell dark wide"><figcaption>아키텍처 · 다크</figcaption><svg viewBox="0 0 320 196" width="100%" role="img">
+  <title>사내망의 웹 UI가 API 서버를 거쳐 작업 큐와 워커로 이어지고, 워커는 외부 메일 발송 서비스를 호출한 뒤 API 서버에 결과를 보고한다</title>
+  <defs>
+    <marker id="r2d3-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
+    </marker>
+  </defs>
+  <g>
+    <rect x="18" y="20" width="250" height="60" rx="6" fill="var(--inset)" stroke="none" />
+    <text x="24" y="30" font-size="6" fill="var(--faint)">사내망</text>
+    <rect x="196" y="88" width="90" height="52" rx="6" fill="var(--inset)" stroke="none" />
+    <text x="202" y="98" font-size="6" fill="var(--faint)">외부</text>
+  </g>
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#r2d3-arrow)">
+    <path d="M 62 56 H 90" />
+    <path d="M 132 56 H 160" />
+    <path d="M 198 56 H 226" />
+    <path d="M 241 68 V 104" />
+    <path d="M 256 56 H 296 Q 300 56 300 60 V 171 Q 300 175 296 175 H 115 Q 111 175 111 171 V 68" stroke-dasharray="4 3" />
+  </g>
+  <rect x="188" y="169" width="34" height="12" fill="var(--page)" />
+  <text x="205" y="177" font-size="6" text-anchor="middle" fill="var(--muted)">결과 보고</text>
+  <g font-size="7" font-weight="600" text-anchor="middle" fill="var(--text)">
+    <rect x="30" y="44" width="32" height="24" rx="4" fill="var(--surface)" stroke="var(--strong-border)" />
+    <text x="46" y="58">웹 UI</text>
+    <rect x="90" y="44" width="42" height="24" rx="4" fill="var(--notice-info)" stroke="var(--accent)" />
+    <text x="111" y="58">API 서버</text>
+    <rect x="160" y="44" width="38" height="24" rx="4" fill="var(--surface)" stroke="var(--strong-border)" />
+    <text x="179" y="58">작업 큐</text>
+    <rect x="226" y="44" width="30" height="24" rx="4" fill="var(--surface)" stroke="var(--strong-border)" />
+    <text x="241" y="58">워커</text>
+    <rect x="208" y="104" width="66" height="24" rx="4" fill="var(--page)" stroke="var(--strong-border)" stroke-dasharray="3 2" />
+    <text x="241" y="118" fill="var(--text-secondary)">메일 발송 서비스</text>
+  </g>
+</svg>
+</figure><figure class="cell light tall"><figcaption>플로차트 · 라이트</figcaption><svg viewBox="0 0 320 312" width="100%" role="img">
+  <title>업로드된 파일의 크기와 바이러스를 검사해 모두 통과하면 저장하고, 크기 초과면 거부하며 바이러스 발견이면 격리 후 관리자에게 알린다</title>
+  <defs>
+    <marker id="r3d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
+    </marker>
+  </defs>
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#r3d1-arrow)">
+    <path d="M 120 36 V 60" />
+    <path d="M 120 96 V 152" />
+    <path d="M 120 192 V 228" />
+    <path d="M 120 252 V 276" />
+    <path d="M 156 78 H 228" />
+    <path d="M 250 90 V 114" />
+    <path d="M 160 172 H 235" />
+    <path d="M 250 184 V 208" />
+    <path d="M 250 232 V 256" />
+  </g>
+  <rect x="110" y="117" width="20" height="14" fill="var(--page)" />
+  <text x="120" y="126" font-size="6" text-anchor="middle" fill="var(--muted)">이하</text>
+  <rect x="110" y="203" width="20" height="14" fill="var(--page)" />
+  <text x="120" y="212" font-size="6" text-anchor="middle" fill="var(--muted)">통과</text>
+  <rect x="182" y="71" width="20" height="14" fill="var(--page)" />
+  <text x="192" y="80" font-size="6" text-anchor="middle" fill="var(--muted)">초과</text>
+  <rect x="188" y="165" width="20" height="14" fill="var(--page)" />
+  <text x="198" y="174" font-size="6" text-anchor="middle" fill="var(--muted)">발견</text>
+  <g fill="var(--surface)" stroke="var(--strong-border)" stroke-width="1">
+    <rect x="94" y="12" width="52" height="24" rx="12" />
+    <polygon points="120,60 156,78 120,96 84,78" />
+    <polygon points="120,152 160,172 120,192 80,172" />
+    <rect x="105" y="228" width="30" height="24" rx="4" />
+    <rect x="105" y="276" width="30" height="24" rx="12" />
+    <rect x="228" y="66" width="44" height="24" rx="4" />
+    <rect x="235" y="114" width="30" height="24" rx="12" />
+    <rect x="235" y="160" width="30" height="24" rx="4" />
+    <rect x="224" y="208" width="52" height="24" rx="4" />
+    <rect x="235" y="256" width="30" height="24" rx="12" />
+  </g>
+  <g font-size="7" font-weight="600" text-anchor="middle" fill="var(--text)">
+    <text x="120" y="26">업로드 요청</text>
+    <text x="120" y="80">10MB 이하?</text>
+    <text x="120" y="174">바이러스 발견?</text>
+    <text x="120" y="242">저장</text>
+    <text x="120" y="290">완료</text>
+    <text x="250" y="80">거부 안내</text>
+    <text x="250" y="128">종료</text>
+    <text x="250" y="174">격리</text>
+    <text x="250" y="222">관리자 알림</text>
+    <text x="250" y="270">종료</text>
+  </g>
+</svg>
+</figure><figure class="cell dark tall"><figcaption>플로차트 · 다크</figcaption><svg viewBox="0 0 320 312" width="100%" role="img">
+  <title>업로드된 파일의 크기와 바이러스를 검사해 모두 통과하면 저장하고, 크기 초과면 거부하며 바이러스 발견이면 격리 후 관리자에게 알린다</title>
+  <defs>
+    <marker id="r4d1-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L7 4 L1 7" fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1.2" />
+    </marker>
+  </defs>
+  <g fill="none" stroke="color-mix(in srgb, var(--strong-border), var(--faint) 40%)" stroke-width="1" marker-end="url(#r4d1-arrow)">
+    <path d="M 120 36 V 60" />
+    <path d="M 120 96 V 152" />
+    <path d="M 120 192 V 228" />
+    <path d="M 120 252 V 276" />
+    <path d="M 156 78 H 228" />
+    <path d="M 250 90 V 114" />
+    <path d="M 160 172 H 235" />
+    <path d="M 250 184 V 208" />
+    <path d="M 250 232 V 256" />
+  </g>
+  <rect x="110" y="117" width="20" height="14" fill="var(--page)" />
+  <text x="120" y="126" font-size="6" text-anchor="middle" fill="var(--muted)">이하</text>
+  <rect x="110" y="203" width="20" height="14" fill="var(--page)" />
+  <text x="120" y="212" font-size="6" text-anchor="middle" fill="var(--muted)">통과</text>
+  <rect x="182" y="71" width="20" height="14" fill="var(--page)" />
+  <text x="192" y="80" font-size="6" text-anchor="middle" fill="var(--muted)">초과</text>
+  <rect x="188" y="165" width="20" height="14" fill="var(--page)" />
+  <text x="198" y="174" font-size="6" text-anchor="middle" fill="var(--muted)">발견</text>
+  <g fill="var(--surface)" stroke="var(--strong-border)" stroke-width="1">
     <rect x="94" y="12" width="52" height="24" rx="12" />
     <polygon points="120,60 156,78 120,96 84,78" />
     <polygon points="120,152 160,172 120,192 80,172" />
