@@ -1,0 +1,609 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.27.1 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+
+<html lang="en-US" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409) - ARCHIVE</title>
+<meta name="description" content="PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409)">
+
+
+  <meta name="author" content="hvppycoding">
+  
+  <meta property="article:author" content="hvppycoding">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="ARCHIVE">
+<meta property="og:title" content="PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409)">
+<meta property="og:url" content="https://hvppycoding.github.io/qt/pyside6-qtwebengine-app-event-filter-crash/">
+
+
+  <meta property="og:description" content="PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409)">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2026-10-01T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://hvppycoding.github.io/qt/pyside6-qtwebengine-app-event-filter-crash/">
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+<!-- hvppycoding: add fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+ <!-- hvppycoding: add favicons -->
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single" dir="ltr">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          ARCHIVE
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a
+                href="/year-archive/"
+                
+                
+              >Posts</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409)">
+    <meta itemprop="description" content="PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409)">
+    <meta itemprop="datePublished" content="2026-10-01T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">
+            <a href="https://hvppycoding.github.io/qt/pyside6-qtwebengine-app-event-filter-crash/" itemprop="url">PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409)
+</a>
+          </h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-10-01T00:00:00+09:00">2026-10-01</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="pyside6-앱-이벤트-필터-하나로-qwebengineview가-segfault하는-이유-pyside-3409">PySide6: 앱 이벤트 필터 하나로 QWebEngineView가 segfault하는 이유 (PYSIDE-3409)</h1>
+
+<p>PySide6 앱에 <code class="language-plaintext highlighter-rouge">QWebEngineView</code>를 붙였더니 웹 뷰가 화면에 뜨는 순간 프로세스가 <code class="language-plaintext highlighter-rouge">SIGSEGV</code>로 죽었다. 원인을 좁혀 보니 웹 엔진 쪽 코드는 아무 상관이 없었다. <strong>Python으로 만든 application-level event filter가 하나라도 설치돼 있으면</strong> 죽는다. 그 필터가 아무 일도 하지 않고 <code class="language-plaintext highlighter-rouge">False</code>만 돌려줘도 마찬가지다.</p>
+
+<h2 id="최소-재현">최소 재현</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""PYSIDE-3409 minimal repro: a Python application event filter + QWebEngineView = SIGSEGV.
+
+    python repro.py              # crashes (exit -11 / SIGSEGV) on PySide6 &lt;= 6.11.2
+    python repro.py --no-filter  # same page, no app filter: renders and exits 0
+"""</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">PySide6.QtCore</span> <span class="kn">import</span> <span class="n">QObject</span><span class="p">,</span> <span class="n">QTimer</span>
+<span class="kn">from</span> <span class="nn">PySide6.QtWebEngineCore</span> <span class="kn">import</span> <span class="n">QWebEnginePage</span><span class="p">,</span> <span class="n">QWebEngineProfile</span>
+<span class="kn">from</span> <span class="nn">PySide6.QtWebEngineWidgets</span> <span class="kn">import</span> <span class="n">QWebEngineView</span>
+<span class="kn">from</span> <span class="nn">PySide6.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span>
+
+
+<span class="k">class</span> <span class="nc">PassThrough</span><span class="p">(</span><span class="n">QObject</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">eventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">watched</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>  <span class="c1"># noqa: N802 - Qt override
+</span>        <span class="k">return</span> <span class="bp">False</span>  <span class="c1"># does nothing; just being installed is enough
+</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span>
+<span class="k">if</span> <span class="s">"--no-filter"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">:</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="n">PassThrough</span><span class="p">()</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">installEventFilter</span><span class="p">(</span><span class="n">keep</span><span class="p">)</span>
+
+<span class="n">view</span> <span class="o">=</span> <span class="n">QWebEngineView</span><span class="p">()</span>
+<span class="n">page</span> <span class="o">=</span> <span class="n">QWebEnginePage</span><span class="p">(</span><span class="n">QWebEngineProfile</span><span class="p">(</span><span class="n">app</span><span class="p">),</span> <span class="n">view</span><span class="p">)</span>
+<span class="n">view</span><span class="p">.</span><span class="n">setPage</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+<span class="n">page</span><span class="p">.</span><span class="n">setHtml</span><span class="p">(</span><span class="s">"&lt;h1&gt;hello&lt;/h1&gt;"</span><span class="p">)</span>
+<span class="n">view</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">QTimer</span><span class="p">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="n">app</span><span class="p">.</span><span class="n">quit</span><span class="p">)</span>
+<span class="n">app</span><span class="p">.</span><span class="k">exec</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"survived"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>실행 결과 (macOS arm64, Python 3.13, PySide6 6.9.3 / Qt WebEngine = Chromium 130):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python repro.py --no-filter
+survived                      # exit 0
+$ python repro.py
+                              # exit -11 (SIGSEGV)
+</code></pre></div></div>
+
+<p>마우스를 움직일 필요도 없다. 웹 뷰가 처음 뜰 때 Qt가 내부적으로 보내는 posted event만으로 충분하다.</p>
+
+<h2 id="네이티브-스택">네이티브 스택</h2>
+
+<p>lldb로 잡은 스택은 이렇다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PySide::typeName(QObject const*) + 36          &lt;- EXC_BAD_ACCESS address=0x8
+PySide::getWrapperForQObject(QObject*, _typeobject*)
+QObjectWrapper::sbk_o_eventFilter(...)
+QCoreApplicationPrivate::sendThroughApplicationEventFilters(...)
+...
+QObject::doSetProperty(...)
+PySide::getWrapperForQObject(...)
+QObjectWrapper::sbk_o_eventFilter(...)
+</code></pre></div></div>
+
+<p>죽는 순간 넘어온 객체의 vtable은 <code class="language-plaintext highlighter-rouge">QtWebEngineCore::RenderWidgetHostViewQtDelegateItem</code>이었다.</p>
+
+<h2 id="왜-죽나">왜 죽나</h2>
+
+<ol>
+  <li><strong>앱 이벤트 필터는 앱의 모든 QObject가 받는 이벤트를 먼저 본다.</strong> 사용자가 만든 위젯뿐 아니라 Qt가 내부에서 만든 객체도 예외가 아니다.</li>
+  <li><strong>필터가 Python이면, PySide는 이벤트마다 대상 C++ 객체를 Python 객체로 바꿔 넘겨야 한다.</strong> <code class="language-plaintext highlighter-rouge">eventFilter(self, watched, event)</code>의 <code class="language-plaintext highlighter-rouge">watched</code>가 그것이다. 처음 보는 객체라면 wrapper를 새로 만든다.</li>
+  <li><strong>wrapper를 만들 때 PySide 6.9.3의 <code class="language-plaintext highlighter-rouge">typeName()</code>은 C++ RTTI(<code class="language-plaintext highlighter-rouge">typeid(*obj).name()</code>)로 "실제 클래스가 무엇인지"를 먼저 묻는다.</strong> 메타오브젝트(<code class="language-plaintext highlighter-rouge">QMetaObject</code>) 조회는 그다음이다.</li>
+  <li><strong>웹 뷰가 처음 화면에 뜰 때 Qt WebEngine은 내부 표면 객체 <code class="language-plaintext highlighter-rouge">RenderWidgetHostViewQtDelegateItem</code>을 만든다.</strong> 이것도 이벤트를 받으므로 앱 필터로 넘어온다.</li>
+  <li><strong>그런데 QtWebEngineCore는 <code class="language-plaintext highlighter-rouge">-fno-rtti</code>로 빌드돼 있다.</strong> Chromium이 RTTI 없이 빌드되기 때문이다. 그래서 이 클래스의 vtable에서 <code class="language-plaintext highlighter-rouge">type_info</code> 슬롯이 null이다.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">typeid()</code>가 null + 8을 읽고 죽는다.</strong> 주소 <code class="language-plaintext highlighter-rouge">0x8</code>이 바로 그 흔적이다.</li>
+</ol>
+
+<p>중요한 점은 이 crash가 <strong>Python 필터 코드에 들어가기 전에, 바인딩이 인자를 변환하는 단계에서</strong> 난다는 것이다. 필터 안에서 <code class="language-plaintext highlighter-rouge">isinstance</code> 검사를 하든 <code class="language-plaintext highlighter-rouge">try/except</code>로 감싸든 막을 방법이 없다.</p>
+
+<h2 id="우회-시도와-결과">우회 시도와 결과</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>시도</th>
+      <th>결과</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>QtQuick 모듈을 먼저 import</td>
+      <td>여전히 crash</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">QQuickWidget.rootObject()</code> wrapper를 미리 만들어 붙잡아 둠</td>
+      <td>crash. 죽는 건 나중에 생기는 delegate item이고, 그걸 Python으로 꺼내는 경로(<code class="language-plaintext highlighter-rouge">childItems()</code> 등)도 같은 <code class="language-plaintext highlighter-rouge">typeName()</code>을 지난다</td>
+    </tr>
+    <tr>
+      <td>필터 코드에서 피하기</td>
+      <td>불가능. 필터 코드가 실행되기 전에 죽는다</td>
+    </tr>
+    <tr>
+      <td>앱 필터 대신 <strong>위젯 단위</strong> <code class="language-plaintext highlighter-rouge">installEventFilter</code></td>
+      <td>crash는 피한다. 웹 엔진 내부 객체의 이벤트가 그 필터를 거치지 않기 때문이다. 단, 앱 필터로만 할 수 있던 일(자식이 먼저 소비하는 키 이벤트 가로채기 등)은 못 한다</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>결국 실질적인 회피책은 "웹 뷰가 있는 프로세스에는 Python 앱 이벤트 필터를 두지 않는다"뿐이다. 테마 전환, 전역 단축키, IME 처리처럼 앱 필터를 쓰는 라이브러리 코드가 하나라도 섞여 있으면 걸린다.</p>
+
+<h2 id="업스트림-상태">업스트림 상태</h2>
+
+<p>업스트림 이슈는 <a href="https://bugreports.qt.io/browse/PYSIDE-3409">PYSIDE-3409</a>이고, 수정 커밋은 <a href="https://github.com/qtproject/pyside-pyside-setup/commit/b8452b5824ae"><code class="language-plaintext highlighter-rouge">b8452b5824ae</code></a>(2026-08-12)다.</p>
+
+<blockquote>
+  <p>Fix a crash retrieving the wrapper for QtWebEngineCore::ResourceRequestBody</p>
+
+  <p>The class is built without RTTI on Linux, calling typeid() on it crashes.
+Flip the lookup order in typeName(QObject*), do QMetaObject lookup first.</p>
+</blockquote>
+
+<p>수정 내용은 <code class="language-plaintext highlighter-rouge">typeName()</code>에서 RTTI보다 <code class="language-plaintext highlighter-rouge">QMetaObject</code>를 먼저 보게 한 것이다. 커밋은 Linux와 <code class="language-plaintext highlighter-rouge">ResourceRequestBody</code>를 언급하지만, macOS에서도 <code class="language-plaintext highlighter-rouge">RenderWidgetHostViewQtDelegateItem</code>으로 똑같이 재현된다.</p>
+
+<p>2026-10-01에 공개 저장소를 확인해 보니 이 수정은 <strong><code class="language-plaintext highlighter-rouge">dev</code> 브랜치에만 있다.</strong> 6.8, 6.9, 6.10, 6.11 브랜치와 v6.10.0–6.10.3, v6.11.0–6.11.2 태그에는 없고, 커밋에 backport 대상(<code class="language-plaintext highlighter-rouge">Pick-to:</code>)도 지정돼 있지 않다. 그러니 다음 마이너 릴리스가 나오기 전까지는 앱 필터와 <code class="language-plaintext highlighter-rouge">QWebEngineView</code>를 한 프로세스에 둘 수 없다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#qt" class="page__taxonomy-item p-category" rel="tag">qt</a>
+    
+    </span>
+  </p>
+
+
+        
+
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time class="dt-published" datetime="2026-10-01T00:00:00+09:00">2026-10-01</time></p>
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/farad/farad-artifact-token-border-values/" class="pagination--pager" title="farad-artifact border·strong-border 토큰 값 비교">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    
+<div class="page__related">
+  
+  <h2 class="page__related-title">You may also enjoy</h2>
+  <div class="grid__wrapper">
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/farad-artifact-token-border-values/" rel="permalink">farad-artifact border·strong-border 토큰 값 비교
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-09-16T18:39:21+09:00">2026-09-16</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">farad-artifact 템플릿의 테두리·선 토큰을 올렸을 때 표·차트·흐름도·SVG 다이어그램이 어떻게 보이는지 비교한 페이지.
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/farad-artifact-svg-connector-colours/" rel="permalink">farad-artifact SVG 다이어그램 연결선 색 미세 조정 비교
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-09-16T18:17:09+09:00">2026-09-16</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">farad-artifact 스킬의 손 SVG 다이어그램에서 연결선과 상자 테두리 색을 라이트·다크로 비교한 페이지.
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/farad-artifact-standalone-route-layer-contract/" rel="permalink">farad-artifact standalone 루트 검증 — 서브에이전트가 스킬만 읽고 만든 Farad 레이어 규약 문서
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-09-16T03:16:32+09:00">2026-09-16</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">farad-artifact standalone 루트 검증 — 서브에이전트가 스킬만 읽고 만든 Farad 레이어 규약 문서
+</p>
+  </article>
+</div>
+
+    
+      
+      
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/farad/farad-artifact-deck-route-layer-contract/" rel="permalink">farad-artifact 덱 루트 검증 — 서브에이전트가 스킬만 읽고 만든 Farad 레이어 규약 덱
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <!-- hvppycoding: remove date icon
+        <i class="far fa-calendar-alt" aria-hidden="true"></i> 
+        -->
+        
+        <time datetime="2026-09-16T03:16:16+09:00">2026-09-16</time>
+      </span>
+    
+
+    
+
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">farad-artifact 덱 루트 검증 — 서브에이전트가 스킬만 읽고 만든 Farad 레이어 규약 덱
+</p>
+  </article>
+</div>
+
+    
+  </div>
+</div>
+
+  
+  
+</div>
+
+      
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        
+
+<div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+
+<div class="page__footer-copyright">&copy; 2013 - 2026 <a href="https://hvppycoding.github.io">ARCHIVE</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
