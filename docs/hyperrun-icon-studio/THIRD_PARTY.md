@@ -21,6 +21,12 @@ code is included. Pinned sources and transformations are documented in docs/pale
 in the source project.
 
 Font SHA-256 values and pinned identities are documented in the project docs/fonts.md.
-Local Adobe application logo images appear only in the reference comparison panel.
+Farad Light/Dark palettes use HEX color facts from the user-owned sibling Farad application,
+not its Python implementation or assets. Pinned source and inspected license scope are recorded
+in the project docs/palette-sources.md. Studio Neutral is a curated Studio palette.
+
+Thirteen local Adobe application SVGs appear only in the main reference comparison viewport.
+They cover Photoshop, Illustrator, InDesign, Premiere Pro, After Effects and Lightroom before
+and after the MAX2025 redesign, plus Photoshop CC2015.
 Their sources and reuse information are in [references/README.md](references/README.md).
 No proprietary font is included.
