@@ -1,4 +1,392 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-11-01T15:31:21+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">Farad 시스템 프롬프트에 오웰 글쓰기 규칙 넣기: Qwen A/B 실험</title><link href="https://hvppycoding.github.io/research/farad-orwell-writing-rules-system-prompt-ab/" rel="alternate" type="text/html" title="Farad 시스템 프롬프트에 오웰 글쓰기 규칙 넣기: Qwen A/B 실험" /><published>2026-11-01T15:31:20+09:00</published><updated>2026-11-01T15:31:20+09:00</updated><id>https://hvppycoding.github.io/research/farad-orwell-writing-rules-system-prompt-ab</id><content type="html" xml:base="https://hvppycoding.github.io/research/farad-orwell-writing-rules-system-prompt-ab/"><![CDATA[<h1 id="farad-시스템-프롬프트에-오웰-글쓰기-규칙-넣기-qwen-ab-실험">Farad 시스템 프롬프트에 오웰 글쓰기 규칙 넣기: Qwen A/B 실험</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://hvppycoding.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hvppycoding.github.io/" rel="alternate" type="text/html" /><updated>2026-11-04T02:48:33+09:00</updated><id>https://hvppycoding.github.io/feed.xml</id><title type="html">ARCHIVE</title><subtitle>An amazing archive.</subtitle><author><name>hvppycoding</name></author><entry><title type="html">OMP2 하네스 아키텍처 읽기: The Harness Playbook 해설과 실제 코드</title><link href="https://hvppycoding.github.io/research/omp2-harness-playbook-ko/" rel="alternate" type="text/html" title="OMP2 하네스 아키텍처 읽기: The Harness Playbook 해설과 실제 코드" /><published>2026-11-04T02:48:32+09:00</published><updated>2026-11-04T02:48:32+09:00</updated><id>https://hvppycoding.github.io/research/omp2-harness-playbook-ko</id><content type="html" xml:base="https://hvppycoding.github.io/research/omp2-harness-playbook-ko/"><![CDATA[<h1 id="omp2-하네스-아키텍처-읽기-the-harness-playbook-해설과-실제-코드">OMP2 하네스 아키텍처 읽기: The Harness Playbook 해설과 실제 코드</h1>
+
+<blockquote>
+  <p><strong>한눈에 보기</strong> · 읽는 시간 약 15분 · 2026-11-04 정리<br />
+<strong>원문</strong>: <a href="https://stencil.so/blog/harness-playbook">The Harness Playbook — Can Bölük, Stencil (2026-09-02)</a><br />
+<strong>코드 기준</strong>: <a href="https://github.com/can1357/oh-my-pi/tree/2f92f3b5aa2035d21c9f016f9ff6350795e5685a">can1357/oh-my-pi, <code class="language-plaintext highlighter-rouge">omp2</code> 브랜치, <code class="language-plaintext highlighter-rouge">2f92f3b</code> (2026-09-04)</a><br />
+<strong>문서 성격</strong>: 저작권자의 글을 문장별로 옮긴 전문 번역이 아닌 <strong>한국어 재구성 해설</strong>. 원문의 주장, 코드로 확인한 내용, 해석·제안을 구분했다.</p>
+</blockquote>
+
+<h2 id="먼저-세-줄로">먼저 세 줄로</h2>
+
+<ol>
+  <li>에이전트 하네스는 LLM API를 반복 호출하는 루프가 아니라 <strong>상태, 실행, 정책, 확장, UI를 책임지는 시스템 소프트웨어</strong>다.</li>
+  <li>OMP2의 해법은 <strong>하나의 세션 정본(Session DOM + Journal)</strong>, <strong>여러 턴의 제어권을 갖는 Director</strong>, <strong>공통 실행·취소·관측 계약</strong>, <strong>모델별 차이를 흡수하는 추론 계층</strong>, <strong>상태에서 파생되는 UI</strong>다.</li>
+  <li>이 개념은 단순한 미래 구상만이 아니다. OMP2의 2026-09-04 코드에서 해당 Rust 크레이트와 Python API, 단위·통합 테스트를 확인했다. 다만 <strong>코드의 존재 ≠ 전체 제품의 안정화·실행 검증 완료</strong>다.</li>
+</ol>
+
+<hr />
+
+<h2 id="길을-잃지-않기-위한-개념-지도">길을 잃지 않기 위한 개념 지도</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">용어</th>
+      <th style="text-align: left">책임</th>
+      <th style="text-align: left">피하려는 문제</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Journal</strong></td>
+      <td style="text-align: left">사건·변경의 내구성 있는 이력, 분기와 복구</td>
+      <td style="text-align: left">메시지만 저장하고 실행 상태는 잃어버림</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Session DOM</strong></td>
+      <td style="text-align: left">Journal을 반영한 현재 세션의 구조화된 정본</td>
+      <td style="text-align: left">메시지·TODO·작업·확장 상태가 각각 별도 정본</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Controller / Actor</strong></td>
+      <td style="text-align: left">Controller가 상태 소유, Actor는 이를 구독·표시</td>
+      <td style="text-align: left">TUI가 제어 상태까지 소유</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Director</strong></td>
+      <td style="text-align: left">여러 턴에 걸쳐 루프 제어, 다음 호출·종료·계속 실행 결정</td>
+      <td style="text-align: left">Plan·Goal·강제 도구 모드가 서로 충돌</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>ConVar</strong></td>
+      <td style="text-align: left">타입·범위·상속·지속성을 지닌 설정/제어 값</td>
+      <td style="text-align: left">계층마다 중복 setter와 설정값</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Tool State Stream</strong></td>
+      <td style="text-align: left">입력·진행·결과·진단·취소를 한 호출 상태에 묶음</td>
+      <td style="text-align: left">execute/preview/render 간 정보 복제</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Job</strong></td>
+      <td style="text-align: left">도구·서브에이전트·백그라운드 프로세스의 수명 관리</td>
+      <td style="text-align: left">실행 종류마다 다른 spawn/poll/kill 구현</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Dynamic Tool Bus</strong></td>
+      <td style="text-align: left">긴 꼬리 도구를 안정된 발견/호출 표면 뒤로 숨김</td>
+      <td style="text-align: left">상시 도구 스키마가 매 턴 비용을 증가</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Structured Renderer</strong></td>
+      <td style="text-align: left">같은 세션 상태를 TUI·웹·원격 UI로 투영</td>
+      <td style="text-align: left">문자열 재파싱, UI별 별도 상태</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>전체 그림을 추상화하면 다음과 같다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        사용자 요청 / 원격 클라이언트 / 확장
+                       │
+                       ▼
+           Controller / Agent Kernel
+             ├─ Director stack (턴 제어)
+             ├─ ConVar / Policy (설정·권한)
+             ├─ Inference (모델/제공자 호환)
+             └─ Tool / Job (실행·취소·한도)
+                       │
+                 Journal + DOM
+                 기록 → 상태화
+                       │
+            ┌──────────┼──────────┐
+            ▼          ▼          ▼
+           TUI       원격 UI     검사/테스트
+          (Actor)     (Actor)       (Actor)
+</code></pre></div></div>
+
+<p><strong>핵심 관계</strong>: Journal은 기록의 내구성을 맡고, DOM은 그 기록을 해석한 현재 상태를 표현한다. UI는 상태를 보는 창이고, Director는 실행을 계속할지 결정하는 제어자다. 역할이 다르므로 전부 하나의 거대한 객체로 합치자는 뜻은 아니다.</p>
+
+<h2 id="01-설계-범위-하네스는-네-가지-제품을-동시에-견뎌야-한다">01. 설계 범위: 하네스는 네 가지 제품을 동시에 견뎌야 한다</h2>
+
+<p>저자는 로컬에서 여러 에이전트를 함께 실행하는 <strong>multiplexed workspace</strong>, 휴대전화 등에서 원격 에이전트를 다루는 <strong>remote driver</strong>, 세션을 관찰하는 <strong>spectator</strong>, 신뢰하지 않는 입력을 자동 처리하는 <strong>software factory</strong>를 출발점으로 삼는다.</p>
+
+<p>로컬 TUI만 상정하면 화면 객체가 세션의 주인이 되고, 중요한 상태는 프로세스 메모리에 남으며, 문제가 생기면 사람이 수습한다는 가정이 들어간다. 반대로 위 네 환경을 모두 고려하면 다음 경계가 필요해진다.</p>
+
+<ol>
+  <li><strong>하나의 권위 있는 세션</strong>: 재개, 되돌리기, 분기, 복제, 검사가 동일한 상태에서 출발한다.</li>
+  <li><strong>신뢰할 수 있는 제어 계층</strong>: 승인·정책·모델 호출·세션 소유권은 호스트에 둔다.</li>
+  <li><strong>유한한 작업</strong>: 실행 시간, 결과 크기, 취소와 종료 가능성이 도구의 기본 계약에 포함된다.</li>
+  <li><strong>명시적인 모델 호환성</strong>: 제공자 차이는 호출부에 퍼진 조건문이 아니라 규칙과 데이터로 관리한다.</li>
+  <li><strong>UI는 투영</strong>: TUI와 원격 화면은 동등한 상태 구독자이지 또 다른 정본이 아니다.</li>
+</ol>
+
+<p>원문의 나머지 개념은 이 다섯 요구를 구현하기 위한 수단이다. <a href="https://stencil.so/blog/harness-playbook">원문 1장</a>.</p>
+
+<h2 id="02-상태-메시지를-저장하는-것과-세션을-복원하는-것은-다르다">02. 상태: 메시지를 저장하는 것과 세션을 복원하는 것은 다르다</h2>
+
+<h3 id="기존-방식의-결함">기존 방식의 결함</h3>
+
+<p>채팅 메시지가 JSONL에 남아도 실행 상태가 보장되지는 않는다. 예를 들어 계획 모드의 활성 여부, TODO, 재시도 횟수, 서브에이전트 등록, 확장이 가진 임시 Map 등이 메모리에 별도로 있으면 <strong>과거 메시지로 이동하는 작업과 실행 상태를 과거로 돌리는 작업</strong>이 서로 어긋난다.</p>
+
+<p>저자는 Pi의 공식 확장 예제를 살펴보고, 분기 전환·재개 시 상태가 어긋나는 사례를 제시한다. 예컨대 턴 카운터가 모듈 변수에 있을 경우 rewind 후 메시지와 카운터가 불일치하고, 도구가 동적으로 추가되었다면 rewind 시 도구가 남아 있지만 재시작 시 사라질 수 있다. 이는 개별 확장 개발자의 부주의만이 아니라, 올바른 상태 소유 방식을 기본으로 제공하지 않는 API 문제다.</p>
+
+<h3 id="omp2의-구조">OMP2의 구조</h3>
+
+<p>세션은 개념적으로 <code class="language-plaintext highlighter-rouge">&lt;session&gt;&lt;meta/&gt;&lt;body/&gt;&lt;queues/&gt;&lt;/session&gt;</code> 형태의 <strong>materialized DOM</strong>으로 표현된다. 메시지, 도구 호출, 작업 큐, 영속 확장 상태가 이 트리 안에 존재한다. Journal은 변경 이벤트를 보관하고 DOM은 이벤트를 적용해 현재 상태를 만든다.</p>
+
+<p>그 결과 rewind·fork·resume·원격 구독을 각각 별도 코드로 특별 처리하지 않고 <strong>같은 상태 변경과 재구성 문제</strong>로 다룰 수 있다. 실행 객체는 인덱스나 캐시를 가질 수 있지만 세션 정본을 별도로 소유하면 안 된다.</p>
+
+<p><strong>코드 확인</strong></p>
+
+<ul>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/dom/README.md"><code class="language-plaintext highlighter-rouge">crates/dom/README.md</code></a>: DOM의 고정 루트, 원자적 트랜잭션, 스냅샷·패치 스트림을 명시.</li>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/journal/README.md"><code class="language-plaintext highlighter-rouge">crates/journal/README.md</code></a>: <code class="language-plaintext highlighter-rouge">.oms</code> Journal, 콘텐츠 주소 기반 blob, 잘린 꼬리 복구, 분기 선택의 책임을 명시.</li>
+</ul>
+
+<p><strong>읽을 때 주의할 점</strong>: DOM은 상태 모델이고 Journal은 지속 기록이다. 하나의 물리적 파일에 모든 데이터를 직접 넣는다는 의미가 아니다. 저장 매체, 스냅샷 전략, 실제 재생 성능은 별도 검증 대상이다. <a href="https://stencil.so/blog/harness-playbook">원문 2장</a>.</p>
+
+<h2 id="03-런타임-실행을-맡길-수는-있지만-권한은-넘기지-않는다">03. 런타임: 실행을 맡길 수는 있지만 권한은 넘기지 않는다</h2>
+
+<h3 id="제어-호스트와-샌드박스">제어 호스트와 샌드박스</h3>
+
+<p>신뢰하지 않는 작업 공간에서 코드를 돌릴 때 에이전트 엔진 전체를 VM에 넣으면 상태, 인증, 정책, 호스트 도구에 접근하는 통로가 복잡해진다. OMP2의 제안은 반대다. <strong>호스트가 모델·정책·기록·승인·한도를 소유하고, 샌드박스는 제한된 실행 요청만 수행</strong>하도록 한다.</p>
+
+<p>여기서 결과 크기 제한은 단순 UX 옵션이 아니다. 신뢰하지 않는 프로세스가 수 GB를 반환해 호스트 메모리나 모델 컨텍스트를 잠식하지 못하도록 하는 안전 경계다.</p>
+
+<h3 id="도구-호출은-하나의-상태-스트림">도구 호출은 하나의 상태 스트림</h3>
+
+<p>기존에 흔한 <code class="language-plaintext highlighter-rouge">renderCall → execute → renderResult</code>는 한 작업의 프리뷰·실행·표시를 세 개의 분리된 인터페이스로 만든다. 파일을 중복 읽거나, 실행 결과 문자열에서 구조화된 정보를 다시 파싱하거나, 진행 상태를 별도 채널에 저장하게 된다.</p>
+
+<p>OMP2는 한 호출에 <strong>입력, 결과, 진단, 실행 시간, 상태</strong>를 붙이고 실행 중에는 구조화된 패치를 내보낸다. 모델이 읽는 결과와 사람이 보는 결과는 이 상태에서 각각 만들어진다. 실행이 끝나면 확정된 변경이 기록된다.</p>
+
+<h3 id="job과-취소">Job과 취소</h3>
+
+<p>백그라운드 셸, 서브에이전트, 별도 프로세스, 오래 걸리는 도구 호출은 모두 <strong>작업 ID, 상태, 출력, 신호, 취소</strong>라는 공통 관심사를 가진다. 따라서 도구마다 각자의 poll/kill/list를 복제하기보다 공통 Job 감독 계층을 둔다.</p>
+
+<p>취소 요청을 전달하는 것만으로 충분하지 않다. 도구가 취소 신호를 무시해도 프로세스·worker·격리 실행 단위에서 실제로 종료시킬 수 있어야 한다.</p>
+
+<p><strong>코드 확인</strong>: <a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/src/jobs.rs"><code class="language-plaintext highlighter-rouge">crates/agent/src/jobs.rs</code></a>에는 Tool / Subagent / Process 구분과 DOM에서 재구축하는 Job 감독 인덱스가 있다. 이는 실제 구현 단서이지만 모든 취소 경로가 운영 환경에서 검증되었다는 뜻은 아니다. <a href="https://stencil.so/blog/harness-playbook">원문 3장</a>.</p>
+
+<h2 id="04-제어-계층-hook과-director는-다르다">04. 제어 계층: Hook과 Director는 다르다</h2>
+
+<p><strong>Hook</strong>은 하나의 이벤트, 모델 호출, 턴에 관여한다. 반면 <strong>Director</strong>는 여러 턴 동안 에이전트의 행동과 사용자에게 제어를 반환할 시점을 결정한다.</p>
+
+<p>Plan Mode와 Goal Mode를 단순한 boolean 플래그로 처리하면, 어느 모드가 현재 루프를 소유하는지, 둘을 중첩할 수 있는지, 외부 모드로 언제 돌아가는지를 각 기능이 따로 처리해야 한다.</p>
+
+<p>OMP2에서는 세션 DOM에 존재하는 <strong>Director 스택</strong>을 통해 제어한다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Base → TodoReminder → Goal → Plan → ForceTool(write)
+                                └─ 가장 안쪽 Director부터
+                                   종료 후보를 판정
+</code></pre></div></div>
+
+<p>모델 호출 전에는 바깥쪽에서 안쪽으로 요청을 준비하고, 턴 종료 후보가 생기면 안쪽에서 바깥쪽으로 판단을 전달한다. Director는 계속 실행, 사용자에게 반환, 하위 Director 진입, 자신 종료, 오류 종료 등을 결정한다. 하위 Director가 끝나면 상위 Director가 다시 종료 후보를 받는다.</p>
+
+<p><strong>중요한 점</strong>은 모든 모드를 동시에 허용한다는 뜻이 아니다. 충돌하는 제어 자원(예: 모드, 루프, 특정 도구 선택)은 명시적으로 소유권을 판정할 수 있어야 한다.</p>
+
+<p><strong>ConVar</strong>는 이와 다른 축이다. 모델·테마·실행 정책 같은 설정의 타입, 기본값, 저장 여부, 상속·복제 규칙을 선언한다. 즉 <strong>Director = 행동 제어</strong>, <strong>ConVar = 제어 값</strong>이다.</p>
+
+<p><strong>코드 확인</strong></p>
+
+<ul>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/src/director.rs"><code class="language-plaintext highlighter-rouge">crates/agent/src/director.rs</code></a>: DOM-backed 스택, 제어 자원 Slot, Verdict.</li>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/src/directors/mod.rs"><code class="language-plaintext highlighter-rouge">crates/agent/src/directors/mod.rs</code></a>: Plan·Goal·ForceTool·TodoReminder·Compaction·Autoresearch 등 등록.</li>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/tests/directors/kernel.rs"><code class="language-plaintext highlighter-rouge">crates/agent/tests/directors/kernel.rs</code></a>: 계속 실행, 제어 우선순위, claim 충돌·승계 관련 테스트.</li>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/py/python/omp/convars.py"><code class="language-plaintext highlighter-rouge">crates/py/python/omp/convars.py</code></a>: Python에서 ConVar 선언·조회·변경 관찰 API.</li>
+</ul>
+
+<p>이 장은 Farad 같은 하네스에서 Plan/Goal/Bot/재시도/강제 도구 호출이 커질 때 특히 참고할 만하다. <a href="https://stencil.so/blog/harness-playbook">원문 4장</a>.</p>
+
+<h2 id="05-추론-계층-모델에-대한-지식을-코드의-조건문으로-흩뜨리지-않는다">05. 추론 계층: 모델에 대한 지식을 코드의 조건문으로 흩뜨리지 않는다</h2>
+
+<p>모델과 제공자는 <code class="language-plaintext highlighter-rouge">stream()</code>이라는 단일 함수만 다르게 구현하는 존재가 아니다. 도구 강제 호출, 사고 모드, strict JSON, 캐시, 토큰 계산, 검색, 압축, 이미지와 음성 기능의 지원 형태가 다르다.</p>
+
+<p>저자가 지적하는 실패는 예외 규칙 하나하나가 틀렸다는 것이 아니다. <strong>각자 맞는 예외가 여러 호출부에 중복으로 등장하고 서로 영향을 주는 구조</strong>다.</p>
+
+<p>OMP2의 방향은 모델/호스트별 특징을 KDL 등 구조화된 카탈로그로 관리하고, 규칙 충돌을 사전에 검출하는 것이다. 지원 정보가 없으면 무조건 불가능하다고 단정하기보다 <strong>알 수 없음</strong>을 표현할 수도 있어야 한다.</p>
+
+<p>예를 들어 "다음 턴에서 <code class="language-plaintext highlighter-rouge">write</code>를 반드시 호출"이라는 요구를 받았을 때:</p>
+
+<ol>
+  <li>Director가 원하는 <strong>의도</strong>를 선언한다.</li>
+  <li>추론 계층은 해당 모델의 호환성·비용을 조회한다.</li>
+  <li>부작용 없는 soft prompt·native 설정부터 적용하고, 미이행 시 제한된 재시도로 강화한다.</li>
+  <li>끝내 만족시키지 못하면 조용히 무시하지 않고 실패를 알린다.</li>
+</ol>
+
+<p>스키마가 조금 틀린 도구 인자도 의미가 명확하다면 정규화할 수 있지만, <strong>원래 모델 출력과 복구 사실</strong>은 관측 가능해야 한다. 오류를 감추는 관용성과 의미를 바꾸는 관용성은 구별해야 한다.</p>
+
+<p><strong>코드 확인</strong>: <a href="https://github.com/can1357/oh-my-pi/tree/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/catalog/compat"><code class="language-plaintext highlighter-rouge">crates/catalog/compat/</code></a> 아래 모델 계열·제공자별 KDL 규칙을 확인했다. <a href="https://stencil.so/blog/harness-playbook">원문 5장</a>.</p>
+
+<h2 id="06-도구-표면-항상-보여-주는-도구는-적고-깊어야-한다">06. 도구 표면: 항상 보여 주는 도구는 적고 깊어야 한다</h2>
+
+<p>상시 노출된 도구 스키마는 <strong>실제로 호출되지 않아도</strong> 요청 프리픽스와 토큰 생성에 영향을 준다. 원문은 특정 과제·샘플에서 핵심 도구 수를 줄이자 벽시계 시간이 개선된 측정을 제시한다. 이 수치를 다른 모델이나 업무의 일반적 성능 보장으로 읽어서는 안 된다.</p>
+
+<p>해법은 두 갈래다.</p>
+
+<p><strong>첫째, 오래 살아남을 기본 도구는 깊은 의미를 제공한다.</strong> <code class="language-plaintext highlighter-rouge">Read</code>는 텍스트 파일만 읽는 것이 아니라 디렉터리, PDF, 문서, 데이터베이스, 이미지, 압축 파일, URL 등을 <em>"이 리소스를 추론 가능한 표현으로 변환한다"</em>라는 하나의 의미 아래 다룬다.</p>
+
+<p><strong>둘째, 긴 꼬리 도구는 안정된 발견 표면 뒤에 둔다.</strong> OMP의 <code class="language-plaintext highlighter-rouge">dyn</code>은 추가 도구를 찾고 인자를 조회하고 실행하게 해 주며, 매번 모델의 최상위 도구 목록을 바꾸지 않도록 한다. 비슷한 작업을 여러 단계로 수행하는 경우 브라우저·컴퓨터처럼 제한된 코드 실행 표면을 둘 수도 있다.</p>
+
+<p>그 밖의 관련 원칙은 <strong>도구 인자에 의도(intent) 제공</strong>, <strong>도구 계약 버전 표시</strong>, <strong>명령문을 구조적으로 해석하여 실제 위험한 효과에 도달하는 순간 승인 판단</strong>이다. 문자열 정규식으로 <code class="language-plaintext highlighter-rouge">Bash</code> 전체를 승인·거절하는 방식과 구분된다.</p>
+
+<p>적용 시에는 도구를 무조건 합치는 대신 <strong>하나의 일관된 의미가 있는가</strong>, <strong>캐시와 권한 경계가 유지되는가</strong>를 확인해야 한다. <a href="https://stencil.so/blog/harness-playbook">원문 6장</a>.</p>
+
+<h2 id="07-인터페이스-ui를-문자열-조립의-부작용으로-만들지-않는다">07. 인터페이스: UI를 문자열 조립의 부작용으로 만들지 않는다</h2>
+
+<p>원문은 ANSI가 섞인 문자열 배열을 계속 감싸고, 자르고, 다시 분석하는 TUI 렌더링의 비용을 프로파일링으로 보여 준다. 한 사례에서 렌더링 시간이 267초에서 90밀리초로 줄었다고 설명하지만, 이것은 <strong>해당 측정 조건의 결과</strong>다.</p>
+
+<p>OMP2는 의미가 있는 컴포넌트와 스타일링된 텍스트의 스트림을 기반으로 하여 렌더링 단계에서의 반복 파싱과 할당을 줄이려 한다. 같은 세션 상태를 TUI, 원격 화면, 서브에이전트 검사기가 서로 다른 방식으로 표시할 수 있다.</p>
+
+<p>여기서 흥미로운 세부 문제는 <strong>터미널의 scrollback</strong>이다. 터미널 위쪽으로 밀려 들어간 문장은 다시 쓰기 어렵다. 그러므로 화면을 계속 바꾸는 진행 표시(mutable)와 끝에만 추가되는 스트리밍 텍스트(append-only)는 기록에 확정하는 시점이 달라야 한다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mutable 블록:   active → final → commit
+                중간 스냅샷은 화면용
+
+Append-only:    active ───────→ final → commit
+                확정된 접두 행은 미리 history에 반영 가능
+</code></pre></div></div>
+
+<p>저자는 이 불변 조건을 <strong>TLA+ 모델</strong>로 검토한 내용을 부록에 제공한다. UI 자동화에서 중요한 또 하나의 제안은 에이전트가 화면을 검증할 수 있도록 <em>파괴적이지 않은 디버그 프로토콜</em>을 먼저 제공하라는 것이다. 레이아웃 트리, 포커스, 합성 입력, 오프스크린 렌더 등으로 "테스트했다"의 의미를 고정하자는 취지다.</p>
+
+<p>이 장은 GUI에도 유효한 사고방식을 제공하지만, 터미널 scrollback의 불변 조건을 Qt 위젯/웹뷰에 그대로 이식해야 한다는 뜻은 아니다. <a href="https://stencil.so/blog/harness-playbook">원문 7장</a>.</p>
+
+<h2 id="08-기술-스택-코드-생성-에이전트에게도-언어-관례가-중요하다">08. 기술 스택: 코드 생성 에이전트에게도 언어 관례가 중요하다</h2>
+
+<p>저자는 모델이 코드를 생성하는 환경에서는 언어의 문법·표준 라이브러리뿐 아니라 <strong>프로젝트 관례의 균질성, 타입 검사, 실행 모델</strong>이 결과를 크게 좌우한다고 본다.</p>
+
+<p>OMP2는 Rust를 엔진에, 내장 Python을 확장 SDK에 선택했다. Rust는 상태·동시성·프로토콜 계층에서 강한 타입과 컴파일 시 검증을 주고, Python은 확장 기능을 쉽게 작성하고 AST를 조사하며 원격 실행 기능을 제공할 수 있다.</p>
+
+<p>다만 저자의 TypeScript에 대한 강한 평가는 경험에 기반한 주장이다. Rust/Python 조합이 모든 에이전트나 GUI 애플리케이션에 유일한 정답이라는 뜻은 아니다. 언어 선택보다 중요한 질문은 <strong>현재 문제가 어떤 계약과 경계에서 발생하는가</strong>다.</p>
+
+<p><strong>코드 확인</strong>: <a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/py/python/omp/extensions.py"><code class="language-plaintext highlighter-rouge">crates/py/python/omp/extensions.py</code></a>는 Python 확장에서 Director와 DOM Component를 선언하는 데코레이터를 제공한다. <a href="https://stencil.so/blog/harness-playbook">원문 8장</a>.</p>
+
+<h2 id="09-결론-복잡성을-제거하는-대신-소유자를-정한다">09. 결론: 복잡성을 제거하는 대신 소유자를 정한다</h2>
+
+<p>글이 주장하는 것은 "무조건 추상화를 많이 만들자"가 아니다. 구현이 어려운 공통 문제를 하네스 코어가 끝까지 해결하면, 사용자는 단순한 API로 접근할 수 있다.</p>
+
+<p>반대로 실측 없이 도입한 추상화는 무게만 더한다. <strong>올바른 일반화는 공통 문제를 한 번 해결하지만, 잘못된 일반화는 모든 호출자에게 새 의무를 만든다.</strong></p>
+
+<p>한 문장으로 요약하면: <strong>정본을 통일하고, 제어권을 명시하고, 실행의 한계를 강제하고, 모든 출력은 검증 가능한 구조로 남겨라.</strong></p>
+
+<h2 id="부록에서-확인할-것">부록에서 확인할 것</h2>
+
+<p><strong>부록 A — 상태 복원 실패 사례</strong>: 공식 Pi 확장에서 나타난 체크포인트·플랜 모드·턴 카운터·동적 도구·분기/북마크 문제를 코드 위치와 함께 제시한다. "메시지를 저장했다"와 "이전 세션을 재구성할 수 있다" 사이의 간극을 이해하기 좋다.</p>
+
+<p><strong>부록 B — Elastic Speculative Slots</strong>: 터미널 출력에서 mutable/append-only 블록을 언제 확정할지, viewport와 scrollback의 불변 조건을 어떻게 검증할지 TLA+ 모델을 제공한다. 전체 하네스 일반론보다 좁은 <strong>렌더링 프로토콜의 형식 검증</strong> 사례다.</p>
+
+<hr />
+
+<h2 id="그래서-omp2에는-실제로-구현되어-있는가">그래서 OMP2에는 실제로 구현되어 있는가?</h2>
+
+<p>다음은 <strong>2026-09-04의 <code class="language-plaintext highlighter-rouge">omp2</code> 커밋 <code class="language-plaintext highlighter-rouge">2f92f3b</code></strong>에 한정한 소스 검토다. 코드와 테스트 파일은 확인했지만, 이 조사에서 직접 빌드·테스트·실사용 검증을 실행하지는 않았다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">개념</th>
+      <th style="text-align: left">확인한 근거</th>
+      <th style="text-align: left">판정 범위</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Session DOM</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/tree/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/dom"><code class="language-plaintext highlighter-rouge">crates/dom/</code></a></td>
+      <td style="text-align: left">구현 존재</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Journal / 복구</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/tree/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/journal"><code class="language-plaintext highlighter-rouge">crates/journal/</code></a></td>
+      <td style="text-align: left">구현·테스트 존재</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Director 스택</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/src/director.rs"><code class="language-plaintext highlighter-rouge">director.rs</code></a> · <a href="https://github.com/can1357/oh-my-pi/tree/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/tests/directors">테스트</a></td>
+      <td style="text-align: left">구현·테스트 존재</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Built-in Director</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/src/directors/mod.rs"><code class="language-plaintext highlighter-rouge">directors/mod.rs</code></a></td>
+      <td style="text-align: left">Plan/Goal/ForceTool 등 등록 확인</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Job 감독</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/agent/src/jobs.rs"><code class="language-plaintext highlighter-rouge">jobs.rs</code></a></td>
+      <td style="text-align: left">Tool/Subagent/Process 구조 확인</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">모델 호환 규칙</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/tree/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/catalog/compat"><code class="language-plaintext highlighter-rouge">crates/catalog/compat/</code></a></td>
+      <td style="text-align: left">데이터·컴파일 계층 존재</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Python 확장 API</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/py/python/omp/extensions.py"><code class="language-plaintext highlighter-rouge">omp/extensions.py</code></a> · <a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/e2e/tests/p9_extension_control.rs">통합 계약 테스트</a></td>
+      <td style="text-align: left">등록·계약 테스트 존재</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ConVar API</td>
+      <td style="text-align: left"><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/crates/py/python/omp/convars.py"><code class="language-plaintext highlighter-rouge">omp/convars.py</code></a></td>
+      <td style="text-align: left">선언·조회·관찰 API 존재</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>확인하지 않은 것</strong>: 전체 크레이트 빌드 성공, 모든 OS의 샌드박스 동작, 원격 다중 클라이언트 환경의 복구 정확도, TUI 렌더의 재현 성능, 운영 환경에서의 안정성, 원문 발표 이후의 구현 완성도. 이 항목은 문서의 존재만으로 완료 판정하지 않는다.</p>
+
+<p>추가로 <a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/PHILOSOPHY.md"><code class="language-plaintext highlighter-rouge">PHILOSOPHY.md</code></a>는 철학을 더 발전시킨 문서다. 특히 <strong>구조화된 결과를 정본으로 두고 모델 프롬프트와 UI를 투영한다</strong>, <strong>모델이 보는 도구 계약에 버전을 붙인다</strong>, <strong>투기적 작업과 실제 효과의 경계를 나눈다</strong>는 원칙을 강조한다. 이 부분은 Playbook과 함께 읽을 가치가 높다.</p>
+
+<h2 id="farad와-같은-에이전트에-가져올-때의-우선순위">Farad와 같은 에이전트에 가져올 때의 우선순위</h2>
+
+<p>아래는 <strong>원문이나 OMP2의 공식 로드맵이 아닌 적용 제안</strong>이다. Farad의 실제 변경 범위는 기존 코드·테스트·저장 계약을 별도로 확인한 뒤 결정해야 한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">우선순위</th>
+      <th style="text-align: left">먼저 확인할 문제</th>
+      <th style="text-align: left">바람직한 접근</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>1. 상태 정합성</strong></td>
+      <td style="text-align: left">재개/분기 후 메시지 외 TODO, 모드, 작업 상태가 일치하는가</td>
+      <td style="text-align: left">정본과 파생 상태를 구분하고 복원 계약 테스트 작성</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>2. 여러 턴의 제어권</strong></td>
+      <td style="text-align: left">Plan/Goal/Bot/강제 호출/자동 계속 실행이 누가 종료 결정을 갖는가</td>
+      <td style="text-align: left">Hook과 루프 소유자를 구분하고 충돌·중첩 정책 명시</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>3. Tool/Job 수명</strong></td>
+      <td style="text-align: left">취소 후 실제 프로세스가 종료되는가, 결과가 중복 표시·저장되지 않는가</td>
+      <td style="text-align: left">출력·취소·확정·진단의 공통 계약 정리</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>4. 호환성 데이터</strong></td>
+      <td style="text-align: left">모델 이름별 예외가 호출부 곳곳에 중복되는가</td>
+      <td style="text-align: left">의도와 구현을 분리하고 규칙 우선순위 테스트</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>5. UI 투영</strong></td>
+      <td style="text-align: left">스트리밍 결과·메시지·도구 출력이 여러 UI에서 일치하는가</td>
+      <td style="text-align: left">화면별 별도 상태 대신 구조화된 상태 투영</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>6. 도구 목록</strong></td>
+      <td style="text-align: left">기본 도구 수가 실제 성능·캐시에 부담을 주는가</td>
+      <td style="text-align: left">실측 후 상시 도구와 동적 발견 도구를 분리</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>무조건 가져오지 않을 것</strong>: XML이라는 표현 형식 자체, Rust 재작성, 특정 TUI 알고리즘, OMP2의 도구 이름·승인 정책. 중요한 것은 <strong>이름이나 기술 스택을 모방하는 것이 아니라 실패 모드와 책임 경계를 해결하는 것</strong>이다.</p>
+
+<h2 id="이어서-읽을-원문코드">이어서 읽을 원문·코드</h2>
+
+<ul>
+  <li><a href="https://stencil.so/blog/harness-playbook">The Harness Playbook — 원문</a>: 9개 장과 2개 부록, 설계의 동기와 사례.</li>
+  <li><a href="https://github.com/can1357/oh-my-pi/tree/2f92f3b5aa2035d21c9f016f9ff6350795e5685a">OMP2 코드 — 고정 커밋</a>: 이 글의 실제 코드 근거를 재현하기 위한 기준.</li>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/PHILOSOPHY.md">OMP2 <code class="language-plaintext highlighter-rouge">PHILOSOPHY.md</code></a>: 코드 수준의 추가 설계 철학.</li>
+  <li><a href="https://github.com/can1357/oh-my-pi/blob/2f92f3b5aa2035d21c9f016f9ff6350795e5685a/AGENTS.md">OMP2 <code class="language-plaintext highlighter-rouge">AGENTS.md</code></a>: 현재 코드 모듈의 경계와 책임.</li>
+</ul>
+
+<p><em>이 글은 원문을 다시 찾아 읽기 위한 안내서이자 OMP2 소스 탐색의 출발점이다. 구현 완료 여부는 각 코드 링크의 최신 상태와 실제 테스트로 다시 확인해야 한다.</em></p>]]></content><author><name>hvppycoding</name></author><category term="research" /><summary type="html"><![CDATA[OMP2 하네스 아키텍처 읽기: The Harness Playbook 해설과 실제 코드]]></summary></entry><entry><title type="html">Farad 시스템 프롬프트에 오웰 글쓰기 규칙 넣기: Qwen A/B 실험</title><link href="https://hvppycoding.github.io/research/farad-orwell-writing-rules-system-prompt-ab/" rel="alternate" type="text/html" title="Farad 시스템 프롬프트에 오웰 글쓰기 규칙 넣기: Qwen A/B 실험" /><published>2026-11-01T15:31:20+09:00</published><updated>2026-11-01T15:31:20+09:00</updated><id>https://hvppycoding.github.io/research/farad-orwell-writing-rules-system-prompt-ab</id><content type="html" xml:base="https://hvppycoding.github.io/research/farad-orwell-writing-rules-system-prompt-ab/"><![CDATA[<h1 id="farad-시스템-프롬프트에-오웰-글쓰기-규칙-넣기-qwen-ab-실험">Farad 시스템 프롬프트에 오웰 글쓰기 규칙 넣기: Qwen A/B 실험</h1>
 
 <blockquote>
   <p>실험일: 2026-11-01<br />
@@ -6178,181 +6566,4 @@ html[data-color-mode="dark"] .farad-artifact.farad-artifact--deck-demo {
 
 <h3 id="차트는-인라인-svg다">차트는 인라인 SVG다</h3>
 
-<p>매크로 안에서는 차트 라이브러리를 불러올 수 없고, 차트를 이미지로 굽으면 발표 모드에서 확대되는 순간 뭉갠다. viewBox 안의 길이는 사용자 단위라 슬라이드와 함께 스케일되고, 색은 덱의 토큰을 그대로 쓰므로 다크 모드도 따라온다. viewBox는 슬라이드보다 납작하게 잡는다 — <code class="language-plaintext highlighter-rouge">width: 100%</code>인 SVG는 높이를 그 비율에서 가져오므로, 세로로 긴 viewBox는 슬라이드를 16:9 밖으로 밀어낸다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드]]></summary></entry><entry><title type="html">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</title><link href="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/" rel="alternate" type="text/html" title="Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션" /><published>2026-07-19T18:20:03+09:00</published><updated>2026-07-19T18:20:03+09:00</updated><id>https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent</id><content type="html" xml:base="https://hvppycoding.github.io/farad/farad-vwp-gui-ai-agent/"><![CDATA[<h1 id="farad-vwp에서-바로-쓰는-gui-ai-agent-애플리케이션">Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션</h1>
-
-<p>Farad 입문 영상에 사용할 내레이션 대본이다. 화면에서는 <code class="language-plaintext highlighter-rouge">Farad</code>, 음성에서는 <code class="language-plaintext highlighter-rouge">패럿</code>으로 읽는다.
-특정 직무에 한정하지 않고 파일 조사, 커맨드 실행, 데이터 분석, 결과 검증처럼 VWP에서 반복되는
-일반적인 업무를 기준으로 설명한다.</p>
-
-<h2 id="실행">실행</h2>
-
-<p>VWP 터미널에서 화면처럼 명령어를 입력하면 이런 창이 뜹니다.</p>
-
-<p>이게 Farad, 패럿입니다.</p>
-
-<p>VWP에서 바로 사용할 수 있는 GUI 형태의 AI Agent 애플리케이션이고요.</p>
-
-<p>겉으로는 채팅창처럼 보이지만, 질문에 답만 하고 끝나는 채팅과는 조금 다릅니다. 현재 업무 폴더의
-파일을 직접 확인하고, 필요한 커맨드를 실행하고, 실제로 나온 결과를 보면서 다음 작업까지 이어갈 수
-있습니다.</p>
-
-<p>먼저 패럿을 왜 이런 형태로 만들었는지 짧게 말씀드리고, Agent가 어떤 방식으로 일하는지 예제와 함께
-보여드리겠습니다.</p>
-
-<h2 id="개발-배경">개발 배경</h2>
-
-<p>패럿의 출발점은 터미널 기반 코딩 Agent였습니다.</p>
-
-<p>직접 사용해 보니 파일을 찾고, 코드를 수정하고, 테스트를 실행하는 능력은 상당히 좋았습니다. 다만
-작업이 여러 개로 늘어나면 예전 세션을 다시 찾거나, 긴 실행 결과를 읽거나, 중단한 작업을 이어가는
-부분은 데스크톱 앱이 훨씬 편했고요.</p>
-
-<p>Codex Desktop이나 Claude Cowork 같은 도구를 보면서, 이런 GUI 형태의 AI Agent가 VWP에도 있으면
-좋겠다는 생각에서 개발을 시작했습니다.</p>
-
-<p>누구나 쉽게 쓸 수 있게 만들되, 저도 실제 업무에서 계속 사용해 보고 있고요. 쓰면서 발견한 불편한
-부분은 하나씩 고쳐가고 있습니다.</p>
-
-<p>기본적인 코딩 작업은 물론이고, 꼭 코드를 다루지 않더라도 파일 조사나 로그 확인, 데이터 분석, 문서
-정리 같은 일에도 사용할 수 있게 만들고 있습니다.</p>
-
-<p>VWP는 여러 사용자가 노드를 공유하고, 사양이 항상 넉넉한 환경도 아닙니다. 그래서 화려한 효과보다는
-세션을 열고, 긴 대화를 읽고, 결과를 스크롤하는 기본 동작이 가볍게 느껴지는 쪽에 더 신경을 썼습니다.</p>
-
-<h2 id="일반-채팅과-agent의-차이">일반 채팅과 Agent의 차이</h2>
-
-<p>Agent라는 말이 조금 생소할 수 있어서, 간단한 예를 하나 들어보겠습니다.</p>
-
-<p>AI에게 내 컴퓨터에 설치된 Python 버전을 알려달라고 해보겠습니다.</p>
-
-<p>일반적인 채팅이라면 Python 버전을 확인하는 커맨드를 알려주고, 직접 실행해 보라고 답할 수 있습니다.
-그러면 사용자가 터미널로 이동해서 커맨드를 실행하고, 나온 결과를 다시 채팅에 전달해야 합니다.</p>
-
-<p>Agent는 이 중간 과정을 이어서 처리합니다.</p>
-
-<p>같은 질문을 패럿에 입력하면, LLM이 Python 버전을 확인하기 위한 Bash 실행을 요청합니다. 패럿은 실제
-VWP 환경에서 커맨드를 실행하고, 나온 결과를 다시 LLM에게 전달합니다. 그러면 LLM은 실제 결과를 보고
-설치된 버전을 알려줍니다.</p>
-
-<p>커맨드 하나에서는 큰 차이가 없어 보이지만, 여러 파일을 확인하고 실행 결과에 따라 다음 행동을 골라야
-하는 작업에서는 이 차이가 꽤 커집니다.</p>
-
-<h2 id="llm과-agent-harness">LLM과 Agent Harness</h2>
-
-<p>여기서 많이 헷갈리는 부분이 하나 있습니다.</p>
-
-<p>LLM이 직접 파일을 열거나 터미널을 조작하는 것은 아닙니다. LLM은 사용자의 요청과 현재 작업 정보를
-보고, 다음에 무엇을 해야 할지 판단합니다.</p>
-
-<p>파일 내용이 필요하면 읽기 도구를 요청하고, 커맨드를 실행해야 하면 Bash 도구를 요청합니다. 말 그대로
-도구를 사용해 달라는 요청을 만드는 겁니다.</p>
-
-<p>그 요청을 실제 작업으로 바꾸는 프로그램이 패럿의 Agent Harness입니다. 패럿이 현재 Working Folder와
-사용할 수 있는 도구를 관리하고, 필요한 경우 사용자에게 권한을 확인한 뒤 실제로 실행합니다. 그리고
-파일 내용이나 커맨드 출력처럼 실행해서 얻은 결과를 다시 LLM에게 전달합니다.</p>
-
-<p>LLM은 그 결과를 보고 답변할 수도 있고, 다른 파일을 확인하거나 다음 커맨드를 요청할 수도 있습니다.</p>
-
-<p>그래서 LLM과 Agent 애플리케이션은 같은 개념이 아닙니다. 같은 LLM을 사용하더라도 어떤 도구를
-연결하고, 권한을 어떻게 확인하고, 작업 정보를 어떻게 관리하느냐에 따라 실제 사용 방식은 달라집니다.</p>
-
-<p>간단히 말하면, LLM은 다음 행동을 판단하고 패럿은 그 판단을 실제 VWP 작업으로 연결합니다. 그리고
-실행 결과가 다시 LLM에게 돌아가면서 이 과정이 필요한 만큼 반복됩니다.</p>
-
-<h2 id="통계-데이터로-작업해-보기">통계 데이터로 작업해 보기</h2>
-
-<p>이제 준비된 예제 데이터로 실제 작업 흐름을 보겠습니다.</p>
-
-<p>입력창에서 <code class="language-plaintext highlighter-rouge">/</code>를 누르면 사용할 수 있는 명령 목록이 열립니다. 가장 자주 사용하는 <code class="language-plaintext highlighter-rouge">/cd</code>를 첫 번째에
-두었기 때문에, 방향키로 선택하고 <code class="language-plaintext highlighter-rouge">Enter</code>만 눌러도 최근에 사용한 폴더를 고를 수 있습니다.</p>
-
-<p>이동할 경로를 알고 있다면 <code class="language-plaintext highlighter-rouge">/cd</code>를 직접 입력해도 됩니다. 경로를 입력하기 시작하면 폴더가 자동으로
-완성되기 때문에 긴 경로를 전부 타이핑할 필요는 없습니다.</p>
-
-<p>여기서 지정한 Working Folder가 현재 세션에서 패럿이 파일을 찾고 커맨드를 실행할 기준 위치가 됩니다.</p>
-
-<p>이미 실행할 커맨드를 알고 있다면 입력 맨 앞에 <code class="language-plaintext highlighter-rouge">!</code>를 붙여서 바로 실행할 수도 있습니다. 예를 들어
-<code class="language-plaintext highlighter-rouge">!pwd</code>를 입력하면 현재 작업 경로를 바로 확인할 수 있습니다. 이건 LLM에게 작업을 부탁하는 것이 아니라,
-사용자가 커맨드를 직접 실행하는 빠른 방법입니다.</p>
-
-<p>이번 예제는 두 가지 실행 방식의 시간과 메모리 사용량을 기록한 교육용 합성 데이터입니다. 실제
-시스템의 성능 수치는 아닙니다.</p>
-
-<p>분석할 파일은 <code class="language-plaintext highlighter-rouge">@</code> 기호로 지정하겠습니다. <code class="language-plaintext highlighter-rouge">@</code>를 입력하고 파일 이름을 몇 글자 치면 Working Folder
-안의 파일을 찾아주기 때문에, 여기서 CSV 파일을 선택하면 됩니다.</p>
-
-<p>처음부터 결론을 내달라고 하기보다는 데이터 상태부터 확인해 보겠습니다. 선택한 파일의 전체 행 수와
-컬럼의 의미를 정리하고, 결측치나 중복, 눈에 띄는 이상치가 있는지 살펴봐 달라고 요청했습니다. 아직
-파일은 만들거나 수정하지 말라는 조건도 같이 넣었고요.</p>
-
-<p>확인 결과 전체 100건 중에 메모리 값이 비어 있는 행이 1건 있었고, 실행 시간이 유난히 긴 이상치
-후보도 1건 있었습니다. 중복 데이터는 없었습니다.</p>
-
-<p>이런 식으로 조사할 범위와 수정 여부를 같이 알려주면, 처음 보는 폴더에서도 부담 없이 시작할 수
-있습니다.</p>
-
-<p>데이터 상태를 확인했으니, 이제 baseline과 optimized 방식을 비교해 보겠습니다.</p>
-
-<p>실행 시간은 평균만 보지 않고 중앙값과 표준편차도 함께 확인하고, 성공률과 평균 메모리 사용량까지
-비교해 달라고 요청했습니다. 이상치가 하나 있기 때문에 평균만 보면 결과가 조금 다르게 보일 수
-있거든요.</p>
-
-<p>분석 과정에서 커맨드 실행이 필요하면 승인 화면이 나타납니다. 패럿이 어떤 커맨드를 어느 폴더에서
-실행하려는지 보여주기 때문에, 내용을 확인한 다음 이번 한 번만 허용하거나 비슷한 작업을 계속 허용할
-수 있습니다.</p>
-
-<p>결과를 보면 optimized 방식은 실행 시간 중앙값이 약 11% 낮고, 실행 시간의 편차도 작았습니다.
-성공률은 두 방식이 같았고요. 대신 평균 peak memory는 약 8% 더 사용했습니다.</p>
-
-<p>정리하면 더 빠르고 일정한 대신, 메모리는 조금 더 사용하는 결과입니다. 다만 이 데이터만으로 실행
-방식 하나가 모든 차이를 만들었다고 단정할 수는 없습니다.</p>
-
-<p>이번에는 분석 결과를 답변으로만 받지 않고, 다른 사람도 다시 실행할 수 있는 형태로 남겨보겠습니다.</p>
-
-<p>패럿이 Python 분석 코드를 만들고 실제로 실행한 다음, Markdown 보고서와 비교 그래프를 생성합니다.
-마지막에는 보고서에 적힌 숫자가 원본 데이터와 맞는지도 다시 확인하고요.</p>
-
-<p>사용자가 직접 분석 코드를 작성하지 않더라도, 결과만 받아보는 데서 끝나지 않고 재현 가능한 코드와
-산출물을 함께 남길 수 있습니다.</p>
-
-<h2 id="svg와-세션-관리">SVG와 세션 관리</h2>
-
-<p>분석 과정과 결론을 한눈에 보고 싶다면, 답변 안에 SVG 다이어그램을 만들어 달라고 할 수도 있습니다.</p>
-
-<p>LLM이 원본 데이터, 품질 점검, 방식 비교, 최종 해석의 관계를 SVG로 만들고, 패럿이 내용을 검증한 뒤
-채팅 안에서 바로 보여줍니다.</p>
-
-<p>여기서 SVG는 Bash처럼 시스템을 실행하는 도구는 아닙니다. LLM이 만든 답변을 패럿이 읽기 쉬운 벡터
-그래픽으로 표현하는 기능이라고 보면 됩니다.</p>
-
-<p>패럿을 데스크톱 앱으로 만든 또 다른 이유는 세션 관리입니다.</p>
-
-<p>실제 업무에서는 분석, 로그 확인, 코드 수정처럼 여러 작업을 번갈아 진행하는 경우가 많습니다.
-패럿에서는 작업마다 세션을 나눌 수 있고, 대화뿐 아니라 어떤 파일을 읽고 어떤 도구를 실행했는지도
-같은 흐름에 남습니다.</p>
-
-<p>새 작업은 <code class="language-plaintext highlighter-rouge">/new</code>나 <code class="language-plaintext highlighter-rouge">Ctrl+N</code>으로 시작할 수 있고요. <code class="language-plaintext highlighter-rouge">Ctrl+K</code>를 누르면 예전 세션을 검색해서 중단했던
-작업을 다시 이어갈 수 있습니다.</p>
-
-<h2 id="처음-사용할-때-기억할-것">처음 사용할 때 기억할 것</h2>
-
-<p>앞에서 본 <code class="language-plaintext highlighter-rouge">/</code>, <code class="language-plaintext highlighter-rouge">!</code>, <code class="language-plaintext highlighter-rouge">@</code> 외에 단축키 몇 개만 알아두면 편합니다. <code class="language-plaintext highlighter-rouge">Ctrl+K</code>는 세션 검색, <code class="language-plaintext highlighter-rouge">Ctrl+N</code>은
-새 세션, <code class="language-plaintext highlighter-rouge">Ctrl+L</code>은 채팅 입력으로 이동하는 단축키입니다. 진행 중인 작업을 멈추려면 <code class="language-plaintext highlighter-rouge">Esc</code>를 누르면
-되고요. 사용할 모델은 <code class="language-plaintext highlighter-rouge">/model</code>에서 바꿀 수 있습니다.</p>
-
-<p>그렇다고 처음부터 이걸 전부 외울 필요는 없습니다. 처음에는 세 가지만 기억해도 충분합니다.</p>
-
-<p>VWP에서 패럿을 실행하고, <code class="language-plaintext highlighter-rouge">/</code> 목록에서 <code class="language-plaintext highlighter-rouge">/cd</code>를 골라 업무 폴더를 지정한 다음, <code class="language-plaintext highlighter-rouge">@</code>로 확인할 파일을
-붙여서 먼저 조사만 부탁해 보는 겁니다.</p>
-
-<blockquote>
-  <p>이 폴더가 어떤 작업을 위한 곳인지 파악해줘. 아직 파일을 수정하거나 커맨드를 실행하지 말고,
-근거가 된 파일과 함께 설명해줘.</p>
-</blockquote>
-
-<p>결과를 확인한 다음에 필요한 커맨드를 실행하거나, 문제의 원인을 더 찾아보거나, 분석 결과를 파일로
-남기는 작업까지 이어가면 됩니다.</p>
-
-<p>Agent는 질문에 답만 해주는 채팅보다는, 실제 작업 결과를 보고 다음 행동으로 이어주는 도구에
-가깝습니다. 처음에는 작은 조사 하나부터 맡겨보면 패럿이 어떤 방식으로 일하는지도 금방 익숙해질
-겁니다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad: VWP에서 바로 쓰는 GUI AI Agent 애플리케이션]]></summary></entry></feed>
+<p>매크로 안에서는 차트 라이브러리를 불러올 수 없고, 차트를 이미지로 굽으면 발표 모드에서 확대되는 순간 뭉갠다. viewBox 안의 길이는 사용자 단위라 슬라이드와 함께 스케일되고, 색은 덱의 토큰을 그대로 쓰므로 다크 모드도 따라온다. viewBox는 슬라이드보다 납작하게 잡는다 — <code class="language-plaintext highlighter-rouge">width: 100%</code>인 SVG는 높이를 그 비율에서 가져오므로, 세로로 긴 viewBox는 슬라이드를 16:9 밖으로 밀어낸다.</p>]]></content><author><name>hvppycoding</name></author><category term="farad" /><summary type="html"><![CDATA[Farad 아티팩트 덱 템플릿 — Confluence 페이지 안에서 바로 발표하는 HTML 슬라이드]]></summary></entry></feed>
