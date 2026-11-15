@@ -1,0 +1,9 @@
+{
+  "version": "26.11.1",
+  "upstream": "https://github.com/hellojianijinworld/raw-md",
+  "upstreamCommit": "2dbb1887685ebbfdcc66c4f878de38ebdbf3f2d7",
+  "publishingSource": "main:/docs",
+  "relativeAssets": true,
+  "requiresHttps": true,
+  "nodeRequiredForServing": false
+}
